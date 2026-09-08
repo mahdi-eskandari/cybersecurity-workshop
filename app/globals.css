@@ -1,0 +1,16 @@
+  @custom-variant dark (&:where(.dark, .dark *));
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* تنظیمات فونت سراسری که در مرحله قبل گفتم */
+body {
+  font-family: var(--font-poppins), var(--font-vazirmatn), sans-serif;
+}
+body {
+  font-family: var(--font-vazirmatn), sans-serif;
+  background-color: #0A1128;
+  color: #E2E8F0;
+  overflow-x: hidden;
+}
