@@ -5,6 +5,8 @@ import { useState } from "react"
 import Link from "next/link"
 import { useTheme } from "../../components/ThemeProvider"
 import { motion } from "framer-motion";
+import {EmergencyModal} from "../../.../../components/CrisisReportForm"
+
 
 const blogPosts = [
   {
@@ -537,6 +539,7 @@ const NetworkDecor = ({
 export default function page() {
   const { darkMode } = useTheme()
   const [menuOpen, setMenuOpen] = useState(false)
+    const [crisisOpen, setCrisisOpen] = useState(false);
 
   useEffect(() => {
     if (darkMode) {
@@ -697,6 +700,7 @@ export default function page() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center w-[80%] mx-auto">
             <Link
+            onClick={() => setCrisisOpen(true)}
               href="mailto:secure@parahoor.io"
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold transition-all duration-300"
               style={{
@@ -734,7 +738,7 @@ export default function page() {
             </Link>
 
             <Link
-              href="/consultation"
+              href="/services"
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-semibold transition-all duration-300 px-[60px]"
               style={{
                 background: darkMode
@@ -783,6 +787,15 @@ export default function page() {
 
           <div className="scan-line mt-16 w-48 mx-auto opacity-60" />
         </div>
+
+
+
+      {crisisOpen && (
+        <EmergencyModal
+          onClose={() => setCrisisOpen(false)}
+        />
+      )}
+
       </motion.div>
 
 

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTheme } from "../../../components/ThemeProvider";
 import { motion } from "framer-motion";
+import {EmergencyModal} from "../../.../../../components/CrisisReportForm"
 
 /* ─── ICONS ─── */
 
@@ -323,6 +324,7 @@ export default function page() {
 const [services, setServices] = useState<Service[]>([]);
 const [loading, setLoading] = useState(true);
 const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const [crisisOpen, setCrisisOpen] = useState(false);
 
   const blue = darkMode ? "#00E5FF" : "#1E3A8A";
   const blueBright = darkMode ? "#00E5FF" : "#1D4ED8";
@@ -638,6 +640,7 @@ useEffect(() => {
 
               <div className="flex-shrink-0">
                 <button
+                     onClick={() => setCrisisOpen(true)}
                   className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl font-semibold text-sm transition-all"
                   style={{
                     background: "transparent",
@@ -709,6 +712,13 @@ useEffect(() => {
             </div>
           </div>
         </div>
+
+      {crisisOpen && (
+        <EmergencyModal
+          onClose={() => setCrisisOpen(false)}
+        />
+      )}
+
       </motion.div>
 
 
