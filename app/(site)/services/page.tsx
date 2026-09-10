@@ -1,10 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTheme } from "../../../components/ThemeProvider";
+import { motion } from "framer-motion";
 
 /* ─── ICONS ─── */
+
+const sanitizeSvg = (svg: string) => {
+  return svg
+    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
+    .replace(/\son\w+\s*=\s*(['"]).*?\1/gi, "")
+    .replace(/javascript\s*:/gi, "");
+};
 
 const IconDot = ({
   size = 7,
@@ -270,81 +278,104 @@ const IconMail = ({
   </svg>
 );
 
+
+
+
 /* ─── DATA ─── */
 
-const services = [
-  {
-    id: "crypto",
-    icon: <IconCrypto />,
-    badge: "CRYPTO TRACE",
-    title: "ردیابی رمزارز و تراکنش‌های بلاک‌چین",
-    desc: "ردیابی مسیر کامل تراکنش‌های کریپتو از کیف پول سرقتی تا نقطه نقد شدن در صرافی‌های متمرکز.",
-    tags: ["Bitcoin", "USDT", "Ethereum", "Tron"],
-    complexity: "پیچیده",
-    complexityColor: "#EF4444",
-  },
-  {
-    id: "forensics",
-    icon: <IconForensics />,
-    badge: "DIGITAL FORENSICS",
-    title: "فارنزیک دیجیتال و کشف ادله",
-    desc: "استخراج و بازیابی ادله دیجیتال از سیستم‌ها، موبایل‌ها، و ابرفضا برای ارائه به مراجع قضایی.",
-    tags: ["iOS", "Android", "Windows", "Cloud"],
-    complexity: "تخصصی",
-    complexityColor: "#F59E0B",
-  },
-  {
-    id: "osint",
-    icon: <IconOsint />,
-    badge: "OSINT / IDENTITY",
-    title: "اوسینت (OSINT) و شناسایی هویت",
-    desc: "کشف هویت واقعی افراد ناشناس از طریق تحلیل رد پای دیجیتال، شبکه‌های اجتماعی و منابع باز.",
-    tags: ["Social Media", "Dark Web", "Registry"],
-    complexity: "متوسط",
-    complexityColor: "#22C55E",
-  },
-  {
-    id: "malware",
-    icon: <IconMalware />,
-    badge: "MALWARE ANALYSIS",
-    title: "بررسی سیستم‌های آلوده و تحلیل بدافزار",
-    desc: "شناسایی نوع حمله، نقطه ورود، و بدافزار نصب‌شده با مستندسازی کامل خسارات وارده.",
-    tags: ["APT", "Ransomware", "Spyware", "RAT"],
-    complexity: "تخصصی",
-    complexityColor: "#F59E0B",
-  },
-  {
-    id: "darkweb",
-    icon: <IconDarkWeb />,
-    badge: "DARK WEB MONITOR",
-    title: "پایش دارک‌وب و نشت اطلاعات",
-    desc: "رصد مستمر دارک‌وب برای شناسایی نشت داده‌های سازمانی، اعتبارنامه‌ها، و اطلاعات محرمانه.",
-    tags: ["Tor", "Data Leak", "Credentials"],
-    complexity: "پیوسته",
-    complexityColor: "#A78BFA",
-  },
-  {
-    id: "network",
-    icon: <IconNetwork />,
-    badge: "NETWORK FORENSICS",
-    title: "تحلیل شبکه و تحقیق حوادث",
-    desc: "بررسی لاگ‌های شبکه، ترافیک مشکوک، و حوادث نفوذ به زیرساخت‌های سازمانی و شخصی.",
-    tags: ["PCAP", "IDS/IPS", "Log Analysis"],
-    complexity: "پیچیده",
-    complexityColor: "#EF4444",
-  },
-];
+/* ─── DATA ─── */
+
+type ServiceStatus = "active" | "draft" | "hidden";
+
+type ServiceLevel =
+  | "intermediate"
+  | "specialized"
+  | "advanced"
+  | "complex";
+
+interface Service {
+  id: string;
+  slug: string;
+  title: string;
+  shortDesc: string;
+  icon: string;
+  tags: string[];
+  level: ServiceLevel;
+  categoryLabel: string;
+  status: ServiceStatus;
+  body: string;
+  urgencyTitle: string;
+  urgencyDesc: string;
+  metaTitle: string;
+  metaDescription: string;
+}
+
+
+
+
+
+
 
 /* ─── APP ─── */
 
 export default function page() {
   const { darkMode } = useTheme();
-
-  const [modalOpen, setModalOpen] = useState(false);
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+const [services, setServices] = useState<Service[]>([]);
+const [loading, setLoading] = useState(true);
+const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   const blue = darkMode ? "#00E5FF" : "#1E3A8A";
   const blueBright = darkMode ? "#00E5FF" : "#1D4ED8";
+
+
+
+// _-_-_-_-_-_-_-_-_-_-_- fetch _-_-_-_-_-_-_-_-_-_-_-
+useEffect(() => {
+  const loadServices = async () => {
+    try {
+      setLoading(true);
+
+      const response = await fetch("/api/services", {
+        cache: "no-store",
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "خطا در دریافت خدمات");
+      }
+
+      const normalizedServices: Service[] = (result.data || []).map(
+        (item: any) => ({
+          id: String(item._id || item.id),
+          slug: item.slug || "",
+          title: item.title || "",
+          shortDesc: item.shortDesc || "",
+          icon: item.icon || "",
+          tags: Array.isArray(item.tags) ? item.tags : [],
+          level: item.level || "intermediate",
+          categoryLabel: item.categoryLabel || "",
+          status: item.status || "draft",
+          body: item.body || "",
+          urgencyTitle: item.urgencyTitle || "",
+          urgencyDesc: item.urgencyDesc || "",
+          metaTitle: item.metaTitle || "",
+          metaDescription: item.metaDescription || "",
+        })
+      );
+
+      setServices(normalizedServices);
+    } catch (error) {
+      console.error("GET services error:", error);
+      setServices([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadServices();
+}, []);
+
 
   return (
     <div
@@ -361,7 +392,14 @@ export default function page() {
     >
       {/* ── HERO ── */}
 
-      <section className="relative px-6 pt-20 pb-16 md:px-12 md:pt-28 md:pb-20 text-center overflow-hidden">
+      {/* <section className="relative px-6 pt-20 pb-16 md:px-12 md:pt-28 md:pb-20 text-center overflow-hidden"> */}
+        <motion.div
+        className="relative px-6 pt-20 pb-16 md:px-12 md:pt-28 md:pb-20 text-center overflow-hidden"
+    initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+  viewport={{ once: true, amount: 0.2 }}
+>
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -449,11 +487,25 @@ export default function page() {
             }}
           />
         </div>
-      </section>
+      </motion.div>
+
+
+
+
+
+
+
 
       {/* ── CONSULTING BANNER ── */}
 
-      <section className="px-6 pb-6 md:px-12">
+      {/* <section className="px-6 pb-6 md:px-12"> */}
+         <motion.div
+        className="px-6 pb-6 md:px-12"
+  initial={{ opacity: 0, y: 60 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.7 }}
+  viewport={{ once: true, amount: 0.2 }}
+>
         <div className="max-w-5xl mx-auto">
           <div
             className="relative overflow-hidden rounded-2xl px-8 py-8 md:px-10 md:py-10 transition-all duration-300"
@@ -657,14 +709,31 @@ export default function page() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.div>
+
+
+
+
+
+
+
+
+
 
       {/* ── SERVICES GRID ── */}
 
-      <section
+      {/* <section
         className="px-6 py-16 md:px-12"
         id="services"
-      >
+      > */}
+         <motion.div
+        className="px-6 py-16 md:px-12"
+        id="services"
+  initial={{ opacity: 0, y: 60 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.7 }}
+  viewport={{ once: true, amount: 0.2 }}
+>
         <div className="max-w-5xl mx-auto">
           {/* Section header */}
 
@@ -795,20 +864,46 @@ export default function page() {
                           borderRadius: 4,
                         }}
                       >
-                        {s.badge}
+                        {s.categoryLabel || "SERVICE"}
                       </span>
 
                       <span
                         style={{
                           fontSize: "0.65rem",
-                          color: s.complexityColor,
-                          background: `${s.complexityColor}15`,
-                          border: `1px solid ${s.complexityColor}30`,
+                        color: {
+  intermediate: "#10B981",
+  specialized: "#00E5FF",
+  advanced: "#A78BFA",
+  complex: "#F59E0B",
+}[s.level],
+
+background: `${
+  {
+    intermediate: "#10B981",
+    specialized: "#00E5FF",
+    advanced: "#A78BFA",
+    complex: "#F59E0B",
+  }[s.level]
+}15`,
+
+border: `1px solid ${
+  {
+    intermediate: "#10B981",
+    specialized: "#00E5FF",
+    advanced: "#A78BFA",
+    complex: "#F59E0B",
+  }[s.level]
+}30`,
                           padding: "1px 7px",
                           borderRadius: 4,
                         }}
                       >
-                        {s.complexity}
+                        {{
+  intermediate: "متوسط",
+  specialized: "تخصصی",
+  advanced: "پیشرفته",
+  complex: "پیچیده",
+}[s.level]}
                       </span>
                     </div>
 
@@ -838,7 +933,7 @@ export default function page() {
                           : "none",
                       }}
                     >
-                      {(() => {
+                      {/* {(() => {
                         switch (s.id) {
                           case "crypto":
                             return <IconCrypto color={blueBright} />;
@@ -855,7 +950,26 @@ export default function page() {
                           default:
                             return s.icon;
                         }
-                      })()}
+                      })()} */}
+
+
+{s.icon ? (
+  <span
+    style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: 30,
+      height: 30,
+    }}
+    dangerouslySetInnerHTML={{
+      __html: sanitizeSvg(s.icon),
+    }}
+  />
+) : (
+  <IconNetwork color={blueBright} />
+)}
+
                     </div>
 
                     {/* Title */}
@@ -889,7 +1003,7 @@ export default function page() {
     letterSpacing: darkMode ? "normal" : "-0.01em",
   }}
 >
-  {s.desc}
+  {s.shortDesc}
 </p>
 
                     {/* Tags */}
@@ -939,7 +1053,7 @@ export default function page() {
                     {/* CTA Link */}
 
                     <Link
-                      href={`/services/${s.id}`}
+                      href={`/services/${s.slug}`}
                       className="flex items-center justify-between group"
                       style={{
                         color: darkMode
@@ -973,7 +1087,7 @@ export default function page() {
             })}
           </div>
         </div>
-      </section>
+      </motion.div>
     </div>
   );
 }

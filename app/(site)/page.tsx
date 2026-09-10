@@ -4,6 +4,7 @@ import React, { useEffect } from "react"
 import { useState } from "react"
 import Link from "next/link"
 import { useTheme } from "../../components/ThemeProvider"
+import { motion } from "framer-motion";
 
 const blogPosts = [
   {
@@ -522,6 +523,17 @@ const NetworkDecor = ({
   );
 };
 
+
+
+
+
+
+
+
+
+
+
+
 export default function page() {
   const { darkMode } = useTheme()
   const [menuOpen, setMenuOpen] = useState(false)
@@ -544,6 +556,8 @@ export default function page() {
         color: darkMode ? "#E2E8F0" : "#111827",
       }}
     >
+
+
       {menuOpen && (
         <div
           className="md:hidden flex flex-col gap-4 px-6 py-4"
@@ -575,7 +589,15 @@ export default function page() {
         </div>
       )}
 
-      <section className="relative flex flex-col items-center justify-center text-center px-6 pt-24 pb-0 md:pt-32 md:pb-16">
+      {/* <section className="relative flex flex-col items-center justify-center text-center px-6 pt-24 pb-0 md:pt-32 md:pb-16"> */}
+      <motion.div
+      className="relative flex flex-col items-center justify-center text-center px-6 pt-24 pb-0 md:pt-32 md:pb-16"
+    initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+  viewport={{ once: true, amount: 0.2 }}
+>
+
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -713,7 +735,7 @@ export default function page() {
 
             <Link
               href="/consultation"
-              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-semibold transition-all duration-300"
+              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-semibold transition-all duration-300 px-[60px]"
               style={{
                 background: darkMode
                   ? "rgba(0,229,255,0.07)"
@@ -755,15 +777,29 @@ export default function page() {
                 }
               }}
             >
-              مشاوره رایگان اولیه
+             خدمات ما
             </Link>
           </div>
 
           <div className="scan-line mt-16 w-48 mx-auto opacity-60" />
         </div>
-      </section>
+      </motion.div>
 
-      <section
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      {/* <section
         className="px-6 py-20 md:px-12"
         id="process"
         style={
@@ -775,7 +811,25 @@ export default function page() {
               }
             : undefined
         }
-      >
+      > */}
+
+        <motion.div
+      className="px-6 py-20 md:px-12"
+        id="process"
+        style={
+          !darkMode
+            ? {
+                background: "linear-gradient(180deg, rgba(239,246,255,0.78), rgba(248,250,252,0.52))",
+                borderTop: "1px solid rgba(37,99,235,0.12)",
+                borderBottom: "1px solid rgba(37,99,235,0.12)",
+              }
+            : undefined
+        }
+ initial={{ opacity: 0, y: 60 }}
+whileInView={{ opacity: 1, y: 0 }}
+transition={{ duration: 0.7 }}
+viewport={{ once: true, amount: 0.2 }}
+>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
             <span className="data-label block mb-3">
@@ -934,9 +988,26 @@ export default function page() {
             ))}
           </div>
         </div>
-      </section>
+      </motion.div>
 
-      <section className="px-6 py-20 md:px-12" id="services">
+
+
+
+
+
+
+
+
+      {/* <section className="px-6 py-20 md:px-12" id="services"> */}
+   <motion.div
+     className="px-6 py-20 md:px-12" id="services"
+ initial={{ opacity: 0, y: 60 }}
+whileInView={{ opacity: 1, y: 0 }}
+transition={{ duration: 0.7 }}
+viewport={{ once: true, amount: 0.2 }}
+>
+
+
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
             <span className="data-label block mb-3">
@@ -1105,7 +1176,7 @@ export default function page() {
             ))}
           </div>
         </div>
-      </section>
+  </motion.div>
 
 
 
@@ -1114,7 +1185,7 @@ export default function page() {
 
       
 
-      <section className="py-20 px-6 md:px-12" 
+      {/* <section className="py-20 px-6 md:px-12" 
        style={
           !darkMode
             ? {
@@ -1124,7 +1195,24 @@ export default function page() {
               }
             : undefined
         }
-      >
+      > */}
+<motion.div
+    className="py-20 px-6 md:px-12" 
+       style={
+          !darkMode
+            ? {
+                background: "linear-gradient(180deg, rgba(240, 244, 250, 0.78), rgba(248,250,252,0.52))",
+                borderTop: "1px solid rgba(37,99,235,0.12)",
+                borderBottom: "1px solid rgba(37,99,235,0.12)",
+              }
+            : undefined
+        }
+ initial={{ opacity: 0, y: 60 }}
+whileInView={{ opacity: 1, y: 0 }}
+transition={{ duration: 0.7 }}
+viewport={{ once: true, amount: 0.2 }}
+>
+
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 mb-2 justify-center">
@@ -1336,63 +1424,9 @@ export default function page() {
             ))}
           </div>
 
-          <div className="text-center mt-10">
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-2 px-16 py-2.5 rounded-xl text-xs md:text-sm font-semibold transition-all duration-300"
-              style={{
-                border: darkMode
-                  ? "1px solid rgba(0,229,255,0.3)"
-                  : "1px solid rgba(59,130,246,0.28)",
-                background: darkMode
-                  ? "rgba(0,229,255,0.07)"
-                  : "#FFFFFF",
-                color: darkMode ? "#E2E8F0" : "#111827",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = darkMode
-                  ? "#155e75"
-                  : "#2563EB"
 
-                e.currentTarget.style.background = darkMode
-                  ? "rgba(8,47,73,0.3)"
-                  : "rgba(37,99,235,0.06)"
-
-                e.currentTarget.style.boxShadow = darkMode
-                  ? "none"
-                  : "0 8px 25px rgba(37,99,235,0.10)"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = darkMode
-                  ? "rgba(0,229,255,0.3)"
-                  : "rgba(59,130,246,0.28)"
-
-                e.currentTarget.style.background = darkMode
-                  ? "rgba(0,229,255,0.07)"
-                  : "#FFFFFF"
-
-                e.currentTarget.style.boxShadow = "none"
-              }}
-            >
-              <span>مشاهده همه گزارش‌ها</span>
-
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="19" y1="12" x2="5" y2="12" />
-                <polyline points="12 19 5 12 12 5" />
-              </svg>
-            </Link>
-          </div>
         </div>
-      </section>
+      </motion.div>
     </div>
   )
 }

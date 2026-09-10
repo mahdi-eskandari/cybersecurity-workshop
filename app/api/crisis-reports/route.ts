@@ -65,3 +65,120 @@ export async function POST(req: Request) {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export async function GET() {
+  try {
+    await connectDB();
+
+    const reports = await CrisisReport.find({})
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return NextResponse.json(
+      {
+        reports,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Crisis reports fetch error:", error);
+
+    return NextResponse.json(
+      { message: "خطایی هنگام دریافت پرونده‌ها رخ داد" },
+      { status: 500 }
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export async function PATCH(req: Request) {
+  try {
+    const body = await req.json();
+    const { id, status } = body;
+
+    const allowedStatuses = [
+      "pending",
+      "reviewing",
+      "consulting",
+      "resolved",
+    ];
+
+    if (!id || !status) {
+      return NextResponse.json(
+        { message: "شناسه و وضعیت الزامی است" },
+        { status: 400 }
+      );
+    }
+
+    if (!allowedStatuses.includes(status)) {
+      return NextResponse.json(
+        { message: "وضعیت نامعتبر است" },
+        { status: 400 }
+      );
+    }
+
+    await connectDB();
+
+    const report = await CrisisReport.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    if (!report) {
+      return NextResponse.json(
+        { message: "پرونده پیدا نشد" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        message: "وضعیت پرونده بروزرسانی شد",
+        report,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Crisis report status update error:", error);
+
+    return NextResponse.json(
+      { message: "خطایی هنگام بروزرسانی وضعیت رخ داد" },
+      { status: 500 }
+    );
+  }
+}

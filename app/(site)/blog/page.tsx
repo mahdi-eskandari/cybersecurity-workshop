@@ -1,849 +1,957 @@
-"use client"
-import { useState } from "react";
-import { useTheme } from "../../../components/ThemeProvider"
-import Link from "next/link";
-import {EmergencyModal} from "../../../components/CrisisReportForm"
-
-/* ─── ICONS ─── */
-const IconBlockchain = ({ darkMode = true }: { darkMode?: boolean }) => (
-  <svg width="38" height="38" viewBox="0 0 48 48" fill="none" stroke={darkMode ? "#00E5FF" : "#2563EB"} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="6" y="18" width="10" height="12" rx="2" />
-    <rect x="19" y="6" width="10" height="12" rx="2" />
-    <rect x="19" y="30" width="10" height="12" rx="2" />
-    <rect x="32" y="18" width="10" height="12" rx="2" />
-    <line x1="16" y1="24" x2="19" y2="24" />
-    <line x1="29" y1="24" x2="32" y2="24" />
-    <line x1="24" y1="18" x2="24" y2="18" />
-    <line x1="24" y1="30" x2="24" y2="30" />
-    <path d="M24 18V12" />
-    <path d="M24 36v-6" />
-    <circle cx="24" cy="24" r="2" fill={darkMode ? "rgba(0,229,255,0.4)" : "rgba(37,99,235,0.12)"} stroke={darkMode ? "#00E5FF" : "#2563EB"} strokeWidth="1" />
-  </svg>
-);
-
-const IconTarget = ({ darkMode = true }: { darkMode?: boolean }) => (
-  <svg width="38" height="38" viewBox="0 0 48 48" fill="none" stroke={darkMode ? "#00E5FF" : "#2563EB"} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="24" cy="24" r="18" />
-    <circle cx="24" cy="24" r="11" />
-    <circle cx="24" cy="24" r="4" fill={darkMode ? "rgba(0,229,255,0.25)" : "rgba(37,99,235,0.12)"} />
-    <line x1="24" y1="6" x2="24" y2="13" />
-    <line x1="24" y1="35" x2="24" y2="42" />
-    <line x1="6" y1="24" x2="13" y2="24" />
-    <line x1="35" y1="24" x2="42" y2="24" />
-    <path d="M36 12l-4 4" strokeWidth="1.8" />
-  </svg>
-);
-
-const IconShieldDoc = ({ darkMode = true }: { darkMode?: boolean }) => (
-  <svg width="38" height="38" viewBox="0 0 48 48" fill="none" stroke={darkMode ? "#00E5FF" : "#2563EB"} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M24 4L8 10v14c0 10 7 18.5 16 22 9-3.5 16-12 16-22V10L24 4z" />
-    <path d="M17 25l4 4 10-10" strokeWidth="1.8" />
-    <line x1="20" y1="18" x2="28" y2="18" />
-    <line x1="20" y1="22" x2="26" y2="22" />
-  </svg>
-);
-
-const IconBitcoin = ({ darkMode }: { darkMode: boolean }) => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={darkMode ? "#00E5FF" : "#2563EB"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="10" />
-    <path d="M9 8h4.5a2 2 0 010 4H9v4h5a2 2 0 000-4" />
-    <line x1="12" y1="6" x2="12" y2="8" />
-    <line x1="12" y1="18" x2="12" y2="20" />
-  </svg>
-);
-
-
-const IconLink = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" />
-    <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
-  </svg>
-);
-
-const IconTelegram = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21.5 4.5L2.5 12l7 2.5" />
-    <path d="M9.5 14.5l2.5 5 3-8" />
-    <path d="M9.5 14.5l8-8" />
-  </svg>
-);
-
-const IconMail = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-    <polyline points="22,6 12,13 2,6" />
-  </svg>
-);
-
-const IconWarning = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-    <line x1="12" y1="9" x2="12" y2="13" />
-    <line x1="12" y1="17" x2="12.01" y2="17" />
-  </svg>
-);
-
-const IconArrowLeft = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="19" y1="12" x2="5" y2="12" />
-    <polyline points="12 19 5 12 12 5" />
-  </svg>
-);
-
-const IconClose = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-    <line x1="18" y1="6" x2="6" y2="18" />
-    <line x1="6" y1="6" x2="18" y2="18" />
-  </svg>
-);
-
-const IconCheck = ({ darkMode = true }: { darkMode?: boolean }) => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={darkMode ? "#00E5FF" : "#2563EB"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="20 6 9 17 4 12" />
-  </svg>
-);
-
-/* ─── DECORATIVE: flowing blockchain path ─── */
-const BlockchainHeroArt = ({
-  darkMode = true,
-}: {
-  darkMode?: boolean;
-}) => (
-  <svg
-    width="100%"
-    height="220"
-    viewBox="0 0 900 220"
-    preserveAspectRatio="xMidYMid meet"
-    className="w-full"
-    style={{ opacity: 0.22 }}
-  >
-    <defs>
-      <filter id="glow">
-        <feGaussianBlur stdDeviation="3" result="blur" />
-        <feMerge>
-          <feMergeNode in="blur" />
-          <feMergeNode in="SourceGraphic" />
-        </feMerge>
-      </filter>
-    </defs>
-
-    {/* Horizontal chain path */}
-    <path
-      d="M0 110 Q100 60 180 110 Q260 160 340 110 Q420 60 500 110 Q580 160 660 110 Q740 60 820 110 Q860 135 900 110"
-      stroke={
-        darkMode
-          ? "rgba(0,229,255,0.5)"
-          : "rgba(37,99,235,0.38)"
-      }
-      strokeWidth="1"
-      fill="none"
-      filter="url(#glow)"
-    />
-
-    {/* Block nodes on path */}
-    {[90, 260, 430, 600, 770].map((x, i) => (
-      <g key={i}>
-        <rect
-          x={x - 18}
-          y={88}
-          width="36"
-          height="44"
-          rx="4"
-          fill={
-            darkMode
-              ? "rgba(0,229,255,0.06)"
-              : "rgba(37,99,235,0.045)"
-          }
-          stroke={
-            darkMode
-              ? "rgba(0,229,255,0.4)"
-              : "rgba(37,99,235,0.32)"
-          }
-          strokeWidth="1"
-        />
-
-        <rect
-          x={x - 10}
-          y={97}
-          width="20"
-          height="3"
-          rx="1"
-          fill={
-            darkMode
-              ? "rgba(0,229,255,0.3)"
-              : "rgba(37,99,235,0.25)"
-          }
-        />
-
-        <rect
-          x={x - 10}
-          y={104}
-          width="14"
-          height="3"
-          rx="1"
-          fill={
-            darkMode
-              ? "rgba(0,229,255,0.2)"
-              : "rgba(37,99,235,0.18)"
-          }
-        />
-
-        <rect
-          x={x - 10}
-          y={111}
-          width="17"
-          height="3"
-          rx="1"
-          fill={
-            darkMode
-              ? "rgba(0,229,255,0.2)"
-              : "rgba(37,99,235,0.18)"
-          }
-        />
-
-        <rect
-          x={x - 10}
-          y={118}
-          width="10"
-          height="3"
-          rx="1"
-          fill={
-            darkMode
-              ? "rgba(0,229,255,0.15)"
-              : "rgba(37,99,235,0.14)"
-          }
-        />
-
-        <circle
-          cx={x}
-          cy={88}
-          r="3"
-          fill={darkMode ? "#00E5FF" : "#2563EB"}
-          filter="url(#glow)"
-        />
-      </g>
-    ))}
-
-    {/* Secondary chain – lower opacity */}
-    <path
-      d="M0 170 Q80 140 160 170 Q240 200 320 165 Q400 130 480 170 Q560 210 640 170 Q720 130 800 165 Q860 182 900 165"
-      stroke={
-        darkMode
-          ? "rgba(0,229,255,0.15)"
-          : "rgba(37,99,235,0.14)"
-      }
-      strokeWidth="1"
-      fill="none"
-    />
-
-    {/* Vertical connectors at random points */}
-    {[170, 410, 650].map((x, i) => (
-      <line
-        key={i}
-        x1={x}
-        y1={80}
-        x2={x}
-        y2={50}
-        stroke={
-          darkMode
-            ? "rgba(0,229,255,0.2)"
-            : "rgba(37,99,235,0.18)"
-        }
-        strokeWidth="1"
-        strokeDasharray="3 3"
-      />
-    ))}
-
-    {[170, 410, 650].map((x, i) => (
-      <circle
-        key={i}
-        cx={x}
-        cy={46}
-        r="3"
-        fill={
-          darkMode
-            ? "rgba(0,229,255,0.35)"
-            : "rgba(37,99,235,0.25)"
-        }
-        stroke={
-          darkMode
-            ? "rgba(0,229,255,0.5)"
-            : "rgba(37,99,235,0.32)"
-        }
-        strokeWidth="1"
-      />
-    ))}
-  </svg>
-);
-
-
-
-/* ─── APP ─── */
-export default function App() {
-  const [modalOpen, setModalOpen] = useState(false);
-    const { darkMode } = useTheme()
-    const [crisisOpen, setCrisisOpen] = useState(false);
-  
-  
-
-  const openModal = () => setModalOpen(true);
-  const closeModal = () => setModalOpen(false);
-
-  return (
-    <div className="min-h-full cyber-grid-bg" style={{ background: darkMode ? "#0A1128" : "#FFFFFF", color: darkMode ? "#E2E8F0" : "#111827" }}>
-
-
-
-      {/* ─── SERVICE HERO ─── */}
-      <section className="relative flex flex-col items-center text-center px-6 pt-20 pb-10 md:pt-28 md:pb-14 overflow-hidden">
-        {/* Radial glow */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: darkMode ? "radial-gradient(ellipse 70% 55% at 50% 40%, rgba(0,229,255,0.07) 0%, transparent 70%)" : "radial-gradient(ellipse 70% 55% at 50% 40%, rgba(37,99,235,0.025) 0%, transparent 70%)" }}
-        />
-
-        <div className="relative z-10 max-w-3xl mx-auto">
-          {/* Eyebrow */}
-          <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 text-xs font-semibold"
-            style={{ background: darkMode ? "rgba(0,229,255,0.07)" : "#F8FAFC", border: darkMode ? "1px solid rgba(0,229,255,0.2)" : "1px solid #a4b2d8", color: darkMode ? "#00E5FF" : "#1D4ED8" }}
-          >
-            <IconBitcoin darkMode={darkMode} />
-            دپارتمان ردیابی مالی و بلاک‌چین
-          </div>
-
-          {/* H1 */}
-          <h1
-            className="font-black leading-snug mb-5"
-            style={{
-              fontSize: "clamp(1.8rem, 4.5vw, 3.2rem)",
-              color: "#fff",
-              textShadow: "0 0 50px rgba(0,229,255,0.15), 0 0 100px rgba(0,229,255,0.05)",
-              lineHeight: 1.35,
-            }}
-          >
-           <span className="text-black dark:text-[#fff]">ردیابی رمزارزهای سرقت‌شده</span> <br /> <span className="text-black dark:text-[#fff]">و </span>
-             <span style={{ color: darkMode ? "#00E5FF" : "#1D4ED8" }}>کلاهبرداری‌های پانزی</span>
-          </h1>
-
-          {/* Sub-headline */}
-          <p
-            className="max-w-2xl mx-auto mb-8 leading-relaxed"
-            style={{ color: "#94A3B8", fontSize: "clamp(0.9rem, 1.8vw, 1.05rem)", fontWeight: 400 }}
-          >
-            مجرمان سایبری فکر می‌کنند تراکنش‌های کریپتو غیرقابل رهگیری است. ما با استفاده از پیشرفته‌ترین ابزارهای آن‌چین (On-chain)، تتر و بیت‌کوینِ سرقتی شما را تا صرافی نهایی ردیابی می‌کنیم.
-          </p>
-
-          {/* Primary CTA */}
-          <Link
-              href="mailto:secure@parahoor.io"
-              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold transition-all duration-300 mb-4"
-              style={{
-                background: darkMode ? "#EF4444" : "#2563EB",
-                color: "#ffffff",
-                border: darkMode
-                  ? "1px solid rgba(239, 68, 68, 0.6)"
-                  : "1px solid rgba(37,99,235,0.6)",
-                boxShadow: darkMode
-                  ? "0 0 15px rgba(239,68,68,0.35)"
-                  : "0 0 15px rgba(37,99,235,0.18)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = darkMode
-                  ? "0 0 22px rgba(239,68,68,0.55)"
-                  : "0 0 22px rgba(37,99,235,0.28)"
-
-                if (!darkMode) {
-                  e.currentTarget.style.background = "#3B82F6"
-                  e.currentTarget.style.borderColor = "#3B82F6"
-                }
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = darkMode
-                  ? "0 0 15px rgba(239,68,68,0.35)"
-                  : "0 0 15px rgba(37,99,235,0.18)"
-
-                if (!darkMode) {
-                  e.currentTarget.style.background = "#2563EB"
-                  e.currentTarget.style.borderColor = "rgba(37,99,235,0.6)"
-                }
-              }}
-            >
-            <IconWarning />
- درخواست ردیابی فوری     
-        </Link>
-
-
-          {/* Trust micro-signals */}
-          <div className="flex flex-wrap items-center justify-center gap-4 mt-2">
-            {[
-              "پاسخ اولیه در کمتر از ۲ ساعت",
-              "رازداری کامل پرونده",
-              "گزارش دادگاه‌پسند",
-            ].map((item) => (
-              <div key={item} className="flex items-center gap-1.5">
-                <IconCheck darkMode={darkMode} />
-                <span style={{ color: "#475569", fontSize: "0.78rem" }}>{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Blockchain art */}
-<div className="relative z-10 w-full max-w-4xl mt-10 -mb-4">
-  <BlockchainHeroArt darkMode={darkMode} />
-</div> 
-      </section>
-
-
-
-      {/* ─── PAIN POINT BANNER ─── */}
-      <section
-        className="px-6 py-16 md:px-12"
-        style={{ background: darkMode ? "#060B19" : "#F4F8FF", borderBottom: darkMode ? "1px solid rgba(0,229,255,0.07)" : "1px solid rgba(37,99,235,0.08)" }}
-      >
-        <div className="max-w-3xl mx-auto">
-          {/* Warning badge */}
-          <div
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-6 text-xs font-semibold"
-            style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)", color: "#EF4444" }}
-          >
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#EF4444", display: "inline-block", boxShadow: "0 0 6px #EF4444" }} />
-            هشدار بحرانی
-          </div>
-
-          <h3
-            className="font-bold mb-4"
-            style={{ fontSize: "clamp(1.3rem, 2.8vw, 1.9rem)", color: darkMode ? "#fff" : "#111827", lineHeight: 1.4 }}
-          >
-            زمان به ضرر شماست...
-          </h3>
-
-          <p style={{ color: "#64748B", fontSize: "clamp(0.88rem, 1.6vw, 1rem)", lineHeight: 1.9 }}>
-            در جرایم رمزارزی، سرعت عمل حیاتی است. هرچه سریع‌تر گزارش دهید، احتمال مسدودسازی دارایی در صرافی‌های متمرکز (CEX) بیشتر است. اکثر صرافی‌های بین‌المللی با گزارش فنی معتبر، دارایی‌های مشکوک را فریز می‌کنند — اما این فرآیند زمان‌بر است و ردپاها محو می‌شوند.
-          </p>
-
-        </div>
-      </section>
-
-      {/* ─── HOW WE TRACK ─── */}
-      <section className="px-6 py-20 md:px-12">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-14">
-            <span
-              style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.65rem", color: darkMode ? "rgba(0,229,255,0.45)" : "#1D4ED8", letterSpacing: "0.18em", textTransform: "uppercase" }}
-              className="block mb-3"
-            >
-              INVESTIGATION PIPELINE
-            </span>
-            <h2
-              className="font-bold"
-              style={{ fontSize: "clamp(1.3rem, 2.8vw, 2rem)", color: darkMode ? "#fff" : "#111827" }}
-            >
-              مراحل کشف و ردیابی پاراهور
-            </h2>
-            <div
-              className="mt-4 mx-auto"
-              style={{ height: 1, width: 80, background: darkMode ? "linear-gradient(90deg,transparent,rgba(0,229,255,0.5),transparent)" : "linear-gradient(90deg,transparent,rgba(37,99,235,0.28),transparent)" }}
-            />
-          </div>
-
-          {/* 3 vertical cards */}
-          <div className="flex flex-col gap-5">
-
-            {/* Card 1 */}
-            <div
-              className="glass-card p-7 flex items-start gap-6 group transition-all duration-300 border border-cyan-500/30 hover:border-cyan-500 bg-cyan-900/10 hover:bg-cyan-800/15 rounded-2xl"
-              style={{ textAlign: "right", background: darkMode ? undefined : "#FFFFFF", borderColor: darkMode ? undefined : "rgba(37,99,235,0.16)", boxShadow: darkMode ? undefined : "0 8px 28px rgba(37,99,235,0.06)" }}
-              onMouseEnter={(e) => { if (!darkMode) { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 14px 34px rgba(37,99,235,0.10)"; e.currentTarget.style.borderColor = "rgba(37,99,235,0.28)"; } }}
-              onMouseLeave={(e) => { if (!darkMode) { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 8px 28px rgba(37,99,235,0.06)"; e.currentTarget.style.borderColor = "rgba(37,99,235,0.16)"; } }}
-            >
-              <div
-                className="flex-shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center"
-                style={{ background: darkMode ? "rgba(0,229,255,0.06)" : "#EFF6FF", border: darkMode ? "1px solid rgba(0,229,255,0.2)" : "1px solid rgba(37,99,235,0.16)" }}
-              >
-                <IconBlockchain darkMode={darkMode} />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <span
-                    style={{ fontFamily: "monospace", fontSize: "0.65rem", color: darkMode ? "rgba(0,229,255,0.4)" : "#1D4ED8", letterSpacing: "0.12em" }}
-                  >
-                    STEP 01
-                  </span>
-                  <div style={{ flex: 1, height: 1, background: darkMode ? "rgba(0,229,255,0.08)" : "rgba(37,99,235,0.12)" }} />
-                </div>
-                <h3 className="font-bold mb-2" style={{ color: darkMode ? "#fff" : "#111827", fontSize: "1.05rem" }}>
-                  آنالیز گره‌ها و میکسرها
-                </h3>
-                <p style={{ color: "#64748B", fontSize: "0.85rem", lineHeight: 1.8 }}>
-                  تحلیل مسیر پول حتی در صورت استفاده مجرم از ابزارهای مخفی‌کننده هویت مانند Tornado Cash، میکسرهای بیت‌کوین، و پروتکل‌های CoinJoin. ردیابی آن‌چین (On-chain) در بلاک‌چین‌های اتریوم، ترون، و بیت‌کوین.
-                </p>
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {["Chainalysis", "TRM Labs", "Crystal Blockchain"].map((tool) => (
-                    <span
-                      key={tool}
-                      className="px-2.5 py-0.5 rounded text-xs"
-                      style={{ background: darkMode ? "rgba(0,229,255,0.06)" : "#F1F5FF", border: darkMode ? "1px solid rgba(0,229,255,0.12)" : "1px solid rgba(37,99,235,0.14)", color: darkMode ? "#00e5ff80" : "#1E3A8A", fontFamily: "monospace", fontWeight: 700 }}
-                    >
-                      {tool}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Connector */}
-            <div className="flex items-center justify-center -my-1" style={{ opacity: 1 }}>
-              <div style={{ height: 24, width: 1, background: darkMode ? "linear-gradient(1270deg, rgba(0,229,255,0.1), rgb(0, 229, 255))" : "linear-gradient(180deg, rgba(37,99,235,0.16), rgba(37,99,235,0.58))", marginRight: "auto", marginLeft: "auto" }} />
-            </div>
-
-            {/* Card 2 */}
-            <div
-              className="glass-card p-7 flex items-start gap-6 group transition-all duration-300 border border-cyan-500/30 hover:border-cyan-500 bg-cyan-900/10 hover:bg-cyan-800/15 rounded-2xl"
-              style={{ textAlign: "right", background: darkMode ? undefined : "#FFFFFF", borderColor: darkMode ? undefined : "rgba(37,99,235,0.16)", boxShadow: darkMode ? undefined : "0 8px 28px rgba(37,99,235,0.06)" }}
-              onMouseEnter={(e) => { if (!darkMode) { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 14px 34px rgba(37,99,235,0.10)"; e.currentTarget.style.borderColor = "rgba(37,99,235,0.28)"; } }}
-              onMouseLeave={(e) => { if (!darkMode) { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 8px 28px rgba(37,99,235,0.06)"; e.currentTarget.style.borderColor = "rgba(37,99,235,0.16)"; } }}
-            >
-              <div
-                className="flex-shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center"
-                style={{ background: darkMode ? "rgba(0,229,255,0.06)" : "#EFF6FF", border: darkMode ? "1px solid rgba(0,229,255,0.2)" : "1px solid rgba(37,99,235,0.16)" }}
-              >
-                <IconTarget darkMode={darkMode} />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <span style={{ fontFamily: "monospace", fontSize: "0.65rem", color: darkMode ? "rgba(0,229,255,0.4)" : "#1D4ED8", letterSpacing: "0.12em" }}>
-                    STEP 02
-                  </span>
-                  <div style={{ flex: 1, height: 1, background: darkMode ? "rgba(0,229,255,0.08)" : "rgba(37,99,235,0.12)" }} />
-                </div>
-                <h3 className="font-bold mb-2" style={{ color: darkMode ? "#fff" : "#111827", fontSize: "1.05rem" }}>
-                  شناسایی نقطه خروج (Off-ramp)
-                </h3>
-                <p style={{ color: "#64748B", fontSize: "0.85rem", lineHeight: 1.8 }}>
-                  پیدا کردن صرافی یا کیفی که مجرم برای نقد کردن رمزارز استفاده کرده است. در بسیاری از موارد، صرافی‌های متمرکز (Binance، Bybit، OKX) نقطه خروج نهایی هستند و با گزارش فنی پاراهور می‌توان درخواست فریز حساب داد.
-                </p>
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {["Binance", "Bybit", "OKX", "KuCoin", "Huobi"].map((ex) => (
-                    <span
-                      key={ex}
-                      className="px-2.5 py-0.5 rounded text-xs"
-                      style={{ background: darkMode ? "rgba(0,229,255,0.06)" : "#F1F5FF", border: darkMode ? "1px solid rgba(0,229,255,0.12)" : "1px solid rgba(37,99,235,0.14)", color: darkMode ? "rgba(0,229,255,0.5)" : "#1E3A8A", fontFamily: "monospace", fontWeight: 700 }}
-                    >
-                      {ex}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Connector */}
-            <div className="flex items-center justify-center -my-1" style={{ opacity: 1 }}>
-              <div style={{ height: 24, width: 1, background: darkMode ? "linear-gradient(1270deg, rgba(0,229,255,0.1), rgb(0, 229, 255))" : "linear-gradient(180deg, rgba(37,99,235,0.16), rgba(37,99,235,0.58))", marginRight: "auto", marginLeft: "auto" }} />
-            </div>
-
-            {/* Card 3 */}
-            <div
-              className="glass-card p-7 flex items-start gap-6 group transition-all duration-300 border border-cyan-500/30 hover:border-cyan-500 bg-cyan-900/10 hover:bg-cyan-800/15 rounded-2xl"
-              style={{ textAlign: "right", background: darkMode ? undefined : "#FFFFFF", borderColor: darkMode ? undefined : "rgba(37,99,235,0.16)", boxShadow: darkMode ? undefined : "0 8px 28px rgba(37,99,235,0.06)" }}
-              onMouseEnter={(e) => { if (!darkMode) { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 14px 34px rgba(37,99,235,0.10)"; e.currentTarget.style.borderColor = "rgba(37,99,235,0.28)"; } }}
-              onMouseLeave={(e) => { if (!darkMode) { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 8px 28px rgba(37,99,235,0.06)"; e.currentTarget.style.borderColor = "rgba(37,99,235,0.16)"; } }}
-            >
-              <div
-                className="flex-shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center"
-                style={{ background: darkMode ? "rgba(0,229,255,0.06)" : "#EFF6FF", border: darkMode ? "1px solid rgba(0,229,255,0.2)" : "1px solid rgba(37,99,235,0.16)" }}
-              >
-                <IconShieldDoc darkMode={darkMode} />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <span style={{ fontFamily: "monospace", fontSize: "0.65rem", color: darkMode ? "rgba(0,229,255,0.4)" : "#1D4ED8", letterSpacing: "0.12em" }}>
-                    STEP 03
-                  </span>
-                  <div style={{ flex: 1, height: 1, background: darkMode ? "rgba(0,229,255,0.08)" : "rgba(37,99,235,0.12)" }} />
-                </div>
-                <h3 className="font-bold mb-2" style={{ color: darkMode ? "#fff" : "#111827", fontSize: "1.05rem" }}>
-                  گزارش فنی و مستندسازی
-                </h3>
-                <p style={{ color: "#64748B", fontSize: "0.85rem", lineHeight: 1.8 }}>
-                  ارائه ادله کاملاً فنی و دقیق برای پیگیری در مراجع قضایی بین‌المللی و داخلی. گزارش شامل نمودار جریان تراکنش، هش بلاک‌ها، تایم‌استمپ‌ها، و تمام زنجیره حضانت دیجیتال (Chain of Custody) می‌شود.
-                </p>
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {["Chain of Custody", "INTERPOL Compatible", "Court Ready"].map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-2.5 py-0.5 rounded text-xs"
-                      style={{ background: darkMode ? "rgba(0,229,255,0.06)" : "#F1F5FF", border: darkMode ? "1px solid rgba(0,229,255,0.12)" : "1px solid rgba(37,99,235,0.14)", color: darkMode ? "rgba(0,229,255,0.5)" : "#1E3A8A", fontFamily: "monospace", fontWeight: 700 }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-    {/* ─── STATS BAND ─── */}
-<div
-  className="px-6 py-12 md:px-12"
-  style={{
-    background: darkMode ? "rgba(0,229,255,0.025)" : "#F4F8FF",
-    borderTop: darkMode
-      ? "1px solid rgba(0,229,255,0.07)"
-      : "1px solid rgba(37,99,235,0.08)",
-    borderBottom: darkMode
-      ? "1px solid rgba(0,229,255,0.07)"
-      : "1px solid rgba(37,99,235,0.08)",
-  }}
->
-  <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-    {[
-      {
-        value: "+۳۰۰",
-        label: "پرونده بسته‌شده",
-      },
-      {
-        value: "۴.۵",
-        unit: "M$",
-        label: "دارایی ردیابی‌شده",
-      },
-      {
-        value: "۱۴",
-        label: "شبکه بلاک‌چین پشتیبانی",
-      },
-      {
-        value: "۲",
-        unit: "h",
-        label: "میانگین پاسخ اولیه",
-      },
-    ].map(({ value, unit, label }) => (
-      <div key={label}>
-        <div
-          className="font-black mb-1"
-          style={{
-            fontSize: "clamp(1.75rem, 3.8vw, 2.55rem)",
-            color: darkMode ? "#00E5FF" : "#1D4ED8",
-
-            // یک فونت ثابت و تمیز در هر دو مود
-            fontFamily:
-              "Inter, Vazirmatn, IRANSansX, Arial, sans-serif",
-
-            fontWeight: 800,
-
-            // فاصله حروف کمی فشرده ولی نه بیش از حد
-            letterSpacing: "-0.025em",
-
-            // اعداد مرتب و هم‌عرض
-            fontVariantNumeric: "tabular-nums lining-nums",
-            fontFeatureSettings: '"tnum" 1, "lnum" 1',
-
-            lineHeight: 1.05,
-
-            // جلوگیری از به‌هم‌ریختن ترکیب فارسی و لاتین
-            direction: "ltr",
-            unicodeBidi: "isolate",
-
-            // ظاهر نرم‌تر
-            WebkitFontSmoothing: "antialiased",
-            MozOsxFontSmoothing: "grayscale",
-          }}
-        >
-          <span
-            style={{
-              display: "inline-block",
-              verticalAlign: "baseline",
-            }}
-          >
-            {value}
-          </span>
-
-         {unit && (
-  <span
-    style={{
-      display: "inline-block",
-      marginRight: "0.08em",
-      marginLeft: "0.08em",
-      fontSize: "1em",
-      fontWeight: 700,
-      letterSpacing: "-0.025em",
-      opacity: 0.95,
-      verticalAlign: "baseline",
-    }}
-  >
-    {unit}
-  </span>
-)}
-        </div>
-
-        <div
-          style={{
-            color: darkMode ? "#94A3B8" : "#334155",
-            fontSize: "0.78rem",
-            fontWeight: 600,
-            lineHeight: 1.7,
-          }}
-        >
-          {label}
-        </div>
-      </div>
-    ))}
-  </div>
-</div>
-
-      {/* ─── BOTTOM CONVERSION AREA ─── */}
-      <section className="px-6 py-20 md:px-12">
-        <div className="max-w-2xl mx-auto">
-          <div
-            className="relative p-8 md:p-12 rounded-2xl text-center overflow-hidden"
-            style={{
-              background: darkMode ? "rgba(255,255,255,0.03)" : "#FFFFFF",
-              border: darkMode ? "1px solid rgba(0,229,255,0.18)" : "1px solid rgba(37,99,235,0.16)",
-              boxShadow: darkMode ? "0 0 60px rgba(0,229,255,0.06), 0 0 120px rgba(0,229,255,0.03), inset 0 0 60px rgba(0,229,255,0.02)" : "0 12px 40px rgba(37,99,235,0.07)",
-            }}
-          >
-            {/* Corner accents */}
-            <div style={{ position: "absolute", top: 0, right: 0, width: 60, height: 60, borderTop: "2px solid rgba(0,229,255,0.3)", borderRight: "2px solid rgba(0,229,255,0.3)", borderRadius: "0 16px 0 0" }} />
-            <div style={{ position: "absolute", bottom: 0, left: 0, width: 60, height: 60, borderBottom: "2px solid rgba(0,229,255,0.3)", borderLeft: "2px solid rgba(0,229,255,0.3)", borderRadius: "0 0 0 16px" }} />
-
-            <span
-              style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.62rem", color: darkMode ? "rgba(0,229,255,0.45)" : "#1D4ED8", letterSpacing: "0.2em", textTransform: "uppercase" }}
-              className="block mb-4"
-            >
-              FREE INITIAL ASSESSMENT
-            </span>
-
-            <h2
-              className="font-bold mb-4"
-              style={{ fontSize: "clamp(1.15rem, 2.5vw, 1.6rem)", color: darkMode ? "#fff" : "#111827", lineHeight: 1.5 }}
-            >
-              همین الان پرونده خود را<br />برای بررسی اولیه ارسال کنید.
-            </h2>
-
-            <p className="mb-8" style={{ color: "#606d7f", fontSize: "0.88rem", lineHeight: 1.8 }}>
-              تیم فنی پاراهور پرونده شما را بدون هزینه ارزیابی اولیه می‌کند و امکان‌سنجی ردیابی را به شما اعلام می‌نماید.
-            </p>
-
-            <Link
-             onClick={() => setCrisisOpen(true)}
-              href="mailto:secure@parahoor.io"
-              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold transition-all duration-300"
-              style={{
-                background: darkMode ? "#EF4444" : "#2563EB",
-                color: "#ffffff",
-                border: darkMode
-                  ? "1px solid rgba(239, 68, 68, 0.6)"
-                  : "1px solid rgba(37,99,235,0.6)",
-                boxShadow: darkMode
-                  ? "0 0 15px rgba(239,68,68,0.35)"
-                  : "0 0 15px rgba(37,99,235,0.18)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = darkMode
-                  ? "0 0 22px rgba(239,68,68,0.55)"
-                  : "0 0 22px rgba(37,99,235,0.28)"
-
-                if (!darkMode) {
-                  e.currentTarget.style.background = "#3B82F6"
-                  e.currentTarget.style.borderColor = "#3B82F6"
-                }
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = darkMode
-                  ? "0 0 15px rgba(239,68,68,0.35)"
-                  : "0 0 15px rgba(37,99,235,0.18)"
-
-                if (!darkMode) {
-                  e.currentTarget.style.background = "#2563EB"
-                  e.currentTarget.style.borderColor = "rgba(37,99,235,0.6)"
-                }
-              }}
-            >
-              تکمیل فرم گزارش بحران
-              <IconLink />
-            </Link>
-
-            {/* Modal */}
-      {crisisOpen && (
-        <EmergencyModal
-          onClose={() => setCrisisOpen(false)}
-        />
-      )}
-
-
-            <p className="mt-4 text-xs" style={{ color: "#606d7f" }}>
-              بدون تعهد مالی • کاملاً محرمانه • پاسخ در کمتر از ۲ ساعت
-            </p>
-          </div>
-        </div>
-      </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    </div>
-  );
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import {
+  Search as SearchIcon,
+  Clock,
+  ChevronLeft,
+  ChevronRight,
+  BookOpen,
+} from "lucide-react";
+import { useTheme } from "../../../components/ThemeProvider";
+
+// ── types & data ──────────────────────────────────────────────────────────────
+
+interface Article {
+  id: number;
+  img: string;
+  date: string;
+  readTime: string;
+  category: string;
+  title: string;
+  excerpt: string;
+  author: string;
+  initials: string;
+  avatarColor: string;
+}
+
+const CATEGORIES = [
+  { id: "همه", label: "همه مطالب" },
+  { id: "تهدیدات سایبری", label: "تهدیدات سایبری" },
+  { id: "اخبار حقوقی", label: "اخبار حقوقی" },
+  {
+    id: "گزارش‌های جرم‌شناسی",
+    label: "گزارش‌های جرم‌شناسی",
+  },
+  { id: "هشدارهای امنیتی", label: "هشدارهای امنیتی" },
+];
+
+const FEATURED: Article = {
+  id: 0,
+  img: "1550751827-4bd374c3f58b",
+  date: "۱۵ تیر ۱۴۰۳",
+  readTime: "۱۲ دقیقه",
+  category: "گزارش‌های جرم‌شناسی",
+  title:
+    "افشای شبکه باج‌افزاری بین‌المللی: گزارش اختصاصی تیم پاراهور",
+  excerpt:
+    "تیم جرم‌شناسی دیجیتال پاراهور موفق به کشف و مستندسازی یک شبکه باج‌افزاری بین‌المللی شد که در طول ۱۸ ماه بیش از ۲۰۰ سازمان ایرانی را هدف قرار داده بود. این گزارش جامع، روش‌های نفوذ، الگوهای حرکت جانبی در شبکه و ساختار مالی این گروه را برای اولین بار به‌طور کامل افشا می‌کند.",
+  author: "دکتر سارا احمدی",
+  initials: "سا",
+  avatarColor: "bg-blue-100 text-[#1565C0]",
+};
+
+const ARTICLES: Article[] = [
+  {
+    id: 1,
+    img: "1563986768609-322da13575f3",
+    date: "۱۲ تیر ۱۴۰۳",
+    readTime: "۷ دقیقه",
+    category: "تهدیدات سایبری",
+    title:
+      "حمله زنجیره تأمین: چگونه نرم‌افزارهای معتبر به ابزار هک تبدیل می‌شوند",
+    excerpt:
+      "بررسی جامع آخرین موج حملات زنجیره تأمین که کتابخانه‌های معتبر NPM را هدف قرار داده و هزاران سیستم را به خطر انداخته است.",
+    author: "مهندس علی رضایی",
+    initials: "عر",
+    avatarColor: "bg-red-100 text-red-700",
+  },
+  {
+    id: 2,
+    img: "1461749280684-dccba630e2f6",
+    date: "۱۰ تیر ۱۴۰۳",
+    readTime: "۵ دقیقه",
+    category: "اخبار حقوقی",
+    title:
+      "تصویب قانون حمایت از داده‌های شخصی: آنچه کسب‌وکارها باید بدانند",
+    excerpt:
+      "با تصویب اخیر قانون حمایت از داده‌های شخصی، سازمان‌ها ملزم به رعایت الزامات جدید در خصوص جمع‌آوری، پردازش و نگهداری داده هستند.",
+    author: "دکتر فاطمه کریمی",
+    initials: "فک",
+    avatarColor: "bg-indigo-100 text-indigo-700",
+  },
+  {
+    id: 3,
+    img: "1518770660439-4636190af475",
+    date: "۸ تیر ۱۴۰۳",
+    readTime: "۹ دقیقه",
+    category: "گزارش‌های جرم‌شناسی",
+    title:
+      "تحلیل متادیتای تصاویر در پرونده‌های سایبری: روش‌شناسی و ابزارها",
+    excerpt:
+      "راهنمای فنی جامع برای استخراج و تحلیل متادیتای EXIF در تحقیقات جرم‌شناسی دیجیتال با معرفی ابزارهای پیشرفته مورد استفاده تیم پاراهور.",
+    author: "مهندس حسین نوری",
+    initials: "حن",
+    avatarColor: "bg-blue-100 text-[#1565C0]",
+  },
+  {
+    id: 4,
+    img: "1526374965328-7f61d4dc18c5",
+    date: "۵ تیر ۱۴۰۳",
+    readTime: "۶ دقیقه",
+    category: "هشدارهای امنیتی",
+    title:
+      "موج جدید فیشینگ هدفمند: آیا ایمیل سازمان شما در خطر است؟",
+    excerpt:
+      "رادار پاراهور افزایش چشمگیر حملات spear-phishing علیه مدیران ارشد سازمان‌های مالی را شناسایی کرده است. بلافاصله بررسی کنید.",
+    author: "دکتر سارا احمدی",
+    initials: "سا",
+    avatarColor: "bg-blue-100 text-[#1565C0]",
+  },
+  {
+    id: 5,
+    img: "1555949963-ff9fe0c870eb",
+    date: "۳ تیر ۱۴۰۳",
+    readTime: "۸ دقیقه",
+    category: "تهدیدات سایبری",
+    title:
+      "جاسوس‌افزارهای تجاری و نقض حریم خصوصی: وضعیت بازار ۱۴۰۳",
+    excerpt:
+      "تحلیل جامع از بازار جهانی جاسوس‌افزارهای تجاری و نحوه استفاده مجرمانه از آن‌ها برای نظارت غیرقانونی بر افراد و مدیران.",
+    author: "مهندس علی رضایی",
+    initials: "عر",
+    avatarColor: "bg-red-100 text-red-700",
+  },
+  {
+    id: 6,
+    img: "1589829545856-d10d557cf95f",
+    date: "۱ تیر ۱۴۰۳",
+    readTime: "۴ دقیقه",
+    category: "اخبار حقوقی",
+    title:
+      "رأی دیوان عالی: مسئولیت پلتفرم‌ها در قبال کلاهبرداری دیجیتال",
+    excerpt:
+      "دیوان عالی در رأیی تاریخی، پلتفرم‌های آنلاین را در قبال خسارات ناشی از کلاهبرداری‌های تسهیل‌شده در بستر خود مسئول شناخت.",
+    author: "دکتر فاطمه کریمی",
+    initials: "فک",
+    avatarColor: "bg-indigo-100 text-indigo-700",
+  },
+  {
+    id: 7,
+    img: "1504384308090-c894fdcc538e",
+    date: "۲۸ خرداد ۱۴۰۳",
+    readTime: "۱۰ دقیقه",
+    category: "گزارش‌های جرم‌شناسی",
+    title:
+      "بازیابی شواهد از دستگاه‌های رمزگذاری‌شده: چالش‌ها و راهکارها",
+    excerpt:
+      "گزارش فنی از تجربه تیم پاراهور در بازیابی شواهد دیجیتال از دستگاه‌های کاملاً رمزگذاری‌شده در ۱۴ پرونده قضایی اخیر.",
+    author: "مهندس حسین نوری",
+    initials: "حن",
+    avatarColor: "bg-blue-100 text-[#1565C0]",
+  },
+  {
+    id: 8,
+    img: "1558618666-fcd25c85cd64",
+    date: "۲۵ خرداد ۱۴۰۳",
+    readTime: "۶ دقیقه",
+    category: "هشدارهای امنیتی",
+    title:
+      "کلاهبرداری‌های ارز دیجیتال: ۵ الگوی شایع که باید بشناسید",
+    excerpt:
+      "معرفی و تحلیل رایج‌ترین روش‌های کلاهبرداری در بازار ارزهای دیجیتال به همراه راهنمای عملی تشخیص و پیشگیری از قربانی شدن.",
+    author: "دکتر سارا احمدی",
+    initials: "سا",
+    avatarColor: "bg-blue-100 text-[#1565C0]",
+  },
+  {
+    id: 9,
+    img: "1516321318423-f06f85e504b3",
+    date: "۲۲ خرداد ۱۴۰۳",
+    readTime: "۷ دقیقه",
+    category: "تهدیدات سایبری",
+    title:
+      "مهندسی اجتماعی پیشرفته: هوش مصنوعی در خدمت کلاهبرداران",
+    excerpt:
+      "بررسی روش‌های نوین مهندسی اجتماعی مبتنی بر هوش مصنوعی که حتی متخصصان امنیتی با سابقه را نیز به اشتباه می‌اندازند.",
+    author: "مهندس علی رضایی",
+    initials: "عر",
+    avatarColor: "bg-red-100 text-red-700",
+  },
+   {
+    id: 10,
+    img: "1563986768609-322da13575f3",
+    date: "۱۲ تیر ۱۴۰۳",
+    readTime: "۷ دقیقه",
+    category: "تهدیدات سایبری",
+    title:
+      "حمله زنجیره تأمین: چگونه نرم‌افزارهای معتبر به ابزار هک تبدیل می‌شوند",
+    excerpt:
+      "بررسی جامع آخرین موج حملات زنجیره تأمین که کتابخانه‌های معتبر NPM را هدف قرار داده و هزاران سیستم را به خطر انداخته است.",
+    author: "مهندس علی رضایی",
+    initials: "عر",
+    avatarColor: "bg-red-100 text-red-700",
+  },
+  {
+    id: 11,
+    img: "1461749280684-dccba630e2f6",
+    date: "۱۰ تیر ۱۴۰۳",
+    readTime: "۵ دقیقه",
+    category: "اخبار حقوقی",
+    title:
+      "تصویب قانون حمایت از داده‌های شخصی: آنچه کسب‌وکارها باید بدانند",
+    excerpt:
+      "با تصویب اخیر قانون حمایت از داده‌های شخصی، سازمان‌ها ملزم به رعایت الزامات جدید در خصوص جمع‌آوری، پردازش و نگهداری داده هستند.",
+    author: "دکتر فاطمه کریمی",
+    initials: "فک",
+    avatarColor: "bg-indigo-100 text-indigo-700",
+  },
+    {
+    id: 12,
+    img: "1526374965328-7f61d4dc18c5",
+    date: "۵ تیر ۱۴۰۳",
+    readTime: "۶ دقیقه",
+    category: "هشدارهای امنیتی",
+    title:
+      "موج جدید فیشینگ هدفمند: آیا ایمیل سازمان شما در خطر است؟",
+    excerpt:
+      "رادار پاراهور افزایش چشمگیر حملات spear-phishing علیه مدیران ارشد سازمان‌های مالی را شناسایی کرده است. بلافاصله بررسی کنید.",
+    author: "دکتر سارا احمدی",
+    initials: "سا",
+    avatarColor: "bg-blue-100 text-[#1565C0]",
+  },
+  {
+    id: 13,
+    img: "1555949963-ff9fe0c870eb",
+    date: "۳ تیر ۱۴۰۳",
+    readTime: "۸ دقیقه",
+    category: "تهدیدات سایبری",
+    title:
+      "جاسوس‌افزارهای تجاری و نقض حریم خصوصی: وضعیت بازار ۱۴۰۳",
+    excerpt:
+      "تحلیل جامع از بازار جهانی جاسوس‌افزارهای تجاری و نحوه استفاده مجرمانه از آن‌ها برای نظارت غیرقانونی بر افراد و مدیران.",
+    author: "مهندس علی رضایی",
+    initials: "عر",
+    avatarColor: "bg-red-100 text-red-700",
+  },
+
+];
+
+const PER_PAGE = 6;
+
+// ── helpers ───────────────────────────────────────────────────────────────────
+
+function imgUrl(id: string, w = 640, h = 380) {
+  return `https://images.unsplash.com/photo-${id}?w=${w}&h=${h}&fit=crop&auto=format`;
 }
 
 
 
 
-// animation
-
-    //   {/* ─── SUPPORTED NETWORKS TICKER ─── */}
-    //   <div
-    //     className="overflow-hidden py-3"
-    //     style={{
-    //       background: "rgba(0,229,255,0.03)",
-    //       borderTop: "1px solid rgba(0,229,255,0.08)",
-    //       borderBottom: "1px solid rgba(0,229,255,0.08)",
-    //     }}
-    //   >
-    //     <div
-    //       className="flex items-center gap-8 whitespace-nowrap"
-    //       style={{ animation: "ticker 22s linear infinite" }}
-    //     >
-    //       {["Bitcoin BTC", "Ethereum ETH", "USDT TRC20", "USDT ERC20", "Tron TRX", "BNB Chain", "Polygon MATIC", "Litecoin LTC",
-    //         "Bitcoin BTC", "Ethereum ETH", "USDT TRC20", "USDT ERC20", "Tron TRX", "BNB Chain"].map((coin, i) => (
-    //         <div key={i} className="flex items-center gap-2 flex-shrink-0">
-    //           <span style={{ color: "rgba(0,229,255,0.25)", fontSize: "0.65rem" }}>◆</span>
-    //           <span style={{ color: "#334155", fontSize: "0.72rem", fontFamily: "monospace", letterSpacing: "0.08em" }}>
-    //             {coin}
-    //           </span>
-    //         </div>
-    //       ))}
-    //     </div>
-    //     <style>{`@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }`}</style>
-    //   </div>
 
 
-     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ── component ─────────────────────────────────────────────────────────────────
+
+export default function App() {
+  const { darkMode } = useTheme();
+
+  const [activeCategory, setActiveCategory] = useState("همه");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Live search with a small debounce
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchQuery(searchInput);
+      setCurrentPage(1);
+    }, 250);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  const theme = darkMode
+    ? {
+        page: "bg-[#0A1128] text-[#E6F7FF]",
+
+        hero: "bg-transparent border-[#1E334A]",
+        heroBadge: "bg-[#062536] text-[#00E5FF]",
+        heroTitle: "text-[#E6F7FF]",
+        heroDescription: "text-[#A7BACB]",
+
+       search:
+  "bg-[#0D1A2B] border border-[#3A536B] focus-within:border-[#00E5FF]/70 focus-within:shadow-[0_0_25px_rgba(0,229,255,0.12)]",
+        searchIcon: "text-[#8FA5B8]",
+        input: "text-[#E6F7FF] placeholder:text-[#71869A]",
+        searchButton:
+          "bg-[#00B8D4] hover:bg-[#00D5F0] text-[#031018]",
+
+        categoryBar: "bg-[#060E18] border-[#1E334A]",
+        categoryActive: "border-[#00E5FF] text-[#00E5FF]",
+        categoryInactive:
+          "text-[#8FA5B8] hover:text-[#E6F7FF] hover:border-[#496276]",
+        countActive: "bg-[#073342] text-[#00E5FF]",
+        countInactive: "bg-[#101C29] text-[#71869A]",
+
+        sectionLabel: "text-[#8FA5B8]",
+        sectionAccent: "bg-[#00E5FF]",
+
+        featuredCard:
+          "bg-cyan-900/10 border border-cyan-500/30 hover:border-cyan-500 hover:bg-cyan-800/15 hover:shadow-[0_10px_30px_rgba(0,229,255,0.06)]",
+
+        imageBg: "bg-[#0D1B29]",
+
+        cardTitle:
+          "text-[#E6F7FF] group-hover:text-[#E6F7FF]",
+
+        cardText: "text-[#9DB0C0]",
+        meta: "text-[#71869A]",
+        divider: "border-[#1E334A]",
+
+        articleCard:
+          "bg-cyan-900/10 border border-cyan-500/30 hover:border-cyan-500 hover:bg-cyan-800/15 hover:shadow-[0_10px_30px_rgba(0,229,255,0.06)]",
+
+        emptyIcon: "bg-[#101C29]",
+        emptyIconText: "text-[#60788C]",
+        emptyTitle: "text-[#A7BACB]",
+        emptyText: "text-[#71869A]",
+
+        pagination:
+          "border-[#263B4E] text-[#8FA5B8] hover:border-[#496276] hover:text-[#E6F7FF]",
+        paginationActive:
+          "bg-[#00B8D4] text-[#031018] shadow-[0_4px_15px_rgba(0,229,255,0.15)]",
+        paginationDisabled: "disabled:opacity-30",
+      }
+    : {
+        page: "bg-[#FAFCFF] text-[#10213D]",
+
+        hero: "bg-[#F4F8FC] border-[#DCE5EF]",
+        heroBadge: "bg-[#EAF3FF] text-[#1557A0]",
+        heroTitle: "text-[#10213D]",
+        heroDescription: "text-[#52657D]",
+
+        search:
+  "bg-white border border-[#AFC7DF] focus-within:border-[#1769C2]/70 focus-within:shadow-[0_4px_20px_rgba(23,105,194,0.12)]",
+        searchIcon: "text-[#8292A5]",
+        input: "text-[#10213D] placeholder:text-[#91A0B0]",
+        searchButton:
+          "bg-[#1769C2] hover:bg-[#1256A0] text-white",
+
+        categoryBar: "bg-white border-[#DCE5EF]",
+        categoryActive: "border-[#1769C2] text-[#1769C2]",
+        categoryInactive:
+          "text-[#61738A] hover:text-[#10213D] hover:border-[#B8C5D3]",
+        countActive: "bg-[#EAF3FF] text-[#1769C2]",
+        countInactive: "bg-[#EFF3F7] text-[#7C8A9B]",
+
+        sectionLabel: "text-[#64758A]",
+        sectionAccent: "bg-[#1769C2]",
+
+        featuredCard:
+          "bg-white border-[#D5E3F0] transition-all duration-300 hover:border-[#8DB9E5] hover:bg-[#FDFEFF] hover:shadow-[0_8px_25px_rgba(37,99,235,0.10)]",
+
+        imageBg: "bg-[#EEF3F8]",
+
+        cardTitle:
+          "text-[#10213D] group-hover:text-[#10213D]",
+
+        cardText: "text-[#5E7086]",
+        meta: "text-[#7C8A9B]",
+        divider: "border-[#E3E9F0]",
+
+        articleCard:
+          "bg-white border-[#D5E3F0] transition-all duration-300 hover:border-[#8DB9E5] hover:bg-[#FDFEFF] hover:shadow-[0_8px_25px_rgba(37,99,235,0.10)]",
+
+        emptyIcon: "bg-[#EFF3F7]",
+        emptyIconText: "text-[#8292A5]",
+        emptyTitle: "text-[#61738A]",
+        emptyText: "text-[#8292A5]",
+
+        pagination:
+          "border-[#D6E0EA] text-[#6D7D90] hover:border-[#B5C3D1] hover:text-[#10213D]",
+        paginationActive:
+          "bg-[#10213D] text-white shadow-sm",
+        paginationDisabled: "disabled:opacity-30",
+      };
+
+  const catBadge: Record<string, string> = darkMode
+    ? {
+        "تهدیدات سایبری":
+          "text-[#FF6B7A] bg-[#32151D] ring-[#5A242E]",
+        "اخبار حقوقی":
+          "text-[#9EAFFF] bg-[#171B3A] ring-[#303665]",
+        "گزارش‌های جرم‌شناسی":
+          "text-[#54B8FF] bg-[#09263D] ring-[#164B70]",
+        "هشدارهای امنیتی":
+          "text-[#F8C85A] bg-[#302612] ring-[#5A461C]",
+      }
+    : {
+        "تهدیدات سایبری":
+          "text-red-700 bg-red-50 ring-red-100",
+        "اخبار حقوقی":
+          "text-indigo-700 bg-indigo-50 ring-indigo-100",
+        "گزارش‌های جرم‌شناسی":
+          "text-[#1565C0] bg-[#EBF3FF] ring-blue-100",
+        "هشدارهای امنیتی":
+          "text-amber-700 bg-amber-50 ring-amber-100",
+      };
+
+      const PER_PAGE = 6;
+
+  const filteredArticles = useMemo(() => {
+  let list = ARTICLES;
+
+  if (activeCategory !== "همه") {
+    list = list.filter(
+      (article) => article.category === activeCategory
+    );
+  }
+
+  if (searchQuery.trim()) {
+    const q = searchQuery.trim();
+
+    list = list.filter(
+      (article) =>
+        article.title.includes(q) ||
+        article.excerpt.includes(q)
+    );
+  }
+
+  return list;
+}, [activeCategory, searchQuery]);
+
+const totalPages = Math.max(
+  1,
+  Math.ceil(filteredArticles.length / PER_PAGE)
+);
+
+const page = Math.min(currentPage, totalPages);
+
+const pageArticles = filteredArticles.slice(
+  (page - 1) * PER_PAGE,
+  page * PER_PAGE
+);
+
+  const showFeatured =
+    (activeCategory === "همه" ||
+      activeCategory === "گزارش‌های جرم‌شناسی") &&
+    (!searchQuery.trim() ||
+      FEATURED.title.includes(searchQuery) ||
+      FEATURED.excerpt.includes(searchQuery));
+
+  const handleCategoryChange = (cat: string) => {
+    setActiveCategory(cat);
+    setCurrentPage(1);
+  };
+
+  const articleCount = (cat: string) =>
+    cat === "همه"
+      ? ARTICLES.length
+      : ARTICLES.filter(
+          (article) => article.category === cat
+        ).length;
+
+  return (
+   <div
+  dir="rtl"
+  className={`min-h-screen transition-colors duration-300 ${theme.page}`}
+  style={{
+    fontFamily: "'Vazirmatn', sans-serif",
+
+    backgroundImage: darkMode
+      ? "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"
+      : "linear-gradient(rgba(30,58,138,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,138,0.035) 1px,transparent 1px)",
+
+    backgroundSize: "52px 52px",
+  }}
+>
+      <main>
+        {/* ─── HERO ─────────────────────────────────────────────────────────── */}
+
+        <section
+          className={`border-b transition-colors duration-300 ${theme.hero} pt-24`}
+        >
+          <div className="max-w-4xl mx-auto px-6 py-16 text-center">
+            <div
+              className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-6 ${theme.heroBadge}`}
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              آرشیو گزارش‌های تحلیلی و حقوقی
+            </div>
+
+            <h1
+              className={`text-3xl md:text-4xl font-bold leading-tight mb-3 ${theme.heroTitle}`}
+            >
+              رادار پاراهور
+            </h1>
+
+            <p
+              className={`text-base mb-10 ${theme.heroDescription}`}
+            >
+              گزارش‌های جرم‌شناسی، هشدارهای امنیتی و اخبار حقوقی توسط تیم متخصصان پاراهور
+            </p>
+
+            {/* Search bar */}
+
+            <div className="max-w-2xl mx-auto">
+              <div
+                className={`flex items-center rounded-xl shadow-sm overflow-hidden focus-within:shadow-md transition-all ${theme.search}`}
+              >
+                <div
+                  className={`px-4 flex-shrink-0 ${theme.searchIcon}`}
+                >
+                  <SearchIcon className="w-5 h-5" />
+                </div>
+
+                <input
+                  type="text"
+                  value={searchInput}
+                  onChange={(e) =>
+                    setSearchInput(e.target.value)
+                  }
+                  placeholder="جستجو در گزارش‌ها و مقالات..."
+                  className={`flex-1 py-4 text-sm bg-transparent outline-none ${theme.input}`}
+                />
+              </div>
+
+              {searchQuery && (
+                <button
+                  onClick={() => {
+                    setSearchInput("");
+                    setSearchQuery("");
+                    setCurrentPage(1);
+                  }}
+                  className={`mt-3 text-xs hover:underline ${
+                    darkMode
+                      ? "text-[#00E5FF]"
+                      : "text-[#1769C2]"
+                  }`}
+                >
+                  پاک کردن جستجو: «{searchQuery}»
+                </button>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* ─── CATEGORY TABS ────────────────────────────────────────────────── */}
+
+        <div
+          className={`border-b sticky top-0 z-40 transition-colors duration-300 ${theme.categoryBar}`}
+        >
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide py-1">
+              {CATEGORIES.map((cat) => {
+                const active = activeCategory === cat.id;
+                const count = articleCount(cat.id);
+
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() =>
+                      handleCategoryChange(cat.id)
+                    }
+                    className={`flex items-center gap-2 px-4 py-3 text-sm font-semibold whitespace-nowrap border-b-2 transition-all ${
+                      active
+                        ? theme.categoryActive
+                        : `border-transparent ${theme.categoryInactive}`
+                    }`}
+                  >
+                    {cat.label}
+
+                    <span
+                      className={`text-[11px] px-1.5 py-0.5 rounded-full font-bold ${
+                        active
+                          ? theme.countActive
+                          : theme.countInactive
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* ─── CONTENT ──────────────────────────────────────────────────────── */}
+
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          {/* ─── FEATURED ARTICLE ───────────────────────────────────────────── */}
+
+          {showFeatured && page === 1 && (
+            <div className="mb-14">
+              <div className="flex items-center gap-2 mb-5">
+                <span
+                  className={`w-1 h-5 rounded-full block ${theme.sectionAccent}`}
+                />
+
+                <span
+                  className={`text-xs font-bold uppercase tracking-widest ${theme.sectionLabel}`}
+                >
+                  گزارش ویژه
+                </span>
+              </div>
+
+              <article
+                className={`group border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 ${theme.featuredCard}`}
+              >
+                <div className="grid md:grid-cols-5">
+                  {/* Image */}
+
+                  <div
+                    className={`md:col-span-2 aspect-video md:aspect-auto overflow-hidden ${theme.imageBg}`}
+                  >
+                    <img
+                      src={imgUrl(
+                        FEATURED.img,
+                        800,
+                        500
+                      )}
+                      alt={FEATURED.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+
+                  {/* Content */}
+
+                  <div className="md:col-span-3 p-8 md:p-10 flex flex-col justify-between transition-all duration-300 dark:hover:bg-cyan-800/5">
+                    <div>
+                      <div className="flex items-center gap-3 mb-5">
+                        <span
+                          className={`text-[11px] font-bold px-2.5 py-1 rounded-full ring-1 ring-inset ${
+                            catBadge[FEATURED.category]
+                          }`}
+                        >
+                          {FEATURED.category}
+                        </span>
+
+                        <span
+                          className={`text-xs font-medium ${theme.meta}`}
+                        >
+                          {FEATURED.date}
+                        </span>
+
+                        <span
+                          className={`flex items-center gap-1 text-xs ${theme.meta}`}
+                        >
+                          <Clock className="w-3 h-3" />
+                          {FEATURED.readTime} مطالعه
+                        </span>
+                      </div>
+
+                      <h2
+                        className={`text-xl md:text-2xl font-bold leading-snug mb-4 transition-colors ${theme.cardTitle}`}
+                      >
+                        {FEATURED.title}
+                      </h2>
+
+                      <p
+                        className={`text-sm md:text-base leading-relaxed ${theme.cardText}`}
+                      >
+                        {FEATURED.excerpt}
+                      </p>
+                    </div>
+
+                    <div
+                      className={`flex items-center justify-between mt-8 pt-6 border-t ${theme.divider}`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${FEATURED.avatarColor}`}
+                        >
+                          {FEATURED.initials}
+                        </div>
+
+                        <span
+                          className={`text-sm font-medium ${theme.cardText}`}
+                        >
+                          {FEATURED.author}
+                        </span>
+                      </div>
+
+                      <a
+                        href="#"
+                        className={`inline-flex items-center gap-1.5 text-sm font-semibold hover:gap-2.5 transition-all ${
+                          darkMode
+                            ? "text-[#00E5FF]"
+                            : "text-[#1769C2]"
+                        }`}
+                      >
+                        مطالعه گزارش کامل
+                        <ChevronLeft className="w-4 h-4" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          )}
+
+          {/* ─── RESULTS COUNT ──────────────────────────────────────────────── */}
+
+          <div className="flex items-center justify-between mb-8">
+            <div
+              className={`flex items-center gap-2 text-sm ${theme.sectionLabel}`}
+            >
+              <span>
+                نمایش{" "}
+                <span
+                  className={`font-semibold ${
+                    darkMode
+                      ? "text-[#E6F7FF]"
+                      : "text-[#10213D]"
+                  }`}
+                >
+                  {filteredArticles.length}
+                </span>{" "}
+                مطلب
+
+                {activeCategory !== "همه" && (
+                  <span>
+                    {" "}
+                    در{" "}
+                    <span
+                      className={`font-semibold ${
+                        darkMode
+                          ? "text-[#E6F7FF]"
+                          : "text-[#10213D]"
+                      }`}
+                    >
+                      {activeCategory}
+                    </span>
+                  </span>
+                )}
+              </span>
+            </div>
+
+            <span
+              className={`text-xs ${theme.meta}`}
+            >
+              صفحه {page} از {totalPages}
+            </span>
+          </div>
+
+          {/* ─── ARTICLE GRID ────────────────────────────────────────────────── */}
+
+          {pageArticles.length > 0 ? (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-7">
+              {pageArticles.map((article) => (
+                <ArticleCard
+                  key={article.id}
+                  article={article}
+                  darkMode={darkMode}
+                  theme={theme}
+                  catBadge={catBadge}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="py-24 flex flex-col items-center justify-center text-center">
+              <div
+                className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 ${theme.emptyIcon}`}
+              >
+                <SearchIcon
+                  className={`w-6 h-6 ${theme.emptyIconText}`}
+                />
+              </div>
+
+              <p
+                className={`text-base font-semibold mb-1 ${theme.emptyTitle}`}
+              >
+                مطلبی یافت نشد
+              </p>
+
+              <p
+                className={`text-sm ${theme.emptyText}`}
+              >
+                معیارهای جستجو یا فیلتر را تغییر دهید
+              </p>
+            </div>
+          )}
+
+          {/* ─── PAGINATION ──────────────────────────────────────────────────── */}
+
+{/* ─── PAGINATION ──────────────────────────────────────────────────── */}
+
+{totalPages > 1 && (
+  <div className="flex items-center justify-center gap-2 mt-12 pb-12">
+    {/* صفحه قبل */}
+    <button
+      type="button"
+      onClick={() =>
+        setCurrentPage((prev) => Math.max(prev - 1, 1))
+      }
+      disabled={page === 1}
+      className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-all ${theme.pagination} ${theme.paginationDisabled}`}
+      aria-label="صفحه قبل"
+    >
+      <ChevronRight size={18} />
+    </button>
+
+    {/* شماره صفحات */}
+    {Array.from({ length: totalPages }, (_, index) => {
+      const pageNumber = index + 1;
+
+      return (
+        <button
+          key={pageNumber}
+          type="button"
+          onClick={() => setCurrentPage(pageNumber)}
+          className={`w-10 h-10 rounded-lg border flex items-center justify-center text-sm font-medium transition-all ${
+            page === pageNumber
+              ? theme.paginationActive
+              : theme.pagination
+          }`}
+        >
+          {pageNumber}
+        </button>
+      );
+    })}
+
+    {/* صفحه بعد */}
+    <button
+      type="button"
+      onClick={() =>
+        setCurrentPage((prev) =>
+          Math.min(prev + 1, totalPages)
+        )
+      }
+      disabled={page === totalPages}
+      className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-all ${theme.pagination} ${theme.paginationDisabled}`}
+      aria-label="صفحه بعد"
+    >
+      <ChevronLeft size={18} />
+    </button>
+  </div>
+)}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+// ── ArticleCard ───────────────────────────────────────────────────────────────
+
+function ArticleCard({
+  article,
+  darkMode,
+  theme,
+  catBadge,
+}: {
+  article: Article;
+  darkMode: boolean;
+  theme: Record<string, string>;
+  catBadge: Record<string, string>;
+}) {
+  return (
+    <article
+      className={`group flex flex-col border rounded-2xl overflow-hidden transition-all duration-200 ${theme.articleCard}`}
+    >
+      {/* Thumbnail */}
+
+      <div
+        className={`aspect-video overflow-hidden flex-shrink-0 ${theme.imageBg}`}
+      >
+        <img
+          src={imgUrl(article.img, 640, 380)}
+          alt={article.title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          loading="lazy"
+        />
+      </div>
+
+      {/* Content */}
+
+      <div className="flex flex-col flex-1 p-6 transition-all duration-300 dark:hover:bg-cyan-800/5">
+        {/* Category */}
+
+        <div className="flex items-center gap-2.5 mb-4">
+          <span
+            className={`text-[11px] font-bold px-2.5 py-1 rounded-full ring-1 ring-inset ${
+              catBadge[article.category]
+            }`}
+          >
+            {article.category}
+          </span>
+        </div>
+
+        {/* Title */}
+
+        <h3
+          className={`text-base font-bold leading-snug mb-3 transition-colors line-clamp-2 ${theme.cardTitle}`}
+        >
+          {article.title}
+        </h3>
+
+        {/* Excerpt */}
+
+        <p
+          className={`text-sm leading-relaxed line-clamp-3 mb-5 flex-1 ${theme.cardText}`}
+        >
+          {article.excerpt}
+        </p>
+
+        {/* Footer */}
+
+        <div
+          className={`pt-4 border-t flex items-center justify-between gap-3 ${theme.divider}`}
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div
+              className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 ${article.avatarColor}`}
+            >
+              {article.initials}
+            </div>
+
+            <div className="min-w-0">
+              <p
+                className={`text-xs font-semibold truncate ${theme.cardText}`}
+              >
+                {article.author}
+              </p>
+
+              <div
+                className={`flex items-center gap-2 text-[10px] ${theme.meta}`}
+              >
+                <span>{article.date}</span>
+                <span>·</span>
+                <Clock className="w-2.5 h-2.5" />
+                <span>{article.readTime}</span>
+              </div>
+            </div>
+          </div>
+
+          <a
+            href="#"
+            className={`flex items-center gap-1 text-xs font-semibold hover:gap-1.5 transition-all flex-shrink-0 ${
+              darkMode
+                ? "text-[#00E5FF]"
+                : "text-[#1769C2]"
+            }`}
+          >
+            ادامه مطلب
+            <ChevronLeft className="w-3 h-3" />
+          </a>
+        </div>
+      </div>
+    </article>
+  );
+}

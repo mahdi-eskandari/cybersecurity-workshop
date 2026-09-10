@@ -29,11 +29,16 @@ const CrisisReportSchema = new Schema(
       trim: true,
     },
 
-    status: {
-      type: String,
-      enum: ["pending", "in_progress", "resolved", "closed"],
-      default: "pending",
-    },
+status: {
+  type: String,
+  enum: [
+    "pending",
+    "reviewing",
+    "consulting",
+    "resolved",
+  ],
+  default: "pending",
+}
   },
   { timestamps: true }
 );
