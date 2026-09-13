@@ -2,17 +2,21 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useTheme } from "../../../components/ThemeProvider";
+import {EmergencyModal} from "../../.../../../components/CrisisReportForm"
+
+
 
 /* ─── SHARED ─── */
-const PulseDot = ({ size = 7 }: { size?: number }) => (
+const PulseDot = ({ size = 7, darkMode = true }: { size?: number; darkMode?: boolean }) => (
   <span
     style={{
       display: "inline-block",
       width: size,
       height: size,
       borderRadius: "50%",
-      background: "#00E5FF",
-      boxShadow: "0 0 8px rgba(0,229,255,0.9)",
+      background: darkMode ? "#00E5FF" : "#1E3A8A",
+      boxShadow: darkMode ? "0 0 8px rgba(0,229,255,0.9)" : "0 0 8px rgba(30,64,175,0.32)",
       flexShrink: 0,
     }}
   />
@@ -36,7 +40,7 @@ const IconClose = () => (
 
 /* ─── DECORATIVE SVGs ─── */
 
-const HeroBg = () => (
+const HeroBg = ({ darkMode = true }: { darkMode?: boolean }) => (
   <svg
     className="absolute inset-0 w-full h-full pointer-events-none"
     viewBox="0 0 1200 520"
@@ -44,7 +48,7 @@ const HeroBg = () => (
   >
     <defs>
       <radialGradient id="hbg" cx="50%" cy="50%" r="60%">
-        <stop offset="0%" stopColor="rgba(0,229,255,0.07)" />
+        <stop offset="0%" stopColor={darkMode ? "rgba(0,229,255,0.07)" : "rgba(30,64,175,0.16)"} />
         <stop offset="100%" stopColor="transparent" />
       </radialGradient>
     </defs>
@@ -70,7 +74,7 @@ const HeroBg = () => (
         y1={y1}
         x2={x2}
         y2={y2}
-        stroke="rgba(0,229,255,0.07)"
+        stroke={darkMode ? "rgba(0,229,255,0.07)" : "rgba(30,64,175,0.16)"}
         strokeWidth="1"
       />
     ))}
@@ -96,11 +100,11 @@ const HeroBg = () => (
         r={i % 3 === 0 ? 4 : 2.5}
         fill={
           i % 3 === 0
-            ? "rgba(0,229,255,0.35)"
-            : "rgba(0,229,255,0.18)"
+            ? (darkMode ? "rgba(0,229,255,0.35)" : "rgba(37,99,235,0.42)")
+            : (darkMode ? "rgba(0,229,255,0.18)" : "rgba(30,58,138,0.52)")
         }
         stroke={
-          i % 3 === 0 ? "rgba(0,229,255,0.5)" : "none"
+          i % 3 === 0 ? (darkMode ? "rgba(0,229,255,0.5)" : "rgba(30,58,138,0.90)") : "none"
         }
         strokeWidth="1"
       />
@@ -108,7 +112,7 @@ const HeroBg = () => (
   </svg>
 );
 
-const SynergyIllustration = () => (
+const SynergyIllustration = ({ darkMode = true }: { darkMode?: boolean }) => (
   <svg
     width="100%"
     height="100%"
@@ -121,7 +125,7 @@ const SynergyIllustration = () => (
   >
     <defs>
       <radialGradient id="sg1" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stopColor="rgba(0,229,255,0.12)" />
+        <stop offset="0%" stopColor={darkMode ? "rgba(0,229,255,0.12)" : "rgba(30,58,138,0.42)"} />
         <stop offset="100%" stopColor="transparent" />
       </radialGradient>
 
@@ -141,7 +145,7 @@ const SynergyIllustration = () => (
       cy="160"
       r="128"
       fill="none"
-      stroke="rgba(0,229,255,0.08)"
+      stroke={darkMode ? "rgba(0,229,255,0.08)" : "rgba(30,58,138,0.42)"}
       strokeWidth="1"
       strokeDasharray="6 6"
     />
@@ -151,28 +155,28 @@ const SynergyIllustration = () => (
       cy="160"
       r="100"
       fill="none"
-      stroke="rgba(0,229,255,0.06)"
+      stroke={darkMode ? "rgba(0,229,255,0.06)" : "rgba(30,58,138,0.34)"}
       strokeWidth="1"
     />
 
     <path
       d="M160 52L88 76v56c0 46 32 88 72 104 40-16 72-58 72-104V76L160 52z"
-      fill="rgba(0,229,255,0.05)"
-      stroke="rgba(0,229,255,0.35)"
+      fill={darkMode ? "rgba(0,229,255,0.05)" : "rgba(30,58,138,0.24)"}
+      stroke={darkMode ? "rgba(0,229,255,0.35)" : "rgba(30,58,138,0.90)"}
       strokeWidth="1.5"
       filter="url(#sglow)"
     />
 
     <path
       d="M160 64L96 86v48c0 40 28 76 64 92 36-16 64-52 64-92V86L160 64z"
-      fill="rgba(0,229,255,0.04)"
-      stroke="rgba(0,229,255,0.2)"
+      fill={darkMode ? "rgba(0,229,255,0.04)" : "rgba(30,58,138,0.18)"}
+      stroke={darkMode ? "rgba(0,229,255,0.2)" : "rgba(29,78,216,0.52)"}
       strokeWidth="1"
     />
 
     <polyline
       points="138,148 152,162 186,130"
-      stroke="#00E5FF"
+      stroke={darkMode ? "#00E5FF" : "#1E3A8A"}
       strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -185,7 +189,7 @@ const SynergyIllustration = () => (
       y1="95"
       x2="160"
       y2="175"
-      stroke="rgba(0,229,255,0.4)"
+      stroke={darkMode ? "rgba(0,229,255,0.4)" : "rgba(37,99,235,0.5)"}
       strokeWidth="1.5"
     />
 
@@ -194,14 +198,14 @@ const SynergyIllustration = () => (
       y1="120"
       x2="200"
       y2="120"
-      stroke="rgba(0,229,255,0.35)"
+      stroke={darkMode ? "rgba(0,229,255,0.35)" : "rgba(30,58,138,0.90)"}
       strokeWidth="1.5"
     />
 
     <path
       d="M110 120 Q100 135 110 138 Q120 141 130 138 Q140 135 130 120Z"
-      fill="rgba(0,229,255,0.08)"
-      stroke="rgba(0,229,255,0.3)"
+      fill={darkMode ? "rgba(0,229,255,0.08)" : "rgba(30,58,138,0.34)"}
+      stroke={darkMode ? "rgba(0,229,255,0.3)" : "rgba(29,78,216,0.62)"}
       strokeWidth="1"
     />
 
@@ -210,7 +214,7 @@ const SynergyIllustration = () => (
       y1="120"
       x2="120"
       y2="138"
-      stroke="rgba(0,229,255,0.2)"
+      stroke={darkMode ? "rgba(0,229,255,0.2)" : "rgba(29,78,216,0.52)"}
       strokeWidth="1"
     />
 
@@ -219,14 +223,14 @@ const SynergyIllustration = () => (
       y1="120"
       x2="120"
       y2="138"
-      stroke="rgba(0,229,255,0.2)"
+      stroke={darkMode ? "rgba(0,229,255,0.2)" : "rgba(29,78,216,0.52)"}
       strokeWidth="1"
     />
 
     <path
       d="M170 122 Q160 137 170 140 Q180 143 190 140 Q200 137 190 122Z"
-      fill="rgba(0,229,255,0.06)"
-      stroke="rgba(0,229,255,0.25)"
+      fill={darkMode ? "rgba(0,229,255,0.06)" : "rgba(29,78,216,0.14)"}
+      stroke={darkMode ? "rgba(0,229,255,0.25)" : "rgba(37,99,235,0.4)"}
       strokeWidth="1"
     />
 
@@ -235,7 +239,7 @@ const SynergyIllustration = () => (
       y1="122"
       x2="180"
       y2="140"
-      stroke="rgba(0,229,255,0.2)"
+      stroke={darkMode ? "rgba(0,229,255,0.2)" : "rgba(29,78,216,0.52)"}
       strokeWidth="1"
     />
 
@@ -244,7 +248,7 @@ const SynergyIllustration = () => (
       y1="122"
       x2="180"
       y2="140"
-      stroke="rgba(0,229,255,0.2)"
+      stroke={darkMode ? "rgba(0,229,255,0.2)" : "rgba(29,78,216,0.52)"}
       strokeWidth="1"
     />
 
@@ -259,8 +263,8 @@ const SynergyIllustration = () => (
         cx={cx}
         cy={cy}
         r="3"
-        fill="rgba(0,229,255,0.2)"
-        stroke="rgba(0,229,255,0.35)"
+        fill={darkMode ? "rgba(0,229,255,0.2)" : "rgba(30,64,175,0.42)"}
+        stroke={darkMode ? "rgba(0,229,255,0.35)" : "rgba(30,58,138,0.90)"}
         strokeWidth="1"
       />
     ))}
@@ -270,7 +274,7 @@ const SynergyIllustration = () => (
       y1="76"
       x2="72"
       y2="100"
-      stroke="rgba(0,229,255,0.1)"
+      stroke={darkMode ? "rgba(0,229,255,0.1)" : "rgba(30,64,175,0.28)"}
       strokeWidth="1"
       strokeDasharray="3 3"
     />
@@ -280,7 +284,7 @@ const SynergyIllustration = () => (
       y1="76"
       x2="248"
       y2="100"
-      stroke="rgba(0,229,255,0.1)"
+      stroke={darkMode ? "rgba(0,229,255,0.1)" : "rgba(30,64,175,0.28)"}
       strokeWidth="1"
       strokeDasharray="3 3"
     />
@@ -289,13 +293,13 @@ const SynergyIllustration = () => (
 
 /* ─── VALUE CARD ICONS ─── */
 
-const IconLockedEye = () => (
+const IconLockedEye = ({ darkMode = true }: { darkMode?: boolean }) => (
   <svg
     width="32"
     height="32"
     viewBox="0 0 48 48"
     fill="none"
-    stroke="#00E5FF"
+    stroke={darkMode ? "#00E5FF" : "#1E3A8A"}
     strokeWidth="1.5"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -306,7 +310,7 @@ const IconLockedEye = () => (
       cx="24"
       cy="26"
       r="2"
-      fill="rgba(0,229,255,0.3)"
+      fill={darkMode ? "rgba(0,229,255,0.3)" : "rgba(30,58,138,0.42)"}
     />
     <rect x="16" y="10" width="16" height="12" rx="3" />
     <path d="M20 10V8a4 4 0 018 0v2" />
@@ -314,31 +318,31 @@ const IconLockedEye = () => (
   </svg>
 );
 
-const IconLightning = () => (
+const IconLightning = ({ darkMode = true }: { darkMode?: boolean }) => (
   <svg
     width="32"
     height="32"
     viewBox="0 0 48 48"
     fill="none"
-    stroke="#00E5FF"
+    stroke={darkMode ? "#00E5FF" : "#1E3A8A"}
     strokeWidth="1.5"
     strokeLinecap="round"
     strokeLinejoin="round"
   >
     <path
       d="M28 4L10 26h14l-4 18 18-22H24L28 4z"
-      fill="rgba(0,229,255,0.1)"
+      fill={darkMode ? "rgba(0,229,255,0.1)" : "rgba(30,58,138,0.16)"}
     />
   </svg>
 );
 
-const IconTerminal = () => (
+const IconTerminal = ({ darkMode = true }: { darkMode?: boolean }) => (
   <svg
     width="32"
     height="32"
     viewBox="0 0 48 48"
     fill="none"
-    stroke="#00E5FF"
+    stroke={darkMode ? "#00E5FF" : "#1E3A8A"}
     strokeWidth="1.5"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -349,20 +353,20 @@ const IconTerminal = () => (
       width="40"
       height="32"
       rx="4"
-      fill="rgba(0,229,255,0.05)"
+      fill={darkMode ? "rgba(0,229,255,0.05)" : "rgba(30,58,138,0.18)"}
     />
     <polyline points="12 20 20 28 12 36" />
     <line x1="24" y1="36" x2="36" y2="36" />
   </svg>
 );
 
-const IconInfo = () => (
+const IconInfo = ({ darkMode = true }: { darkMode?: boolean }) => (
   <svg
     width="20"
     height="20"
     viewBox="0 0 24 24"
     fill="none"
-    stroke="#00E5FF"
+    stroke={darkMode ? "#00E5FF" : "#1E3A8A"}
     strokeWidth="1.8"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -396,217 +400,20 @@ const IconWarning = () => (
   </svg>
 );
 
-/* ─── EMERGENCY MODAL ─── */
 
-const EmergencyModal = ({
-  onClose,
-  darkMode,
-}: {
-  onClose: () => void;
-  darkMode: boolean;
-}) => {
-  const [contact, setContact] = useState("");
-  const [sent, setSent] = useState(false);
-
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{
-        background: darkMode
-          ? "rgba(4,8,20,0.92)"
-          : "rgba(15,23,42,0.45)",
-        backdropFilter: "blur(20px)",
-      }}
-      onClick={(e) =>
-        e.target === e.currentTarget && onClose()
-      }
-    >
-      <div
-        className="w-full max-w-md relative overflow-hidden"
-        style={{
-          background: darkMode
-            ? "linear-gradient(160deg,rgba(10,17,42,0.99),rgba(6,11,28,0.99))"
-            : "#FFFFFF",
-          border: darkMode
-            ? "1px solid rgba(0,229,255,0.2)"
-            : "1px solid rgba(37,99,235,0.18)",
-          borderRadius: 18,
-          boxShadow: darkMode
-            ? "0 0 80px rgba(0,229,255,0.06),0 40px 100px rgba(0,0,0,0.7)"
-            : "0 30px 80px rgba(15,23,42,0.18)",
-        }}
-      >
-        <div
-          style={{
-            height: 2,
-            background: darkMode
-              ? "linear-gradient(90deg,transparent,rgba(0,229,255,0.7),transparent)"
-              : "linear-gradient(90deg,transparent,#2563EB,transparent)",
-          }}
-        />
-
-        <div className="px-6 pt-5 pb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3
-              className="font-black text-base"
-              style={{
-                color: darkMode ? "#fff" : "#0F172A",
-              }}
-            >
-              فرم اورژانسی گزارش بحران
-            </h3>
-
-            <button
-              onClick={onClose}
-              style={{
-                color: darkMode ? "#475569" : "#64748B",
-              }}
-            >
-              <IconClose />
-            </button>
-          </div>
-
-          {sent ? (
-            <div className="py-6 text-center">
-              <div
-                className="mx-auto mb-4 flex items-center justify-center w-14 h-14 rounded-full"
-                style={{
-                  background: darkMode
-                    ? "rgba(0,229,255,0.08)"
-                    : "rgba(37,99,235,0.08)",
-                  border: darkMode
-                    ? "1px solid rgba(0,229,255,0.2)"
-                    : "1px solid rgba(37,99,235,0.2)",
-                }}
-              >
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke={darkMode ? "#00E5FF" : "#2563EB"}
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  <polyline points="9 12 11 14 15 10" />
-                </svg>
-              </div>
-
-              <p
-                className="font-bold text-sm mb-2"
-                style={{
-                  color: darkMode ? "#fff" : "#0F172A",
-                }}
-              >
-                گزارش شما ثبت شد
-              </p>
-
-              <p
-                style={{
-                  color: darkMode ? "#475569" : "#64748B",
-                  fontSize: "0.8rem",
-                }}
-              >
-                تیم پاراهور در کمتر از ۲ ساعت با شما تماس
-                می‌گیرد.
-              </p>
-
-              <button
-                onClick={onClose}
-                className="mt-5 px-6 py-2 rounded-lg text-sm"
-                style={{
-                  background: darkMode
-                    ? "rgba(255,255,255,0.04)"
-                    : "#F1F5F9",
-                  border: darkMode
-                    ? "1px solid rgba(255,255,255,0.08)"
-                    : "1px solid #E2E8F0",
-                  color: darkMode ? "#475569" : "#475569",
-                }}
-              >
-                بستن
-              </button>
-            </div>
-          ) : (
-            <>
-              <p
-                className="mb-4 text-xs"
-                style={{
-                  color: darkMode ? "#475569" : "#64748B",
-                  lineHeight: 1.75,
-                }}
-              >
-                اطلاعات شما با بالاترین سطح رمزنگاری
-                مستقیماً برای کارآگاهان ارشد پاراهور ارسال
-                می‌شود.
-              </p>
-
-              <div className="space-y-3">
-                <textarea
-                  rows={3}
-                  placeholder="شرح مختصر حادثه..."
-                  className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
-                  style={{
-                    background: darkMode ? "#060B19" : "#F8FAFC",
-                    border: darkMode
-                      ? "1px solid rgba(0,229,255,0.1)"
-                      : "1px solid #CBD5E1",
-                    color: darkMode ? "#E2E8F0" : "#0F172A",
-                    fontFamily: "Vazirmatn,sans-serif",
-                  }}
-                />
-
-                <input
-                  type="text"
-                  value={contact}
-                  onChange={(e) => setContact(e.target.value)}
-                  placeholder="شماره موبایل یا @ID تلگرام"
-                  className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                  style={{
-                    background: darkMode ? "#060B19" : "#F8FAFC",
-                    border: darkMode
-                      ? "1px solid rgba(0,229,255,0.1)"
-                      : "1px solid #CBD5E1",
-                    color: darkMode ? "#E2E8F0" : "#0F172A",
-                    fontFamily: "Vazirmatn,sans-serif",
-                  }}
-                />
-              </div>
-
-              <button
-                onClick={() => contact.trim() && setSent(true)}
-                className="w-full mt-4 py-3.5 rounded-xl font-bold text-sm"
-                style={{
-                  background: "#EF4444",
-                  color: "#fff",
-                  border: "1px solid rgba(239,68,68,0.5)",
-                  boxShadow:
-                    "0 0 20px rgba(239,68,68,0.25)",
-                  fontFamily: "Vazirmatn,sans-serif",
-                }}
-              >
-                ثبت امن گزارش و درخواست تماس
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
 
 /* ─── APP ─── */
 
 export default function App() {
   const [modalOpen, setModalOpen] = useState(false);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-  const [darkMode, setDarkMode] = useState(true);
+  const { darkMode } = useTheme();
+  const [crisisOpen, setCrisisOpen] = useState(false);
+
 
   const values = [
     {
-      icon: <IconLockedEye />,
+      icon: <IconLockedEye darkMode={darkMode} />,
       badge: "CONFIDENTIALITY",
       title: "رازداری مطلق",
       desc: "هویت مراجعین و جزئیات پرونده‌ها در بالاترین سطح امنیتی و به صورت آفلاین نگهداری می‌شوند.",
@@ -614,7 +421,7 @@ export default function App() {
         "پروتکل آفلاین • رمزگذاری سرتاسری • بدون ذخیره ابری",
     },
     {
-      icon: <IconLightning />,
+      icon: <IconLightning darkMode={darkMode} />,
       badge: "RAPID RESPONSE",
       title: "واکنش سریع",
       desc: "در جرایم سایبری زمان محدود است. تیم اورژانس ما در لحظه بحران وارد عمل می‌شود.",
@@ -622,7 +429,7 @@ export default function App() {
         "پاسخ اولیه < ۲ ساعت • ۷ روز هفته • ۲۴ ساعته",
     },
     {
-      icon: <IconTerminal />,
+      icon: <IconTerminal darkMode={darkMode} />,
       badge: "SCIENTIFIC PRECISION",
       title: "دقت علمی",
       desc: "گزارش‌های ما بر پایه تحلیل دقیق گره‌های بلاک‌چین و لاگ‌های سرور است، نه حدس و گمان.",
@@ -631,9 +438,9 @@ export default function App() {
     },
   ];
 
-  const accent = darkMode ? "#00E5FF" : "#2563EB";
+  const accent = darkMode ? "#00E5FF" : "#1E3A8A";
   const textMain = darkMode ? "#E2E8F0" : "#0F172A";
-  const textMuted = darkMode ? "#475569" : "#64748B";
+  const textMuted = darkMode ? "#475569" : "#475569";
   const cardBg = darkMode
     ? "rgba(255,255,255,0.028)"
     : "#FFFFFF";
@@ -642,42 +449,20 @@ export default function App() {
     <div
       className="min-h-full transition-colors duration-300"
       style={{
-        background: darkMode ? "#0A1128" : "#F8FAFC",
+        background: darkMode ? "#0A1128" : "#FFFFFF",
         color: textMain,
         fontFamily: "Vazirmatn, sans-serif",
         backgroundImage: darkMode
           ? "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"
-          : "linear-gradient(rgba(37,99,235,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,0.035) 1px,transparent 1px)",
+          : "linear-gradient(rgba(30,64,175,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(30,64,175,0.07) 1px,transparent 1px)",
         backgroundSize: "52px 52px",
       }}
     >
-      {modalOpen && (
+     {crisisOpen && (
         <EmergencyModal
-          onClose={() => setModalOpen(false)}
-          darkMode={darkMode}
+          onClose={() => setCrisisOpen(false)}
         />
       )}
-
-      {/* THEME BUTTON */}
-      <button
-        onClick={() => setDarkMode((prev) => !prev)}
-        className="fixed top-5 left-5 z-40 flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300"
-        style={{
-          background: darkMode
-            ? "rgba(255,255,255,0.04)"
-            : "#FFFFFF",
-          border: darkMode
-            ? "1px solid rgba(0,229,255,0.16)"
-            : "1px solid rgba(37,99,235,0.16)",
-          color: accent,
-          boxShadow: darkMode
-            ? "0 0 20px rgba(0,229,255,0.06)"
-            : "0 8px 24px rgba(37,99,235,0.08)",
-        }}
-        aria-label="تغییر تم"
-      >
-        {darkMode ? "☀" : "☾"}
-      </button>
 
       {/* ─── HERO ─── */}
 
@@ -688,14 +473,14 @@ export default function App() {
         viewport={{ once: true, amount: 0.2 }}
         className="relative overflow-hidden px-6 pt-24 pb-28 md:px-12 md:pt-32 md:pb-36 text-center"
       >
-        <HeroBg />
+        <HeroBg darkMode={darkMode} />
 
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background: darkMode
               ? "radial-gradient(ellipse 65% 60% at 50% 50%, rgba(0,229,255,0.065) 0%, transparent 70%)"
-              : "radial-gradient(ellipse 65% 60% at 50% 50%, rgba(37,99,235,0.07) 0%, transparent 70%)",
+              : "radial-gradient(ellipse 65% 60% at 50% 50%, rgba(227, 232, 242, 0.18) 0%, transparent 70%)",
           }}
         />
 
@@ -705,14 +490,14 @@ export default function App() {
             style={{
               background: darkMode
                 ? "rgba(0,229,255,0.07)"
-                : "rgba(37,99,235,0.06)",
+                : "rgba(30,58,138,0.12)",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.2)"
-                : "1px solid rgba(37,99,235,0.18)",
+                : "1px solid rgba(30,58,138,0.42)",
               color: accent,
             }}
           >
-            <PulseDot size={5} />
+            <PulseDot size={5} darkMode={darkMode} />
 
             <span
               style={{
@@ -732,7 +517,7 @@ export default function App() {
               lineHeight: 1.3,
               textShadow: darkMode
                 ? "0 0 80px rgba(0,229,255,0.18), 0 0 160px rgba(0,229,255,0.08)"
-                : "0 10px 40px rgba(37,99,235,0.08)",
+                : "0 10px 40px rgba(248, 250, 255, 0.16)",
             }}
           >
             ما تاریکی‌های
@@ -800,7 +585,7 @@ export default function App() {
             height: 1,
             background: darkMode
               ? "linear-gradient(90deg,transparent,rgba(0,229,255,0.2),transparent)"
-              : "linear-gradient(90deg,transparent,rgba(37,99,235,0.2),transparent)",
+              : "linear-gradient(90deg,transparent,rgba(30,64,175,0.28),transparent)",
           }}
         />
       </motion.section>
@@ -824,7 +609,7 @@ export default function App() {
                     height: 22,
                     background: darkMode
                       ? "linear-gradient(180deg,#00E5FF,rgba(0,229,255,0.15))"
-                      : "linear-gradient(180deg,#2563EB,rgba(37,99,235,0.15))",
+                      : "linear-gradient(180deg,#2563EB,rgba(30,64,175,0.22))",
                     borderRadius: 2,
                   }}
                 />
@@ -835,7 +620,7 @@ export default function App() {
                     fontSize: "0.62rem",
                     color: darkMode
                       ? "rgba(0,229,255,0.45)"
-                      : "rgba(37,99,235,0.65)",
+                      : "rgba(30,64,175,0.78)",
                     letterSpacing: "0.18em",
                   }}
                 >
@@ -904,15 +689,15 @@ export default function App() {
                 {[
                   {
                     label: "تحلیل آن‌چین بلاک‌چین",
-                    col: "#2563EB",
+                    col: "#1E3A8A",
                   },
                   {
                     label: "گزارش‌های دادگاه‌پسند",
-                    col: "#2563EB",
+                    col: "#1E3A8A",
                   },
                   {
                     label: "کارآگاهی دیجیتال",
-                    col: "#2563EB",
+                    col: "#1E3A8A",
                   },
                   {
                     label: "مشاوره حقوقی فنی",
@@ -931,10 +716,26 @@ export default function App() {
                         : `1px solid ${col}25`,
                       color:
                         col === "#7C3AED"
-                          ? "#7C3AED"
+                          ? (darkMode ? "#7C3AED" : "#1E3A8A")
                           : darkMode
                             ? "#00E5FF"
-                            : "#2563EB",
+                            : "#1E3A8A",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!darkMode) {
+                        e.currentTarget.style.background = "#EFF6FF";
+                        e.currentTarget.style.borderColor = "rgba(29,78,216,0.42)";
+                        e.currentTarget.style.transform = "translateY(-2px)";
+                        e.currentTarget.style.boxShadow = "0 8px 22px rgba(30,58,138,0.12)";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!darkMode) {
+                        e.currentTarget.style.background = "rgba(30,58,138,0.10)";
+                        e.currentTarget.style.borderColor = "rgba(30,58,138,0.34)";
+                        e.currentTarget.style.transform = "none";
+                        e.currentTarget.style.boxShadow = "none";
+                      }
                     }}
                   >
                     <span
@@ -963,13 +764,13 @@ export default function App() {
                   className="absolute inset-0 pointer-events-none rounded-full"
                   style={{
                     background: darkMode
-                      ? "radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%)"
-                      : "radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 70%)",
+                      ? "radial-gradient(circle, rgba(30,64,175,0.14) 0%, rgba(30,64,175,0.04) 48%, transparent 72%)"
+                      : "radial-gradient(circle, rgba(29,78,216,0.20) 0%, rgba(30,58,138,0.08) 42%, transparent 72%)",
                     transform: "scale(1.3)",
                   }}
                 />
 
-                <SynergyIllustration />
+                <SynergyIllustration darkMode={darkMode} />
               </div>
             </div>
           </div>
@@ -990,10 +791,10 @@ export default function App() {
             : "rgba(255,255,255,0.75)",
           borderTop: darkMode
             ? "1px solid rgba(0,229,255,0.06)"
-            : "1px solid rgba(37,99,235,0.08)",
+            : "1px solid rgba(30,58,138,0.16)",
           borderBottom: darkMode
             ? "1px solid rgba(0,229,255,0.06)"
-            : "1px solid rgba(37,99,235,0.08)",
+            : "1px solid rgba(30,58,138,0.16)",
         }}
       >
         <div className="max-w-5xl mx-auto">
@@ -1004,7 +805,7 @@ export default function App() {
                 fontSize: "0.62rem",
                 color: darkMode
                   ? "rgba(0,229,255,0.4)"
-                  : "rgba(37,99,235,0.55)",
+                  : "rgba(30,58,138,0.90)",
                 letterSpacing: "0.2em",
               }}
               className="block mb-3"
@@ -1028,7 +829,7 @@ export default function App() {
                 width: 60,
                 background: darkMode
                   ? "linear-gradient(90deg,transparent,rgba(0,229,255,0.5),transparent)"
-                  : "linear-gradient(90deg,transparent,rgba(37,99,235,0.55),transparent)",
+                  : "linear-gradient(90deg,transparent,rgba(30,58,138,0.90),transparent)",
                 margin: "16px auto 0",
               }}
             />
@@ -1046,15 +847,15 @@ export default function App() {
                     background: isHov
                       ? darkMode
                         ? "rgba(0,229,255,0.06)"
-                        : "rgba(37,99,235,0.06)"
+                        : "rgba(192, 200, 221, 0.12)"
                       : cardBg,
                     border: isHov
                       ? darkMode
                         ? "1px solid rgba(0,229,255,0.35)"
-                        : "1px solid rgba(37,99,235,0.35)"
+                        : "1px solid rgba(29,78,216,0.52)"
                       : darkMode
                         ? "1px solid rgba(0,229,255,0.12)"
-                        : "1px solid rgba(37,99,235,0.14)",
+                        : "1px solid rgba(29,78,216,0.20)",
                     backdropFilter: "blur(10px)",
                     transform: isHov
                       ? "translateY(-4px)"
@@ -1062,7 +863,7 @@ export default function App() {
                     boxShadow: isHov
                       ? darkMode
                         ? "0 16px 48px rgba(0,0,0,0.4), 0 0 30px rgba(0,229,255,0.07)"
-                        : "0 16px 40px rgba(37,99,235,0.12)"
+                        : "0 16px 40px rgba(30,58,138,0.34)"
                       : darkMode
                         ? "0 4px 20px rgba(0,0,0,0.2)"
                         : "0 4px 20px rgba(15,23,42,0.06)",
@@ -1075,7 +876,7 @@ export default function App() {
                       height: 1.5,
                       background: darkMode
                         ? "linear-gradient(90deg,transparent,rgba(0,229,255,0.6),transparent)"
-                        : "linear-gradient(90deg,transparent,rgba(37,99,235,0.7),transparent)",
+                        : "linear-gradient(90deg,transparent,rgba(30,64,175,0.82),transparent)",
                       opacity: isHov ? 1 : 0.3,
                       transition: "opacity 0.3s",
                     }}
@@ -1088,7 +889,7 @@ export default function App() {
                         fontSize: "0.58rem",
                         color: darkMode
                           ? "rgba(0,229,255,0.35)"
-                          : "rgba(37,99,235,0.55)",
+                          : "rgba(30,58,138,0.90)",
                         letterSpacing: "0.14em",
                         marginBottom: 16,
                         display: "block",
@@ -1106,14 +907,14 @@ export default function App() {
                             : "rgba(37,99,235,0.1)"
                           : darkMode
                             ? "rgba(0,229,255,0.06)"
-                            : "rgba(37,99,235,0.05)",
+                            : "rgba(30,58,138,0.10)",
                         border: isHov
                           ? darkMode
                             ? "1px solid rgba(0,229,255,0.3)"
-                            : "1px solid rgba(37,99,235,0.3)"
+                            : "1px solid rgba(30,64,175,0.42)"
                           : darkMode
                             ? "1px solid rgba(0,229,255,0.15)"
-                            : "1px solid rgba(37,99,235,0.12)",
+                            : "1px solid rgba(30,58,138,0.34)",
                       }}
                     >
                       {v.icon}
@@ -1152,7 +953,7 @@ export default function App() {
                         background: isHov
                           ? darkMode
                             ? "rgba(0,229,255,0.12)"
-                            : "rgba(37,99,235,0.12)"
+                            : "rgba(30,58,138,0.34)"
                           : darkMode
                             ? "rgba(255,255,255,0.04)"
                             : "rgba(15,23,42,0.06)",
@@ -1167,7 +968,7 @@ export default function App() {
                         fontSize: "0.65rem",
                         color: darkMode
                           ? "rgba(0,229,255,0.35)"
-                          : "rgba(37,99,235,0.55)",
+                          : "rgba(30,58,138,0.90)",
                         letterSpacing: "0.06em",
                       }}
                     >
@@ -1198,7 +999,7 @@ export default function App() {
                 fontSize: "0.62rem",
                 color: darkMode
                   ? "rgba(0,229,255,0.4)"
-                  : "rgba(37,99,235,0.55)",
+                  : "rgba(30,58,138,0.90)",
                 letterSpacing: "0.2em",
               }}
               className="block mb-3"
@@ -1225,7 +1026,7 @@ export default function App() {
                 width: 1,
                 background: darkMode
                   ? "linear-gradient(180deg,rgba(0,229,255,0.4),rgba(0,229,255,0.05))"
-                  : "linear-gradient(180deg,rgba(37,99,235,0.45),rgba(37,99,235,0.05))",
+                  : "linear-gradient(180deg,rgba(29,78,216,0.62),rgba(30,58,138,0.10))",
               }}
             />
 
@@ -1270,11 +1071,27 @@ export default function App() {
                           : "#FFFFFF",
                         border: darkMode
                           ? "1px solid rgba(0,229,255,0.1)"
-                          : "1px solid rgba(37,99,235,0.12)",
+                          : "1px solid rgba(30,58,138,0.34)",
                         boxShadow: darkMode
                           ? "none"
                           : "0 8px 24px rgba(15,23,42,0.04)",
                       }}
+                    onMouseEnter={(e) => {
+                      if (!darkMode) {
+                        e.currentTarget.style.background = "#eff6ffe8";
+                        e.currentTarget.style.borderColor = "rgba(29,78,216,0.52)";
+                        e.currentTarget.style.transform = "translateY(-2px)";
+                        e.currentTarget.style.boxShadow = "0 8px 22px rgba(30,58,138,0.24)";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!darkMode) {
+                        e.currentTarget.style.background = "#FFFFFF";
+                        e.currentTarget.style.borderColor = "rgba(30,58,138,0.34)";
+                        e.currentTarget.style.transform = "none";
+                        e.currentTarget.style.boxShadow = "none";
+                      }
+                    }}
                     >
                       <span
                         style={{
@@ -1282,7 +1099,7 @@ export default function App() {
                           fontSize: "0.62rem",
                           color: darkMode
                             ? "rgba(0,229,255,0.5)"
-                            : "rgba(37,99,235,0.65)",
+                            : "rgba(30,64,175,0.78)",
                           letterSpacing: "0.15em",
                         }}
                         className="block mb-2"
@@ -1327,10 +1144,10 @@ export default function App() {
                         background: accent,
                         boxShadow: darkMode
                           ? "0 0 12px rgba(0,229,255,0.8)"
-                          : "0 0 12px rgba(37,99,235,0.35)",
+                          : "0 0 12px rgba(29,78,216,0.52)",
                         border: darkMode
                           ? "2px solid rgba(0,229,255,0.4)"
-                          : "2px solid rgba(37,99,235,0.25)",
+                          : "2px solid rgba(29,78,216,0.40)",
                       }}
                     />
                   </div>
@@ -1352,10 +1169,10 @@ export default function App() {
           background: darkMode ? "#060B19" : "#FFFFFF",
           borderTop: darkMode
             ? "1px solid rgba(0,229,255,0.09)"
-            : "1px solid rgba(37,99,235,0.09)",
+            : "1px solid rgba(30,58,138,0.34)",
           borderBottom: darkMode
             ? "1px solid rgba(0,229,255,0.09)"
-            : "1px solid rgba(37,99,235,0.09)",
+            : "1px solid rgba(30,58,138,0.34)",
         }}
       >
         <div className="max-w-5xl mx-auto flex items-start gap-4">
@@ -1364,13 +1181,13 @@ export default function App() {
             style={{
               background: darkMode
                 ? "rgba(0,229,255,0.07)"
-                : "rgba(37,99,235,0.07)",
+                : "rgba(30,58,138,0.18)",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.15)"
-                : "1px solid rgba(37,99,235,0.15)",
+                : "1px solid rgba(30,64,175,0.22)",
             }}
           >
-            <IconInfo />
+            <IconInfo darkMode={darkMode} />
           </div>
 
           <p
@@ -1416,10 +1233,10 @@ export default function App() {
                 : "#FFFFFF",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.16)"
-                : "1px solid rgba(37,99,235,0.16)",
+                : "1px solid rgba(30,58,138,0.42)",
               boxShadow: darkMode
                 ? "0 0 60px rgba(0,229,255,0.06), 0 0 120px rgba(0,229,255,0.03), inset 0 0 40px rgba(0,229,255,0.02)"
-                : "0 20px 60px rgba(37,99,235,0.08)",
+                : "0 20px 60px rgba(30,58,138,0.16)",
             }}
           >
             <div
@@ -1431,10 +1248,10 @@ export default function App() {
                 height: 48,
                 borderTop: darkMode
                   ? "1.5px solid rgba(0,229,255,0.3)"
-                  : "1.5px solid rgba(37,99,235,0.3)",
+                  : "1.5px solid rgba(30,64,175,0.42)",
                 borderRight: darkMode
                   ? "1.5px solid rgba(0,229,255,0.3)"
-                  : "1.5px solid rgba(37,99,235,0.3)",
+                  : "1.5px solid rgba(30,64,175,0.42)",
                 borderRadius: "0 16px 0 0",
                 pointerEvents: "none",
               }}
@@ -1449,10 +1266,10 @@ export default function App() {
                 height: 48,
                 borderBottom: darkMode
                   ? "1.5px solid rgba(0,229,255,0.3)"
-                  : "1.5px solid rgba(37,99,235,0.3)",
+                  : "1.5px solid rgba(30,64,175,0.42)",
                 borderLeft: darkMode
                   ? "1.5px solid rgba(0,229,255,0.3)"
-                  : "1.5px solid rgba(37,99,235,0.3)",
+                  : "1.5px solid rgba(30,64,175,0.42)",
                 borderRadius: "0 0 0 16px",
                 pointerEvents: "none",
               }}
@@ -1464,7 +1281,7 @@ export default function App() {
                 fontSize: "0.62rem",
                 color: darkMode
                   ? "rgba(0,229,255,0.4)"
-                  : "rgba(37,99,235,0.55)",
+                  : "rgba(30,58,138,0.90)",
                 letterSpacing: "0.2em",
               }}
               className="block mb-5"
@@ -1498,7 +1315,7 @@ export default function App() {
             </p>
 
             <button
-              onClick={() => setModalOpen(true)}
+               onClick={() => setCrisisOpen(true)}
               className="inline-flex items-center gap-2.5 px-9 py-4 rounded-xl font-bold transition-all"
               style={{
                 background: "#EF4444",

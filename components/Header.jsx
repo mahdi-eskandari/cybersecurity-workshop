@@ -199,7 +199,7 @@ export default function Header() {
 
   const navItems = [
     { label: "خدمات ما", href: "/services" },
-    { label: "وبلاگ", href: "/blog" },
+    { label: "وبلاگ", href: "/blogs" },
     { label: "درباره ما", href: "/about" },
     { label: "تماس با ما", href: "/contact" },
   ];
@@ -307,26 +307,11 @@ export default function Header() {
             className="px-2.5 py-1.5 sm:px-3.5 sm:py-2 md:px-4 rounded-lg text-[11px] sm:text-xs md:text-sm font-semibold transition-all whitespace-nowrap"
             style={{
               color: "#FFFFFF",
-              backgroundColor: darkMode ? "#EF4444" : "#0B3B82",
-              border: darkMode
-                ? "1px solid #EF4444"
-                : "1px solid #1D4ED8",
-              boxShadow: darkMode
-                ? undefined
-                : "0 4px 14px rgba(7,26,58,0.28)",
+              backgroundColor: "#EF4444",
+              border: "1px solid #EF4444"
+
             }}
-            onMouseEnter={(e) => {
-              if (!darkMode) {
-                e.currentTarget.style.backgroundColor = "#2563EB";
-                e.currentTarget.style.borderColor = "#60A5FA";
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!darkMode) {
-                e.currentTarget.style.backgroundColor = "#0B3B82";
-                e.currentTarget.style.borderColor = "#1D4ED8";
-              }
-            }}
+            
           >
             تماس اورژانسی
           </Link>

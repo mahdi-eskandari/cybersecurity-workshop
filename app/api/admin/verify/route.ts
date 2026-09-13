@@ -8,6 +8,7 @@ import bcrypt from "bcryptjs";
 import { sendVerificationEmail } from "../../../../lib/mail";
 
 export async function POST(req: Request) {
+    console.log("🔥 VERIFY ROUTE HIT");
   try {
     await dbConnect();
 
@@ -37,10 +38,17 @@ export async function POST(req: Request) {
       );
     }
 
-    const isPasswordValid = await bcrypt.compare(
-      password,
-      user.password
-    );
+console.log("LOGIN EMAIL:", email);
+console.log("USER FOUND:", !!user);
+console.log("USER ROLE:", user?.role);
+console.log("PASSWORD EXISTS:", !!user?.password);
+
+const isPasswordValid = await bcrypt.compare(
+  password,
+  user.password
+);
+
+console.log("PASSWORD VALID:", isPasswordValid);
 
     if (!isPasswordValid) {
       return NextResponse.json(

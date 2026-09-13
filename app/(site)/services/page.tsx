@@ -380,18 +380,19 @@ useEffect(() => {
 
 
   return (
-    <div
-      className="min-h-full"
-      style={{
-        background: darkMode ? "#0A1128" : "#FFFFFF",
-        color: darkMode ? "#E2E8F0" : "#111827",
-        fontFamily: "Vazirmatn, sans-serif",
-        backgroundImage: darkMode
-          ? "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"
-          : "linear-gradient(rgba(30,58,138,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,138,0.035) 1px,transparent 1px)",
-        backgroundSize: "52px 52px",
-      }}
-    >
+   <div
+    className="min-h-full transition-colors duration-300"
+    style={{
+      color: darkMode ? "#E2E8F0" : "#0F172A",
+      fontFamily: "Vazirmatn, sans-serif",
+      backgroundColor: darkMode ? "#0A1128" : "#FFFFFF",
+      backgroundImage: darkMode
+        ? "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"
+        : "linear-gradient(rgba(30,58,138,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,138,0.035) 1px,transparent 1px)",
+      backgroundSize: "52px 52px",
+      backgroundAttachment: "fixed",
+    }}
+  >
       {/* ── HERO ── */}
 
       {/* <section className="relative px-6 pt-20 pb-16 md:px-12 md:pt-28 md:pb-20 text-center overflow-hidden"> */}
@@ -406,8 +407,8 @@ useEffect(() => {
           className="absolute inset-0 pointer-events-none"
           style={{
             background: darkMode
-              ? "radial-gradient(ellipse 65% 55% at 50% 40%, rgba(0,229,255,0.055) 0%, transparent 70%)"
-              : "radial-gradient(ellipse 65% 55% at 50% 40%, rgba(30,58,138,0.045) 0%, transparent 70%)",
+              ? "radial-gradient(ellipse 65% 60% at 50% 50%, rgba(0,229,255,0.065) 0%, transparent 70%)"
+              : "radial-gradient(ellipse 65% 60% at 50% 50%, rgba(84, 128, 215, 0.18) 0%, transparent 70%)",
           }}
         />
 
@@ -449,7 +450,7 @@ useEffect(() => {
             className="font-black mb-5 leading-snug"
             style={{
               fontSize: "clamp(1.7rem, 4vw, 2.8rem)",
-              color: darkMode ? "#fff" : "#111827",
+              color: darkMode ? "#fff" : "#0F172A",
               textShadow: darkMode
                 ? "0 0 60px rgba(0,229,255,0.12)"
                 : "0 8px 30px rgba(30,58,138,0.08)",
@@ -458,7 +459,7 @@ useEffect(() => {
           >
             خدمات اجرایی و مشاوره‌های
             <br />
-            <span style={{ color: blueBright }}>
+            <span style={{ color: darkMode ? blueBright : "#1E3A8A" }}>
               تخصصی پاراهور
             </span>
           </h1>
@@ -614,7 +615,7 @@ useEffect(() => {
                 <h2
                   className="font-bold mb-2"
                   style={{
-                    color: darkMode ? "#fff" : "#111827",
+                    color: darkMode ? "#fff" : "#0F172A",
                     fontSize: "clamp(1rem, 2.2vw, 1.35rem)",
                     lineHeight: 1.4,
                   }}
@@ -656,7 +657,7 @@ useEffect(() => {
                     (e.currentTarget as HTMLElement).style.background =
                       darkMode
                         ? "rgba(0,229,255,0.1)"
-                        : "#1E3A8A";
+                        : "#142a65";
 
                     (e.currentTarget as HTMLElement).style.color =
                       darkMode ? "#00E5FF" : "#FFFFFF";
@@ -666,8 +667,7 @@ useEffect(() => {
                         ? "0 0 28px rgba(0,229,255,0.15), inset 0 0 20px rgba(0,229,255,0.06)"
                         : "0 12px 30px rgba(30,58,138,0.20)";
 
-                    (e.currentTarget as HTMLElement).style.transform =
-                      "translateY(-2px)";
+
                   }}
                   onMouseLeave={(e) => {
                     (e.currentTarget as HTMLElement).style.background =
@@ -777,7 +777,7 @@ useEffect(() => {
             <h2
               className="font-bold"
               style={{
-                color: darkMode ? "#fff" : "#111827",
+                color: darkMode ? "#fff" : "#0F172A",
                 fontSize: "clamp(1.2rem, 2.5vw, 1.7rem)",
               }}
             >
@@ -787,7 +787,7 @@ useEffect(() => {
             <p
               className="mt-2 text-sm"
               style={{
-                color: darkMode ? "#334155" : "#475569",
+                color: darkMode ? "#334155" : "#334155",
                 maxWidth: 480,
               }}
             >
@@ -799,9 +799,11 @@ useEffect(() => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {services.map((s) => {
+               if (s.status !== "active") return null;
               const isHovered = hoveredCard === s.id;
 
               return (
+                
                 <div
                   key={s.id}
                   className="relative flex flex-col overflow-hidden rounded-2xl transition-all duration-300 cursor-default"
@@ -811,16 +813,16 @@ useEffect(() => {
                         ? "rgba(0,229,255,0.055)"
                         : "rgba(255,255,255,0.028)"
                       : isHovered
-                        ? "#FFFFFF"
-                        : "#F8FAFC",
+                        ? "rgba(192, 200, 221, 0.12)"
+                        : "#FFFFFF",
 
                     border: darkMode
                       ? isHovered
                         ? "1px solid rgba(0,229,255,0.35)"
                         : "1px solid rgba(0,229,255,0.12)"
                       : isHovered
-                        ? "1px solid rgba(30,58,138,0.35)"
-                        : "1px solid rgba(30,58,138,0.13)",
+                        ? "1px solid rgba(29,78,216,0.52)"
+                        : "1px solid rgba(29,78,216,0.20)",
 
                     backdropFilter: "blur(10px)",
 
@@ -833,8 +835,8 @@ useEffect(() => {
                         ? "0 12px 40px rgba(0,0,0,0.4), 0 0 30px rgba(0,229,255,0.06)"
                         : "0 4px 20px rgba(0,0,0,0.2)"
                       : isHovered
-                        ? "0 18px 45px rgba(15,23,42,0.11), 0 8px 24px rgba(30,58,138,0.08)"
-                        : "0 5px 18px rgba(15,23,42,0.05)",
+                        ? "0 16px 40px rgba(30,58,138,0.34)"
+                        : "0 4px 20px rgba(15,23,42,0.06)",
                   }}
                   onMouseEnter={() => setHoveredCard(s.id)}
                   onMouseLeave={() => setHoveredCard(null)}
@@ -846,7 +848,7 @@ useEffect(() => {
                       height: 1.5,
                       background: darkMode
                         ? "linear-gradient(90deg,transparent,rgba(0,229,255,0.7),transparent)"
-                        : "linear-gradient(90deg,transparent,rgba(30,58,138,0.75),transparent)",
+                        : "linear-gradient(90deg,transparent,rgba(30,64,175,0.82),transparent)",
                       opacity: isHovered ? 1 : 0,
                       transition: "opacity 0.3s",
                     }}
@@ -880,30 +882,32 @@ useEffect(() => {
                       <span
                         style={{
                           fontSize: "0.65rem",
-                        color: {
-  intermediate: "#10B981",
-  specialized: "#00E5FF",
-  advanced: "#A78BFA",
-  complex: "#F59E0B",
-}[s.level],
+                        color: darkMode
+                          ? {
+                              intermediate: "#10B981",
+                              specialized: "#00E5FF",
+                              advanced: "#A78BFA",
+                              complex: "#F59E0B",
+                            }[s.level]
+                          : "#1E3A8A",
 
-background: `${
-  {
-    intermediate: "#10B981",
-    specialized: "#00E5FF",
-    advanced: "#A78BFA",
-    complex: "#F59E0B",
-  }[s.level]
-}15`,
+                        background: darkMode
+                          ? `${{
+                              intermediate: "#10B981",
+                              specialized: "#00E5FF",
+                              advanced: "#A78BFA",
+                              complex: "#F59E0B",
+                            }[s.level]}15`
+                          : "rgba(30,58,138,0.08)",
 
-border: `1px solid ${
-  {
-    intermediate: "#10B981",
-    specialized: "#00E5FF",
-    advanced: "#A78BFA",
-    complex: "#F59E0B",
-  }[s.level]
-}30`,
+                        border: darkMode
+                          ? `1px solid ${{
+                              intermediate: "#10B981",
+                              specialized: "#00E5FF",
+                              advanced: "#A78BFA",
+                              complex: "#F59E0B",
+                            }[s.level]}30`
+                          : "1px solid rgba(30,58,138,0.20)",
                           padding: "1px 7px",
                           borderRadius: 4,
                         }}

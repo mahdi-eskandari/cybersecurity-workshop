@@ -8,9 +8,36 @@ import {
 } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { EditorContent, useEditor } from "@tiptap/react";
+import { Extension, Mark, Node, mergeAttributes } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Underline from "@tiptap/extension-underline";
+import {
+  AlignCenter,
+  AlignJustify,
+  AlignLeft,
+  AlignRight,
+  ArrowLeftRight,
+  Code2,
+  Highlighter,
+  IndentDecrease,
+  IndentIncrease,
+  Link2,
+  List,
+  ListOrdered,
+  Minus,
+  MoreHorizontal,
+  Pilcrow,
+  Quote,
+  Redo2,
+  RemoveFormatting,
+  Strikethrough,
+  Subscript,
+  Superscript,
+  Type,
+  Underline as UnderlineIcon,
+  Undo2,
+} from "lucide-react";
 
 /* ───────────────── ICONS ───────────────── */
 
@@ -358,6 +385,433 @@ const getTiptapText = (node: any): string => {
   return "";
 };
 
+const InsertMark = Mark.create({
+  name: "insert",
+
+  parseHTML() {
+    return [{ tag: "ins" }];
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ["ins", mergeAttributes(HTMLAttributes), 0];
+  },
+
+  addCommands() {
+    return {
+      toggleInsert:
+        () =>
+        ({ commands }: { commands: any }) =>
+          commands.toggleMark(this.name),
+    } as any;
+  },
+});
+
+const DeleteMark = Mark.create({
+  name: "delete",
+
+  parseHTML() {
+    return [{ tag: "del" }];
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ["del", mergeAttributes(HTMLAttributes), 0];
+  },
+
+  addCommands() {
+    return {
+      toggleDelete:
+        () =>
+        ({ commands }: { commands: any }) =>
+          commands.toggleMark(this.name),
+    } as any;
+  },
+});
+
+const ImageNode = Node.create({
+  name: "serviceImage",
+  inline: true,
+  group: "inline",
+  draggable: true,
+
+  addAttributes() {
+    return {
+      src: { default: "" },
+      alt: { default: "" },
+      title: { default: "" },
+    };
+  },
+
+  parseHTML() {
+    return [{ tag: "img[src]" }];
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ["img", mergeAttributes(HTMLAttributes)];
+  },
+});
+
+const MoreNode = Node.create({
+  name: "more",
+  group: "block",
+  atom: true,
+
+  parseHTML() {
+    return [{ tag: 'div[data-service-more="true"]' }];
+  },
+
+  renderHTML() {
+    return [
+      "div",
+      {
+        "data-service-more": "true",
+        class: "service-more-marker",
+      },
+      "ادامه مطلب",
+    ];
+  },
+});
+
+const TextColorMark = Mark.create({
+  name: "textColor",
+
+  addAttributes() {
+    return {
+      color: {
+        default: null,
+        parseHTML: (element) => element.style.color || null,
+        renderHTML: (attributes) =>
+          attributes.color ? { style: `color: ${attributes.color}` } : {},
+      },
+    };
+  },
+
+  parseHTML() {
+    return [{ tag: "span[style*='color']" }];
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ["span", mergeAttributes(HTMLAttributes), 0];
+  },
+});
+
+const HighlightMark = Mark.create({
+  name: "textHighlight",
+
+  addAttributes() {
+    return {
+      color: {
+        default: null,
+        parseHTML: (element) => element.style.backgroundColor || null,
+        renderHTML: (attributes) =>
+          attributes.color
+            ? { style: `background-color: ${attributes.color}` }
+            : {},
+      },
+    };
+  },
+
+  parseHTML() {
+    return [{ tag: "mark" }, { tag: "span[style*='background-color']" }];
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ["mark", mergeAttributes(HTMLAttributes), 0];
+  },
+});
+
+const FontSizeMark = Mark.create({
+  name: "fontSize",
+
+  addAttributes() {
+    return {
+      size: {
+        default: null,
+        parseHTML: (element) => element.style.fontSize || null,
+        renderHTML: (attributes) =>
+          attributes.size ? { style: `font-size: ${attributes.size}` } : {},
+      },
+    };
+  },
+
+  parseHTML() {
+    return [{ tag: "span[style*='font-size']" }];
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ["span", mergeAttributes(HTMLAttributes), 0];
+  },
+});
+
+const FontFamilyMark = Mark.create({
+  name: "fontFamily",
+
+  addAttributes() {
+    return {
+      family: {
+        default: null,
+        parseHTML: (element) => element.style.fontFamily || null,
+        renderHTML: (attributes) =>
+          attributes.family
+            ? { style: `font-family: ${attributes.family}` }
+            : {},
+      },
+    };
+  },
+
+  parseHTML() {
+    return [{ tag: "span[style*='font-family']" }];
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ["span", mergeAttributes(HTMLAttributes), 0];
+  },
+});
+
+const SuperscriptMark = Mark.create({
+  name: "superscript",
+
+  parseHTML() {
+    return [{ tag: "sup" }];
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ["sup", mergeAttributes(HTMLAttributes), 0];
+  },
+});
+
+const SubscriptMark = Mark.create({
+  name: "subscript",
+
+  parseHTML() {
+    return [{ tag: "sub" }];
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ["sub", mergeAttributes(HTMLAttributes), 0];
+  },
+});
+
+const TextAlignExtension = Extension.create({
+  name: "serviceTextAlign",
+
+  addGlobalAttributes() {
+    return [
+      {
+        types: ["paragraph", "heading"],
+        attributes: {
+          textAlign: {
+            default: "right",
+            parseHTML: (element: HTMLElement) =>
+              element.style.textAlign || "right",
+            renderHTML: (attributes: { textAlign?: string }) => ({
+              style: `text-align: ${attributes.textAlign || "right"}`,
+            }),
+          },
+          textDirection: {
+            default: "rtl",
+            parseHTML: (element: HTMLElement) =>
+              element.getAttribute("dir") || "rtl",
+            renderHTML: (attributes: { textDirection?: string }) => ({
+              dir: attributes.textDirection || "rtl",
+            }),
+          },
+          indent: {
+            default: 0,
+            parseHTML: (element: HTMLElement) =>
+              Number(element.getAttribute("data-indent") || 0),
+            renderHTML: (attributes: { indent?: number }) => ({
+              "data-indent": String(attributes.indent || 0),
+              style: `text-indent: ${(attributes.indent || 0) * 2}em;`,
+            }),
+          },
+        },
+      },
+    ];
+  },
+
+  addCommands() {
+    return {
+      setTextDirection:
+        (direction: "rtl" | "auto" | "ltr") =>
+        ({ commands }: any) =>
+          commands.updateAttributes("paragraph", { textDirection: direction }) ||
+          commands.updateAttributes("heading", { textDirection: direction }),
+      setTextIndent:
+        (indent: number) =>
+        ({ commands }: any) => {
+          const value = Math.max(0, indent);
+          return (
+            commands.updateAttributes("paragraph", { indent: value }) ||
+            commands.updateAttributes("heading", { indent: value })
+          );
+        },
+    };
+  },
+});
+
+const ServiceTextStyle = Mark.create({
+  name: "serviceTextStyle",
+
+  addAttributes() {
+    return {
+      fontFamily: {
+        default: null,
+        parseHTML: (element) => element.style.fontFamily || null,
+        renderHTML: (attributes) =>
+          attributes.fontFamily
+            ? { style: `font-family: ${attributes.fontFamily}` }
+            : {},
+      },
+      fontSize: {
+        default: null,
+        parseHTML: (element) => element.style.fontSize || null,
+        renderHTML: (attributes) =>
+          attributes.fontSize
+            ? { style: `font-size: ${attributes.fontSize}` }
+            : {},
+      },
+      color: {
+        default: null,
+        parseHTML: (element) => element.style.color || null,
+        renderHTML: (attributes) =>
+          attributes.color ? { style: `color: ${attributes.color}` } : {},
+      },
+      backgroundColor: {
+        default: null,
+        parseHTML: (element) => element.style.backgroundColor || null,
+        renderHTML: (attributes) =>
+          attributes.backgroundColor
+            ? { style: `background-color: ${attributes.backgroundColor}` }
+            : {},
+      },
+    };
+  },
+
+  parseHTML() {
+    return [{ tag: "span[style]" }];
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ["span", mergeAttributes(HTMLAttributes), 0];
+  },
+});
+
+const ServiceSuper = Mark.create({
+  name: "serviceSuperscript",
+  parseHTML() { return [{ tag: "sup" }]; },
+  renderHTML({ HTMLAttributes }) { return ["sup", mergeAttributes(HTMLAttributes), 0]; },
+});
+
+const ServiceSub = Mark.create({
+  name: "serviceSubscript",
+  parseHTML() { return [{ tag: "sub" }]; },
+  renderHTML({ HTMLAttributes }) { return ["sub", mergeAttributes(HTMLAttributes), 0]; },
+});
+
+const ServiceMore = Node.create({
+  name: "serviceMore",
+  group: "block",
+  atom: true,
+  parseHTML() {
+    return [{ tag: "div[data-service-more]" }];
+  },
+  renderHTML() {
+    return ["div", { "data-service-more": "true" }, "ادامه مطلب"];
+  },
+});
+
+const ServiceParagraphStyle = Extension.create({
+  name: "serviceParagraphStyle",
+
+  addGlobalAttributes() {
+    return [
+      {
+        types: ["paragraph", "heading"],
+        attributes: {
+          textAlign: {
+            default: "right",
+            parseHTML: (element) => element.style.textAlign || "right",
+            renderHTML: (attributes) =>
+              attributes.textAlign
+                ? { style: `text-align: ${attributes.textAlign}` }
+                : {},
+          },
+          textDirection: {
+            default: "rtl",
+            parseHTML: (element) => element.getAttribute("dir") || "rtl",
+            renderHTML: (attributes) =>
+              attributes.textDirection
+                ? { dir: attributes.textDirection }
+                : {},
+          },
+          indent: {
+            default: 0,
+            parseHTML: (element) => Number(element.getAttribute("data-indent") || 0),
+            renderHTML: (attributes) =>
+              attributes.indent
+                ? {
+                    "data-indent": String(attributes.indent),
+                    style:
+                      attributes.textDirection === "ltr"
+                        ? `margin-left: ${attributes.indent * 28}px`
+                        : `margin-right: ${attributes.indent * 28}px`,
+                  }
+                : {},
+          },
+        },
+      },
+    ];
+  },
+});
+
+function EditorIcon({ name }: { name: string }) {
+  const common = {
+    width: 15,
+    height: 15,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.9,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+  };
+
+  const paths: Record<string, ReactNode> = {
+    undo: <><path d="M9 14 4 9l5-5" /><path d="M4 9h10a6 6 0 0 1 6 6v1" /></>,
+    redo: <><path d="m15 14 5-5-5-5" /><path d="M20 9H10a6 6 0 0 0-6 6v1" /></>,
+    bold: <><path d="M7 5h6a4 4 0 0 1 0 8H7z" /><path d="M7 13h7a4 4 0 0 1 0 8H7z" /></>,
+    italic: <><line x1="19" y1="4" x2="10" y2="20" /><line x1="9" y1="4" x2="19" y2="4" /><line x1="5" y1="20" x2="15" y2="20" /></>,
+    strike: <><path d="M6 5h7a4 4 0 0 1 3.6 5.7" /><path d="M18 15.5A4 4 0 0 1 14 20H7" /><path d="M4 12h16" /></>,
+    underline: <><path d="M6 4v7a6 6 0 0 0 12 0V4" /><path d="M4 21h16" /></>,
+    link: <><path d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1" /><path d="M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1" /></>,
+    quote: <><path d="M10 11H6a3 3 0 0 0-3 3v4h7v-7Z" /><path d="M21 11h-4a3 3 0 0 0-3 3v4h7v-7Z" /></>,
+    code: <><path d="m8 9-4 3 4 3" /><path d="m16 9 4 3-4 3" /><path d="m14 5-4 14" /></>,
+    clear: <><path d="m7 7 10 10" /><path d="M5 19h14" /><path d="M7 5h10" /></>,
+    more: <><circle cx="5" cy="12" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /></>,
+    superscript: <><path d="M5 17 11 7" /><path d="m5 7 6 10" /><path d="M15 8h5" /><path d="M17.5 8v-3" /></>,
+    subscript: <><path d="M5 17 11 7" /><path d="m5 7 6 10" /><path d="M15 16h5" /><path d="M17.5 16v3" /></>,
+    symbols: <><circle cx="6" cy="6" r="2" /><path d="M12 4v5" /><path d="M9.5 6.5h5" /><path d="M17 18a3 3 0 1 0 0-6" /><path d="M17 15h5" /></>,
+    left: <><path d="M20 6H4" /><path d="M14 12H4" /><path d="M18 18H4" /></>,
+    center: <><path d="M6 6h12" /><path d="M4 12h16" /><path d="M7 18h10" /></>,
+    right: <><path d="M4 6h16" /><path d="M10 12h10" /><path d="M6 18h14" /></>,
+    justify: <><path d="M4 6h16" /><path d="M4 12h16" /><path d="M4 18h16" /></>,
+    rtl: <><path d="M5 5h9" /><path d="M5 9h7" /><path d="M5 13h9" /><path d="M19 5v14" /><path d="m15 15 4 4 4-4" /><path d="M4 19h10" /></>,
+    ltr: <><path d="M10 5h9" /><path d="M12 9h7" /><path d="M10 13h9" /><path d="M5 5v14" /><path d="m1 9 4-4 4 4" /><path d="M5 19h10" /></>,
+    heading: <><path d="M5 5v14" /><path d="M19 5v14" /><path d="M5 12h14" /></>,
+    readMore: <><rect x="3" y="5" width="18" height="14" rx="3" /><circle cx="8" cy="12" r="1.2" /><circle cx="12" cy="12" r="1.2" /><circle cx="16" cy="12" r="1.2" /></>,
+    indentIn: <><path d="M20 5H9" /><path d="M20 12H9" /><path d="M20 19H9" /><path d="m5 9-3 3 3 3" /></>,
+    indentOut: <><path d="M4 5h11" /><path d="M4 12h11" /><path d="M4 19h11" /><path d="m20 9 3 3-3 3" /></>,
+    list: <><path d="M8 6h13" /><path d="M8 12h13" /><path d="M8 18h13" /><path d="M3 6h.01" /><path d="M3 12h.01" /><path d="M3 18h.01" /></>,
+    ordered: <><path d="M10 6h11" /><path d="M10 12h11" /><path d="M10 18h11" /><path d="M3 4h2v4" /><path d="M3 8h3" /><path d="M3 11h3l-3 3h3" /><path d="M3 18c0-2 3-2 3 0s-3 2-3 0Z" /></>,
+    moreText: <><path d="M5 5h14" /><path d="M12 5v14" /><path d="M8 19h8" /></>,
+    remove: <><path d="M5 5h14" /><path d="M5 19h14" /><path d="m8 8 8 8" /></>,
+    minus: <path d="M5 12h14" />,
+    plus: <><path d="M12 5v14" /><path d="M5 12h14" /></>,
+  };
+
+  return <svg {...common}>{paths[name] ?? paths.more}</svg>;
+}
+
 function RichTextEditor({
   value,
   onChange,
@@ -365,44 +819,36 @@ function RichTextEditor({
   value: TiptapContent;
   onChange: (value: TiptapContent) => void;
 }) {
+  const [showMore, setShowMore] = useState(false);
+  const [showHeadingMenu, setShowHeadingMenu] = useState(false);
+  const [showSymbols, setShowSymbols] = useState(false);
+  const [textColor, setTextColor] = useState("#E2E8F0");
+  const [highlightColor, setHighlightColor] = useState("#F59E0B");
+
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({
-        heading: {
-          levels: [1, 2, 3],
-        },
-      }),
+      StarterKit.configure({ heading: { levels: [1, 2, 3, 4, 5, 6] } }),
+      ServiceTextStyle,
+      ServiceSuper,
+      ServiceSub,
+      ServiceMore,
+      ServiceParagraphStyle,
       Underline,
-      Link.configure({
-        openOnClick: false,
-        autolink: true,
-        linkOnPaste: true,
-      }),
+      Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true }),
     ],
     content: (value?.type === "doc" ? value : EMPTY_TIPTAP_CONTENT) as any,
     immediatelyRender: false,
     editorProps: {
-      attributes: {
-        dir: "rtl",
-        class: "service-rich-editor-content",
-      },
+      attributes: { dir: "rtl", class: "service-rich-editor-content" },
     },
-    onUpdate: ({ editor }) => {
-      onChange(editor.getJSON() as TiptapContent);
-    },
+    onUpdate: ({ editor }) => onChange(editor.getJSON() as TiptapContent),
   });
 
   useEffect(() => {
     if (!editor) return;
-
     const current = JSON.stringify(editor.getJSON());
     const next = JSON.stringify(value?.type === "doc" ? value : EMPTY_TIPTAP_CONTENT);
-
-    if (current !== next) {
-      editor.commands.setContent(
-        (value?.type === "doc" ? value : EMPTY_TIPTAP_CONTENT) as any
-      );
-    }
+    if (current !== next) editor.commands.setContent((value?.type === "doc" ? value : EMPTY_TIPTAP_CONTENT) as any);
   }, [editor, value]);
 
   const [linkUrl, setLinkUrl] = useState("");
@@ -410,227 +856,167 @@ function RichTextEditor({
 
   if (!editor) return null;
 
-  const run = (command: () => boolean) => {
-    command();
+  const run = (command: () => boolean) => command();
+
+  const updateBlock = (attrs: Record<string, any>) => {
+    const type = editor.state.selection.$from.parent.type.name === "heading" ? "heading" : "paragraph";
+    editor.chain().focus().updateAttributes(type, attrs).run();
+  };
+
+  const setStyle = (attrs: Record<string, string | null>) => {
+    editor.chain().focus().setMark("serviceTextStyle", attrs).run();
+  };
+
+  const removeStyle = (key: string) => {
+    editor.chain().focus().setMark("serviceTextStyle", { [key]: null }).run();
   };
 
   const openLinkEditor = () => {
-    const previousUrl = editor.getAttributes("link").href || "";
-    setLinkUrl(previousUrl);
+    setLinkUrl(editor.getAttributes("link").href || "");
     setShowLinkEditor(true);
   };
 
   const applyLink = () => {
     const url = linkUrl.trim();
-
-    if (!url) {
-      editor.chain().focus().unsetLink().run();
-    } else {
-      editor.chain().focus().setLink({ href: url }).run();
-    }
-
+    if (!url) editor.chain().focus().unsetLink().run();
+    else editor.chain().focus().setLink({ href: url }).run();
     setShowLinkEditor(false);
     editor.commands.focus();
   };
 
-  const removeLink = () => {
-    editor.chain().focus().unsetLink().run();
-    setLinkUrl("");
-    setShowLinkEditor(false);
+  const changeIndent = (delta: number) => {
+    const parent = editor.state.selection.$from.parent;
+    const current = Number(parent.attrs.indent || 0);
+    updateBlock({ indent: Math.max(0, Math.min(8, current + delta)) });
   };
 
-  const buttonStyle = (active = false): CSSProperties => ({
-    width: 32,
-    height: 30,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 6,
-    border: active
-      ? "1px solid rgba(0,229,255,0.28)"
-      : "1px solid transparent",
-    background: active
-      ? "rgba(0,229,255,0.10)"
-      : "transparent",
-    color: active ? "#00E5FF" : "#64748B",
-    cursor: "pointer",
-    fontFamily: "var(--font-vazirmatn), Vazirmatn, sans-serif",
-    fontSize: 12,
-    fontWeight: 700,
-  });
+  const buttonStyle = (active = false, extra = "") =>
+    `flex h-8 w-[34px] shrink-0 items-center justify-center rounded-[7px] border text-xs font-bold transition-colors ${
+      active
+        ? "border-[rgba(0,229,255,0.28)] bg-[rgba(0,229,255,0.10)] text-[#00E5FF]"
+        : "border-transparent bg-transparent text-[#94A3B8]"
+    } cursor-pointer ${extra}`;
+
+  const menuStyle =
+    "absolute right-0 top-[calc(100%+6px)] z-[30] min-w-[150px] rounded-[9px] border border-[rgba(255,255,255,0.08)] bg-[#0B1224] p-[6px] shadow-[0_16px_40px_rgba(0,0,0,0.45)]";
+
+  const menuButton = (label: string, active = false) => (
+    <button
+      type="button"
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={() => {
+        if (label === "متن") run(() => editor.chain().focus().setParagraph().run());
+        else {
+          const level = Number(label.replace("تیتر ", "")) as 1 | 2 | 3 | 4 | 5 | 6;
+          run(() => editor.chain().focus().toggleHeading({ level }).run());
+        }
+        setShowHeadingMenu(false);
+      }}
+      className={`flex w-full items-center justify-between rounded-[6px] border-0 px-[9px] py-2 text-xs font-inherit cursor-pointer ${
+        active ? "bg-[rgba(0,229,255,0.08)] text-[#00E5FF]" : "bg-transparent text-[#CBD5E1]"
+      }` }
+    >
+      <span>{label}</span><span className="text-[#64748B]">Aa</span>
+    </button>
+  );
+
+  const headingLevel = editor.getAttributes("heading").level;
+  const paragraph = editor.state.selection.$from.parent;
+  const currentIndent = Number(paragraph.attrs.indent || 0);
 
   return (
     <div className="service-rich-editor">
       <div className="service-rich-editor-toolbar">
-        <button
-          type="button"
-          title="عنوان اصلی"
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() =>
-            run(() => editor.chain().focus().toggleHeading({ level: 1 }).run())
-          }
-          style={buttonStyle(editor.isActive("heading", { level: 1 }))}
-        >
-          H1
-        </button>
+        <div className="service-rich-editor-toolbar-row">
+          <button type="button" title="بازگشت" onMouseDown={(e) => e.preventDefault()} onClick={() => editor.chain().focus().undo().run()} className={buttonStyle()}><EditorIcon name="undo" /></button>
+          <button type="button" title="جلو" onMouseDown={(e) => e.preventDefault()} onClick={() => editor.chain().focus().redo().run()} className={buttonStyle()}><EditorIcon name="redo" /></button>
+          <span className="service-rich-editor-divider">|</span>
+          <div className="relative">
+            <button type="button" title="تیتر" onMouseDown={(e) => e.preventDefault()} onClick={() => setShowHeadingMenu(!showHeadingMenu)} className={buttonStyle(!!headingLevel, "w-[42px]")}><EditorIcon name="heading" /><span className="mr-0.5 text-[9px]">⌄</span></button>
+            {showHeadingMenu && <div className={menuStyle}>{menuButton("متن", !headingLevel)}{[1,2,3,4,5,6].map((n) => menuButton(`تیتر ${n}`, headingLevel === n))}</div>}
+          </div>
+          <span className="service-rich-editor-divider">|</span>
+          <button type="button" title="Bold" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().toggleBold().run())} className={buttonStyle(editor.isActive("bold"))}><EditorIcon name="bold" /></button>
+          <button type="button" title="Italic" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().toggleItalic().run())} className={buttonStyle(editor.isActive("italic"))}><EditorIcon name="italic" /></button>
+          <button type="button" title="زیرخط" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().toggleUnderline().run())} className={buttonStyle(editor.isActive("underline"))}><EditorIcon name="underline" /></button>
+          <button type="button" title="خط خورده" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().toggleStrike().run())} className={buttonStyle(editor.isActive("strike"))}><EditorIcon name="strike" /></button>
+          <span className="service-rich-editor-divider">|</span>
+          <div className="flex items-center gap-0.5"><button type="button" title="رنگ متن" onMouseDown={(e) => e.preventDefault()} onClick={() => setStyle({ color: textColor })} className={buttonStyle(false)}><span className="font-black leading-[1.1]" style={{ borderBottom: `3px solid ${textColor}` }}>A</span></button><input aria-label="رنگ متن" type="color" value={textColor} onChange={(e) => { setTextColor(e.target.value); setStyle({ color: e.target.value }); }} className="h-3 w-3 cursor-pointer border-0 bg-transparent p-0" /></div>
+          <div className="flex items-center gap-0.5"><button type="button" title="هایلایت" onMouseDown={(e) => e.preventDefault()} onClick={() => setStyle({ backgroundColor: highlightColor })} className={buttonStyle(false)}><span className="rounded-[2px] px-[3px] py-px font-black text-[#020617]" style={{ background: highlightColor }}>H</span></button><input aria-label="رنگ هایلایت" type="color" value={highlightColor} onChange={(e) => { setHighlightColor(e.target.value); setStyle({ backgroundColor: e.target.value }); }} className="h-3 w-3 cursor-pointer border-0 bg-transparent p-0" /></div>
+        </div>
 
-        <button
-          type="button"
-          title="عنوان ۲"
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() =>
-            run(() => editor.chain().focus().toggleHeading({ level: 2 }).run())
-          }
-          style={buttonStyle(editor.isActive("heading", { level: 2 }))}
-        >
-          H2
-        </button>
+        <div className="service-rich-editor-toolbar-row">
+          <button type="button" title="راست‌چین" onMouseDown={(e) => e.preventDefault()} onClick={() => updateBlock({ textAlign: "right" })} className={buttonStyle(paragraph.attrs.textAlign === "right")}><EditorIcon name="right" /></button>
+          <button type="button" title="وسط‌چین" onMouseDown={(e) => e.preventDefault()} onClick={() => updateBlock({ textAlign: "center" })} className={buttonStyle(paragraph.attrs.textAlign === "center")}><EditorIcon name="center" /></button>
+          <button type="button" title="چپ‌چین" onMouseDown={(e) => e.preventDefault()} onClick={() => updateBlock({ textAlign: "left" })} className={buttonStyle(paragraph.attrs.textAlign === "left")}><EditorIcon name="left" /></button>
+          <button type="button" title="تمام‌چین" onMouseDown={(e) => e.preventDefault()} onClick={() => updateBlock({ textAlign: "justify" })} className={buttonStyle(paragraph.attrs.textAlign === "justify")}><EditorIcon name="justify" /></button>
+          <span className="service-rich-editor-divider">|</span>
+          <button type="button" title="RTL - راست به چپ" onMouseDown={(e) => e.preventDefault()} onClick={() => updateBlock({ textDirection: "rtl", textAlign: "right" })} className={buttonStyle(paragraph.attrs.textDirection === "rtl")}><EditorIcon name="rtl" /></button>
+          <button type="button" title="LTR - چپ به راست" onMouseDown={(e) => e.preventDefault()} onClick={() => updateBlock({ textDirection: "ltr", textAlign: "left" })} className={buttonStyle(paragraph.attrs.textDirection === "ltr")}><EditorIcon name="ltr" /></button>
+          <span className="service-rich-editor-divider">|</span>
+          <button type="button" title="کاهش تورفتگی" disabled={currentIndent === 0} onMouseDown={(e) => e.preventDefault()} onClick={() => changeIndent(-1)} className={buttonStyle(false, currentIndent === 0 ? "opacity-35" : "opacity-100")}><EditorIcon name="indentOut" /></button>
+          <button type="button" title="افزایش تورفتگی" onMouseDown={(e) => e.preventDefault()} onClick={() => changeIndent(1)} className={buttonStyle()}><EditorIcon name="indentIn" /></button>
+        </div>
 
-        <button
-          type="button"
-          title="عنوان ۳"
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() =>
-            run(() => editor.chain().focus().toggleHeading({ level: 3 }).run())
-          }
-          style={buttonStyle(editor.isActive("heading", { level: 3 }))}
-        >
-          H3
-        </button>
-
-        <span className="service-rich-editor-divider" />
-
-        <button
-          type="button"
-          title="Bold"
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() => run(() => editor.chain().focus().toggleBold().run())}
-          style={buttonStyle(editor.isActive("bold"))}
-        >
-          B
-        </button>
-
-        <button
-          type="button"
-          title="Italic"
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() => run(() => editor.chain().focus().toggleItalic().run())}
-          style={{ ...buttonStyle(editor.isActive("italic")), fontStyle: "italic" }}
-        >
-          I
-        </button>
-
-        <button
-          type="button"
-          title="خط خورده"
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() => run(() => editor.chain().focus().toggleStrike().run())}
-          style={buttonStyle(editor.isActive("strike"))}
-        >
-          S
-        </button>
-
-        <button
-          type="button"
-          title="زیرخط"
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() => run(() => editor.chain().focus().toggleUnderline().run())}
-          style={{ ...buttonStyle(editor.isActive("underline")), textDecoration: "underline" }}
-        >
-          U
-        </button>
-
-        <span className="service-rich-editor-divider" />
-
-        <button
-          type="button"
-          title="لیست نقطه‌ای"
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() => run(() => editor.chain().focus().toggleBulletList().run())}
-          style={buttonStyle(editor.isActive("bulletList"))}
-        >
-          <span className="service-list-icon">
-            <span>•</span><span>•</span><span>•</span>
-          </span>
-        </button>
-
-        <button
-          type="button"
-          title="لیست شماره‌ای"
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() => run(() => editor.chain().focus().toggleOrderedList().run())}
-          style={buttonStyle(editor.isActive("orderedList"))}
-        >
-          <span className="service-list-icon service-number-list-icon">
-            <span>1.</span><span>2.</span><span>3.</span>
-          </span>
-        </button>
-
-        <button
-          type="button"
-          title="نقل قول"
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() => run(() => editor.chain().focus().toggleBlockquote().run())}
-          style={buttonStyle(editor.isActive("blockquote"))}
-        >
-          ❝
-        </button>
-
-        <button
-          type="button"
-          title="خط جداکننده"
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() => run(() => editor.chain().focus().setHorizontalRule().run())}
-          style={buttonStyle()}
-        >
-          —
-        </button>
-
-        <span className="service-rich-editor-divider" />
-
-        <button
-          type="button"
-          title="لینک"
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={openLinkEditor}
-          style={buttonStyle(editor.isActive("link"))}
-        >
-          ↗
-        </button>
-
-        <button
-          type="button"
-          title="حذف فرمت"
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() => run(() => editor.chain().focus().clearNodes().unsetAllMarks().run())}
-          style={buttonStyle()}
-        >
-          Tx
-        </button>
+        <div className="service-rich-editor-toolbar-row">
+          <button type="button" title="لیست نقطه‌ای" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().toggleBulletList().run())} className={buttonStyle(editor.isActive("bulletList"))}><EditorIcon name="list" /></button>
+          <button type="button" title="لیست شماره‌ای" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().toggleOrderedList().run())} className={buttonStyle(editor.isActive("orderedList"))}><EditorIcon name="ordered" /></button>
+          <span className="service-rich-editor-divider">|</span>
+          <button type="button" title="نقل قول" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().toggleBlockquote().run())} className={buttonStyle(editor.isActive("blockquote"))}><EditorIcon name="quote" /></button>
+          <button type="button" title="کد" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().toggleCodeBlock().run())} className={buttonStyle(editor.isActive("codeBlock"))}><EditorIcon name="code" /></button>
+          <button type="button" title="لینک" onMouseDown={(e) => e.preventDefault()} onClick={openLinkEditor} className={buttonStyle(editor.isActive("link"))}><EditorIcon name="link" /></button>
+          <button type="button" title="پاک کردن قالب‌بندی" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().unsetAllMarks().clearNodes().run())} className={buttonStyle()}><EditorIcon name="clear" /></button>
+          <button type="button" title="خط جداکننده" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().setHorizontalRule().run())} className={buttonStyle()}><EditorIcon name="minus" /></button>
+          <span className="service-rich-editor-divider">|</span>
+          <button type="button" title={showMore ? "بستن ابزارهای بیشتر" : "ابزارهای بیشتر"} onMouseDown={(e) => e.preventDefault()} onClick={() => setShowMore(!showMore)} className={buttonStyle(showMore)}><EditorIcon name="more" /></button>
+        </div>
       </div>
+      {showMore && (
+        <div className="service-rich-editor-extra-toolbar">
+          <div className="service-rich-editor-extra-group">
+            <span className="service-rich-editor-extra-label">تنظیمات متن</span>
+            <div className="service-rich-editor-extra-buttons">
+              <button type="button" title="حذف رنگ متن" onMouseDown={(e) => e.preventDefault()} onClick={() => removeStyle("color")} className={buttonStyle()}><span className="font-black underline decoration-current underline-offset-[3px]">A</span></button>
+              <button type="button" title="حذف هایلایت" onMouseDown={(e) => e.preventDefault()} onClick={() => removeStyle("backgroundColor")} className={buttonStyle()}><EditorIcon name="clear" /></button>
+              <button type="button" title="بالانویس" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().toggleMark("serviceSuperscript").run())} className={buttonStyle(editor.isActive("serviceSuperscript"))}><EditorIcon name="superscript" /></button>
+              <button type="button" title="زیرنویس" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().toggleMark("serviceSubscript").run())} className={buttonStyle(editor.isActive("serviceSubscript"))}><EditorIcon name="subscript" /></button>
+            </div>
+          </div>
+
+          <div className="service-rich-editor-extra-group">
+            <span className="service-rich-editor-extra-label">بلوک‌ها</span>
+            <div className="service-rich-editor-extra-buttons">
+              <button type="button" title="بلوک کد" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().toggleCodeBlock().run())} className={buttonStyle(editor.isActive("codeBlock"))}><EditorIcon name="code" /></button>
+              <button type="button" title="نقل قول" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().toggleBlockquote().run())} className={buttonStyle(editor.isActive("blockquote"))}><EditorIcon name="quote" /></button>
+              <button type="button" title="خط جداکننده" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().setHorizontalRule().run())} className={buttonStyle()}><EditorIcon name="minus" /></button>
+              <button type="button" title="More" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().insertContent({ type: "serviceMore" }).run())} className={buttonStyle(false, "w-[52px]")}><span className="text-xs font-extrabold tracking-[0.2px]">more</span></button>
+            </div>
+          </div>
+
+          <div className="service-rich-editor-extra-group">
+            <span className="service-rich-editor-extra-label">نمادها</span>
+            <div className="service-rich-editor-extra-buttons">
+              <div className="relative">
+                <button type="button" title="نمادهای ویژه" onMouseDown={(e) => e.preventDefault()} onClick={() => setShowSymbols(!showSymbols)} className={buttonStyle(showSymbols)}><EditorIcon name="symbols" /></button>
+                {showSymbols && (
+                  <div className={`${menuStyle} right-0 grid min-w-[288px] grid-cols-8 gap-[3px]`}>
+                    {["©","®","™","§","¶","†","‡","•","×","÷","±","≈","≠","≤","≥","∞","√","∑","π","µ","Ω","Δ","α","β","γ","→","←","↔","↑","↓","✓","★","☆","♥","♦","♣","♠","€","$","£","¥","٪","°","‰","…","—","–","·","№","@","#","&","/","\\","()","[]","{}","«","»","“","”","‘","’"].map((symbol) => (
+                      <button key={symbol} type="button" title={`درج ${symbol}`} onMouseDown={(e) => e.preventDefault()} onClick={() => { editor.chain().focus().insertContent(symbol).run(); setShowSymbols(false); }} className="h-[30px] cursor-pointer rounded-[5px] border-0 bg-transparent text-[13px] text-[#CBD5E1]">{symbol}</button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
 
       {showLinkEditor && (
         <div className="service-rich-link-editor">
-          <input
-            type="url"
-            dir="ltr"
-            value={linkUrl}
-            onChange={(e) => setLinkUrl(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                applyLink();
-              }
-              if (e.key === "Escape") {
-                e.preventDefault();
-                setShowLinkEditor(false);
-              }
-            }}
-            placeholder="https://example.com"
-            autoFocus
-          />
+          <input type="url" dir="ltr" value={linkUrl} onChange={(e) => setLinkUrl(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); applyLink(); } if (e.key === "Escape") { e.preventDefault(); setShowLinkEditor(false); } }} placeholder="https://example.com" autoFocus />
           <button type="button" onClick={applyLink}>اعمال لینک</button>
-          <button type="button" onClick={removeLink} className="service-rich-link-remove">حذف لینک</button>
+          <button type="button" onClick={() => { editor.chain().focus().unsetLink().run(); setShowLinkEditor(false); }} className="service-rich-link-remove">حذف لینک</button>
           <button type="button" onClick={() => setShowLinkEditor(false)} className="service-rich-link-cancel">انصراف</button>
         </div>
       )}
@@ -666,8 +1052,16 @@ function RichTextPreview({
 }) {
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({ heading: { levels: [1, 2, 3] } }),
+      StarterKit.configure({ heading: { levels: [1, 2, 3, 4, 5, 6] } }),
+      ServiceTextStyle,
+      ServiceSuper,
+      ServiceSub,
+      ServiceMore,
+      ServiceParagraphStyle,
       Underline,
+      InsertMark,
+      DeleteMark,
+      MoreNode,
       Link.configure({ openOnClick: true }),
     ],
     content: content as any,
@@ -3935,6 +4329,24 @@ const normalizedData = {
                 }}
               >
                 <button
+                  type="button"
+                  onClick={handleSubmit((data) => handleSave({ ...data, status: "draft" }))}
+                  style={{
+                    padding: "10px 16px",
+                    borderRadius: 10,
+                    cursor: "pointer",
+                    background: "rgba(148,163,184,0.08)",
+                    border: "1px solid rgba(148,163,184,0.18)",
+                    color: "#CBD5E1",
+                    fontSize: "0.82rem",
+                    fontWeight: 700,
+                    fontFamily: "var(--font-vazirmatn), Vazirmatn, sans-serif",
+                  }}
+                >
+                  ذخیره در پیش‌نویس
+                </button>
+
+                <button
                   type="submit"
                   style={{
                     flex: 1,
@@ -4271,13 +4683,88 @@ const normalizedData = {
 
         .service-rich-editor-toolbar {
           display: flex;
-          align-items: center;
-          gap: 3px;
-          flex-wrap: wrap;
-          padding: 6px 8px;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 5px;
+          padding: 7px 8px;
           background: rgba(255,255,255,0.025);
           border-bottom: 1px solid rgba(255,255,255,0.06);
         }
+
+        .service-rich-editor-toolbar-row {
+          display: flex;
+          align-items: center;
+          gap: 3px;
+          min-height: 32px;
+        }
+
+        .service-rich-editor-divider {
+          color: #475569;
+          font-size: 16px;
+          line-height: 1;
+          margin: 0 7px;
+          user-select: none;
+        }
+
+        .service-rich-editor-toolbar button:hover,
+        .service-rich-editor-extra-toolbar button:hover {
+          color: #00E5FF !important;
+          background: rgba(0,229,255,0.07) !important;
+        }
+
+        .service-rich-editor-extra-toolbar {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 7px;
+          padding: 8px;
+          background: rgba(0,229,255,0.018);
+          border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .service-rich-editor-extra-toolbar .service-rich-editor-extra-group {
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .service-rich-editor-extra-group {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 3px 6px;
+          border: 1px solid rgba(255,255,255,0.055);
+          border-radius: 8px;
+          background: rgba(255,255,255,0.018);
+        }
+
+        .service-rich-editor-extra-label {
+          color: #64748B;
+          font-size: 10px;
+          font-weight: 800;
+          white-space: nowrap;
+        }
+
+        .service-rich-editor-extra-buttons {
+          display: flex;
+          align-items: center;
+          gap: 2px;
+        }
+
+        .service-rich-editor .ProseMirror [data-indent] {
+          transition: margin 0.15s ease;
+        }
+
+        .service-rich-editor .ProseMirror h4,
+        .service-rich-editor .ProseMirror h5,
+        .service-rich-editor .ProseMirror h6 {
+          margin: 14px 0 8px;
+          color: #F8FAFC;
+          line-height: 1.6;
+        }
+
+        .service-rich-editor .ProseMirror h4 { font-size: 0.95rem; }
+        .service-rich-editor .ProseMirror h5 { font-size: 0.88rem; }
+        .service-rich-editor .ProseMirror h6 { font-size: 0.82rem; }
 
         .service-rich-editor-toolbar button:hover {
           color: #00E5FF !important;
@@ -4305,6 +4792,78 @@ const normalizedData = {
           font-size: 7px;
           line-height: 8px;
           font-weight: 800;
+        }
+
+
+        .service-rich-editor .ProseMirror [data-indent="1"] { text-indent: 2em; }
+        .service-rich-editor .ProseMirror [data-indent="2"] { text-indent: 4em; }
+        .service-rich-editor .ProseMirror [data-indent="3"] { text-indent: 6em; }
+        .service-rich-editor .ProseMirror [data-indent="4"] { text-indent: 8em; }
+
+        .service-rich-editor .ProseMirror code {
+          background: rgba(0,229,255,0.08);
+          border: 1px solid rgba(0,229,255,0.12);
+          border-radius: 5px;
+          padding: 2px 5px;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        .service-rich-editor .ProseMirror pre {
+          direction: ltr;
+          text-align: left;
+          white-space: pre-wrap;
+          background: #020617;
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 10px;
+          padding: 14px;
+        }
+
+        .service-rich-editor .ProseMirror p[dir="ltr"],
+        .service-rich-editor .ProseMirror h1[dir="ltr"],
+        .service-rich-editor .ProseMirror h2[dir="ltr"],
+        .service-rich-editor .ProseMirror h3[dir="ltr"],
+        .service-rich-editor .ProseMirror h4[dir="ltr"],
+        .service-rich-editor .ProseMirror h5[dir="ltr"],
+        .service-rich-editor .ProseMirror h6[dir="ltr"] {
+          direction: ltr;
+          text-align: left;
+        }
+        .service-rich-editor .ProseMirror ins {
+          text-decoration: underline;
+          text-decoration-color: rgba(16,185,129,0.75);
+          text-decoration-thickness: 2px;
+        }
+
+        .service-rich-editor .ProseMirror del {
+          text-decoration: line-through;
+          text-decoration-color: #EF4444;
+        }
+
+        .service-rich-editor .ProseMirror img {
+          display: inline-block;
+          max-width: 100%;
+          height: auto;
+          border-radius: 8px;
+          margin: 6px 0;
+        }
+
+        .service-more-marker {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin: 16px 0;
+          color: #64748B;
+          font-size: 10px;
+          font-weight: 700;
+          text-align: center;
+        }
+
+        .service-more-marker::before,
+        .service-more-marker::after {
+          content: "";
+          flex: 1;
+          height: 1px;
+          background: rgba(148,163,184,0.22);
         }
 
         .service-rich-link-editor {
@@ -4360,6 +4919,61 @@ const normalizedData = {
 
         .service-rich-link-editor .service-rich-link-cancel {
           color: #94A3B8;
+        }
+
+        .service-color-tool {
+          position: relative;
+          width: 34px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 7px;
+          cursor: pointer;
+          color: #CBD5E1;
+          overflow: hidden;
+          border: 1px solid transparent;
+        }
+
+        .service-color-tool:hover {
+          background: rgba(0,229,255,0.07);
+          border-color: rgba(0,229,255,0.12);
+        }
+
+        .service-color-tool input {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+          cursor: pointer;
+        }
+
+        .service-color-icon {
+          font-size: 15px;
+          font-weight: 900;
+          border-bottom: 3px solid #00E5FF;
+          line-height: 20px;
+        }
+
+        .service-highlight-icon {
+          font-size: 15px;
+          font-weight: 900;
+          background: linear-gradient(transparent 58%, #FFF59D 58%);
+          line-height: 20px;
+        }
+
+        .service-mark-ins {
+          text-decoration: underline;
+          text-decoration-color: #10B981;
+          text-decoration-thickness: 2px;
+          font-size: 9px;
+        }
+
+        .service-mark-del {
+          text-decoration: line-through;
+          text-decoration-color: #EF4444;
+          font-size: 9px;
         }
 
         .service-rich-editor-divider {
@@ -4435,6 +5049,26 @@ const normalizedData = {
         .service-rich-editor .ProseMirror li::marker {
           color: #94A3B8;
           font-weight: 700;
+        }
+
+
+        .service-rich-editor .ProseMirror [data-service-more] {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin: 18px 0;
+          color: #64748B;
+          font-size: 10px;
+          font-weight: 700;
+          user-select: none;
+        }
+
+        .service-rich-editor .ProseMirror [data-service-more]::before,
+        .service-rich-editor .ProseMirror [data-service-more]::after {
+          content: "";
+          flex: 1;
+          height: 1px;
+          background: rgba(148,163,184,0.18);
         }
 
         .service-rich-editor .ProseMirror hr {

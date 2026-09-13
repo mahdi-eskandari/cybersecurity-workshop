@@ -1,7 +1,30 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 "use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 /* ─── ICONS ─── */
 
@@ -56,7 +79,8 @@ const IconWrench = () => (
   </svg>
 );
 
-const IconImage = () => (
+
+const IconCase = () => (
   <svg
     width="16"
     height="16"
@@ -67,11 +91,13 @@ const IconImage = () => (
     strokeLinecap="round"
     strokeLinejoin="round"
   >
-    <rect x="3" y="3" width="18" height="18" rx="2" />
-    <circle cx="8.5" cy="8.5" r="1.5" />
-    <polyline points="21 15 16 10 5 21" />
+    <path d="M4 7.5A2.5 2.5 0 016.5 5h3l2 2h6A2.5 2.5 0 0120 9.5v8A2.5 2.5 0 0117.5 20h-11A2.5 2.5 0 014 17.5v-10z" />
+    <path d="M8 12h8" />
+    <path d="M8 15.5h5" />
   </svg>
 );
+
+
 
 const IconSettings = () => (
   <svg
@@ -117,9 +143,9 @@ const navItems = [
     icon: <IconGrid />,
   },
   {
-    id: "cases",
-    label: "مدیریت پرونده‌ها",
-    href: "/admin/cases",
+    id: "blogs",
+    label: "مدیریت پست ها",
+    href: "/admin/blogs",
     icon: <IconDoc />,
     badge: "۳",
   },
@@ -131,9 +157,9 @@ const navItems = [
   },
   {
     id: "media",
-    label: "رسانه‌ها",
-    href: "/admin/media",
-    icon: <IconImage />,
+    label: "مدیریت پرونده ها",
+    href: "/admin/cases",
+    icon: <IconCase />,
   },
 
 ];
@@ -145,7 +171,8 @@ export default function AdminSidebar({
   open,
   onLogout,
 }) {
-  const pathname = usePathname();
+
+const pathname = usePathname();
 
   const isActive = (href) => {
     if (href === "/admin") {
@@ -154,6 +181,11 @@ export default function AdminSidebar({
 
     return pathname === href || pathname.startsWith(`${href}/`);
   };
+
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+
+
+
 
   return (
     <aside
@@ -317,8 +349,8 @@ export default function AdminSidebar({
         }}
       >
         <button
-          type="button"
-          onClick={onLogout}
+  type="button"
+  onClick={() => setLogoutModalOpen(true)}
           title={!open ? "خروج از سیستم" : undefined}
           style={{
             width: "100%",
@@ -349,6 +381,147 @@ export default function AdminSidebar({
         </button>
       </div>
 
+
+    {logoutModalOpen && (
+  <div
+    dir="rtl"
+    style={{
+      position: "fixed",
+      inset: 0,
+      zIndex: 100,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      background: "rgba(2, 8, 23, 0.72)",
+      backdropFilter: "blur(8px)",
+      WebkitBackdropFilter: "blur(8px)",
+      padding: "20px",
+    }}
+    onClick={() => setLogoutModalOpen(false)}
+  >
+    <div
+      onClick={(e) => e.stopPropagation()}
+      style={{
+        width: "100%",
+        maxWidth: 380,
+        background: "#0A1128",
+        border: "1px solid rgba(0,229,255,0.14)",
+        borderRadius: 18,
+        padding: "26px",
+        boxShadow:
+          "0 20px 60px rgba(0,0,0,0.45), 0 0 35px rgba(0,229,255,0.06)",
+      }}
+    >
+      {/* Icon */}
+      <div
+        style={{
+          width: 52,
+          height: 52,
+          margin: "0 auto 18px",
+          borderRadius: 14,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "rgba(239,68,68,0.08)",
+          border: "1px solid rgba(239,68,68,0.18)",
+          color: "#EF4444",
+        }}
+      >
+        <IconLogout />
+      </div>
+
+      {/* Title */}
+      <h3
+        style={{
+          margin: 0,
+          textAlign: "center",
+          color: "#F8FAFC",
+          fontSize: "1rem",
+          fontWeight: 800,
+        }}
+      >
+        خروج از سیستم
+      </h3>
+
+      {/* Description */}
+      <p
+        style={{
+          margin: "10px 0 24px",
+          textAlign: "center",
+          color: "#64748B",
+          fontSize: "0.82rem",
+          lineHeight: 1.8,
+        }}
+      >
+        آیا مطمئن هستید که می‌خواهید از حساب کاربری خود خارج شوید؟
+      </p>
+
+      {/* Buttons */}
+      <div
+        style={{
+          display: "flex",
+          gap: 10,
+        }}
+      >
+        <button
+          type="button"
+          onClick={async () => {
+            try {
+              const res = await fetch("/api/admin/logout", {
+                method: "POST",
+              });
+
+              if (!res.ok) {
+                throw new Error("Logout failed");
+              }
+
+              window.location.href = "/admin-login";
+            } catch (error) {
+              console.error("Logout error:", error);
+            }
+          }}
+          style={{
+            flex: 1,
+            height: 42,
+            border: "1px solid rgba(239,68,68,0.35)",
+            borderRadius: 10,
+            background: "rgba(239,68,68,0.1)",
+            color: "#EF4444",
+            fontFamily: "inherit",
+            fontSize: "0.78rem",
+            fontWeight: 700,
+            cursor: "pointer",
+            transition: "all 0.2s ease",
+          }}
+        >
+          خروج از حساب
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setLogoutModalOpen(false)}
+          style={{
+            flex: 1,
+            height: 42,
+            border: "1px solid rgba(148,163,184,0.14)",
+            borderRadius: 10,
+            background: "rgba(255,255,255,0.035)",
+            color: "#94A3B8",
+            fontFamily: "inherit",
+            fontSize: "0.78rem",
+            fontWeight: 600,
+            cursor: "pointer",
+            transition: "all 0.2s ease",
+          }}
+        >
+          انصراف
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </aside>
+    
   );
 }

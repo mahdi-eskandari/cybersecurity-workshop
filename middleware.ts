@@ -7,25 +7,38 @@ interface AuthTokenPayload extends JWTPayload {
   role: "user" | "admin";
 }
 
-const protectedPageRoutes = ["/", "/trips", "/profile"];
-const protectedApiRoutes = ["/api/trips", "/api/profile"];
+const publicAdminApiRoutes = [
+  "/api/admin/login",
+  "/api/admin/verify",
+  "/api/admin/resend-code",
+];
 
-function isPathProtected(
-  pathname: string,
-  routes: string[]
-): boolean {
-  return routes.some(
+function isPublicAdminApi(pathname: string): boolean {
+  return publicAdminApiRoutes.some(
     (route) =>
-      pathname === route || pathname.startsWith(`${route}/`)
+      pathname === route ||
+      pathname.startsWith(`${route}/`)
   );
 }
 
-function isAdminRoute(pathname: string): boolean {
+function isAdminPage(pathname: string): boolean {
   return (
     pathname === "/admin" ||
-    pathname.startsWith("/admin/") ||
+    pathname.startsWith("/admin/")
+  );
+}
+
+function isAdminApi(pathname: string): boolean {
+  return (
     pathname === "/api/admin" ||
     pathname.startsWith("/api/admin/")
+  );
+}
+
+function isProtectedApi(pathname: string): boolean {
+  return (
+    pathname === "/api/crisis-reports" ||
+    pathname.startsWith("/api/crisis-reports/")
   );
 }
 
@@ -33,74 +46,200 @@ function isApiRoute(pathname: string): boolean {
   return pathname === "/api" || pathname.startsWith("/api/");
 }
 
-export async function middleware(request: NextRequest) {
+function addSecurityHeaders(
+  response: NextResponse,
+  noIndex = false
+) {
+  response.headers.set(
+    "X-Content-Type-Options",
+    "nosniff"
+  );
+
+  response.headers.set(
+    "Referrer-Policy",
+    "strict-origin-when-cross-origin"
+  );
+
+  response.headers.set(
+    "X-Frame-Options",
+    "SAMEORIGIN"
+  );
+
+  response.headers.set(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=()"
+  );
+
+  if (noIndex) {
+    response.headers.set(
+      "X-Robots-Tag",
+      "noindex, nofollow, noarchive"
+    );
+  }
+
+  return response;
+}
+
+export async function middleware(
+  request: NextRequest
+) {
   const { pathname } = request.nextUrl;
-  const token = request.cookies.get("token")?.value;
 
-  const isAdmin = isAdminRoute(pathname);
-  const isProtectedPage = isPathProtected(pathname, protectedPageRoutes);
-  const isProtectedApi = isPathProtected(pathname, protectedApiRoutes);
+  /*
+   * ---------------------------------------------------------
+   * Public admin authentication APIs
+   * ---------------------------------------------------------
+   *
+   * این Routeها قبل از داشتن Token باید قابل دسترسی باشند.
+   *
+   * /api/admin/verify
+   * /api/admin/login
+   * /api/admin/resend-code
+   */
+  if (isPublicAdminApi(pathname)) {
+    return addSecurityHeaders(
+      NextResponse.next(),
+      true
+    );
+  }
 
-  // If the route is not protected at all, let it pass
-  if (!isAdmin && !isProtectedPage && !isProtectedApi) {
+  const isAdmin = isAdminPage(pathname);
+  const isAdminAPI = isAdminApi(pathname);
+  const isProtectedAPI = isProtectedApi(pathname);
+
+  /*
+   * فقط این بخش‌ها نیاز به احراز هویت دارند.
+   */
+  if (!isAdmin && !isAdminAPI && !isProtectedAPI) {
     return NextResponse.next();
   }
 
-  // All protected routes require a token
+  const token = request.cookies.get("token")?.value;
+
+  /*
+   * ---------------------------------------------------------
+   * No token
+   * ---------------------------------------------------------
+   */
   if (!token) {
     if (isApiRoute(pathname)) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
+      return addSecurityHeaders(
+        NextResponse.json(
+          {
+            error: "Unauthorized",
+          },
+          {
+            status: 401,
+          }
+        ),
+        true
       );
     }
 
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(
+      new URL("/admin-login", request.url)
+    );
   }
 
+  /*
+   * ---------------------------------------------------------
+   * Verify JWT
+   * ---------------------------------------------------------
+   */
   try {
     const jwtSecret = process.env.JWT_SECRET;
 
     if (!jwtSecret) {
-      throw new Error("JWT_SECRET is not configured");
+      throw new Error(
+        "JWT_SECRET is not configured"
+      );
     }
 
-    const secret = new TextEncoder().encode(jwtSecret);
-
-    const { payload } = await jwtVerify<AuthTokenPayload>(
-      token,
-      secret
+    const secret = new TextEncoder().encode(
+      jwtSecret
     );
 
-    // Admin routes require the admin role
-    if (isAdmin && payload.role !== "admin") {
+    const { payload } =
+      await jwtVerify<AuthTokenPayload>(
+        token,
+        secret
+      );
+
+    /*
+     * -------------------------------------------------------
+     * Admin authorization
+     * -------------------------------------------------------
+     */
+    if (
+      (isAdmin || isAdminAPI) &&
+      payload.role !== "admin"
+    ) {
       if (isApiRoute(pathname)) {
-        return NextResponse.json(
-          { error: "Forbidden" },
-          { status: 403 }
+        return addSecurityHeaders(
+          NextResponse.json(
+            {
+              error: "Forbidden",
+            },
+            {
+              status: 403,
+            }
+          ),
+          true
         );
       }
 
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(
+        new URL("/admin-login", request.url)
+      );
     }
 
-    return NextResponse.next();
+    /*
+     * -------------------------------------------------------
+     * Valid token
+     * -------------------------------------------------------
+     */
+    return addSecurityHeaders(
+      NextResponse.next(),
+      isAdmin || isAdminAPI
+    );
   } catch {
+    /*
+     * -------------------------------------------------------
+     * Invalid / expired token
+     * -------------------------------------------------------
+     */
+
     if (isApiRoute(pathname)) {
       const response = NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
+        {
+          error: "Unauthorized",
+        },
+        {
+          status: 401,
+        }
       );
 
       response.cookies.delete("token");
 
-      return response;
+      return addSecurityHeaders(
+        response,
+        true
+      );
     }
 
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("error", "session_expired");
+    const loginUrl = new URL(
+      "/admin-login",
+      request.url
+    );
 
-    const response = NextResponse.redirect(loginUrl);
+    loginUrl.searchParams.set(
+      "error",
+      "session_expired"
+    );
+
+    const response =
+      NextResponse.redirect(loginUrl);
+
     response.cookies.delete("token");
 
     return response;
@@ -109,12 +248,8 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/",
-    "/trips/:path*",
-    "/profile/:path*",
     "/admin/:path*",
-    "/api/trips/:path*",
-    "/api/profile/:path*",
     "/api/admin/:path*",
+    "/api/crisis-reports/:path*",
   ],
 };
