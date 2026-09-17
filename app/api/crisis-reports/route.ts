@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import crypto from "crypto";
 import CrisisReport from "../../model/crisisReport";
+import { Types } from "mongoose";
+import ConfidentialNote from "../../model/ConfidentialNote";
 
 export async function POST(req: Request) {
   try {
@@ -74,19 +76,6 @@ export async function POST(req: Request) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 export async function GET() {
   try {
     await connectDB();
@@ -118,13 +107,6 @@ export async function GET() {
 
 
 
-
-
-
-
-
-
-
 export async function PATCH(req: Request) {
   try {
     const body = await req.json();
@@ -135,6 +117,7 @@ export async function PATCH(req: Request) {
       "reviewing",
       "consulting",
       "resolved",
+      "closed",
     ];
 
     if (!id || !status) {
@@ -178,6 +161,57 @@ export async function PATCH(req: Request) {
 
     return NextResponse.json(
       { message: "خطایی هنگام بروزرسانی وضعیت رخ داد" },
+      { status: 500 }
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+export async function DELETE(request: Request) {
+  try {
+    await connectDB();
+
+    const body = await request.json().catch(() => ({}));
+    const id = String(body?.id || "").trim();
+
+    if (!id || !Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { message: "شناسه پرونده نامعتبر است." },
+        { status: 400 }
+      );
+    }
+
+    const deletedReport = await CrisisReport.findByIdAndDelete(id);
+
+    if (!deletedReport) {
+      return NextResponse.json(
+        { message: "پرونده پیدا نشد." },
+        { status: 404 }
+      );
+    }
+
+    // یادداشت‌های محرمانه مربوط به پرونده هم پاک می‌شوند.
+    await ConfidentialNote.deleteMany({ reportId: id });
+
+    return NextResponse.json(
+      {
+        message: "پرونده با موفقیت حذف شد.",
+        reportId: deletedReport._id.toString(),
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("DELETE crisis report error:", error);
+
+    return NextResponse.json(
+      { message: "حذف پرونده انجام نشد." },
       { status: 500 }
     );
   }

@@ -446,16 +446,20 @@ export default function App() {
     : "#FFFFFF";
 
   return (
-    <div
-      className="min-h-full transition-colors duration-300"
+ <div
+      dir="rtl"
+      className={`min-h-screen transition-colors duration-300 ${
+        darkMode
+          ? "bg-[#0A1128] text-[#E6F7FF]"
+          : "bg-white text-[#0F172A]"
+      }`}
       style={{
-        background: darkMode ? "#0A1128" : "#FFFFFF",
-        color: textMain,
-        fontFamily: "Vazirmatn, sans-serif",
+        fontFamily: "'Vazirmatn', sans-serif",
         backgroundImage: darkMode
           ? "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"
-          : "linear-gradient(rgba(30,64,175,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(30,64,175,0.07) 1px,transparent 1px)",
+          : "linear-gradient(rgba(30,58,138,0.045) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,138,0.045) 1px,transparent 1px)",
         backgroundSize: "52px 52px",
+      backgroundAttachment: "fixed"
       }}
     >
      {crisisOpen && (

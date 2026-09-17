@@ -1,32 +1,9 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 "use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-
-/* ─── ICONS ─── */
+import { LuThumbsUp, LuThumbsDown } from "react-icons/lu";/* ─── ICONS ─── */
 
 const IconGrid = () => (
   <svg
@@ -99,6 +76,7 @@ const IconCase = () => (
 
 
 
+
 const IconSettings = () => (
   <svg
     width="16"
@@ -155,12 +133,17 @@ const navItems = [
     href: "/admin/services",
     icon: <IconWrench />,
   },
-  {
-    id: "media",
-    label: "مدیریت پرونده ها",
-    href: "/admin/cases",
-    icon: <IconCase />,
-  },
+{
+  id: "user-feedback",
+  label: "بازخورد کاربران",
+  href: "/admin/user-feedback",
+icon: (
+  <span style={{ display: "flex", gap: 1 }}>
+    <LuThumbsUp size={13} />
+    <LuThumbsDown size={13} />
+  </span>
+),
+}
 
 ];
 

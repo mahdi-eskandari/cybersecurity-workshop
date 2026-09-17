@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/AdminForm.jsx", "app/model/User.js", "app/model/VerificationCode.js", "app/page.jsx", "app/layout.tsx", "app/(site)/page.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/AdminForm.jsx", "app/model/User.js", "app/model/VerificationCode.js", "app/page.jsx", "app/layout.tsx", "app/(site)/page.jsx", "app/model/feedback.js"],
   "exclude": ["node_modules"]
 }

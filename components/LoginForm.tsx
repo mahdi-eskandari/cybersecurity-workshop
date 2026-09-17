@@ -18,6 +18,7 @@ import { useForm, Controller } from "react-hook-form";
 // ── types ──────────────────────────────────────────────────────────────────
 
 interface LoginFormData {
+  username: string;
   email: string;
   password: string;
   otp: string;
@@ -139,25 +140,28 @@ export default function App() {
     formState: { errors },
   } = useForm<LoginFormData>({
     mode: "onBlur",
-    defaultValues: {
-      email: "",
-      password: "",
-      otp: "",
-    },
+defaultValues: {
+  username: "",
+  email: "",
+  password: "",
+  otp: "",
+},
   });
 
   // ── resend / send verification code ─────────────────────────────────────
 
   async function handleResend() {
     // قبل از ارسال، ایمیل و پسورد را اعتبارسنجی می‌کنیم
-    const valid = await trigger(["email", "password"]);
-
+const valid = await trigger([
+  "username",
+  "email",
+  "password",
+]);
     if (!valid) {
       return;
     }
 
-    const { email, password } = getValues();
-
+const { username, email, password } = getValues();
     // پیام‌های قبلی را پاک می‌کنیم
     clearErrors("root");
     clearErrors("otp");
@@ -172,10 +176,11 @@ export default function App() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+body: JSON.stringify({
+  username,
+  email,
+  password,
+}),
       });
 
       const result = await response.json();
@@ -242,9 +247,10 @@ export default function App() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: data.email,
-            password: data.password,
-          }),
+  username: data.username,
+  email: data.email,
+  password: data.password,
+}),
         });
 
         const result = await response.json();
@@ -296,10 +302,11 @@ export default function App() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: data.email,
-          code: data.otp,
-        }),
+body: JSON.stringify({
+  username: data.username,
+  email: data.email,
+  code: data.otp,
+}),
       });
 
       const result = await response.json();
@@ -438,6 +445,46 @@ export default function App() {
           className="space-y-4"
           noValidate
         >
+
+
+
+{/* Username */}
+
+<div>
+  <label className="block text-[12px] font-semibold text-slate-600 mb-1.5">
+    نام کاربری
+  </label>
+
+  <div className="relative">
+    <User className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+
+    <input
+      type="text"
+      autoComplete="username"
+      placeholder="منوچهر"
+      dir="rtl"
+      {...register("username", {
+        required: "نام کاربری الزامی است",
+      })}
+      className={`w-full pr-10 pl-4 py-3 bg-slate-50 border rounded-xl text-[13px] text-slate-800 placeholder-slate-400
+        focus:outline-none focus:bg-white focus:ring-2 transition-all text-right
+        ${
+          errors.username
+            ? "border-red-300 focus:border-red-400 focus:ring-red-100"
+            : "border-slate-200 focus:border-[#0B1C3E] focus:ring-[#0B1C3E]/10"
+        }`}
+    />
+  </div>
+
+  {errors.username && (
+    <p className="text-[11px] text-red-500 mt-1">
+      {errors.username.message}
+    </p>
+  )}
+</div>
+
+
+
 
           {/* Email */}
 

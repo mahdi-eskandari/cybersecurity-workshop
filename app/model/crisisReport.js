@@ -1,7 +1,5 @@
 import { Schema, model, models } from "mongoose";
 
-
-
 const CrisisReportSchema = new Schema(
   {
     trackingCode: {
@@ -29,18 +27,20 @@ const CrisisReportSchema = new Schema(
       trim: true,
     },
 
-status: {
-  type: String,
-  enum: [
-    "pending",
-    "reviewing",
-    "consulting",
-    "resolved",
-  ],
-  default: "pending",
-}
+    status: {
+      type: String,
+      enum: [
+        "pending",
+        "reviewing",
+        "consulting",
+        "resolved",
+        "closed",
+      ],
+      default: "pending",
+    },
   },
   { timestamps: true }
 );
 
-export default models.CrisisReport || model("CrisisReport", CrisisReportSchema);
+export default models.CrisisReport ||
+  model("CrisisReport", CrisisReportSchema);

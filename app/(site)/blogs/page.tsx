@@ -88,6 +88,251 @@ type BlogPost = {
 
 
 
+/* ─────────────────────────────────────────────────────────────
+   HERO IMAGE FALLBACK
+───────────────────────────────────────────────────────────── */
+
+const HeroImageFallback = ({
+  darkMode,
+}: {
+  darkMode: boolean;
+}) => (
+  <svg
+    width="100%"
+    height="100%"
+    viewBox="0 0 1000 380"
+    preserveAspectRatio="xMidYMid slice"
+    style={{ display: "block" }}
+  >
+    <defs>
+      <radialGradient id="hg1" cx="25%" cy="50%" r="55%">
+        <stop
+          offset="0%"
+          stopColor={
+            darkMode
+              ? "rgba(0,229,255,0.1)"
+              : "rgba(30,58,138,0.08)"
+          }
+        />
+        <stop offset="100%" stopColor="transparent" />
+      </radialGradient>
+
+      <radialGradient id="hg2" cx="75%" cy="40%" r="45%">
+        <stop
+          offset="0%"
+          stopColor={
+            darkMode
+              ? "rgba(239,68,68,0.07)"
+              : "rgba(30,58,138,0.04)"
+          }
+        />
+        <stop offset="100%" stopColor="transparent" />
+      </radialGradient>
+
+      <filter id="hblur">
+        <feGaussianBlur stdDeviation="3" />
+      </filter>
+    </defs>
+
+    <rect
+      width="1000"
+      height="380"
+      fill={darkMode ? "#050C1E" : "#F8FAFC"}
+    />
+
+    <rect width="1000" height="380" fill="url(#hg1)" />
+    <rect width="1000" height="380" fill="url(#hg2)" />
+
+    {Array.from({ length: 14 }).map((_, i) => (
+      <line
+        key={`h${i}`}
+        x1="0"
+        y1={i * 28}
+        x2="1000"
+        y2={i * 28}
+        stroke={
+          darkMode
+            ? "rgba(0,229,255,0.035)"
+            : "rgba(30,58,138,0.045)"
+        }
+        strokeWidth="1"
+      />
+    ))}
+
+    {Array.from({ length: 34 }).map((_, i) => (
+      <line
+        key={`v${i}`}
+        x1={i * 30}
+        y1="0"
+        x2={i * 30}
+        y2="380"
+        stroke={
+          darkMode
+            ? "rgba(0,229,255,0.035)"
+            : "rgba(30,58,138,0.045)"
+        }
+        strokeWidth="1"
+      />
+    ))}
+
+    <path
+      d="M80 190 L200 140 L340 190 L480 120 L600 170 L740 110 L880 160 L960 140"
+      stroke={
+        darkMode
+          ? "rgba(0,229,255,0.4)"
+          : "rgba(30,58,138,0.3)"
+      }
+      strokeWidth="1.5"
+      fill="none"
+      filter="url(#hblur)"
+    />
+
+    <path
+      d="M80 190 L200 140 L340 190 L480 120 L600 170 L740 110 L880 160 L960 140"
+      stroke={
+        darkMode
+          ? "rgba(0,229,255,0.2)"
+          : "rgba(30,58,138,0.18)"
+      }
+      strokeWidth="1"
+      fill="none"
+    />
+
+    {[
+      { x: 200, y: 140 },
+      { x: 340, y: 190 },
+      { x: 480, y: 120 },
+      { x: 600, y: 170 },
+      { x: 740, y: 110 },
+      { x: 880, y: 160 },
+    ].map((p, i) => (
+      <g key={i}>
+        <rect
+          x={p.x - 20}
+          y={p.y - 22}
+          width="40"
+          height="44"
+          rx="4"
+          fill={
+            darkMode
+              ? "rgba(0,229,255,0.05)"
+              : "rgba(30,58,138,0.04)"
+          }
+          stroke={
+            darkMode
+              ? "rgba(0,229,255,0.3)"
+              : "rgba(30,58,138,0.22)"
+          }
+          strokeWidth="1"
+        />
+
+        <rect
+          x={p.x - 12}
+          y={p.y - 14}
+          width="24"
+          height="3"
+          rx="1"
+          fill={
+            darkMode
+              ? "rgba(0,229,255,0.3)"
+              : "rgba(30,58,138,0.25)"
+          }
+        />
+
+        <rect
+          x={p.x - 12}
+          y={p.y - 7}
+          width="17"
+          height="2.5"
+          rx="1"
+          fill={
+            darkMode
+              ? "rgba(0,229,255,0.18)"
+              : "rgba(30,58,138,0.16)"
+          }
+        />
+
+        <rect
+          x={p.x - 12}
+          y={p.y - 1}
+          width="20"
+          height="2.5"
+          rx="1"
+          fill={
+            darkMode
+              ? "rgba(0,229,255,0.15)"
+              : "rgba(30,58,138,0.13)"
+          }
+        />
+
+        <circle
+          cx={p.x}
+          cy={p.y - 22}
+          r="3.5"
+          fill={darkMode ? "#00E5FF" : "#1E3A8A"}
+          opacity="0.7"
+        />
+      </g>
+    ))}
+
+    <circle
+      cx="480"
+      cy="120"
+      r="22"
+      fill="transparent"
+      stroke={
+        darkMode
+          ? "rgba(239,68,68,0.2)"
+          : "rgba(30,58,138,0.15)"
+      }
+      strokeWidth="1"
+    />
+
+    <circle
+      cx="480"
+      cy="120"
+      r="14"
+      fill="transparent"
+      stroke={
+        darkMode
+          ? "rgba(239,68,68,0.3)"
+          : "rgba(30,58,138,0.2)"
+      }
+      strokeWidth="1"
+    />
+
+    <circle
+      cx="480"
+      cy="120"
+      r="5"
+      fill={
+        darkMode
+          ? "rgba(239,68,68,0.5)"
+          : "rgba(30,58,138,0.35)"
+      }
+      stroke={
+        darkMode
+          ? "rgba(239,68,68,0.8)"
+          : "rgba(30,58,138,0.55)"
+      }
+      strokeWidth="1.5"
+    />
+
+    <text
+      x="20"
+      y="368"
+      fontSize="8"
+      fill={
+        darkMode
+          ? "rgba(0,229,255,0.25)"
+          : "rgba(30,58,138,0.25)"
+      }
+      fontFamily="monospace"
+    >
+      PARAHOOR FORENSICS // CASE ANALYSIS
+    </text>
+  </svg>
+);
 
 
 
@@ -677,8 +922,9 @@ useEffect(() => {
                 className={`group border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 ${
                   darkMode
                     ? "bg-cyan-900/10 border border-cyan-500/30 hover:border-cyan-500 hover:bg-cyan-800/15 hover:shadow-[0_10px_30px_rgba(0,229,255,0.06)]"
-                    : "bg-white border border-[rgba(29,78,216,0.20)] hover:border-[rgba(29,78,216,0.52)] hover:bg-[rgba(30,58,138,0.04)] hover:shadow-[0_16px_40px_rgba(30,58,138,0.18)]"
+                    : "bg-white border border-[rgba(29,78,216,0.20)] hover:border-[rgba(29,78,216,0.52)] hover:bg-[rgba(30,58,138,0.05)] hover:shadow-[0_16px_40px_rgba(30,58,138,0.28)]"
                 }`}
+
               >
                 <div className="grid md:grid-cols-5">
                   {/* Image */}
@@ -690,11 +936,27 @@ useEffect(() => {
                         : "bg-[#F1F5F9]"
                     }`}
                   >
-                    <img
-                      src={featuredArticle.img || "/placeholder.svg"}
-                      alt={featuredArticle.featuredImageAlt?.trim() || featuredArticle.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
+
+    {featuredArticle.img ? (
+      <img
+        src={featuredArticle.img}
+        alt={featuredArticle.featuredImageAlt?.trim() || featuredArticle.title}
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        loading="lazy"
+      />
+    ) : (
+<div style={{
+  borderBottom: darkMode ? "none" : "1px solid #4362815e",
+}}
+className="w-full h-full"
+>
+  <HeroImageFallback darkMode={darkMode} />
+</div>
+
+    )}
+
+
+
                   </div>
 
                   {/* Content */}
@@ -1181,17 +1443,33 @@ function ArticleCard({
             : "bg-[#F1F5F9]"
         }`}
       >
-        <img
+        {article.img ? (
+                  <img
           src={article.img || "/placeholder.svg"}
           alt={article.featuredImageAlt?.trim() || article.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
         />
+        ) : (
+                <div className="w-full h-full border-b-2 border-indigo-100"
+style={{
+  borderBottom: darkMode ? "none" : "1px solid #43628123",
+}}
+>
+  <div  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        <HeroImageFallback darkMode={darkMode} />
+  </div>
+      </div>
+        )}
       </div>
 
       {/* Content */}
 
-      <div className="flex flex-col flex-1 p-6 transition-all duration-300 dark:hover:bg-cyan-800/5">
+      <div className="flex flex-col flex-1 p-6 transition-all duration-300 dark:hover:bg-cyan-800/5"
+      style={{
+        borderTop: darkMode ? "undefinde" : "#33313185"
+      }}
+      >
         {/* Category */}
 
         <div className="flex items-center gap-2.5 mb-4">
@@ -1216,17 +1494,29 @@ function ArticleCard({
           {article.title}
         </h3>
 
-        {/* Excerpt */}
 
-        <p
-          className={`text-sm leading-relaxed line-clamp-3 mb-5 flex-1 ${
-            darkMode
-              ? "text-[#9DB0C0]"
-              : "text-[#475569]"
-          }`}
-        >
-          {article.excerpt}
-        </p>
+{/* Excerpt */}
+
+<p
+  className={`text-sm leading-relaxed line-clamp-3 mb-5 flex-1 ${
+    darkMode
+      ? "text-[#9DB0C0]"
+      : "text-[#475569]"
+  }`}
+>
+  {(() => {
+    const cleanExcerpt = (article.excerpt || "")
+      .replace(/<[^>]*>/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    return cleanExcerpt.length > 50
+      ? `${cleanExcerpt.slice(0, 50)}...`
+      : cleanExcerpt;
+  })()}
+</p>
+
+
 
         {/* Footer */}
 

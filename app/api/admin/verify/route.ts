@@ -1,4 +1,3 @@
-
 import { NextResponse } from "next/server";
 import dbConnect from "../../../../lib/mongodb";
 import User from "../../../model/User";
@@ -8,25 +7,35 @@ import bcrypt from "bcryptjs";
 import { sendVerificationEmail } from "../../../../lib/mail";
 
 export async function POST(req: Request) {
-    console.log("🔥 VERIFY ROUTE HIT");
+  console.log("🔥 VERIFY ROUTE HIT");
+
   try {
     await dbConnect();
 
     const body = await req.json();
-    const { email, password } = body;
+    const { username, email, password } = body;
 
-    if (!email || !password) {
+    if (!username || !email || !password) {
       return NextResponse.json(
-        { message: "ایمیل و رمز عبور الزامی است." },
+        {
+          message:
+            "نام کاربری، ایمیل و رمز عبور الزامی است.",
+        },
         { status: 400 }
       );
     }
 
-    const user = await User.findOne({ email });
+    const normalizedUsername = username.trim();
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const user = await User.findOne({
+      username: normalizedUsername,
+      email: normalizedEmail,
+    });
 
     if (!user) {
       return NextResponse.json(
-        { message: "ایمیل یا رمز عبور اشتباه است." },
+        { message: "نام کاربری، ایمیل یا رمز عبور اشتباه است." },
         { status: 401 }
       );
     }
@@ -38,42 +47,57 @@ export async function POST(req: Request) {
       );
     }
 
-console.log("LOGIN EMAIL:", email);
-console.log("USER FOUND:", !!user);
-console.log("USER ROLE:", user?.role);
-console.log("PASSWORD EXISTS:", !!user?.password);
+    console.log("LOGIN USERNAME:", normalizedUsername);
+    console.log("LOGIN EMAIL:", normalizedEmail);
+    console.log("USER FOUND:", !!user);
+    console.log("USER ROLE:", user?.role);
+    console.log("PASSWORD EXISTS:", !!user?.password);
 
-const isPasswordValid = await bcrypt.compare(
-  password,
-  user.password
-);
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      user.password
+    );
 
-console.log("PASSWORD VALID:", isPasswordValid);
+    console.log("PASSWORD VALID:", isPasswordValid);
 
     if (!isPasswordValid) {
       return NextResponse.json(
-        { message: "ایمیل یا رمز عبور اشتباه است." },
+        {
+          message:
+            "نام کاربری، ایمیل یا رمز عبور اشتباه است.",
+        },
         { status: 401 }
       );
     }
 
-    await VerificationCode.deleteMany({ email });
+    await VerificationCode.deleteMany({
+      email: normalizedEmail,
+    });
 
     const verificationCode = crypto
       .randomInt(100000, 1000000)
       .toString();
 
-await VerificationCode.create({
-  email,
-  code: verificationCode,
-  expiresAt: new Date(Date.now() + 10 * 60 * 1000),
-});
+    await VerificationCode.create({
+      email: normalizedEmail,
+      code: verificationCode,
+      expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+    });
 
-    // await sendVerificationEmail(email, verificationCode);
-        console.log("verificationCode:", verificationCode)
-sendVerificationEmail(email, verificationCode).catch((err) => {
-  console.error("Background email sending failed:", err);
-});
+    console.log(
+      "verificationCode:",
+      verificationCode
+    );
+
+    sendVerificationEmail(
+      normalizedEmail,
+      verificationCode
+    ).catch((err) => {
+      console.error(
+        "Background email sending failed:",
+        err
+      );
+    });
 
     return NextResponse.json(
       {

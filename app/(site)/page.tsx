@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect } from "react"
+import React, { useEffect, type ReactNode } from "react"
 import { useState } from "react"
 import Link from "next/link"
 import { useTheme } from "../../components/ThemeProvider"
@@ -515,10 +515,578 @@ const NetworkDecor = ({
   )
 }
 
+const IconArrowRight = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+    <path d="M19 12H5" />
+    <path d="m12 19-7-7 7-7" />
+  </svg>
+);
+
+const IconChevronDown = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+    <path d="m6 9 6 6 6-6" />
+  </svg>
+);
+
+const IconCopy = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+    <rect x="9" y="9" width="11" height="11" rx="2" />
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+  </svg>
+);
+
+const IconCheck = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+    <path d="m5 12 4 4L19 6" />
+  </svg>
+);
+
+const IconSave = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z" />
+    <path d="M17 21v-8H7v8M7 3v5h8" />
+  </svg>
+);
+
+const IconForward = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+    <path d="m13 5 7 7-7 7" />
+    <path d="M20 12H4" />
+  </svg>
+);
+
+const IconSms = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+    <path d="M21 11.5a8.38 8.38 0 0 1-9 8.5 8.8 8.8 0 0 1-4-.95L3 21l1.95-4.8A8.38 8.38 0 1 1 21 11.5Z" />
+    <path d="M8 12h.01M12 12h.01M16 12h.01" />
+  </svg>
+);
+
+const IconLock = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+    <rect x="4" y="10" width="16" height="11" rx="2" />
+    <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+  </svg>
+);
+
+const IconPlus = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+    <path d="M12 5v14M5 12h14" />
+  </svg>
+);
+
+const IconAdmin = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+    <path d="M20 21a8 8 0 0 0-16 0" />
+    <circle cx="12" cy="7" r="4" />
+  </svg>
+);
+
+const IconBot = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+    <rect x="4" y="7" width="16" height="12" rx="3" />
+    <path d="M12 3v4M8 12h.01M16 12h.01M8 16h8" />
+  </svg>
+);
+
+const IconMenu = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+    <path d="M4 6h16M4 12h16M4 18h16" />
+  </svg>
+);
+
+const IconDashboard = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+    <rect x="3" y="3" width="7" height="7" rx="1" />
+    <rect x="14" y="3" width="7" height="7" rx="1" />
+    <rect x="3" y="14" width="7" height="7" rx="1" />
+    <rect x="14" y="14" width="7" height="7" rx="1" />
+  </svg>
+);
+
+const IconCases = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+    <path d="M4 7h16v13H4z" />
+    <path d="M8 7V5h8v2M8 12h8M8 16h5" />
+  </svg>
+);
+
+const IconSettings = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+    <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" />
+    <path d="m19.4 15 .1.1a2 2 0 0 1-2.8 2.8l-.1-.1a2 2 0 0 0-3.4 1.4V19a2 2 0 0 1-4 0v-.2a2 2 0 0 0-3.4-1.4l-.1.1A2 2 0 1 1 3 14.7l.1-.1A2 2 0 0 0 1.7 11H1.5a2 2 0 0 1 0-4h.2a2 2 0 0 0 1.4-3.4L3 3.5A2 2 0 1 1 5.8.7l.1.1A2 2 0 0 0 9.3.2V0a2 2 0 0 1 4 0v.2a2 2 0 0 0 3.4 1.4l.1-.1A2 2 0 1 1 19.6 4l-.1.1A2 2 0 0 0 20.9 7h.2a2 2 0 0 1 0 4h-.2a2 2 0 0 0-1.5 4Z" />
+  </svg>
+);
+
+const IconLogout = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+    <path d="M10 17l5-5-5-5M15 12H3" />
+    <path d="M21 19V5a2 2 0 0 0-2-2h-6" />
+  </svg>
+);
+
+const navItems = [
+  { label: "داشبورد", icon: IconDashboard },
+  { label: "پرونده‌ها", icon: IconCases, active: true },
+  { label: "تنظیمات", icon: IconSettings },
+];
+
+
+interface Note {
+  id: number;
+  author: string;
+  role: string;
+  text: string;
+  time: string;
+}
+
+const initialNotes: Note[] = [
+  {
+    id: 1,
+    author: "سامان رضایی",
+    role: "تحلیلگر ارشد",
+    text: "الگوی پرداخت‌های مرحله‌ای با نمونه‌های قبلی هم‌خوانی دارد. پیشنهاد می‌شود مسیر انتقال وجه کامل بررسی شود.",
+    time: "امروز، ۱۰:۳۲",
+  },
+  {
+    id: 2,
+    author: "سیستم هوشمند",
+    role: "AI",
+    text: "۳ تراکنش مشکوک شناسایی شد. مجموع مبلغ آن‌ها ۱۸۵,۰۰۰,۰۰۰ تومان است.",
+    time: "امروز، ۰۹:۵۸",
+  },
+];
+
+function FieldRow({
+  label,
+  value,
+  copyable,
+}: {
+  label: string;
+  value: ReactNode;
+  copyable?: string;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  const copy = async () => {
+    if (!copyable) return;
+    try {
+      await navigator.clipboard.writeText(copyable);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1400);
+    } catch {
+      // Clipboard can be unavailable in some embedded browsers.
+    }
+  };
+
+
+  return (
+    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 py-3 border-b border-white/[0.06] last:border-0">
+      <div className="text-xs text-slate-500 sm:w-36 shrink-0">{label}</div>
+      <div className="flex-1 min-w-0 flex items-center gap-2 text-sm text-slate-200 break-words">{value}</div>
+      {copyable && (
+        <button
+          type="button"
+          onClick={copy}
+          className="self-start sm:self-auto p-2 rounded-lg text-slate-500 hover:text-white hover:bg-white/[0.06] transition"
+          aria-label="کپی"
+        >
+          {copied ? <IconCheck /> : <IconCopy />}
+        </button>
+      )}
+    </div>
+  );
+}
+
+function SectionDivider({ title, action }: { title: string; action?: ReactNode }) {
+  return (
+    <div className="flex items-center justify-between gap-3 mb-4">
+      <h2 className="text-sm sm:text-base font-bold text-white">{title}</h2>
+      {action}
+    </div>
+  );
+}
+
+function CaseReviewPanel({ onClose }: { onClose: () => void }) {
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [noteText, setNoteText] = useState("");
+  const [notes, setNotes] = useState<Note[]>(initialNotes);
+  const [saved, setSaved] = useState(false);
+  const [smsSent, setSmsSent] = useState(false);
+  const [referred, setReferred] = useState(false);
+
+  const handleAddNote = () => {
+    const clean = noteText.trim();
+    if (!clean) return;
+
+    setNotes((prev) => [
+      {
+        id: Date.now(),
+        author: "شما",
+        role: "کارشناس پرونده",
+        text: clean,
+        time: "همین حالا",
+      },
+      ...prev,
+    ]);
+    setNoteText("");
+  };
+
+  const handleSave = () => {
+    setSaved(true);
+    window.setTimeout(() => setSaved(false), 1800);
+  };
+
+  return (
+    <div dir="rtl" className="fixed inset-0 z-[9999] min-h-screen overflow-y-auto overflow-x-hidden bg-[#070b14] text-slate-200" role="dialog" aria-modal="true">
+      <style jsx global>{`
+        @keyframes urg-pulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,.18); }
+          50% { box-shadow: 0 0 0 7px rgba(239,68,68,0); }
+        }
+        .urg-pulse { animation: urg-pulse 2s infinite; }
+      `}</style>
+
+      {/* Mobile backdrop */}
+      {sidebarOpen && (
+        <button
+          type="button"
+          aria-label="بستن منو"
+          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={[
+          "fixed z-50 top-0 right-0 h-screen w-[250px] sm:w-[270px] lg:w-[220px]",
+          "bg-[#0b1120] border-l border-white/[0.07] flex flex-col transition-transform duration-300",
+          sidebarOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0",
+        ].join(" ")}
+      >
+        <div className="h-16 px-5 flex items-center justify-between border-b border-white/[0.07]">
+          <div>
+            <div className="font-black text-white text-base">پاراهور</div>
+            <div className="text-[10px] text-slate-500 mt-0.5">مرکز مدیریت پرونده‌ها</div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden p-2 rounded-lg hover:bg-white/[0.06]"
+            aria-label="بستن"
+          >
+            ×
+          </button>
+        </div>
+
+        <nav className="p-3 space-y-1">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.label}
+                type="button"
+                onClick={() => setSidebarOpen(false)}
+                className={[
+                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition",
+                  item.active
+                    ? "bg-cyan-400/10 text-cyan-300 border border-cyan-400/10"
+                    : "text-slate-400 hover:text-white hover:bg-white/[0.05]",
+                ].join(" ")}
+              >
+                <Icon />
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="mt-auto p-3 border-t border-white/[0.07]">
+          <div className="flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.03]">
+            <div className="w-9 h-9 rounded-full bg-cyan-400/10 text-cyan-300 flex items-center justify-center">
+              <IconAdmin />
+            </div>
+            <div className="min-w-0">
+              <div className="text-sm text-white font-semibold truncate">کارشناس پرونده</div>
+              <div className="text-[11px] text-slate-500">سطح دسترسی: تحلیلگر</div>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="mt-2 w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-500 hover:text-red-300 hover:bg-red-500/5 transition"
+          >
+            <IconLogout />
+            خروج
+          </button>
+        </div>
+      </aside>
+
+      {/* Main shell */}
+      <div className="lg:mr-[220px] min-h-screen">
+        {/* Header */}
+        <header className="sticky top-0 z-30 h-auto min-h-16 bg-[#070b14]/90 backdrop-blur-xl border-b border-white/[0.07]">
+          <div className="px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.07] text-slate-300"
+              aria-label="باز کردن منو"
+            >
+              <IconMenu />
+            </button>
+
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 text-xs text-slate-500">
+                <span>پرونده‌ها</span>
+                <span>/</span>
+                <span className="text-slate-300">PRH-902</span>
+              </div>
+              <div className="mt-1 text-sm sm:text-base font-bold text-white truncate">
+                بررسی پرونده PRH-902
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleSave}
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-white/[0.08] bg-white/[0.04] text-xs sm:text-sm text-slate-200 hover:bg-white/[0.07] transition"
+              >
+                {saved ? <IconCheck /> : <IconSave />}
+                <span>{saved ? "ذخیره شد" : "ذخیره"}</span>
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="hidden sm:inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-cyan-400/20 bg-cyan-400/10 text-cyan-300 text-xs sm:text-sm hover:bg-cyan-400/15 transition"
+              >
+                <IconArrowRight />
+                بازگشت
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <main className="p-4 sm:p-6 lg:p-8 max-w-[1500px] mx-auto">
+          {/* Top status row */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xl sm:text-2xl font-black text-white">پرونده PRH-902</span>
+                <span className="text-[11px] px-2 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-300">
+                  نیازمند بررسی فوری
+                </span>
+              </div>
+              <p className="mt-2 text-xs sm:text-sm text-slate-500">
+                آخرین بروزرسانی: امروز، ۱۰:۳۸
+              </p>
+            </div>
+
+            <p className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border bg-red-500/15 text-red-300 border-red-500/30 text-sm font-bold whitespace-nowrap">
+                <span className="w-2 h-2 rounded-full bg-current" />
+                فوری
+              </p>
+            </div>
+
+          {/* Responsive content */}
+          <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1.65fr)_minmax(300px,.9fr)] gap-5 lg:gap-6">
+            <div className="space-y-5 min-w-0">
+              {/* Case information */}
+              <section className="rounded-2xl border border-white/[0.07] bg-[#0b1120] overflow-hidden">
+                <div className="p-4 sm:p-5 border-b border-white/[0.07] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <SectionDivider title="اطلاعات پرونده" />
+                  <span className="inline-flex items-center gap-1.5 text-[11px] text-slate-500">
+                    <IconLock /> اطلاعات محرمانه
+                  </span>
+                </div>
+
+                <div className="p-4 sm:p-5">
+                  <FieldRow label="شناسه پرونده" value={<span className="font-mono text-cyan-300">PRH-902</span>} copyable="PRH-902" />
+                  <FieldRow label="عنوان" value="گزارش تراکنش مشکوک و کلاهبرداری اینترنتی" />
+                  <FieldRow label="دسته‌بندی" value="کلاهبرداری مالی / انتقال وجه" />
+                  <FieldRow label="اولویت" value={<span className="text-red-300 font-semibold">فوری</span>} />
+                  <FieldRow label="تاریخ ثبت" value="۱۴۰۵/۰۶/۱۹ - ۰۹:۲۱" />
+                  <FieldRow label="مسئول پرونده" value="سامان رضایی" />
+                </div>
+              </section>
+
+              {/* Quick actions */}
+              <section className="rounded-2xl border border-white/[0.07] bg-[#0b1120] p-4 sm:p-5">
+                <SectionDivider title="اقدامات سریع" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setSmsSent(true)}
+                    className="min-h-20 p-4 rounded-xl border border-white/[0.07] bg-white/[0.025] hover:bg-white/[0.05] text-right transition"
+                  >
+                    <div className="flex items-center gap-2 text-cyan-300 text-sm font-bold">
+                      <IconSms /> {smsSent ? "پیام ارسال شد" : "ارسال پیامک"}
+                    </div>
+                    <div className="text-[11px] text-slate-500 mt-2">اطلاع‌رسانی به گزارش‌دهنده</div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setReferred(true)}
+                    className="min-h-20 p-4 rounded-xl border border-white/[0.07] bg-white/[0.025] hover:bg-white/[0.05] text-right transition"
+                  >
+                    <div className="flex items-center gap-2 text-violet-300 text-sm font-bold">
+                      <IconForward /> {referred ? "ارجاع شد" : "ارجاع پرونده"}
+                    </div>
+                    <div className="text-[11px] text-slate-500 mt-2">ارسال به کارشناس دیگر</div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    className="min-h-20 p-4 rounded-xl border border-white/[0.07] bg-white/[0.025] hover:bg-white/[0.05] text-right transition sm:col-span-2 lg:col-span-1"
+                  >
+                    <div className="flex items-center gap-2 text-amber-300 text-sm font-bold">
+                      <IconSave /> چاپ / خروجی
+                    </div>
+                    <div className="text-[11px] text-slate-500 mt-2">تهیه نسخه قابل ارائه</div>
+                  </button>
+                </div>
+              </section>
+
+              {/* Notes */}
+              <section className="rounded-2xl border border-white/[0.07] bg-[#0b1120] p-4 sm:p-5">
+                <SectionDivider
+                  title="یادداشت‌های داخلی"
+                  action={<span className="text-[11px] text-slate-500">{notes.length} یادداشت</span>}
+                />
+
+                <div className="space-y-3">
+                  {notes.map((note) => (
+                    <div key={note.id} className="rounded-xl border border-white/[0.06] bg-white/[0.025] p-4">
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                        <div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-sm font-bold text-white">{note.author}</span>
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.05] text-slate-500">{note.role}</span>
+                          </div>
+                          <p className="mt-2 text-xs sm:text-sm leading-7 text-slate-300">{note.text}</p>
+                        </div>
+                        <span className="shrink-0 text-[10px] text-slate-600">{note.time}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-4 rounded-xl border border-white/[0.07] bg-[#080d18] p-3">
+                  <textarea
+                    value={noteText}
+                    onChange={(e) => setNoteText(e.target.value)}
+                    placeholder="یادداشت داخلی جدید..."
+                    rows={4}
+                    className="w-full resize-none bg-transparent outline-none text-sm leading-7 text-slate-200 placeholder:text-slate-600"
+                  />
+                  <div className="mt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
+                    <span className="text-[10px] text-slate-600">این یادداشت برای کاربران عمومی نمایش داده نمی‌شود.</span>
+                    <button
+                      type="button"
+                      onClick={handleAddNote}
+                      className="inline-flex justify-center items-center gap-2 px-4 py-2 rounded-xl bg-cyan-400 text-slate-950 text-xs font-black hover:bg-cyan-300 transition"
+                    >
+                      <IconPlus /> افزودن یادداشت
+                    </button>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            {/* Side column */}
+            <div className="space-y-5 min-w-0">
+              <section className="rounded-2xl border border-red-500/15 bg-[#0b1120] p-4 sm:p-5">
+                <SectionDivider title="خلاصه هوشمند پرونده" />
+                <div className="rounded-xl bg-red-500/[0.06] border border-red-500/10 p-4">
+                  <div className="flex items-center gap-2 text-red-300 text-sm font-bold">
+                    <IconBot /> تحلیل هوش مصنوعی
+                  </div>
+                  <p className="mt-3 text-xs sm:text-sm leading-7 text-slate-300">
+                    شواهد فعلی با الگوی چند پرونده مشابه هم‌خوانی دارد. چند تراکنش با فاصله زمانی کوتاه
+                    و مبالغ غیرمعمول شناسایی شده است و بررسی زنجیره انتقال وجه پیشنهاد می‌شود.
+                  </p>
+                </div>
+              </section>
+
+              <section className="rounded-2xl border border-white/[0.07] bg-[#0b1120] p-4 sm:p-5">
+                <SectionDivider title="تراکنش‌های مشکوک" action={<span className="text-red-300 text-xs font-bold">۳ مورد</span>} />
+                <div className="space-y-2">
+                  {[
+                    ["۱۸۵,۰۰۰,۰۰۰ تومان", "امروز، ۰۹:۴۴", "مشکوک"],
+                    ["۷۵,۰۰۰,۰۰۰ تومان", "امروز، ۰۹:۲۷", "مشکوک"],
+                    ["۱۱۰,۰۰۰,۰۰۰ تومان", "دیروز، ۱۸:۰۵", "نیازمند بررسی"],
+                  ].map(([amount, time, label]) => (
+                    <div key={`${amount}-${time}`} className="p-3 rounded-xl bg-white/[0.025] border border-white/[0.06]">
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="text-sm font-bold text-white">{amount}</span>
+                        <span className="text-[10px] text-red-300">{label}</span>
+                      </div>
+                      <div className="mt-1 text-[10px] text-slate-600">{time}</div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section className="rounded-2xl border border-white/[0.07] bg-[#0b1120] p-4 sm:p-5">
+                <SectionDivider title="مسیر پرونده" />
+                <div className="relative pr-5">
+                  <div className="absolute right-[7px] top-2 bottom-2 w-px bg-white/[0.08]" />
+                  {[
+                    ["ثبت گزارش", "امروز، ۰۹:۲۱", true],
+                    ["تأیید اولیه", "امروز، ۰۹:۴۶", true],
+                    ["ارجاع به تحلیلگر", "امروز، ۱۰:۰۲", true],
+                    ["بررسی تکمیلی", "در حال انجام", false],
+                  ].map(([title, time, done], index) => (
+                    <div key={index} className="relative flex items-start gap-3 pb-5 last:pb-0">
+                      <span
+                        className={`relative z-10 mt-1.5 w-3.5 h-3.5 rounded-full border-2 ${
+                          done ? "bg-cyan-400 border-cyan-400" : "bg-[#0b1120] border-amber-400"
+                        }`}
+                      />
+                      <div>
+                        <div className="text-xs font-bold text-white">{title}</div>
+                        <div className="mt-1 text-[10px] text-slate-600">{time}</div>
+                      </div>
+                      {index < 3 && <span className="absolute right-[2px] top-5 text-[10px] text-cyan-400">✓</span>}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      {/* Persistent return control: desktop bottom-left, mobile full-width-ish bottom-left */}
+      <button
+        type="button"
+        onClick={onClose}
+        className="fixed left-3 right-3 sm:left-6 sm:right-auto bottom-3 sm:bottom-6 z-[60] inline-flex justify-center items-center gap-2 px-4 py-3 rounded-2xl bg-cyan-400 text-slate-950 font-black text-xs sm:text-sm shadow-[0_12px_35px_rgba(0,0,0,.35)] hover:bg-cyan-300 hover:-translate-y-0.5 transition"
+      >
+        <IconArrowRight />
+        بازگشت به صفحه گزارش
+      </button>
+    </div>
+  );
+}
+
 export default function page() {
   const { darkMode } = useTheme()
   const [menuOpen, setMenuOpen] = useState(false)
   const [crisisOpen, setCrisisOpen] = useState(false)
+  const [caseOpen, setCaseOpen] = useState(false)
+  useEffect(() => {
+    if (!caseOpen) return
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setCaseOpen(false)
+    }
+    window.addEventListener("keydown", onKeyDown)
+    return () => window.removeEventListener("keydown", onKeyDown)
+  }, [caseOpen])
 
   useEffect(() => {
     if (darkMode) {
@@ -529,6 +1097,8 @@ export default function page() {
   }, [darkMode])
 
   const iconColor = darkMode ? "#00E5FF" : "#1D4ED8"
+
+  {caseOpen && <CaseReviewPanel onClose={() => setCaseOpen(false)} />}
 
   return (
     <div
@@ -1231,9 +1801,9 @@ export default function page() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {blogPosts.map((post, i) => (
-              <Link
+              <article
                 key={i}
-                href="/blog"
+                
                 className={`group flex flex-col rounded-2xl overflow-hidden transition-all ${
                   darkMode ? "bg-cyan-900/10" : ""
                 }`}
@@ -1394,7 +1964,9 @@ export default function page() {
                     {post.excerpt}
                   </p>
 
-                  <div
+                  <button
+                    type="button"
+                    onClick={() => setCaseOpen(true)}
                     className="flex items-center gap-1.5 text-sm font-semibold transition-colors"
                     style={{
                       color: darkMode
@@ -1402,7 +1974,7 @@ export default function page() {
                         : "#1D4ED8",
                     }}
                   >
-                    مطالعه گزارش
+                    بررسی گزارش
 
                     <svg
                       width="12"
@@ -1422,9 +1994,9 @@ export default function page() {
                       />
                       <polyline points="12 5 19 12 12 19" />
                     </svg>
-                  </div>
+                  </button>
                 </div>
-              </Link>
+              </article>
             ))}
           </div>
         </div>

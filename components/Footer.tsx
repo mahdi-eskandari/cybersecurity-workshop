@@ -1,19 +1,57 @@
 "use client";
 
-import { Shield, Phone, Mail, MapPin } from "lucide-react";
 import React from "react";
 import Link from "next/link";
 import { useTheme } from "./ThemeProvider";
 
 const F_SERVICES = [
-  "کشف هویت پشت نقاب",
-  "ردیابی رمز ارز",
-  "پاکسازی سیستم آلوده",
-  "مستند سازی ادله دیجیتال",
+  {
+    title: "کشف هویت پشت نقاب",
+    href: "/services",
+  },
+  {
+    title: "ردیابی رمز ارز",
+    href: "/services",
+  },
+  {
+    title: "پاکسازی سیستم آلوده",
+    href: "/services",
+  },
+  {
+    title: "مستند سازی ادله دیجیتال",
+    href: "/services",
+  },
 ];
 
-const contactUs = ["درباره ما", "تماس با ما", "حریم خصوصی"];
-const blug = ["اخبار", "آموزش", "گزارش رادار"];
+const COMPANY_LINKS = [
+  {
+    title: "درباره ما",
+    href: "/about",
+  },
+  {
+    title: "تماس با ما",
+    href: "/contact",
+  },
+   {
+    title: "حریم خصوصی",
+    href: "/privacy",
+  },
+];
+
+const BLOG_LINKS = [
+  {
+    title: "اخبار",
+    href: "/blogs",
+  },
+  {
+    title: "آموزش",
+    href: "/blogs",
+  },
+  {
+    title: "گزارش رادار",
+    href: "/blogs",
+  },
+];
 
 const PulseDot = ({
   size = 7,
@@ -37,6 +75,21 @@ const PulseDot = ({
 
 export default function Footer() {
   const { darkMode } = useTheme();
+
+  const footerMenus = [
+    {
+      title: "خدمات",
+      links: F_SERVICES,
+    },
+    {
+      title: "شرکت",
+      links: COMPANY_LINKS,
+    },
+    {
+      title: "وبلاگ",
+      links: BLOG_LINKS,
+    },
+  ];
 
   return (
     <div
@@ -63,7 +116,8 @@ export default function Footer() {
                   color={darkMode ? "#00E5FF" : "#60A5FA"}
                 />
 
-                <span
+                <Link
+                  href="/"
                   className="font-black text-lg"
                   style={{
                     color: darkMode
@@ -72,13 +126,13 @@ export default function Footer() {
                   }}
                 >
                   پاراهور
-                </span>
+                </Link>
               </div>
 
               <p
                 className="text-[0.78rem] leading-[1.9]"
                 style={{
-                  color: darkMode ? "#334155" : "#E2E8F0",
+                  color: darkMode ? "#818fa0" : "#E2E8F0",
                 }}
               >
                 پاراهور یک آژانس تحقیقاتِ فنی است و مستقیماً خدمات وکالتی ارائه
@@ -88,11 +142,7 @@ export default function Footer() {
             </div>
 
             {/* ۳ ستون منو */}
-            {[
-              { title: "خدمات", links: F_SERVICES },
-              { title: "شرکت", links: contactUs },
-              { title: "قانونی", links: blug },
-            ].map(({ title, links }) => (
+            {footerMenus.map(({ title, links }) => (
               <div key={title} className="md:col-span-1">
                 <h4
                   className="text-[14px] font-semibold mb-5"
@@ -106,13 +156,13 @@ export default function Footer() {
                 </h4>
 
                 <ul className="space-y-3">
-                  {links.map((l) => (
-                    <li key={l}>
+                  {links.map((link) => (
+                    <li key={link.title}>
                       <Link
-                        href="#"
+                        href={link.href}
                         className="text-[13px] transition-colors block"
                         style={{
-                          color: darkMode ? "#334155" : "#CBD5E1",
+                          color: darkMode ? "#818fa0" : "#CBD5E1",
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.color = darkMode
@@ -121,11 +171,11 @@ export default function Footer() {
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.color = darkMode
-                            ? "#334155"
+                            ? "#818fa0"
                             : "#CBD5E1";
                         }}
                       >
-                        {l}
+                        {link.title}
                       </Link>
                     </li>
                   ))}
@@ -146,7 +196,7 @@ export default function Footer() {
             <p
               className="text-[11px]"
               style={{
-                color: darkMode ? "#334155" : "#CBD5E1",
+                color: darkMode ? "#818fa0" : "#CBD5E1",
               }}
             >
               © ۱۴۰۳ پاراهور — تمامی حقوق محفوظ است
@@ -155,7 +205,7 @@ export default function Footer() {
             <p
               className="text-[11px]"
               style={{
-                color: darkMode ? "#334155" : "#CBD5E1",
+                color: darkMode ? "#818fa0" : "#CBD5E1",
               }}
             >
               کارشناس رسمی دادگستری · عضو انجمن حقوق دیجیتال ایران
@@ -166,7 +216,6 @@ export default function Footer() {
     </div>
   );
 }
-
 
 
 // "use client";

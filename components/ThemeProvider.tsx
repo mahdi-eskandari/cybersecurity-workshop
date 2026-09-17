@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useLayoutEffect,
+  ReactNode,
+} from "react";
 
 interface ThemeContextType {
   darkMode: boolean;
@@ -15,7 +21,7 @@ const ThemeContext = createContext<ThemeContextType>({
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [darkMode, setDarkMode] = useState(true);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
     } else {

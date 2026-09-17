@@ -327,9 +327,9 @@ function SideCard({ title, icon, children, accentColor = "#00E5FF" }: { title: s
 
 function F({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
   return <div className="flex flex-col gap-[5px]">
-    <label className="font-mono text-[0.68rem] tracking-widest text-slate-600">{label}</label>
+    <label className="font-mono text-[0.68rem] font-semibold tracking-widest text-slate-400">{label}</label>
     {children}
-    {hint && <span className="text-[0.62rem] text-slate-800">{hint}</span>}
+    {hint && <span className="text-[0.62rem] font-medium text-slate-400">{hint}</span>}
   </div>;
 }
 
@@ -544,7 +544,7 @@ function CodePanel({ editor, onClose }: { editor: Editor; onClose: () => void })
 }
 
 const ADMIN_AUTHORS = [
-  { id: "admin-1", name: "ادمین ۱" },
+  { id: "admin-1", name: "ادمین ۱ (محمدرضا)" },
   { id: "admin-2", name: "ادمین ۲" },
 ] as const;
 
@@ -587,8 +587,8 @@ export default function PostsAdminPage() {
   const [featuredAlt, setFeaturedAlt] = useState("");
   const mediaFileRef = useRef<HTMLInputElement>(null);
   const [codePanelOpen, setCodePanelOpen] = useState(false);
-  const [seoPreview, setSeoPreview] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const titleRef = useRef<HTMLTextAreaElement | null>(null);
   type PostRecord = {
     id: string;
     title: string;
@@ -624,6 +624,7 @@ export default function PostsAdminPage() {
     defaultValues: { title: "", slug: "", content: "", metaTitle: "", metaDescription: "", authorId: "" },
     mode: "onSubmit",
   });
+  const titleRegister = register("title", { required: "عنوان پست الزامی است." });
 
 
   const editor = useEditor({
@@ -983,9 +984,6 @@ export default function PostsAdminPage() {
   };
 
   const normalizedSlug = slug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
-  const seoTitle = metaTitle.trim() || title.trim() || "عنوان صفحه";
-  const seoDescription = metaDesc.trim() || "توضیحات متا در اینجا نمایش داده می‌شود...";
-  const canonicalUrl = `https://parahoor.io/blog/${normalizedSlug || "post-url"}`;
   const wordCount = editor?.getText().split(/\s+/).filter(Boolean).length || 0;
   const readMin = Math.max(1, Math.round(wordCount / 180));
   const selectedAuthor = ADMIN_AUTHORS.find((a) => a.id === authorId);
@@ -1003,6 +1001,13 @@ export default function PostsAdminPage() {
     setValue("metaDescription", metaDesc, { shouldValidate: false });
     setValue("authorId", authorId, { shouldValidate: false });
   }, [title, normalizedSlug, content, metaTitle, metaDesc, authorId, setValue]);
+
+  useEffect(() => {
+    if (titleRef.current) {
+      titleRef.current.style.height = "auto";
+      titleRef.current.style.height = `${titleRef.current.scrollHeight}px`;
+    }
+  }, [title]);
 
   return <div className="min-h-screen w-full bg-[#050814] text-slate-200">
     {view === "list" ? (
@@ -1096,7 +1101,7 @@ export default function PostsAdminPage() {
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
                         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-cyan-400/10 bg-cyan-400/[0.05] text-cyan-300"><IconHeading /></div>
-                        <div className="min-w-0 max-w-[320px]"><div className="truncate text-[0.8rem] font-bold text-slate-200" title={post.title}>{post.title}</div><div className="mt-0.5 truncate font-mono text-[9px] text-slate-700" title={post.id}>{post.id}</div></div>
+                        <div className="min-w-0 max-w-[250px]"><div className="truncate text-[0.8rem] font-bold text-slate-200" title={post.title}>{post.title}</div><div className="mt-0.5 truncate font-mono text-[9px] text-slate-700" title={post.id}>{post.id}</div></div>
                       </div>
                     </td>
                     <td className="px-5 py-4"><span className={`inline-flex rounded-md border px-2 py-1 text-[9px] font-bold ${post.postType === "special" ? "border-purple-400/20 bg-purple-400/[0.08] text-purple-300" : "border-slate-400/15 bg-slate-400/[0.05] text-slate-400"}`}>{post.postType === "special" ? "ویژه" : "معمولی"}</span></td>
@@ -1138,7 +1143,7 @@ export default function PostsAdminPage() {
           {codePanelOpen && editor && <CodePanel editor={editor} onClose={() => setCodePanelOpen(false)} />}
 
           <div className="px-12 pt-9">
-            <textarea {...register("title", { required: "عنوان پست الزامی است." })} value={title} onChange={(e) => { setTitle(e.target.value); setValue("title", e.target.value, { shouldValidate: false }); e.target.style.height = "auto"; e.target.style.height = `${e.target.scrollHeight}px`; }} placeholder="عنوان گزارش یا پرونده را اینجا بنویسید..." rows={1} className="w-full resize-none overflow-hidden border-0 border-b-2 border-cyan-400/[0.08] bg-transparent pb-4 text-[clamp(1.5rem,2.6vw,2.1rem)] font-black leading-[1.35] text-white outline-none placeholder:text-slate-800 caret-cyan-400 focus:border-cyan-400/30" />
+            <textarea {...titleRegister} ref={(element) => { titleRegister.ref(element); titleRef.current = element; }} value={title} onChange={(e) => { setTitle(e.target.value); setValue("title", e.target.value, { shouldValidate: false }); e.target.style.height = "auto"; e.target.style.height = `${e.target.scrollHeight}px`; }} placeholder="عنوان گزارش یا پرونده را اینجا بنویسید..." rows={1} className="w-full resize-none overflow-hidden border-0 border-b-2 border-cyan-400/[0.08] bg-transparent pb-4 text-[clamp(1.5rem,2.6vw,2.1rem)] font-black leading-[1.35] text-white outline-none placeholder:text-slate-800 caret-cyan-400 focus:border-cyan-400/30" />
           </div>
 
           {errors.title && <p className="px-12 pt-2 text-[0.65rem] font-bold text-red-400">{errors.title.message}</p>}
@@ -1172,7 +1177,7 @@ export default function PostsAdminPage() {
                 </div>
               </div>
               {!authorId && <p className="-mt-1 px-1 text-[0.6rem] font-bold text-red-400">انتخاب نویسنده الزامی است.</p>}
-              <div className="grid grid-cols-2 gap-2 text-[0.62rem] text-slate-700">
+              <div className="grid grid-cols-2 gap-2 text-[0.62rem] font-medium text-slate-400">
                 <div className="rounded-lg border border-white/[0.04] bg-[#050814]/50 px-2.5 py-2">ایجاد: {createdAt || "پس از ذخیره"}</div>
                 <div className="rounded-lg border border-white/[0.04] bg-[#050814]/50 px-2.5 py-2">ویرایش: {updatedAt || "هنوز ذخیره نشده"}</div>
               </div>
@@ -1183,8 +1188,8 @@ export default function PostsAdminPage() {
           </SideCard>
 
           <SideCard title="دسته‌بندی و برچسب‌ها" icon={<IconTag />} accentColor="#A78BFA">
-            <div className="flex flex-col gap-3.5"><div><p className="mb-2 font-mono text-[0.65rem] tracking-widest text-slate-700">CATEGORIES</p><div className="flex flex-col gap-1.5">{CATS.map(({ id, label }) => { const checked = selectedCats.includes(id); return <div key={id} className="flex items-center gap-2.5"><button type="button" onClick={() => toggleCat(id)} className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-[5px] ${checked ? "border-[1.5px] border-cyan-400 bg-cyan-400/[0.12]" : "border-[1.5px] border-white/[0.15] bg-transparent"}`}>{checked && <IconCheck />}</button><button type="button" onClick={() => toggleCat(id)} className={`border-0 bg-transparent p-0 text-right text-[0.8rem] ${checked ? "text-slate-200" : "text-slate-600"}`}>{label}</button></div>; })}</div></div>
-              <div><p className="mb-2 font-mono text-[0.65rem] tracking-widest text-slate-700">TAGS</p><div className="mb-2 flex flex-wrap gap-1.5">{tags.map((t) => <span key={t} className="inline-flex items-center gap-1 rounded-md border border-purple-400/25 bg-purple-400/[0.10] px-2 py-[3px] font-mono text-[0.7rem] text-purple-400">{t}<button type="button" onClick={() => removeTag(t)} className="flex cursor-pointer border-0 bg-transparent p-0 text-purple-400/50 hover:text-red-400"><IconX /></button></span>)}</div><input value={tagInput} onChange={(e) => setTagInput(e.target.value)} onKeyDown={addTag} placeholder="مثلاً #ردیابی_تتر — Enter برای افزودن" className={inputClass} /></div>
+            <div className="flex flex-col gap-3.5"><div><p className="mb-2 font-mono text-[0.65rem] font-semibold tracking-widest text-slate-400">CATEGORIES</p><div className="flex flex-col gap-1.5">{CATS.map(({ id, label }) => { const checked = selectedCats.includes(id); return <div key={id} className="flex items-center gap-2.5"><button type="button" onClick={() => toggleCat(id)} className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-[5px] ${checked ? "border-[1.5px] border-cyan-400 bg-cyan-400/[0.12]" : "border-[1.5px] border-white/[0.15] bg-transparent"}`}>{checked && <IconCheck />}</button><button type="button" onClick={() => toggleCat(id)} className={`border-0 bg-transparent p-0 text-right text-[0.8rem] ${checked ? "text-slate-200" : "text-slate-600"}`}>{label}</button></div>; })}</div></div>
+              <div><p className="mb-2 font-mono text-[0.65rem] font-semibold tracking-widest text-slate-400">TAGS</p><div className="mb-2 flex flex-wrap gap-1.5">{tags.map((t) => <span key={t} className="inline-flex items-center gap-1 rounded-md border border-purple-400/25 bg-purple-400/[0.10] px-2 py-[3px] font-mono text-[0.7rem] text-purple-400">{t}<button type="button" onClick={() => removeTag(t)} className="flex cursor-pointer border-0 bg-transparent p-0 text-purple-400/50 hover:text-red-400"><IconX /></button></span>)}</div><input value={tagInput} onChange={(e) => setTagInput(e.target.value)} onKeyDown={addTag} placeholder="مثلاً #ردیابی_تتر — Enter برای افزودن" className={inputClass} /></div>
             </div>
           </SideCard>
 
@@ -1203,7 +1208,7 @@ export default function PostsAdminPage() {
               {(() => { const item = mediaItems.find((m) => m.id === featuredMediaId); return item ? <><div className="relative overflow-hidden rounded-lg border border-amber-400/20 bg-[#050814]"><img src={item.url} alt={featuredAlt} className="aspect-[16/9] w-full object-cover" /><span className="absolute right-2 top-2 rounded-md bg-[#050814]/85 px-2 py-1 text-[9px] font-bold text-amber-300">تصویر شاخص</span></div><F label="متن جایگزین تصویر شاخص" hint="برای دسترس‌پذیری و سئو"><input value={featuredAlt} onChange={(e) => updateMediaAlt(item.id, e.target.value)} placeholder="توضیح دقیق و کوتاه تصویر" className={inputClass} /></F><button type="button" onClick={openMediaLibraryForEditor} className="w-full cursor-pointer rounded-lg border border-white/[0.07] bg-transparent py-2 text-[0.68rem] text-slate-300 hover:bg-white/[0.03] hover:text-slate-300">تغییر تصویر شاخص</button></> : null; })()}
             </div> : <div className="flex flex-col gap-2.5">
               <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => { addMediaFiles(e.target.files); e.currentTarget.value = ""; }} />
-              <button type="button" onClick={() => { if (mediaItems.length) setMediaLibraryOpen(true); else mediaFileRef.current?.click(); }} onMouseEnter={() => setUploadHover(true)} onMouseLeave={() => setUploadHover(false)} className={`flex w-full cursor-pointer flex-col items-center gap-2 rounded-[10px] border p-[22px_12px] transition-all ${uploadHover ? "border-[1.5px] border-dashed border-amber-400/55 bg-amber-400/[0.04]" : "border-[1.5px] border-dashed border-amber-400/20 bg-white/[0.01]"}`}><span className="text-amber-400/50"><IconUpload /></span><span className="text-center text-[0.76rem] text-amber-400/55">انتخاب از پرونده‌های چندرسانه‌ای</span><span className="text-center font-mono text-[0.62rem] text-slate-800">JPG/PNG/WEBP</span></button>
+              <button type="button" onClick={() => { if (mediaItems.length) setMediaLibraryOpen(true); else mediaFileRef.current?.click(); }} onMouseEnter={() => setUploadHover(true)} onMouseLeave={() => setUploadHover(false)} className={`flex w-full cursor-pointer flex-col items-center gap-2 rounded-[10px] border p-[22px_12px] transition-all ${uploadHover ? "border-[1.5px] border-dashed border-amber-400/55 bg-amber-400/[0.04]" : "border-[1.5px] border-dashed border-amber-400/20 bg-white/[0.01]"}`}><span className="text-amber-400/50"><IconUpload /></span><span className="text-center text-[0.76rem] text-amber-400/55">انتخاب از پرونده‌های چندرسانه‌ای</span><span className="text-center font-mono text-[0.62rem] font-medium text-slate-400">JPG/PNG/WEBP</span></button>
             </div>}
           </SideCard>
 
@@ -1212,10 +1217,6 @@ export default function PostsAdminPage() {
               <F label="نامک (URL Slug)" hint="فقط حروف انگلیسی، اعداد و خط تیره"><input {...register("slug", { required: "نامک الزامی است." })} value={slug} maxLength={100} onChange={(e) => { const value = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-"); setSlug(value); setValue("slug", value, { shouldValidate: false }); }} placeholder="post-url-slug" className={`${inputClass} font-mono text-[0.76rem]`} />{errors.slug && <p className="mt-1 text-[0.6rem] font-bold text-red-400">{errors.slug.message}</p>}</F>
               <F label="عنوان سئو (Meta Title)" hint={`${metaTitle.length}/60 — بهتر است زیر 60 کاراکتر باشد`}><input {...register("metaTitle", { required: "عنوان سئو الزامی است." })} value={metaTitle} maxLength={60} onChange={(e) => { setMetaTitle(e.target.value); setValue("metaTitle", e.target.value, { shouldValidate: false }); }} placeholder="عنوان صفحه برای موتورهای جستجو" className={inputClass} /><div className="h-1 w-full overflow-hidden rounded-full bg-white/[0.04]"><div className={`h-full transition-all ${metaTitle.length > 55 ? "bg-red-400" : metaTitle.length > 45 ? "bg-amber-400" : "bg-emerald-400"}`} style={{ width: `${Math.min(100, metaTitle.length / 60 * 100)}%` }} /></div>{errors.metaTitle && <p className="mt-1 text-[0.6rem] font-bold text-red-400">{errors.metaTitle.message}</p>}</F>
               <F label="توضیحات متا (Meta Description)" hint={`${metaDesc.length}/160 — حدود 120 تا 160 کاراکتر مناسب است`}><textarea {...register("metaDescription", { required: "توضیحات متا الزامی است." })} value={metaDesc} maxLength={160} onChange={(e) => { setMetaDesc(e.target.value); setValue("metaDescription", e.target.value, { shouldValidate: false }); }} placeholder="توضیح کوتاه و جذاب برای نتایج جستجو..." rows={4} className={`${inputClass} resize-none leading-6`} />{errors.metaDescription && <p className="mt-1 text-[0.6rem] font-bold text-red-400">{errors.metaDescription.message}</p>}<div className="h-1 w-full overflow-hidden rounded-full bg-white/[0.04]"><div className={`h-full transition-all ${metaDesc.length > 150 ? "bg-red-400" : metaDesc.length > 110 ? "bg-emerald-400" : "bg-amber-400"}`} style={{ width: `${Math.min(100, metaDesc.length / 160 * 100)}%` }} /></div></F>
-              <button type="button" onClick={() => setSeoPreview((v) => !v)} className="flex w-full items-center justify-between rounded-lg border border-emerald-400/[0.12] bg-emerald-400/[0.03] px-3 py-2 font-mono text-[12px] text-emerald-400/70 hover:bg-emerald-400/[0.07] hover:text-emerald-300"><span>GOOGLE SERP PREVIEW</span><span>{seoPreview ? "−" : "+"}</span></button>
-              {seoPreview && <div className="rounded-[9px] border border-white/[0.09] bg-[#050814]/80 p-3"><p className="mb-1.5 font-mono text-[0.58rem] tracking-widest text-slate-700">GOOGLE SEARCH</p><p className="mb-1 text-[0.82rem] leading-5 text-[#4285F4]">{seoTitle}</p><p className="mb-1.5 truncate font-mono text-[0.62rem] text-[#34A853]">parahoor.io › blog › {normalizedSlug || "post-url"}</p><p className="text-[0.72rem] leading-5 text-slate-300">{seoDescription}</p></div>}
-              <div className="rounded-lg border border-white/[0.05] bg-white/[0.015] p-3"><p className="mb-1.5 font-mono text-[0.58rem] tracking-widest text-slate-700">CANONICAL URL</p><p className="break-all font-mono text-[0.62rem] leading-5 text-cyan-400/45">{canonicalUrl}</p></div>
-              <div className="flex flex-col gap-1.5"><p className="font-mono text-[0.58rem] tracking-widest text-slate-700">SEO CHECK</p><div className="flex items-center justify-between text-[0.65rem]"><span className="text-slate-600">عنوان SEO</span><span className={metaTitle.length > 0 ? "text-emerald-400" : "text-amber-400"}>{metaTitle.length > 0 ? "✓ OK" : "○ تنظیم نشده"}</span></div><div className="flex items-center justify-between text-[0.65rem]"><span className="text-slate-600">توضیحات Meta</span><span className={metaDesc.length >= 120 && metaDesc.length <= 160 ? "text-emerald-400" : "text-amber-400"}>{metaDesc.length >= 120 && metaDesc.length <= 160 ? "✓ مناسب" : "○ نیاز به بهینه‌سازی"}</span></div><div className="flex items-center justify-between text-[0.65rem]"><span className="text-slate-600">Slug</span><span className={normalizedSlug ? "text-emerald-400" : "text-red-400"}>{normalizedSlug ? "✓ OK" : "✕ خالی"}</span></div><div className="flex items-center justify-between text-[0.65rem]"><span className="text-slate-600">Alt تصویر شاخص</span><span className={featuredMediaId && featuredAlt.trim() ? "text-emerald-400" : featuredMediaId ? "text-amber-400" : "text-slate-700"}>{featuredMediaId ? (featuredAlt.trim() ? "✓ OK" : "○ نیاز به Alt") : "○ بدون تصویر"}</span></div></div>
             </div>
           </SideCard>
 
@@ -1306,6 +1307,44 @@ export default function PostsAdminPage() {
       .service-rich-editor-content sub { font-size:.72em; line-height:0; vertical-align:sub; color:#A5B4FC; }
       textarea::placeholder, input::placeholder { color:#1E293B; }
 
+      /* Responsive layout — editor */
+      @media (max-width: 1100px) {
+        form > div {
+          flex-direction: column !important;
+          overflow: visible !important;
+        }
+
+        form > div > main,
+        form > div > aside {
+          flex: 0 0 auto !important;
+          width: 100% !important;
+          min-width: 0 !important;
+        }
+
+        form > div > main {
+          min-height: auto !important;
+          overflow: visible !important;
+          border-left: 0 !important;
+          border-bottom: 1px solid rgba(0,229,255,0.06);
+        }
+
+        form > div > aside {
+          min-height: auto !important;
+          overflow: visible !important;
+          display: grid !important;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          align-items: start;
+        }
+
+        form > div > aside > div:not(.fixed) {
+          min-width: 0;
+        }
+
+        form > div > aside > div:not(.fixed):first-child {
+          grid-column: 1 / -1;
+        }
+      }
+
       @media (max-width: 760px) {
         .services-page-main {
           padding: 20px 14px !important;
@@ -1328,6 +1367,87 @@ export default function PostsAdminPage() {
         .posts-add-button {
           width: 100% !important;
         }
+
+        form > div > main {
+          width: 100% !important;
+        }
+
+        form > div > aside {
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 12px !important;
+          padding: 12px !important;
+        }
+
+        form > div > aside > div:not(.fixed) {
+          width: 100%;
+        }
+
+        .service-rich-editor-toolbar {
+          position: sticky;
+          top: 0;
+          padding: 6px;
+        }
+
+        .service-rich-editor-toolbar-row {
+          gap: 2px;
+        }
+
+        .service-rich-editor-divider {
+          margin: 0 3px;
+        }
+
+        .service-rich-editor-extra-group {
+          align-items: flex-start;
+          flex-wrap: wrap;
+        }
+
+        .service-rich-link-editor input {
+          flex-basis: 100%;
+          min-width: 0;
+        }
+
+        form > div > main > div:has(> textarea),
+        form > div > main > div:has(.service-rich-editor-content),
+        form > div > main > div:has(> span.font-mono) {
+          padding-left: 14px !important;
+          padding-right: 14px !important;
+        }
+
+        .service-rich-editor-content {
+          min-height: 320px;
+          padding: 20px 2px 40px;
+        }
+
+        .service-rich-editor-content h1 {
+          font-size: 1.55rem;
+        }
+
+        .service-rich-editor-content h2 {
+          font-size: 1.2rem;
+        }
+
+        .service-image-actions {
+          right: 5px;
+          top: 5px;
+          max-width: calc(100% - 10px);
+        }
+
+        .service-image-actions button {
+          padding: 4px 6px;
+        }
+
+        .service-rich-link-editor {
+          align-items: stretch;
+        }
+
+        .service-rich-link-editor button {
+          flex: 1 1 auto;
+        }
+
+        form > div > aside .grid.grid-cols-2 {
+          grid-template-columns: 1fr;
+        }
       }
 
       @media (max-width: 480px) {
@@ -1336,6 +1456,49 @@ export default function PostsAdminPage() {
         }
 
         .post-filters {
+          padding-left: 12px !important;
+          padding-right: 12px !important;
+        }
+
+        .service-rich-editor-toolbar-row > button {
+          width: 32px !important;
+        }
+
+        .service-rich-editor-toolbar-row > div > button {
+          max-width: 72px;
+        }
+
+        .service-rich-editor-content {
+          font-size: 15px;
+          line-height: 2;
+        }
+
+        .service-rich-editor-content pre {
+          margin-left: -2px;
+          margin-right: -2px;
+          padding: 0.8rem;
+        }
+
+        .service-rich-editor-content [data-indent="5"],
+        .service-rich-editor-content [data-indent="6"],
+        .service-rich-editor-content [data-indent="7"],
+        .service-rich-editor-content [data-indent="8"] {
+          margin-right: 1.5em;
+        }
+
+        form > div > main > div:has(> textarea),
+        form > div > main > div:has(.service-rich-editor-content),
+        form > div > main > div:has(> span.font-mono) {
+          padding-left: 10px !important;
+          padding-right: 10px !important;
+        }
+
+        .services-table {
+          min-width: 720px !important;
+        }
+
+        .services-table th,
+        .services-table td {
           padding-left: 12px !important;
           padding-right: 12px !important;
         }

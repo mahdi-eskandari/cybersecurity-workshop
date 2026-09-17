@@ -1,4 +1,3 @@
-
 import { NextResponse } from "next/server";
 import dbConnect from "../../../../lib/mongodb";
 import User from "../../../model/User";
@@ -7,26 +6,28 @@ import jwt from "jsonwebtoken";
 
 export async function POST(req: Request) {
   try {
-    const { email, code } = await req.json();
+    const { username, email, code } = await req.json();
 
-    if (!email || !code) {
+    if (!username || !email || !code) {
       return NextResponse.json(
-        { error: "ایمیل و کد تأیید الزامی هستند." },
+        { error: "نام کاربری، ایمیل و کد تأیید الزامی هستند." },
         { status: 400 }
       );
     }
 
+    const normalizedUsername = username.trim();
     const normalizedEmail = email.toLowerCase().trim();
 
     await dbConnect();
 
     const user = await User.findOne({
+      username: normalizedUsername,
       email: normalizedEmail,
     });
 
     if (!user) {
       return NextResponse.json(
-        { error: "کاربری با این ایمیل پیدا نشد." },
+        { error: "کاربری با این مشخصات پیدا نشد." },
         { status: 404 }
       );
     }
@@ -56,7 +57,10 @@ export async function POST(req: Request) {
       });
 
       return NextResponse.json(
-        { error: "کد تأیید منقضی شده است. لطفاً دوباره درخواست کد کنید." },
+        {
+          error:
+            "کد تأیید منقضی شده است. لطفاً دوباره درخواست کد کنید.",
+        },
         { status: 401 }
       );
     }
@@ -64,6 +68,7 @@ export async function POST(req: Request) {
     const token = jwt.sign(
       {
         userId: user._id.toString(),
+        username: user.username,
         email: normalizedEmail,
         role: user.role,
       },
@@ -99,9 +104,11 @@ export async function POST(req: Request) {
     console.error("Login Error:", error);
 
     return NextResponse.json(
-      { error: "خطایی هنگام ورود رخ داد. لطفاً دوباره تلاش کنید." },
+      {
+        error:
+          "خطایی هنگام ورود رخ داد. لطفاً دوباره تلاش کنید.",
+      },
       { status: 500 }
     );
   }
 }
-
