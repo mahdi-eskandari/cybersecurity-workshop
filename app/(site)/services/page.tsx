@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTheme } from "../../../components/ThemeProvider";
 import { motion } from "framer-motion";
-import {EmergencyModal} from "../../.../../../components/CrisisReportForm"
+import EmergencyModal from "@/components/CrisisReportForm";
+
 
 /* ─── ICONS ─── */
 
@@ -380,6 +381,9 @@ useEffect(() => {
 
 
   return (
+
+   
+
    <div
     className="min-h-full transition-colors duration-300"
     style={{
@@ -1103,5 +1107,6 @@ useEffect(() => {
         </div>
       </motion.div>
     </div>
+
   );
 }

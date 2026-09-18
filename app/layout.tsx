@@ -1,6 +1,8 @@
 import { Poppins, Vazirmatn } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../components/ThemeProvider";
+import type { Metadata } from "next";
+
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -16,9 +18,27 @@ const vazirmatn = Vazirmatn({
   weight: ["400", "500", "600", "700"],
 });
 
-export const metadata = {
-  title: "پاراهور | جرم‌شناسی دیجیتال",
-  description: "کشف و ردیابی هویت دیجیتال مجرم",
+
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://parahoor.com"),
+
+  title: {
+    default: "پاراهور | آژانس تحقیقات سایبری و فارنزیک",
+    template: "%s | پاراهور",
+  },
+
+  description:
+    "پاراهور، آژانس تخصصی تحقیقات سایبری، فارنزیک دیجیتال، تحلیل شواهد دیجیتال و بررسی جرایم سایبری.",
+
+  robots: {
+    index: true,
+    follow: true,
+  },
+  icons: {
+    icon: "/favicon.ico?v=3",
+  },
+
 };
 
 export default function SiteLayout({
@@ -32,7 +52,9 @@ export default function SiteLayout({
       dir="rtl"
       className="dark"
       suppressHydrationWarning
+      
     >
+      
       <body
         className={`${vazirmatn.variable} ${poppins.variable}`}
       >

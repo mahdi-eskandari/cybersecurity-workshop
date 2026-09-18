@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useTheme } from "@/components/ThemeProvider";
 import EmergencyModal from "@/components/CrisisReportForm";
 import { siTelegram } from "simple-icons";
+import Head from "next/head";
 
 /* ─── SHARED ─── */
 const PulseDot = ({ size = 7, color = "#00E5FF" }: { size?: number; color?: string }) => (
@@ -340,6 +341,49 @@ export default function App() {
   ];
 
   return (
+    <>
+    <Head>
+  <title>تماس با پاراهور | آژانس تحقیقات سایبری و فارنزیک</title>
+
+  <meta
+    name="description"
+    content="برای دریافت اطلاعات و ارتباط با پاراهور درباره خدمات تحقیقات سایبری، فارنزیک دیجیتال و بررسی پرونده‌های سایبری با ما در تماس باشید."
+  />
+
+  <link rel="canonical" href="https://parahoor.com/contact" />
+
+  <meta name="robots" content="index, follow" />
+  <meta name="googlebot" content="index, follow" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="fa_IR" />
+  <meta property="og:site_name" content="پاراهور" />
+  <meta
+    property="og:title"
+    content="تماس با پاراهور | آژانس تحقیقات سایبری و فارنزیک"
+  />
+  <meta
+    property="og:description"
+    content="برای دریافت اطلاعات و ارتباط با پاراهور درباره خدمات تحقیقات سایبری، فارنزیک دیجیتال و بررسی پرونده‌های سایبری با ما در تماس باشید."
+  />
+  <meta property="og:url" content="https://parahoor.com/contact" />
+  <meta property="og:image" content="https://parahoor.com/logo.jpg" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta
+    name="twitter:title"
+    content="تماس با پاراهور | آژانس تحقیقات سایبری و فارنزیک"
+  />
+  <meta
+    name="twitter:description"
+    content="برای دریافت اطلاعات و ارتباط با پاراهور درباره خدمات تحقیقات سایبری، فارنزیک دیجیتال و بررسی پرونده‌های سایبری با ما در تماس باشید."
+  />
+  <meta
+    name="twitter:image"
+    content="https://parahoor.com/logo.jpg"
+  />
+</Head>
+
     <div dir="rtl" className={`contact-page min-h-screen bg-[length:52px_52px] bg-fixed font-[Vazirmatn,sans-serif] transition-colors duration-300 ${isDark ? "bg-[#0A1128] text-[#E6F7FF] [background-image:linear-gradient(rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.03)_1px,transparent_1px)]" : "bg-white text-[#0F172A] [background-image:linear-gradient(rgba(30,58,138,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(30,58,138,0.045)_1px,transparent_1px)]"}`}>
       {/* HERO */}
       <motion.section className="contact-hero relative overflow-hidden px-6 pb-16 pt-20 text-center md:px-12 md:pb-20 md:pt-28" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.65, ease: "easeOut" }}
@@ -704,6 +748,7 @@ export default function App() {
   </div>
 </motion.section>
     </div>
+    </>
   );
 }
 

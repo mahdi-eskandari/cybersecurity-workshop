@@ -11,6 +11,7 @@ import {
 import { useTheme } from "../../../components/ThemeProvider";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import Link from "next/link";
+import Head from "next/head";
 
 
 // ── types & data ──────────────────────────────────────────────────────────────
@@ -677,6 +678,49 @@ useEffect(() => {
       : smallArticles.filter((article) => article.categoryId === cat).length;
 
   return (
+    <>
+    <Head>
+  <title>وبلاگ پاراهور | مقالات تحقیقات سایبری و فارنزیک</title>
+
+  <meta
+    name="description"
+    content="وبلاگ پاراهور؛ مقالات و مطالب تخصصی درباره تحقیقات سایبری، فارنزیک دیجیتال، جرایم سایبری، امنیت اطلاعات و تحلیل شواهد دیجیتال."
+  />
+
+  <link rel="canonical" href="https://parahoor.com/blogs" />
+
+  <meta name="robots" content="index, follow" />
+  <meta name="googlebot" content="index, follow" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="fa_IR" />
+  <meta property="og:site_name" content="پاراهور" />
+  <meta
+    property="og:title"
+    content="وبلاگ پاراهور | مقالات تحقیقات سایبری و فارنزیک"
+  />
+  <meta
+    property="og:description"
+    content="وبلاگ پاراهور؛ مقالات و مطالب تخصصی درباره تحقیقات سایبری، فارنزیک دیجیتال، جرایم سایبری، امنیت اطلاعات و تحلیل شواهد دیجیتال."
+  />
+  <meta property="og:url" content="https://parahoor.com/blogs" />
+  <meta property="og:image" content="https://parahoor.com/logo.jpg" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta
+    name="twitter:title"
+    content="وبلاگ پاراهور | مقالات تحقیقات سایبری و فارنزیک"
+  />
+  <meta
+    name="twitter:description"
+    content="وبلاگ پاراهور؛ مقالات و مطالب تخصصی درباره تحقیقات سایبری، فارنزیک دیجیتال، جرایم سایبری، امنیت اطلاعات و تحلیل شواهد دیجیتال."
+  />
+  <meta
+    name="twitter:image"
+    content="https://parahoor.com/logo.jpg"
+  />
+</Head>
+    
     <div
       dir="rtl"
       className={`min-h-screen transition-colors duration-300 ${
@@ -1276,6 +1320,7 @@ className="w-full h-full"
         </div>
       </main>
     </div>
+    </>
   );
 }
 

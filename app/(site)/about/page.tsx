@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "../../../components/ThemeProvider";
 import {EmergencyModal} from "../../.../../../components/CrisisReportForm"
+import Head from "next/head";
 
 
 
@@ -446,6 +447,49 @@ export default function App() {
     : "#FFFFFF";
 
   return (
+    <>
+    <Head>
+  <title>درباره پاراهور | تحقیقات سایبری و فارنزیک</title>
+
+  <meta
+    name="description"
+    content="درباره پاراهور؛ آژانس خصوصی تحقیقات سایبری و فارنزیک با تمرکز بر کشف شواهد دیجیتال، تحلیل جرایم سایبری و بررسی پرونده‌های پیچیده."
+  />
+
+  <link rel="canonical" href="https://parahoor.com/about" />
+
+  <meta name="robots" content="index, follow" />
+  <meta name="googlebot" content="index, follow" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="fa_IR" />
+  <meta property="og:site_name" content="پاراهور" />
+  <meta
+    property="og:title"
+    content="درباره پاراهور | تحقیقات سایبری و فارنزیک"
+  />
+  <meta
+    property="og:description"
+    content="درباره پاراهور؛ آژانس خصوصی تحقیقات سایبری و فارنزیک با تمرکز بر کشف شواهد دیجیتال، تحلیل جرایم سایبری و بررسی پرونده‌های پیچیده."
+  />
+  <meta property="og:url" content="https://parahoor.com/about" />
+  <meta property="og:image" content="https://parahoor.com/logo.jpg" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta
+    name="twitter:title"
+    content="درباره پاراهور | تحقیقات سایبری و فارنزیک"
+  />
+  <meta
+    name="twitter:description"
+    content="درباره پاراهور؛ آژانس خصوصی تحقیقات سایبری و فارنزیک با تمرکز بر کشف شواهد دیجیتال، تحلیل جرایم سایبری و بررسی پرونده‌های پیچیده."
+  />
+  <meta
+    name="twitter:image"
+    content="https://parahoor.com/logo.jpg"
+  />
+</Head>
+
  <div
       dir="rtl"
       className={`min-h-screen transition-colors duration-300 ${
@@ -1359,5 +1403,6 @@ export default function App() {
         </div>
       </motion.section>
     </div>
+    </>
   );
 }
