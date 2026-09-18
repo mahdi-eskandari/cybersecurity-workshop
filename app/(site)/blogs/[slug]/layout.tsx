@@ -59,15 +59,11 @@ export async function generateMetadata({
     }
 
     // عنوان اصلی مقاله
-    const rawTitle =
-      post.metaTitle?.trim() ||
-      post.title?.trim() ||
-      "مقاله";
+const rawTitle = post.title?.trim() || "مقاله";
 
-    // اضافه کردن برند به عنوان
-    const title = rawTitle.endsWith("| پاراهور")
-      ? rawTitle
-      : `${rawTitle} | پاراهور`;
+const title = rawTitle.endsWith("| پاراهور")
+  ? rawTitle
+  : `${rawTitle} | پاراهور`;
 
     const description =
       post.metaDescription?.trim() ||

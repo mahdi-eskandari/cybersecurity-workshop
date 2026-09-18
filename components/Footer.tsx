@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useTheme } from "./ThemeProvider";
+import {Phone} from "lucide-react";
 
 const F_SERVICES = [
   {
@@ -181,7 +182,27 @@ export default function Footer() {
                   ))}
                 </ul>
               </div>
+              
             ))}
+                         <div>
+              
+              <div className="bg-[#C62828]/20 border border-[#C62828]/35 rounded-xl p-4 w-[300px]">
+                <p className="text-xs font-semibold text-red-300 mb-1.5">
+                  اورژانس سایبری
+                </p>
+                <p className="text-xs text-white/50 mb-3">
+                  در صورت حادثه فوری، ۲۴/۷ در دسترسیم
+                </p>
+                <a
+                  href="tel:+982188004000"
+                  className="flex items-center gap-2 px-3.5 py-2 bg-[#C62828] text-white text-xs font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors w-fit"
+                >
+                  <Phone className="w-3.5 h-3.5" />
+                  تماس اضطراری
+                </a>
+              </div>
+            </div>
+
           </div>
 
           {/* کپی‌رایت پایین */}

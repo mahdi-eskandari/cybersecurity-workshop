@@ -671,9 +671,45 @@ export default function FeedbackAdminPage() {
             <div className="h-8 w-1 rounded-full bg-[#00E5FF]" />
 
             <div>
-              <div className="text-[10px] font-black uppercase tracking-[0.25em] text-[#00E5FF]/65">
+               <div
+              style={{
+                display: "flex",
+                alignItems:
+                  "center",
+                gap: 7,
+                marginBottom: 4,
+              }}
+            >
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius:
+                    "50%",
+                  background:
+                    "#00E5FF",
+                  boxShadow:
+                    "0 0 7px rgba(0,229,255,0.9)",
+                    
+                }}
+              />
+
+              <span
+                style={{
+                  fontFamily:
+                    "monospace",
+                  fontSize:
+                    "0.6rem",
+                  color:
+                    "rgba(0,229,255,0.5)",
+                  letterSpacing:
+                    "0.18em",
+                }}
+              >
                 USER FEEDBACK
-              </div>
+              </span>
+            </div>
+              
 
               <h1 className="mt-1 text-2xl font-black tracking-tight text-white sm:text-3xl">
                 بازخورد کاربران
@@ -854,7 +890,7 @@ export default function FeedbackAdminPage() {
                     تاریخ
                   </th>
 
-                  <th className="px-5 py-4 text-left text-[10px] font-black text-slate-600">
+                  <th className="w-[70px] px-5 py-4 text-left text-[10px] font-black text-slate-600">
                     عملیات
                   </th>
                 </tr>
@@ -923,13 +959,11 @@ export default function FeedbackAdminPage() {
                           </span>
                         </td>
 
-                        <td className="px-5 py-4 text-left">
+                        <td className="w-[70px] px-5 py-4 text-left">
                           <button
                             className="service-eye-button"
                             onClick={() => {
-                              setSelectedFeedback(
-                                feedback
-                              );
+                              setSelectedFeedback(feedback);
                             }}
                             type="button"
                             title="مشاهده"
@@ -941,13 +975,10 @@ export default function FeedbackAdminPage() {
                               height: 30,
                               borderRadius: 10,
                               cursor: "pointer",
-                              background:
-                                "rgba(255,255,255,0.03)",
-                              border:
-                                "1px solid rgba(255,255,255,0.07)",
+                              background: "rgba(255,255,255,0.03)",
+                              border: "1px solid rgba(255,255,255,0.07)",
                               color: "#475569",
-                              transition:
-                                "all 0.18s ease",
+                              transition: "all 0.18s ease",
                             }}
                           >
                             <IconEye />

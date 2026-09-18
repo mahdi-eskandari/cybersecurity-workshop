@@ -728,6 +728,8 @@ export default function App() {
 
   const [filterStatus, setFilterStatus] =
     useState<string>("all");
+  const [search, setSearch] = useState("");
+  const [incidentFilter, setIncidentFilter] = useState<string>("all");
 
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 12;
@@ -894,19 +896,31 @@ const [selectedReport, setSelectedReport] =
   /* ─── FILTERED DATA ─── */
 
   const filteredData = useMemo(() => {
-    if (filterStatus === "all") {
-      return reports;
-    }
+    const searchValue = search.trim().toLowerCase();
 
     return reports.filter((report) => {
       const currentStatus = getStatusKey(report.status);
+      const incidentLabel = incidentTypes[report.incidentType]?.label || report.incidentType || "";
 
-      if (filterStatus === "emergency") {
-        return currentStatus === "new" || currentStatus === "emergency";
-      }
-      return currentStatus === filterStatus;
+      const matchesSearch =
+        !searchValue ||
+        report.trackingCode.toLowerCase().includes(searchValue) ||
+        report.contact.toLowerCase().includes(searchValue) ||
+        report.description.toLowerCase().includes(searchValue) ||
+        incidentLabel.toLowerCase().includes(searchValue);
+
+      const matchesStatus =
+        filterStatus === "all" ||
+        (filterStatus === "emergency"
+          ? currentStatus === "new" || currentStatus === "emergency"
+          : currentStatus === filterStatus);
+
+      const matchesIncident =
+        incidentFilter === "all" || report.incidentType === incidentFilter;
+
+      return matchesSearch && matchesStatus && matchesIncident;
     });
-  }, [reports, filterStatus]);
+  }, [reports, search, filterStatus, incidentFilter]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -950,7 +964,33 @@ const [selectedReport, setSelectedReport] =
     };
   }, [reports]);
 
-  /* ─── STAT CARDS ─── */
+  /* ─── CUSTOM SELECT ─── */
+function CustomSelect({ value, onChange, options }: { value: string; onChange: (value: string) => void; options: { value: string; label: string }[] }) {
+  const [open, setOpen] = useState(false);
+  const selectedOption = options.find((option) => option.value === value) ?? options[0];
+  return (
+    <div className="relative">
+      <button type="button" onClick={() => setOpen((prev) => !prev)} className={`flex h-10 w-full items-center justify-between rounded-[8px] border bg-[#0B1224] px-3 text-right text-[11px] font-bold outline-none transition-all ${open ? "border-cyan-400/35 shadow-[0_0_16px_rgba(0,229,255,0.04)]" : "border-white/[0.07] hover:border-cyan-400/15"}`}>
+        <span className="truncate text-slate-300">{selectedOption.label}</span>
+        <span className={`mr-2 flex h-5 w-5 shrink-0 items-center justify-center rounded-[5px] border border-white/[0.05] bg-white/[0.025] text-slate-500 transition-all duration-200 ${open ? "border-cyan-400/15 bg-cyan-400/[0.05] text-cyan-300" : ""}`}>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}><path d="m6 9 6 6 6-6" /></svg>
+        </span>
+      </button>
+      {open && <>
+        <button type="button" aria-label="بستن منو" onClick={() => setOpen(false)} className="fixed inset-0 z-40 cursor-default" />
+        <div className="absolute right-0 top-[calc(100%+6px)] z-50 max-h-[280px] w-full overflow-y-auto rounded-[9px] border border-white/[0.08] bg-[#0B1224] p-[6px] shadow-[0_16px_40px_rgba(0,0,0,0.45)]">
+          {options.map((option) => { const selected = option.value === value; return (
+            <button key={option.value} type="button" onClick={() => { onChange(option.value); setOpen(false); }} className={`flex w-full items-center justify-between rounded-[7px] px-3 py-2.5 text-right text-[11px] font-bold transition-all ${selected ? "bg-cyan-400/[0.08] text-cyan-300" : "text-slate-300 hover:bg-white/[0.05] hover:text-white"}`}>
+              <span className="truncate">{option.label}</span>{selected && <span className="mr-2 shrink-0 text-cyan-300"><IconCheck /></span>}
+            </button>
+          ); })}
+        </div>
+      </>}
+    </div>
+  );
+}
+
+/* ─── STAT CARDS ─── */
 
   const statCards = [
     {
@@ -1383,6 +1423,44 @@ const [selectedReport, setSelectedReport] =
           )}
         </div>
 
+        {/* ─── FILTERS ─── */}
+        <section className="mb-5 overflow-visible rounded-[14px] border border-[rgba(0,229,255,0.09)] bg-[#0A1128]">
+          <div className="h-0.5 bg-gradient-to-l from-[#00E5FF]/40 via-[#00E5FF]/10 to-transparent" />
+          <div className="p-4">
+            <div className="mb-3 flex items-center gap-2">
+              <span className="text-[12px] font-black text-slate-300">جستجو و فیلتر</span>
+              <span className="text-[10px] font-bold text-slate-600">{filteredData.length.toLocaleString("fa-IR")} مورد</span>
+            </div>
+<div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_220px]">
+  <div className="relative">
+    <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-[17px] text-slate-600">
+      ⌕
+    </span>
+
+    <input
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+      placeholder="جستجوی شناسه پرونده، شماره تماس یا شرح حادثه..."
+      className="h-10 w-full rounded-[8px] border border-white/[0.07] bg-[#0B1224] pr-10 pl-4 text-[11px] font-bold text-slate-300 outline-none transition-all placeholder:text-slate-600 focus:border-cyan-400/30"
+    />
+  </div>
+
+  <CustomSelect
+    value={filterStatus}
+    onChange={setFilterStatus}
+    options={[
+      { value: "all", label: "همه وضعیت‌ها" },
+      { value: "emergency", label: "جدید / اورژانسی" },
+      { value: "reviewing", label: "در حال بررسی" },
+      { value: "consulting", label: "ارجاع به مشاوره" },
+      { value: "resolved", label: "مختومه (موفق)" },
+      { value: "closed", label: "بسته شده" },
+    ]}
+  />
+</div>
+          </div>
+        </section>
+
         {/* ─── DATA TABLE ─── */}
 
         <div
@@ -1450,92 +1528,7 @@ const [selectedReport, setSelectedReport] =
               </p>
             </div>
 
-            <div
-              className="soc-filter-group"
-              style={{
-                display:
-                  "flex",
-                alignItems:
-                  "center",
-                gap: 8,
-              }}
-            >
-              {/* Filter pills */}
-
-              {[
-                {
-                  key: "all",
-                  label: "همه",
-                },
-                {
-                  key: "emergency",
-                  label: "اورژانسی",
-                },
-                {
-                  key: "reviewing",
-                  label: "در بررسی",
-                },
-                {
-                  key: "consulting",
-                  label: "مشاوره",
-                },
-                {
-                  key: "resolved",
-                  label: "مختومه (موفق)",
-                },
-              ].map(
-                ({
-                  key,
-                  label,
-                }) => (
-                  <button
-                    key={
-                      key
-                    }
-                    type="button"
-                    onClick={() =>
-                      setFilterStatus(
-                        key
-                      )
-                    }
-                    style={{
-                      padding:
-                        "4px 10px",
-                      borderRadius:
-                        6,
-                      fontSize:
-                        "0.72rem",
-                      cursor:
-                        "pointer",
-                      background:
-                        filterStatus ===
-                        key
-                          ? "rgba(0,229,255,0.1)"
-                          : "rgba(255,255,255,0.03)",
-                      border:
-                        filterStatus ===
-                        key
-                          ? "1px solid rgba(0,229,255,0.35)"
-                          : "1px solid rgba(255,255,255,0.06)",
-                      color:
-                        filterStatus ===
-                        key
-                          ? "#00E5FF"
-                          : "#475569",
-                      fontFamily:
-                        "Vazirmatn,sans-serif",
-                      transition:
-                        "all 0.15s",
-                    }}
-                  >
-                    {
-                      label
-                    }
-                  </button>
-                )
-              )}
-
-            </div>
+            <div className="text-[10px] font-bold text-slate-600">{filteredData.length.toLocaleString("fa-IR")} پرونده</div>
           </div>
 
           {/* Table */}

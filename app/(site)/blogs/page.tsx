@@ -444,6 +444,25 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
 const [blogs, setBlogs] = useState<BlogPost[]>([]);
+const [filterFixed, setFilterFixed] = useState(false);
+const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
+
+
+useEffect(() => {
+  const handleScroll = () => {
+    setFilterFixed(window.scrollY >= 380);
+  };
+
+  window.addEventListener("scroll", handleScroll, {
+    passive: true,
+  });
+
+  handleScroll();
+
+  return () => {
+    window.removeEventListener("scroll", handleScroll);
+  };
+}, []);
 
   // Live search with a small debounce
 useEffect(() => {
@@ -846,61 +865,192 @@ useEffect(() => {
         {/* ─── CATEGORY TABS ────────────────────────────────────────────────── */}
 
 
-          <motion.div
-        className={`border-b sticky top-0 z-40 transition-colors duration-300 ${
-            darkMode
-              ? "bg-[#060E18] border-[#1E334A]"
-              : "bg-white border-[rgba(29,78,216,0.12)]"
-          }`}
-  initial={{ opacity: 0, y: 60 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.7 }}
-  viewport={{ once: true, amount: 0.2 }}
->
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide py-1">
-              {categories.map((cat) => {
-                const active = activeCategory === cat.id;
-                const count = articleCount(cat.id);
+     <div className="relative">
+  {filterFixed && (
+    <div className="h-[58px] md:h-[76px]" />
+  )}
 
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() =>
-                      handleCategoryChange(cat.id)
-                    }
-                    className={`flex items-center gap-2 px-4 py-3 text-sm font-semibold whitespace-nowrap border-b-2 transition-all ${
+  <motion.div
+    className={`${
+      filterFixed
+        ? "fixed top-[55px] md:top-[70px] left-0 right-0 z-40"
+        : "relative"
+    } border-b transition-colors duration-300 ${
+      darkMode
+        ? "bg-[#060E18] border-[#1E334A]"
+        : "bg-white border-[rgba(29,78,216,0.12)]"
+    }`}
+    initial={{ opacity: 0, y: 60 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.7 }}
+    viewport={{ once: true, amount: 0.2 }}
+  >
+    <div className="max-w-7xl mx-auto px-4 sm:px-6">
+
+      {/* ================= MOBILE ================= */}
+      <div className="md:hidden relative py-2">
+
+        <button
+          type="button"
+          onClick={() =>
+            setMobileCategoryOpen((prev) => !prev)
+          }
+          className={`w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl border transition-all duration-300 ${
+            darkMode
+              ? "bg-[#0B1724] border-[#1E334A] text-[#E6F7FF] hover:border-[#496276]"
+              : "bg-slate-50 border-slate-200 text-slate-700 hover:border-slate-300"
+          }`}
+        >
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="font-semibold text-sm truncate">
+              {
+                categories.find(
+                  (cat) => cat.id === activeCategory
+                )?.label || "همه مقالات"
+              }
+            </span>
+
+            <span
+              className={`text-[11px] px-1.5 py-0.5 rounded-full font-bold ${
+                darkMode
+                  ? "bg-[#073342] text-[#00E5FF]"
+                  : "bg-[rgba(30,58,138,0.08)] text-[#1E3A8A]"
+              }`}
+            >
+              {articleCount(activeCategory)}
+            </span>
+          </div>
+
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={`shrink-0 transition-transform duration-300 ${
+              mobileCategoryOpen ? "rotate-180" : ""
+            }`}
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </button>
+
+        {/* Dropdown */}
+        {mobileCategoryOpen && (
+          <div
+            className={`absolute top-full left-0 right-0 mt-2 z-50 rounded-xl border overflow-hidden shadow-xl ${
+              darkMode
+                ? "bg-[#08121E] border-[#1E334A] shadow-black/40"
+                : "bg-white border-slate-200 shadow-slate-300/40"
+            }`}
+          >
+            {categories.map((cat) => {
+              const active = activeCategory === cat.id;
+              const count = articleCount(cat.id);
+
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => {
+                    handleCategoryChange(cat.id);
+                    setMobileCategoryOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between gap-3 px-4 py-3 text-sm font-semibold transition-all duration-200 ${
+                    active
+                      ? darkMode
+                        ? "bg-[#073342] text-[#00E5FF]"
+                        : "bg-[rgba(30,58,138,0.06)] text-[#1E3A8A]"
+                      : darkMode
+                        ? "text-[#8FA5B8] hover:bg-[#101C29] hover:text-[#E6F7FF]"
+                        : "text-[#475569] hover:bg-slate-50 hover:text-[#0F172A]"
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    {active && (
+                      <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="m5 12 4 4L19 7" />
+                      </svg>
+                    )}
+
+                    <span>{cat.label}</span>
+                  </div>
+
+                  <span
+                    className={`text-[11px] px-1.5 py-0.5 rounded-full font-bold ${
                       active
                         ? darkMode
-                          ? "border-[#00E5FF] text-[#00E5FF]"
-                          : "border-[#1E3A8A] text-[#1E3A8A]"
+                          ? "bg-[#00E5FF]/10 text-[#00E5FF]"
+                          : "bg-[rgba(30,58,138,0.08)] text-[#1E3A8A]"
                         : darkMode
-                        ? "border-transparent text-[#8FA5B8] hover:text-[#E6F7FF] hover:border-[#496276]"
-                        : "border-transparent text-[#475569] hover:text-[#0F172A] hover:border-[rgba(29,78,216,0.30)]"
-                    }`}
-                  >
-                    {cat.label}
-
-                    <span
-                      className={`text-[11px] px-1.5 py-0.5 rounded-full font-bold ${
-                        active
-                          ? darkMode
-                            ? "bg-[#073342] text-[#00E5FF]"
-                            : "bg-[rgba(30,58,138,0.08)] text-[#1E3A8A]"
-                          : darkMode
                           ? "bg-[#101C29] text-[#71869A]"
                           : "bg-[#F1F5F9] text-[#64748B]"
-                      }`}
-                    >
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+                    }`}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
-</motion.div>
+        )}
+      </div>
 
+      {/* ================= DESKTOP ================= */}
+      <div className="hidden md:flex items-center gap-1 overflow-x-auto scrollbar-hide py-1">
+        {categories.map((cat) => {
+          const active = activeCategory === cat.id;
+          const count = articleCount(cat.id);
+
+          return (
+            <button
+              key={cat.id}
+              onClick={() => handleCategoryChange(cat.id)}
+              className={`flex items-center gap-2 px-4 py-3 text-sm font-semibold whitespace-nowrap border-b-2 transition-all ${
+                active
+                  ? darkMode
+                    ? "border-[#00E5FF] text-[#00E5FF]"
+                    : "border-[#1E3A8A] text-[#1E3A8A]"
+                  : darkMode
+                    ? "border-transparent text-[#8FA5B8] hover:text-[#E6F7FF] hover:border-[#496276]"
+                    : "border-transparent text-[#475569] hover:text-[#0F172A] hover:border-[rgba(29,78,216,0.30)]"
+              }`}
+            >
+              {cat.label}
+
+              <span
+                className={`text-[11px] px-1.5 py-0.5 rounded-full font-bold ${
+                  active
+                    ? darkMode
+                      ? "bg-[#073342] text-[#00E5FF]"
+                      : "bg-[rgba(30,58,138,0.08)] text-[#1E3A8A]"
+                    : darkMode
+                      ? "bg-[#101C29] text-[#71869A]"
+                      : "bg-[#F1F5F9] text-[#64748B]"
+                }`}
+              >
+                {count}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+    </div>
+  </motion.div>
+</div>
 
 
 
@@ -982,12 +1132,24 @@ useEffect(() => {
                   >
 
     {featuredArticle.img ? (
-      <img
-        src={featuredArticle.img}
-        alt={featuredArticle.featuredImageAlt?.trim() || featuredArticle.title}
-        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        loading="lazy"
-      />
+<img
+  src={featuredArticle.img}
+  alt={
+    featuredArticle.featuredImageAlt?.trim() ||
+    featuredArticle.title
+  }
+  className="block w-full h-full object-cover"
+  style={{
+    transition: "transform 500ms ease-out",
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.transform = "scale(1.05)";
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.transform = "scale(1)";
+  }}
+  loading="lazy"
+/>
     ) : (
 <div style={{
   borderBottom: darkMode ? "none" : "1px solid #4362815e",

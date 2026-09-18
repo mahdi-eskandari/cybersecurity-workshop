@@ -990,7 +990,7 @@ useEffect(() => {
 
                     </div>
 
-                    {/* Title */}
+
 
                     {/* Title */}
 <h3
@@ -1021,7 +1021,7 @@ useEffect(() => {
     letterSpacing: darkMode ? "normal" : "-0.01em",
   }}
 >
-  {s.shortDesc}
+  {s.shortDesc.length > 80 ? s.shortDesc.slice(0,80) + "..." : s.shortDesc}
 </p>
 
                     {/* Tags */}

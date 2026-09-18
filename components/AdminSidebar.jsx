@@ -504,7 +504,7 @@ const pathname = usePathname();
   </div>
 )}
 
-    </aside>
+</aside>
     
   );
 }

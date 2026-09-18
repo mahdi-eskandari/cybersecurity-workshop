@@ -1,5 +1,12 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+
+type AdminHeaderProps = {
+  onMenuClick: () => void;
+  title?: string;
+};
+
 const IconMenu = () => (
   <svg
     width="17"
@@ -16,29 +23,75 @@ const IconMenu = () => (
   </svg>
 );
 
-const IconSearch = () => (
+const IconUser = () => (
   <svg
-    width="14"
-    height="14"
+    width="20"
+    height="20"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="2"
+    strokeWidth="1.8"
     strokeLinecap="round"
+    strokeLinejoin="round"
   >
-    <circle cx="11" cy="11" r="8" />
-    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    <circle cx="12" cy="8" r="3.5" />
+    <path d="M5 20c.8-3.2 3.2-5 7-5s6.2 1.8 7 5" />
   </svg>
 );
-
 
 export default function AdminHeader({
   onMenuClick,
   title = "پیشخوان فرماندهی",
-  search = "",
-  onSearchChange,
-  searchPlaceholder = "جستجو...",
-}) {
+}: AdminHeaderProps) {
+  const [username, setUsername] = useState("");
+  const [showProfile, setShowProfile] = useState(false);
+
+  const profileRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const loadAdmin = async () => {
+      try {
+        const response = await fetch("/api/admin/me", {
+          method: "GET",
+          cache: "no-store",
+        });
+
+        if (!response.ok) return;
+
+        const data = await response.json();
+
+        setUsername(data?.user?.username ?? "");
+      } catch (error) {
+        console.error("Admin profile error:", error);
+      }
+    };
+
+    void loadAdmin();
+  }, []);
+
+  useEffect(() => {
+    if (!showProfile) return;
+
+    const handleOutsideClick = (event: MouseEvent) => {
+      const target = event.target;
+
+      if (!(target instanceof Node)) return;
+
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(target)
+      ) {
+        setShowProfile(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [showProfile]);
+
   return (
     <header
       dir="rtl"
@@ -58,7 +111,6 @@ export default function AdminHeader({
         flexShrink: 0,
       }}
     >
-
       {/* Right side */}
 
       <div
@@ -127,91 +179,27 @@ export default function AdminHeader({
         </div>
       </div>
 
-
       {/* Left side */}
 
       <div
+        ref={profileRef}
         style={{
           display: "flex",
           alignItems: "center",
           gap: 10,
           flexShrink: 0,
+          position: "relative",
         }}
       >
-
-       {/* Search */}
-
-{/* Search */}
-<div
-  style={{
-    position: "relative",
-    width: 224,
-    height: 40,
-    flexShrink: 0,
-  }}
->
-  {/* Search icon */}
-  <span
-    style={{
-      position: "absolute",
-      top: 0,
-      right: 0,
-      width: 40,
-      height: "100%",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      color: "#29405F",
-      pointerEvents: "none",
-      zIndex: 2,
-    }}
-  >
-    <IconSearch />
-  </span>
-
-  <input
-    type="text"
-    value={search}
-    onChange={(e) => onSearchChange(e.target.value)}
-    placeholder={searchPlaceholder}
-    aria-label={searchPlaceholder}
-    className="admin-search-input"
-    style={{
-      width: "100%",
-      height: "100%",
-      boxSizing: "border-box",
-
-      background: "#050A18",
-      border: "1px solid #10213A",
-      borderRadius: 11,
-
-      padding: "0 42px 0 12px",
-
-      color: "#64748B",
-      fontFamily: "Vazirmatn, sans-serif",
-      fontSize: 12,
-      fontWeight: 400,
-
-      textAlign: "right",
-      direction: "rtl",
-
-      outline: "none",
-      caretColor: "#00E5FF",
-
-      boxShadow: "inset 0 0 0 1px rgba(0,229,255,0.015)",
-    }}
-  />
-</div>
-        
-
         {/* Avatar */}
 
         <button
           type="button"
           aria-label="پروفایل کاربر"
+          onClick={() => setShowProfile((prev) => !prev)}
           style={{
-            width: 28,
-            height: 28,
+            width: 36,
+            height: 36,
             borderRadius: "50%",
             background:
               "linear-gradient(135deg,rgba(0,229,255,0.3),rgba(0,229,255,0.08))",
@@ -219,18 +207,58 @@ export default function AdminHeader({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: "0.65rem",
             color: "#00E5FF",
-            fontWeight: 700,
             cursor: "pointer",
             flexShrink: 0,
           }}
         >
-          A
+          <IconUser />
         </button>
 
-      </div>
+        {/* Profile popup */}
 
+        {showProfile && (
+          <div
+            style={{
+              position: "absolute",
+              top: 44,
+              left: 0,
+              zIndex: 50,
+              minWidth: 170,
+              padding: "12px 14px",
+              borderRadius: 10,
+              border: "1px solid rgba(0,229,255,0.10)",
+              background: "#0B1224",
+              boxShadow: "0 18px 45px rgba(0,0,0,0.45)",
+              direction: "rtl",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "0.68rem",
+                fontWeight: 700,
+                color: "#64748B",
+                marginBottom: 6,
+              }}
+            >
+              نام کاربری
+            </div>
+
+            <div
+              style={{
+                fontSize: "0.78rem",
+                fontWeight: 800,
+                color: "#E2E8F0",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {username || "در حال دریافت..."}
+            </div>
+          </div>
+        )}
+      </div>
     </header>
   );
 }

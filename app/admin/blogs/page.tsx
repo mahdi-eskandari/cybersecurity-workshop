@@ -557,6 +557,93 @@ type PostFormValues = {
   authorId: string;
 };
 
+
+function CustomSelect({
+  value,
+  onChange,
+  options,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  options: { value: string; label: string }[];
+}) {
+  const [open, setOpen] = useState(false);
+  const selectedOption = options.find((option) => option.value === value) ?? options[0];
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        className={`flex h-10 w-full items-center justify-between rounded-[8px] border bg-[#0B1224] px-3 text-right text-[11px] font-bold outline-none transition-all ${
+          open
+            ? "border-cyan-400/35 shadow-[0_0_16px_rgba(0,229,255,0.04)]"
+            : "border-white/[0.07] hover:border-cyan-400/15"
+        }`}
+      >
+        <span className="truncate text-slate-300">{selectedOption.label}</span>
+        <span
+          className={`mr-2 flex h-5 w-5 shrink-0 items-center justify-center rounded-[5px] border border-white/[0.05] bg-white/[0.025] text-slate-500 transition-all duration-200 ${
+            open ? "border-cyan-400/15 bg-cyan-400/[0.05] text-cyan-300" : ""
+          }`}
+        >
+          <svg
+            width="11"
+            height="11"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </span>
+      </button>
+
+      {open && (
+        <>
+          <button
+            type="button"
+            aria-label="بستن منو"
+            onClick={() => setOpen(false)}
+            className="fixed inset-0 z-40 cursor-default"
+          />
+          <div className="absolute right-0 top-[calc(100%+6px)] z-50 max-h-[280px] w-full overflow-y-auto rounded-[9px] border border-white/[0.08] bg-[#0B1224] p-[6px] shadow-[0_16px_40px_rgba(0,0,0,0.45)]">
+            {options.map((option) => {
+              const selected = option.value === value;
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => {
+                    onChange(option.value);
+                    setOpen(false);
+                  }}
+                  className={`flex w-full items-center justify-between rounded-[7px] px-3 py-2.5 text-right text-[11px] font-bold transition-all ${
+                    selected
+                      ? "bg-cyan-400/[0.08] text-cyan-300"
+                      : "text-slate-300 hover:bg-white/[0.05] hover:text-white"
+                  }`}
+                >
+                  <span className="truncate">{option.label}</span>
+                  {selected && (
+                    <span className="mr-2 shrink-0 text-cyan-300">
+                      <IconCheck />
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 /* ─────────────────────────────────────────────
    MAIN
 ───────────────────────────────────────────── */
@@ -615,10 +702,9 @@ export default function PostsAdminPage() {
   const [postsLoading, setPostsLoading] = useState(true);
   const [postsError, setPostsError] = useState<string | null>(null);
   const [mediaLoading, setMediaLoading] = useState(false);
+  const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "draft" | "published">("all");
   const [authorFilter, setAuthorFilter] = useState<"all" | "admin-1" | "admin-2">("all");
-  const [statusFilterOpen, setStatusFilterOpen] = useState(false);
-  const [authorFilterOpen, setAuthorFilterOpen] = useState(false);
 
   const { register, setValue, handleSubmit, reset: resetForm, formState: { errors } } = useForm<PostFormValues>({
     defaultValues: { title: "", slug: "", content: "", metaTitle: "", metaDescription: "", authorId: "" },
@@ -989,6 +1075,13 @@ export default function PostsAdminPage() {
   const selectedAuthor = ADMIN_AUTHORS.find((a) => a.id === authorId);
   const activeFilterKey = statusFilter !== "all" ? statusFilter : authorFilter !== "all" ? authorFilter : "all";
   const filteredPosts = posts.filter((post) => {
+    const q = search.trim().toLocaleLowerCase();
+    if (
+      q &&
+      !post.title.toLocaleLowerCase().includes(q) &&
+      !post.slug.toLocaleLowerCase().includes(q) &&
+      !post.id.toLocaleLowerCase().includes(q)
+    ) return false;
     if (statusFilter !== "all" && post.status !== statusFilter) return false;
     if (authorFilter !== "all" && post.authorId !== authorFilter) return false;
     return true;
@@ -1015,7 +1108,44 @@ export default function PostsAdminPage() {
         <div className="w-full">
           <div className="services-header mb-5 flex items-center justify-between gap-4">
             <div>
-              <div className="mb-1 font-mono text-[12px] tracking-[0.2em] text-cyan-400/45">POST MANAGEMENT</div>
+               <div
+              style={{
+                display: "flex",
+                alignItems:
+                  "center",
+                gap: 7,
+                marginBottom: 4,
+              }}
+            >
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius:
+                    "50%",
+                  background:
+                    "#00E5FF",
+                  boxShadow:
+                    "0 0 7px rgba(0,229,255,0.9)",
+                    
+                }}
+              />
+
+              <span
+                style={{
+                  fontFamily:
+                    "monospace",
+                  fontSize:
+                    "0.6rem",
+                  color:
+                    "rgba(0,229,255,0.5)",
+                  letterSpacing:
+                    "0.18em",
+                }}
+              >
+                POST MANAGEMENT
+              </span>
+            </div>
               <h1 className="text-xl font-black text-white">مدیریت پست‌ها</h1>
               <p className="mt-1 text-xs text-slate-600">ایجاد، ویرایش، انتشار و حذف پست‌های سایت</p>
             </div>
@@ -1045,48 +1175,53 @@ export default function PostsAdminPage() {
             </button>
           </div>
 
+          {/* Filters */}
+          <div className="mb-4 overflow-visible rounded-2xl border border-cyan-400/[0.08] bg-[#0A1128]">
+            <div className="border-b border-cyan-400/[0.06] px-5 py-3.5">
+              <span className="text-sm font-bold text-white">جستجو و فیلتر پست‌ها</span>
+            </div>
+            <div className="flex flex-col gap-2.5 px-5 py-3.5 sm:flex-row sm:flex-wrap sm:items-center" dir="rtl">
+              <div className="relative w-full sm:min-w-[220px] sm:flex-1">
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="جستجو در عنوان، نامک یا شناسه..."
+                  className="box-border h-10 w-full rounded-[8px] border border-white/[0.07] bg-[#0B1224] px-3 text-right text-[11px] font-bold text-slate-300 outline-none transition-all placeholder:text-slate-600 focus:border-cyan-400/35 focus:ring-[3px] focus:ring-cyan-400/[0.04]"
+                />
+              </div>
+
+              <div className="w-full sm:w-[180px]">
+                <CustomSelect
+                  value={statusFilter}
+                  onChange={(value) => setStatusFilter(value as "all" | "draft" | "published")}
+                  options={[
+                    { value: "all", label: "همه وضعیت‌ها" },
+                    { value: "published", label: "منتشر شده" },
+                    { value: "draft", label: "پیش‌نویس" },
+                  ]}
+                />
+              </div>
+
+              <div className="w-full sm:w-[180px]">
+                <CustomSelect
+                  value={authorFilter}
+                  onChange={(value) => setAuthorFilter(value as "all" | "admin-1" | "admin-2")}
+                  options={[
+                    { value: "all", label: "همه نویسندگان" },
+                    { value: "admin-1", label: "ادمین ۱" },
+                    { value: "admin-2", label: "ادمین ۲" },
+                  ]}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Posts table */}
           <div className="overflow-hidden rounded-2xl border border-cyan-400/[0.08] bg-[#0A1128]">
             <div className="flex items-center justify-between gap-2 border-b border-cyan-400/[0.06] px-5 py-3.5">
               <span className="flex-1 text-sm font-bold text-white">فهرست پست‌ها</span>
               <span className="font-mono text-[11px] text-slate-700">{filteredPosts.length} مورد</span>
-            </div>
-            <div className="post-filters flex flex-wrap items-center justify-start gap-2 border-b border-white/[0.04] px-5 py-3" dir="ltr">
-              {[
-                ["admin-2", "ادمین ۲"],
-                ["admin-1", "ادمین ۱"],
-                ["published", "منتشر شده"],
-                ["draft", "پیش‌نویس"],
-                ["all", "همه"],
-              ].map(([value, label]) => (
-                <button
-                  key={value}
-                  type="button"
-                  onClick={() => {
-                    if (value === "all") {
-                      setStatusFilter("all");
-                      setAuthorFilter("all");
-                    } else if (value === "draft" || value === "published") {
-                      setStatusFilter(value as "draft" | "published");
-                      setAuthorFilter("all");
-                    } else {
-                      setStatusFilter("all");
-                      setAuthorFilter(value as "admin-1" | "admin-2");
-                    }
-                  }}
-                  className="cursor-pointer rounded-md font-semibold outline-none transition-all"
-                  style={{
-                    padding: "4px 10px",
-                    borderRadius: 6,
-                    fontSize: "0.72rem",
-                    background: activeFilterKey === value ? "rgba(0,229,255,0.1)" : "rgba(255,255,255,0.03)",
-                    border: activeFilterKey === value ? "1px solid rgba(0,229,255,0.35)" : "1px solid rgba(255,255,255,0.06)",
-                    color: activeFilterKey === value ? "#00E5FF" : "#475569",
-                    fontFamily: "var(--font-vazirmatn), Vazirmatn, sans-serif",
-                  }}
-                >
-                  {label}
-                </button>
-              ))}
             </div>
             {postsError && <div className="mx-5 mt-4 flex items-center justify-between gap-3 rounded-xl border border-red-400/15 bg-red-400/[0.05] px-4 py-3 text-[12px] font-bold text-red-300"><span>{postsError}</span><button type="button" onClick={() => void loadPosts()} className="cursor-pointer rounded-md border border-red-400/15 bg-red-400/[0.05] px-2.5 py-1.5 text-[9px] text-red-300">تلاش دوباره</button></div>}
             <div className="services-table-scroll overflow-x-auto">

@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://parahoor.com"),
 
   title: {
-    default: "پاراهور | آژانس تحقیقات سایبری و فارنزیک",
+    default: "آژانس تحقیقات سایبری و فارنزیک | پاراهور",
     template: "%s | پاراهور",
   },
 
