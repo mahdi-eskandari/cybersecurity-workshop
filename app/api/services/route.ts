@@ -111,6 +111,11 @@ export async function POST(request: NextRequest) {
           typeof step?.description === "string"
             ? step.description.trim()
             : "",
+
+        icon:
+          typeof step?.icon === "string"
+            ? step.icon.trim()
+            : "",
       })
     );
 
@@ -201,7 +206,10 @@ export async function POST(request: NextRequest) {
       trackingSteps:
         normalizedTrackingSteps,
 
-        trackingTitle: trackingTitle.trim(),
+      trackingTitle:
+        typeof trackingTitle === "string"
+          ? trackingTitle.trim()
+          : "",
 
       metaTitle:
         typeof metaTitle === "string"

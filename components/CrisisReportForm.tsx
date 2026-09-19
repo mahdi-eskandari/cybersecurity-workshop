@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTheme } from "@/components/ThemeProvider";
 
@@ -209,6 +208,69 @@ const HelperText = ({ message }: { message?: string }) => {
 };
 
 /* ────────────────────────────────
+   LAST INCIDENT TYPE
+──────────────────────────────── */
+
+const LAST_INCIDENT_TYPE_COOKIE = "parahoor_last_incident_type";
+
+const isValidIncidentType = (value: string) => {
+  return (
+    value === "سرقت کریپتو" ||
+    value === "هک و نفوذ" ||
+    value === "مزاحمت و اخاذی"
+  );
+};
+
+const getLastIncidentType = () => {
+  if (typeof document === "undefined") {
+    return "";
+  }
+
+  try {
+    const prefix = `${LAST_INCIDENT_TYPE_COOKIE}=`;
+
+    const cookie = document.cookie
+      .split(";")
+      .map((item) => item.trim())
+      .find((item) => item.startsWith(prefix));
+
+    if (!cookie) {
+      return "";
+    }
+
+    const value = cookie.substring(prefix.length);
+
+    const decodedValue = decodeURIComponent(value);
+
+    if (!isValidIncidentType(decodedValue)) {
+      return "";
+    }
+
+    return decodedValue;
+  } catch {
+    return "";
+  }
+};
+
+const saveLastIncidentType = (incidentType: string) => {
+  if (
+    typeof document === "undefined" ||
+    !isValidIncidentType(incidentType)
+  ) {
+    return;
+  }
+
+  try {
+    document.cookie =
+      `${LAST_INCIDENT_TYPE_COOKIE}=${encodeURIComponent(
+        incidentType
+      )}; path=/; max-age=31536000; SameSite=Lax`;
+  } catch {
+    // خطای Cookie نباید مانع ارسال گزارش شود.
+  }
+};
+
+/* ────────────────────────────────
    MODAL
 ──────────────────────────────── */
 
@@ -247,6 +309,24 @@ export const EmergencyModal = ({
 
   const primary = darkMode ? "#00E5FF" : "#2563EB";
 
+  /* ────────────────────────────────
+     LOAD LAST INCIDENT TYPE
+  ───────────────────────────────── */
+
+  useEffect(() => {
+    const savedIncidentType = getLastIncidentType();
+
+    if (!savedIncidentType) {
+      return;
+    }
+
+    setValue("incidentType", savedIncidentType, {
+      shouldValidate: false,
+      shouldDirty: false,
+      shouldTouch: false,
+    });
+  }, [setValue]);
+
   const onSubmit = async (data: CrisisReportFormValues) => {
     setSubmitError("");
 
@@ -264,6 +344,12 @@ export const EmergencyModal = ({
           result?.message || "ارسال گزارش ناموفق بود"
         );
       }
+
+      /*
+       * فقط بعد از ثبت موفق گزارش،
+       * نوع حادثه انتخاب‌شده ذخیره می‌شود.
+       */
+      saveLastIncidentType(data.incidentType);
 
       setTrackingCode(result?.trackingCode || "");
       setSubmitted(true);
@@ -471,36 +557,30 @@ export const EmergencyModal = ({
               onMouseEnter={(e) => {
                 if (!trackingCode) return;
 
-                e.currentTarget.style.background =
-                  darkMode
-                    ? "rgba(0,229,255,0.08)"
-                    : "rgba(37,99,235,0.08)";
+                e.currentTarget.style.background = darkMode
+                  ? "rgba(0,229,255,0.08)"
+                  : "rgba(37,99,235,0.08)";
 
-                e.currentTarget.style.borderColor =
-                  darkMode
-                    ? "rgba(0,229,255,0.25)"
-                    : "rgba(37,99,235,0.24)";
+                e.currentTarget.style.borderColor = darkMode
+                  ? "rgba(0,229,255,0.25)"
+                  : "rgba(37,99,235,0.24)";
 
-                e.currentTarget.style.boxShadow =
-                  darkMode
-                    ? "0 0 20px rgba(0,229,255,0.08)"
-                    : "0 0 20px rgba(37,99,235,0.08)";
+                e.currentTarget.style.boxShadow = darkMode
+                  ? "0 0 20px rgba(0,229,255,0.08)"
+                  : "0 0 20px rgba(37,99,235,0.08)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background =
-                  darkMode
-                    ? "rgba(0,229,255,0.035)"
-                    : "rgba(37,99,235,0.035)";
+                e.currentTarget.style.background = darkMode
+                  ? "rgba(0,229,255,0.035)"
+                  : "rgba(37,99,235,0.035)";
 
-                e.currentTarget.style.borderColor =
-                  darkMode
-                    ? "rgba(0,229,255,0.1)"
-                    : "rgba(37,99,235,0.10)";
+                e.currentTarget.style.borderColor = darkMode
+                  ? "rgba(0,229,255,0.1)"
+                  : "rgba(37,99,235,0.10)";
 
-                e.currentTarget.style.boxShadow =
-                  darkMode
-                    ? "0 0 18px rgba(0,229,255,0.025)"
-                    : "0 0 18px rgba(37,99,235,0.025)";
+                e.currentTarget.style.boxShadow = darkMode
+                  ? "0 0 18px rgba(0,229,255,0.025)"
+                  : "0 0 18px rgba(37,99,235,0.025)";
               }}
             >
               <span>{trackingCode || "PENDING"}</span>
@@ -833,7 +913,6 @@ export const EmergencyModal = ({
 
           {/* ── FORM BODY ── */}
           <div className="px-6 py-5 space-y-6">
-
             {/* FIELD 1 – Incident Type Chips */}
             <div>
               <label
@@ -1202,7 +1281,6 @@ export const EmergencyModal = ({
 
             {/* ── SECURITY NOTICE ── */}
             <div className="flex items-center justify-between pt-1">
-
               {/* reCAPTCHA badge */}
               <div className="flex items-center gap-1.5">
                 <IconRecaptcha darkMode={darkMode} />
@@ -1364,4 +1442,3 @@ export const EmergencyModal = ({
 };
 
 export default EmergencyModal;
-

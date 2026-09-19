@@ -5580,6 +5580,7 @@ type TrackingStep = {
   tag: string;
   title: string;
   description: string;
+  icon: string;
 };
 
 interface Service {
@@ -6710,11 +6711,12 @@ const normalizeService = (
           tag: item.trackingSteps?.[index]?.tag ?? "",
           title: item.trackingSteps?.[index]?.title ?? "",
           description: item.trackingSteps?.[index]?.description ?? "",
+          icon: item.trackingSteps?.[index]?.icon ?? "",
         }))
       : [
-          { tag: "", title: "", description: "" },
-          { tag: "", title: "", description: "" },
-          { tag: "", title: "", description: "" },
+          { tag: "", title: "", description: "", icon: "" },
+          { tag: "", title: "", description: "", icon: "" },
+          { tag: "", title: "", description: "", icon: "" },
         ],
 
   metaTitle:
@@ -6897,9 +6899,9 @@ export default function ServicesPage() {
   },
 
   trackingSteps: [
-    { tag: "", title: "", description: "" },
-    { tag: "", title: "", description: "" },
-    { tag: "", title: "", description: "" },
+    { tag: "", title: "", description: "", icon: "" },
+    { tag: "", title: "", description: "", icon: "" },
+    { tag: "", title: "", description: "", icon: "" },
   ],
 
   metaTitle: "",
@@ -7044,6 +7046,7 @@ urgencyContent:
           tag: service.trackingSteps?.[index]?.tag ?? "",
           title: service.trackingSteps?.[index]?.title ?? "",
           description: service.trackingSteps?.[index]?.description ?? "",
+          icon: service.trackingSteps?.[index]?.icon ?? "",
         })),
 
         metaTitle:
@@ -7076,9 +7079,9 @@ urgencyContent: {
 },
 
         trackingSteps: [
-          { tag: "", title: "", description: "" },
-          { tag: "", title: "", description: "" },
-          { tag: "", title: "", description: "" },
+          { tag: "", title: "", description: "", icon: "" },
+          { tag: "", title: "", description: "", icon: "" },
+          { tag: "", title: "", description: "", icon: "" },
         ],
 
         metaTitle: "",
@@ -7148,6 +7151,7 @@ const normalizedData = {
     tag: data.trackingSteps?.[index]?.tag?.trim() ?? "",
     title: data.trackingSteps?.[index]?.title?.trim() ?? "",
     description: data.trackingSteps?.[index]?.description?.trim() ?? "",
+    icon: data.trackingSteps?.[index]?.icon?.trim() ?? "",
   })),
 
   metaTitle:
@@ -9957,6 +9961,21 @@ const normalizedData = {
                             ),
                             resize: "none",
                           }}
+                        />
+                      </Field>
+
+                      <Field
+                        label="آیکون مرحله"
+                        hint="SVG یا کد آیکون"
+                        error={errors.trackingSteps?.[index]?.icon?.message}
+                      >
+                        <input
+                          {...register(`trackingSteps.${index}.icon`)}
+                          placeholder="<svg ...></svg>"
+                          style={inputStyle(
+                            !!errors.trackingSteps?.[index]?.icon
+                          )}
+                          dir="ltr"
                         />
                       </Field>
                     </div>

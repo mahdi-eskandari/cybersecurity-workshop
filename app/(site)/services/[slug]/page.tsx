@@ -1,8 +1,9 @@
 "use client" 
-import { useEffect, useState } from "react"; 
+import React, { useEffect, useState } from "react"; 
 import { useParams } from "next/navigation"; 
 import { EditorContent, useEditor } from "@tiptap/react"; 
 import StarterKit from "@tiptap/starter-kit"; 
+import { Mark, Extension, Node, mergeAttributes } from "@tiptap/core"; 
 import LinkExtension from "@tiptap/extension-link"; 
 import Underline from "@tiptap/extension-underline"; 
 import { useTheme } from "../../.../../../../components/ThemeProvider" 
@@ -282,12 +283,146 @@ const BlockchainHeroArt = ({
   </svg> 
 ); 
  
-/* ─── RICH TEXT DISPLAY ─── */ 
-const EMPTY_TIPTAP_CONTENT = { 
-  type: "doc", 
-  content: [], 
-}; 
- 
+/* ─── RICH TEXT DISPLAY ─── */
+const EMPTY_TIPTAP_CONTENT = { type: "doc", content: [] };
+
+const ServiceTextStyle = Mark.create({
+  name: "serviceTextStyle",
+  addAttributes() {
+    return {
+      fontFamily: { default: null, parseHTML: (el: HTMLElement) => el.style.fontFamily || null, renderHTML: (a: any) => a.fontFamily ? { style: `font-family: ${a.fontFamily}` } : {} },
+      fontSize: { default: null, parseHTML: (el: HTMLElement) => el.style.fontSize || null, renderHTML: (a: any) => a.fontSize ? { style: `font-size: ${a.fontSize}` } : {} },
+      color: { default: null, parseHTML: (el: HTMLElement) => el.style.color || null, renderHTML: (a: any) => a.color ? { style: `color: ${a.color}` } : {} },
+      backgroundColor: { default: null, parseHTML: (el: HTMLElement) => el.style.backgroundColor || null, renderHTML: (a: any) => a.backgroundColor ? { style: `background-color: ${a.backgroundColor}` } : {} },
+    };
+  },
+  parseHTML() { return [{ tag: "span[style]" }]; },
+  renderHTML({ HTMLAttributes }) { return ["span", mergeAttributes(HTMLAttributes), 0]; },
+});
+
+const ServiceRawInlineStyle = Mark.create({
+  name: "serviceRawInlineStyle",
+  addAttributes() {
+    return { htmlStyle: { default: null, parseHTML: (el: HTMLElement) => el.getAttribute("style") || null, renderHTML: (a: any) => a.htmlStyle ? { style: a.htmlStyle } : {} } };
+  },
+  parseHTML() { return [{ tag: "span[style]" }, { tag: "mark[style]" }]; },
+  renderHTML({ HTMLAttributes }) { return ["span", mergeAttributes(HTMLAttributes), 0]; },
+});
+
+const ServiceSuper = Mark.create({ name: "serviceSuperscript", parseHTML: () => [{ tag: "sup" }], renderHTML: ({ HTMLAttributes }) => ["sup", mergeAttributes(HTMLAttributes), 0] });
+const ServiceSub = Mark.create({ name: "serviceSubscript", parseHTML: () => [{ tag: "sub" }], renderHTML: ({ HTMLAttributes }) => ["sub", mergeAttributes(HTMLAttributes), 0] });
+const InsertMark = Mark.create({ name: "insert", parseHTML: () => [{ tag: "ins" }], renderHTML: ({ HTMLAttributes }) => ["ins", mergeAttributes(HTMLAttributes), 0] });
+const DeleteMark = Mark.create({ name: "delete", parseHTML: () => [{ tag: "del" }], renderHTML: ({ HTMLAttributes }) => ["del", mergeAttributes(HTMLAttributes), 0] });
+
+const ServiceMore = Node.create({
+  name: "serviceMore", group: "block", atom: true,
+  parseHTML() { return [{ tag: "div[data-service-more]" }]; },
+  renderHTML() { return ["div", { "data-service-more": "true" }, "ادامه مطلب"]; },
+});
+const MoreNode = Node.create({
+  name: "more", group: "block", atom: true,
+  parseHTML() { return [{ tag: 'div[data-service-more="true"]' }]; },
+  renderHTML() { return ["div", { "data-service-more": "true" }, "ادامه مطلب"]; },
+});
+
+const ServiceParagraphStyle = Extension.create({
+  name: "serviceParagraphStyle",
+  addGlobalAttributes() {
+    return [{
+      types: ["paragraph", "heading"],
+      attributes: {
+        textAlign: { default: "right", parseHTML: (el: HTMLElement) => el.style.textAlign || "right", renderHTML: (a: any) => a.textAlign ? { style: `text-align: ${a.textAlign}` } : {} },
+        textDirection: { default: "rtl", parseHTML: (el: HTMLElement) => el.getAttribute("dir") || "rtl", renderHTML: (a: any) => a.textDirection ? { dir: a.textDirection } : {} },
+        indent: { default: 0, parseHTML: (el: HTMLElement) => Number(el.getAttribute("data-indent") || 0), renderHTML: (a: any) => a.indent ? { "data-indent": String(a.indent), style: `text-indent: ${(a.indent || 0) * 2}em;` } : {} },
+        htmlStyle: { default: null, parseHTML: (el: HTMLElement) => el.getAttribute("data-html-style") || null, renderHTML: (a: any) => a.htmlStyle ? { "data-html-style": a.htmlStyle } : {} },
+      },
+    }];
+  },
+});
+
+const sanitizeSvg = (svg: string) => svg
+  .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
+  .replace(/\son\w+\s*=\s*(['"]).*?\1/gi, "")
+  .replace(/\s(?:href|xlink:href)\s*=\s*(['"])\s*javascript:[^'"]*\1/gi, "");
+
+
+const toLatinDigits = (value: string) =>
+  value.replace(/[۰-۹]/g, (digit) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit)));
+
+const toPersianDigits = (value: string) =>
+  value.replace(/[0-9]/g, (digit) => "۰۱۲۳۴۵۶۷۸۹"[Number(digit)]);
+
+const AnimatedStatNumber = ({
+  value,
+  darkMode,
+}: {
+  value: string;
+  darkMode: boolean;
+}) => {
+  const [displayValue, setDisplayValue] = useState("0");
+  const [started, setStarted] = useState(false);
+  const ref = React.useRef<HTMLSpanElement | null>(null);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element || started) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setStarted(true);
+        observer.disconnect();
+
+        const raw = toLatinDigits(String(value)).replace(/,/g, "").trim();
+        const target = Number(raw);
+        if (!Number.isFinite(target)) {
+          setDisplayValue(value);
+          return;
+        }
+
+        const decimalPlaces = (raw.split(".")[1] || "").length;
+        const duration = 1500;
+        const startTime = performance.now();
+
+        const animate = (now: number) => {
+          const progress = Math.min((now - startTime) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const current = target * eased;
+          const formatted = decimalPlaces > 0
+            ? current.toFixed(decimalPlaces)
+            : Math.round(current).toString();
+          setDisplayValue(toPersianDigits(formatted));
+
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          }
+        };
+
+        requestAnimationFrame(animate);
+      },
+      { threshold: 0.35 }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [value, started]);
+
+  return (
+    <span ref={ref} style={{ display: "inline-block" }}>
+      {displayValue}
+    </span>
+  );
+};
+
+const StepIcon = ({ icon, index, darkMode }: { icon?: string; index: number; darkMode: boolean }) => {
+  const customIcon = typeof icon === "string" ? icon.trim() : "";
+  if (customIcon && /<svg[\s\S]*<\/svg>/i.test(customIcon)) {
+    return <span aria-hidden="true" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }} dangerouslySetInnerHTML={{ __html: sanitizeSvg(customIcon) }} />;
+  }
+  const DefaultIcon = index === 0 ? IconBlockchain : index === 1 ? IconTarget : IconShieldDoc;
+  return <DefaultIcon darkMode={darkMode} />;
+};
+
 const RichTextDisplay = ({ 
   content, 
   darkMode, 
@@ -299,9 +434,18 @@ const RichTextDisplay = ({
     extensions: [ 
       StarterKit.configure({ 
         heading: { 
-          levels: [1, 2, 3], 
+          levels: [1, 2, 3, 4, 5, 6], 
         }, 
-      }), 
+      }),
+      ServiceTextStyle,
+      ServiceRawInlineStyle,
+      ServiceSuper,
+      ServiceSub,
+      ServiceMore,
+      ServiceParagraphStyle,
+      InsertMark,
+      DeleteMark,
+      MoreNode,
       Underline, 
       LinkExtension.configure({ 
         openOnClick: true, 
@@ -507,9 +651,11 @@ export default function App() {
               lineHeight: 1.35, 
             }} 
           > 
-            {loadingService 
-              ? "در حال بارگذاری..." 
-              : service?.title || "ردیابی رمزارزهای سرقت‌شده و کلاهبرداری‌های پانزی"} 
+            {loadingService ? (
+              <span aria-label="در حال بارگذاری عنوان خدمت" style={{ display: "inline-block", width: "min(100%, 620px)", height: "1.35em", borderRadius: 10, background: darkMode ? "linear-gradient(90deg, rgba(255,255,255,0.07), rgba(0,229,255,0.16), rgba(255,255,255,0.07))" : "linear-gradient(90deg, rgba(15,23,42,0.06), rgba(37,99,235,0.13), rgba(15,23,42,0.06))", backgroundSize: "200% 100%", animation: "serviceTitleSkeleton 1.5s ease-in-out infinite", verticalAlign: "middle" }} />
+            ) : (
+              service?.title || "ردیابی رمزارزهای سرقت‌شده و کلاهبرداری‌های پانزی"
+            )} 
           </h1> 
  
           {/* Sub-headline */} 
@@ -660,14 +806,7 @@ export default function App() {
           {/* 3 vertical cards */} 
           <div className="flex flex-col gap-5"> 
  
-            {(service?.trackingSteps || []).slice(0, 3).map((step: any, index: number) => { 
-              const StepIcon = 
-                index === 0 
-                  ? IconBlockchain 
-                  : index === 1 
-                    ? IconTarget 
-                    : IconShieldDoc; 
- 
+            {(service?.trackingSteps || []).slice(0, 3).map((step: any, index: number) => {
               return ( 
                 <div key={index}> 
  
@@ -718,7 +857,11 @@ export default function App() {
                           : "1px solid rgba(29,78,216,0.20)", 
                       }} 
                     > 
-                      <StepIcon darkMode={darkMode} /> 
+                      <StepIcon
+                        icon={step?.icon}
+                        index={index}
+                        darkMode={darkMode}
+                      /> 
                     </div> 
  
                     <div className="flex-1"> 
@@ -769,26 +912,33 @@ export default function App() {
                       </p> 
  
                       {step?.tag && ( 
-                        <div className="flex flex-wrap gap-2 mt-3"> 
-                          <span 
-                            className="px-2.5 py-0.5 rounded text-xs" 
-                            style={{ 
-                              background: darkMode 
-                                ? "rgba(0,229,255,0.06)" 
-                                : "rgba(30,58,138,0.06)", 
-                              border: darkMode 
-                                ? "1px solid rgba(0,229,255,0.12)" 
-                                : "1px solid rgba(29,78,216,0.20)", 
-                              color: darkMode 
-                                ? "rgba(0,229,255,0.5)" 
-                                : "#1E3A8A", 
-                              fontFamily: "monospace", 
-                              fontWeight: 700, 
-                            }} 
-                          > 
-                            {step.tag} 
-                          </span> 
-                        </div> 
+                        <div className="flex flex-wrap gap-2 mt-3">
+                          {String(step.tag)
+                            .split(/[,،]/)
+                            .map((tag: string) => tag.trim())
+                            .filter(Boolean)
+                            .map((tag: string, tagIndex: number) => (
+                              <span 
+                                key={`${tag}-${tagIndex}`}
+                                className="px-2.5 py-0.5 rounded text-xs" 
+                                style={{ 
+                                  background: darkMode 
+                                    ? "rgba(0,229,255,0.06)" 
+                                    : "rgba(30,58,138,0.06)", 
+                                  border: darkMode 
+                                    ? "1px solid rgba(0,229,255,0.12)" 
+                                    : "1px solid rgba(29,78,216,0.20)", 
+                                  color: darkMode 
+                                    ? "rgba(0,229,255,0.5)" 
+                                    : "#1E3A8A", 
+                                  fontFamily: "monospace", 
+                                  fontWeight: 700, 
+                                }} 
+                              > 
+                                {tag}
+                              </span>
+                            ))}
+                        </div>
                       )} 
  
                     </div> 
@@ -801,6 +951,7 @@ export default function App() {
                       style={{ opacity: 1 }} 
                     > 
                       <div 
+                      className="mt-2"
                         style={{ 
                           height: 24, 
                           width: 1, 
@@ -897,7 +1048,7 @@ export default function App() {
                     verticalAlign: "baseline", 
                   }} 
                 > 
-                  {value} 
+                  <AnimatedStatNumber value={value} darkMode={darkMode} />
                 </span> 
  
                 {unit && ( 
@@ -1079,7 +1230,13 @@ export default function App() {
         </div> 
 </motion.div>
  
-      <style jsx global>{` 
+      <style jsx global>{`
+        @keyframes serviceTitleSkeleton {
+          0% { background-position: 200% 0; opacity: 0.65; }
+          50% { opacity: 1; }
+          100% { background-position: -200% 0; opacity: 0.65; }
+        }
+
         .service-urgency-content .ProseMirror { 
           outline: none; 
           width: 100%; 

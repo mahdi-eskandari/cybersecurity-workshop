@@ -7,7 +7,7 @@ import Service from "../../../model/Service";
 type RouteContext = {
   params: Promise<{
     id: string;
-        slug: string;
+    slug: string;
   }>;
 };
 
@@ -77,13 +77,6 @@ export async function GET(
   }
 }
 
-
-
-
-
-
-
-
 /* ───────────────── PATCH ───────────────── */
 
 export async function PATCH(
@@ -134,8 +127,7 @@ export async function PATCH(
       return NextResponse.json(
         {
           success: false,
-          message:
-            "slug، عنوان و توضیح کوتاه الزامی هستند",
+          message: "slug، عنوان و توضیح کوتاه الزامی هستند",
         },
         { status: 400 }
       );
@@ -150,15 +142,14 @@ export async function PATCH(
       return NextResponse.json(
         {
           success: false,
-          message:
-            "دقیقاً ۳ مرحله شناسایی باید وارد شود",
+          message: "دقیقاً ۳ مرحله شناسایی باید وارد شود",
         },
         { status: 400 }
       );
     }
 
-    const normalizedTrackingSteps =
-      trackingSteps.map((step: any) => ({
+    const normalizedTrackingSteps = trackingSteps.map(
+      (step: any) => ({
         tag:
           typeof step?.tag === "string"
             ? step.tag.trim()
@@ -173,7 +164,14 @@ export async function PATCH(
           typeof step?.description === "string"
             ? step.description.trim()
             : "",
-      }));
+
+        // فقط اضافه شدن ذخیره آیکون مرحله
+        icon:
+          typeof step?.icon === "string"
+            ? step.icon.trim()
+            : "",
+      })
+    );
 
     const invalidTrackingStep =
       normalizedTrackingSteps.some(
@@ -203,8 +201,7 @@ export async function PATCH(
       return NextResponse.json(
         {
           success: false,
-          message:
-            "محتوای اصلی خدمت الزامی است",
+          message: "محتوای اصلی خدمت الزامی است",
         },
         { status: 400 }
       );
@@ -245,8 +242,7 @@ export async function PATCH(
 
           title: title.trim(),
 
-          shortDesc:
-            shortDesc.trim(),
+          shortDesc: shortDesc.trim(),
 
           icon:
             typeof icon === "string"
@@ -273,7 +269,8 @@ export async function PATCH(
           trackingSteps:
             normalizedTrackingSteps,
 
-            trackingTitle: trackingTitle.trim(),
+          trackingTitle:
+            trackingTitle.trim(),
 
           urgencyTitle:
             urgencyTitle || "",
@@ -297,8 +294,7 @@ export async function PATCH(
       return NextResponse.json(
         {
           success: false,
-          message:
-            "خدمت پیدا نشد",
+          message: "خدمت پیدا نشد",
         },
         { status: 404 }
       );
@@ -307,8 +303,7 @@ export async function PATCH(
     return NextResponse.json(
       {
         success: true,
-        message:
-          "خدمت با موفقیت ویرایش شد",
+        message: "خدمت با موفقیت ویرایش شد",
         data: updatedService,
       },
       { status: 200 }
@@ -325,8 +320,7 @@ export async function PATCH(
       return NextResponse.json(
         {
           success: false,
-          message:
-            "این slug قبلاً ثبت شده است",
+          message: "این slug قبلاً ثبت شده است",
         },
         { status: 409 }
       );
@@ -335,22 +329,12 @@ export async function PATCH(
     return NextResponse.json(
       {
         success: false,
-        message:
-          "خطا در ویرایش خدمت",
+        message: "خطا در ویرایش خدمت",
       },
       { status: 500 }
     );
   }
 }
-
-
-
-
-
-
-
-
-
 
 /* ───────────────── DELETE ───────────────── */
 
@@ -365,8 +349,7 @@ export async function DELETE(
       return NextResponse.json(
         {
           success: false,
-          message:
-            "شناسه خدمت نامعتبر است",
+          message: "شناسه خدمت نامعتبر است",
         },
         { status: 400 }
       );
@@ -375,16 +358,13 @@ export async function DELETE(
     await connectDB();
 
     const deletedService =
-      await Service.findByIdAndDelete(
-        id
-      );
+      await Service.findByIdAndDelete(id);
 
     if (!deletedService) {
       return NextResponse.json(
         {
           success: false,
-          message:
-            "خدمت پیدا نشد",
+          message: "خدمت پیدا نشد",
         },
         { status: 404 }
       );
@@ -393,8 +373,7 @@ export async function DELETE(
     return NextResponse.json(
       {
         success: true,
-        message:
-          "خدمت با موفقیت حذف شد",
+        message: "خدمت با موفقیت حذف شد",
       },
       { status: 200 }
     );
@@ -407,8 +386,7 @@ export async function DELETE(
     return NextResponse.json(
       {
         success: false,
-        message:
-          "خطا در حذف خدمت",
+        message: "خطا در حذف خدمت",
       },
       { status: 500 }
     );

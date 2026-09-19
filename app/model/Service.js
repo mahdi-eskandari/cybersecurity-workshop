@@ -92,40 +92,46 @@ const ServiceSchema = new Schema(
       }),
     },
 
-// سه مرحله شناسایی
-trackingSteps: {
-  type: [
-    {
-      tag: {
-        type: String,
-        required: true,
-        trim: true,
-      },
+    // سه مرحله شناسایی
+    trackingSteps: {
+      type: [
+        {
+          tag: {
+            type: String,
+            required: true,
+            trim: true,
+          },
 
-      title: {
-        type: String,
-        required: true,
-        trim: true,
-      },
+          title: {
+            type: String,
+            required: true,
+            trim: true,
+          },
 
-      description: {
-        type: String,
-        required: true,
-        trim: true,
+          description: {
+            type: String,
+            required: true,
+            trim: true,
+          },
+
+          icon: {
+            type: String,
+            default: "",
+            trim: true,
+          },
+        },
+      ],
+
+      required: true,
+
+      validate: {
+        validator: function (value) {
+          return Array.isArray(value) && value.length === 3;
+        },
+
+        message: "دقیقاً ۳ مرحله شناسایی باید وارد شود.",
       },
     },
-  ],
-
-  required: true,
-
-  validate: {
-    validator: function (value) {
-      return Array.isArray(value) && value.length === 3;
-    },
-
-    message: "دقیقاً ۳ مرحله شناسایی باید وارد شود.",
-  },
-},
 
     // برای داده‌های قدیمی
     urgencyTitle: {
