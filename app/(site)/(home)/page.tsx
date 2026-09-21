@@ -4,19 +4,291 @@ import React, { useEffect, type ReactNode } from "react"
 import { useState } from "react"
 import Link from "next/link"
 import Head from "next/head"
-import { useTheme } from "../../components/ThemeProvider"
+import { useTheme } from "../../../components/ThemeProvider"
 import { motion } from "framer-motion"
-import { EmergencyModal } from "../../.../../components/CrisisReportForm"
-import { Metadata } from "next"
+import { EmergencyModal } from "../../../components/CrisisReportForm"
 
 
-// // متا دیتا
-// export const metadata: Metadata = {
-//   title: "پاراهور | آژانس تحقیقات سایبری و فارنزیک",
-//   description:
-//     "پاراهور؛ آژانس خصوصی تحقیقات سایبری و فارنزیک. کشف شواهد دیجیتال، ردیابی جریان‌های مالی، تحلیل جرایم سایبری و آشکارسازی هویت‌های پنهان.",
-// };
 
+/* ─────────────────────────────────────────────────────────────
+   HERO IMAGE FALLBACK
+───────────────────────────────────────────────────────────── */
+
+const HeroImageFallback = ({
+  darkMode,
+}: {
+  darkMode: boolean;
+}) => (
+  <svg
+    width="100%"
+    height="100%"
+    viewBox="0 0 1000 380"
+    preserveAspectRatio="xMidYMid slice"
+    style={{ display: "block" }}
+  >
+    <defs>
+      <radialGradient id="hg1" cx="25%" cy="50%" r="55%">
+        <stop
+          offset="0%"
+          stopColor={
+            darkMode
+              ? "rgba(0,229,255,0.1)"
+              : "rgba(30,58,138,0.08)"
+          }
+        />
+        <stop offset="100%" stopColor="transparent" />
+      </radialGradient>
+
+      <radialGradient id="hg2" cx="75%" cy="40%" r="45%">
+        <stop
+          offset="0%"
+          stopColor={
+            darkMode
+              ? "rgba(239,68,68,0.07)"
+              : "rgba(30,58,138,0.04)"
+          }
+        />
+        <stop offset="100%" stopColor="transparent" />
+      </radialGradient>
+
+      <filter id="hblur">
+        <feGaussianBlur stdDeviation="3" />
+      </filter>
+    </defs>
+
+    <rect
+      width="1000"
+      height="380"
+      fill={darkMode ? "#050C1E" : "#F8FAFC"}
+    />
+
+    <rect width="1000" height="380" fill="url(#hg1)" />
+    <rect width="1000" height="380" fill="url(#hg2)" />
+
+    {Array.from({ length: 14 }).map((_, i) => (
+      <line
+        key={`h${i}`}
+        x1="0"
+        y1={i * 28}
+        x2="1000"
+        y2={i * 28}
+        stroke={
+          darkMode
+            ? "rgba(0,229,255,0.035)"
+            : "rgba(30,58,138,0.045)"
+        }
+        strokeWidth="1"
+      />
+    ))}
+
+    {Array.from({ length: 34 }).map((_, i) => (
+      <line
+        key={`v${i}`}
+        x1={i * 30}
+        y1="0"
+        x2={i * 30}
+        y2="380"
+        stroke={
+          darkMode
+            ? "rgba(0,229,255,0.035)"
+            : "rgba(30,58,138,0.045)"
+        }
+        strokeWidth="1"
+      />
+    ))}
+
+    <path
+      d="M80 190 L200 140 L340 190 L480 120 L600 170 L740 110 L880 160 L960 140"
+      stroke={
+        darkMode
+          ? "rgba(0,229,255,0.4)"
+          : "rgba(30,58,138,0.3)"
+      }
+      strokeWidth="1.5"
+      fill="none"
+      filter="url(#hblur)"
+    />
+
+    <path
+      d="M80 190 L200 140 L340 190 L480 120 L600 170 L740 110 L880 160 L960 140"
+      stroke={
+        darkMode
+          ? "rgba(0,229,255,0.2)"
+          : "rgba(30,58,138,0.18)"
+      }
+      strokeWidth="1"
+      fill="none"
+    />
+
+    {[
+      { x: 200, y: 140 },
+      { x: 340, y: 190 },
+      { x: 480, y: 120 },
+      { x: 600, y: 170 },
+      { x: 740, y: 110 },
+      { x: 880, y: 160 },
+    ].map((p, i) => (
+      <g key={i}>
+        <rect
+          x={p.x - 20}
+          y={p.y - 22}
+          width="40"
+          height="44"
+          rx="4"
+          fill={
+            darkMode
+              ? "rgba(0,229,255,0.05)"
+              : "rgba(30,58,138,0.04)"
+          }
+          stroke={
+            darkMode
+              ? "rgba(0,229,255,0.3)"
+              : "rgba(30,58,138,0.22)"
+          }
+          strokeWidth="1"
+        />
+
+        <rect
+          x={p.x - 12}
+          y={p.y - 14}
+          width="24"
+          height="3"
+          rx="1"
+          fill={
+            darkMode
+              ? "rgba(0,229,255,0.3)"
+              : "rgba(30,58,138,0.25)"
+          }
+        />
+
+        <rect
+          x={p.x - 12}
+          y={p.y - 7}
+          width="17"
+          height="2.5"
+          rx="1"
+          fill={
+            darkMode
+              ? "rgba(0,229,255,0.18)"
+              : "rgba(30,58,138,0.16)"
+          }
+        />
+
+        <rect
+          x={p.x - 12}
+          y={p.y - 1}
+          width="20"
+          height="2.5"
+          rx="1"
+          fill={
+            darkMode
+              ? "rgba(0,229,255,0.15)"
+              : "rgba(30,58,138,0.13)"
+          }
+        />
+
+        <circle
+          cx={p.x}
+          cy={p.y - 22}
+          r="3.5"
+          fill={darkMode ? "#00E5FF" : "#1E3A8A"}
+          opacity="0.7"
+        />
+      </g>
+    ))}
+
+    <circle
+      cx="480"
+      cy="120"
+      r="22"
+      fill="transparent"
+      stroke={
+        darkMode
+          ? "rgba(239,68,68,0.2)"
+          : "rgba(30,58,138,0.15)"
+      }
+      strokeWidth="1"
+    />
+
+    <circle
+      cx="480"
+      cy="120"
+      r="14"
+      fill="transparent"
+      stroke={
+        darkMode
+          ? "rgba(239,68,68,0.3)"
+          : "rgba(30,58,138,0.2)"
+      }
+      strokeWidth="1"
+    />
+
+    <circle
+      cx="480"
+      cy="120"
+      r="5"
+      fill={
+        darkMode
+          ? "rgba(239,68,68,0.5)"
+          : "rgba(30,58,138,0.35)"
+      }
+      stroke={
+        darkMode
+          ? "rgba(239,68,68,0.8)"
+          : "rgba(30,58,138,0.55)"
+      }
+      strokeWidth="1.5"
+    />
+
+    <text
+      x="20"
+      y="368"
+      fontSize="8"
+      fill={
+        darkMode
+          ? "rgba(0,229,255,0.25)"
+          : "rgba(30,58,138,0.25)"
+      }
+      fontFamily="monospace"
+    >
+      PARAHOOR FORENSICS // CASE ANALYSIS
+    </text>
+  </svg>
+);
+
+
+type Post = {
+  _id: string;
+  title: string;
+  slug: string;
+  content: string;
+  status: "draft" | "published" | string;
+
+  createdAt: string;
+  updatedAt?: string;
+
+  featuredImage?: string;
+  featuredImageAlt?: string;
+
+  tag?: string;
+  tagColor?: string;
+  categoryId: string;
+
+  date?: string;
+  readingTime?: string;
+  excerpt?: string;
+};
+
+type Media = {
+  id: string;
+  name: string;
+  url: string;
+  alt?: string;
+  mimeType: string;
+  size?: number;
+  createdAt?: string;
+  updatedAt?: string;
+};
 
 
 
@@ -1087,11 +1359,110 @@ function CaseReviewPanel({ onClose }: { onClose: () => void }) {
   );
 }
 
-export default function page() {
-  const { darkMode } = useTheme()
+
+
+
+const formatPersianDate = (date: string) => {
+  return new Intl.DateTimeFormat("fa-IR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(new Date(date));
+};
+
+
+export default function HomePage() {
+      const { darkMode } = useTheme()
   const [menuOpen, setMenuOpen] = useState(false)
   const [crisisOpen, setCrisisOpen] = useState(false)
   const [caseOpen, setCaseOpen] = useState(false)
+  
+  const [seo, setSeo] = useState({
+    h1Title: "هیچ مجرمی در دنیای دیجیتال بی‌ردپا نیست.",
+  });
+const [posts, setPosts] = useState<Post[]>([]);
+const [media, setMedia] = useState<any[]>([]);
+const [loading, setLoading] = useState(true);
+
+
+ useEffect(() => {
+  async function getPosts() {
+    try {
+      const response = await fetch("/api/posts");
+
+      if (!response.ok) {
+        throw new Error("خطا در دریافت پست‌ها");
+      }
+
+      const data = await response.json();
+
+      console.log("POSTS:", data);
+
+      setPosts(data.posts || data);
+    } catch (error) {
+      console.error("Get posts error:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  getPosts();
+}, []);
+
+
+
+   useEffect(() => {
+  async function getMedia() {
+    try {
+      const response = await fetch("/api/media");
+
+      if (!response.ok) {
+        throw new Error("خطا در دریافت تصاویر");
+      }
+
+      const data = await response.json();
+
+      console.log("MEDIA:", data);
+
+      setMedia(data.media || data);
+    } catch (error) {
+      console.error("Get media error:", error);
+    }
+  }
+
+  getMedia();
+}, []);
+
+const latestBlogPosts = [...posts]
+.filter((post) => post.status === "published")
+  .sort(
+    (a, b) =>
+      new Date(b.createdAt).getTime() -
+      new Date(a.createdAt).getTime()
+  )
+  .slice(0, 3);
+
+
+
+
+useEffect(() => {
+  fetch("/api/admin/seo")
+    .then((res) => res.json())
+    .then((data) => {
+      const homeSeo = data?.pages?.find(
+        (page: any) => page.pageKey === "home"
+      );
+
+      if (homeSeo?.h1Title) {
+        setSeo({
+          h1Title: homeSeo.h1Title,
+        });
+      }
+    })
+    .catch(() => {});
+}, []);
+
+
   useEffect(() => {
     if (!caseOpen) return
     const onKeyDown = (event: KeyboardEvent) => {
@@ -1111,52 +1482,122 @@ export default function page() {
 
   const iconColor = darkMode ? "#00E5FF" : "#1D4ED8"
 
-  {caseOpen && <CaseReviewPanel onClose={() => setCaseOpen(false)} />}
 
+
+
+
+  const SkeletonCard = () => (
+  <article
+    className="flex flex-col rounded-2xl overflow-hidden animate-pulse"
+    style={{
+      border: darkMode
+        ? "1px solid rgba(255,255,255,0.06)"
+        : "1px solid rgba(30,58,138,0.22)",
+      background: darkMode ? "#0A1128" : "#FFFFFF",
+    }}
+  >
+    {/* تصویر */}
+    <div
+      style={{
+        height: 180,
+        background: darkMode ? "#111827" : "#E5E7EB",
+      }}
+    />
+
+    {/* محتوای کارت */}
+    <div className="flex flex-col flex-1 p-5">
+      {/* تاریخ و زمان */}
+      <div className="flex items-center gap-3 mb-4">
+        <div
+          className="h-2 rounded"
+          style={{
+            width: 65,
+            background: darkMode ? "#1E293B" : "#E2E8F0",
+          }}
+        />
+
+        <div
+          className="rounded-full"
+          style={{
+            width: 3,
+            height: 3,
+            background: darkMode ? "#334155" : "#CBD5E1",
+          }}
+        />
+
+        <div
+          className="h-2 rounded"
+          style={{
+            width: 55,
+            background: darkMode ? "#1E293B" : "#E2E8F0",
+          }}
+        />
+      </div>
+
+      {/* عنوان */}
+      <div
+        className="h-4 rounded mb-3"
+        style={{
+          width: "80%",
+          background: darkMode ? "#1E293B" : "#E2E8F0",
+        }}
+      />
+
+      <div
+        className="h-4 rounded mb-5"
+        style={{
+          width: "55%",
+          background: darkMode ? "#1E293B" : "#E2E8F0",
+        }}
+      />
+
+      {/* توضیحات */}
+      <div
+        className="h-3 rounded mb-2"
+        style={{
+          width: "100%",
+          background: darkMode ? "#1E293B" : "#E2E8F0",
+        }}
+      />
+
+      <div
+        className="h-3 rounded mb-2"
+        style={{
+          width: "90%",
+          background: darkMode ? "#1E293B" : "#E2E8F0",
+        }}
+      />
+
+      <div
+        className="h-3 rounded mb-5"
+        style={{
+          width: "65%",
+          background: darkMode ? "#1E293B" : "#E2E8F0",
+        }}
+      />
+
+      {/* دکمه */}
+      <div
+        className="h-4 rounded mt-auto"
+        style={{
+          width: 80,
+          background: darkMode ? "#1E293B" : "#E2E8F0",
+        }}
+      />
+    </div>
+  </article>
+);
+
+
+
+
+
+
+
+  
   return (
-    <>
-<Head>
-  <title>پاراهور | آژانس تحقیقات سایبری و فارنزیک</title>
-
-  <meta
-    name="description"
-    content="پاراهور؛ آژانس خصوصی تحقیقات سایبری و فارنزیک. کشف شواهد دیجیتال، ردیابی جریان‌های مالی، تحلیل جرایم سایبری و آشکارسازی هویت‌های پنهان."
-  />
-
-<link rel="canonical" href="https://parahoor.com/" />
-
-  <meta name="robots" content="index, follow" />
-  <meta name="googlebot" content="index, follow" />
-
-  <meta property="og:type" content="website" />
-  <meta property="og:locale" content="fa_IR" />
-  <meta property="og:site_name" content="پاراهور" />
-  <meta
-    property="og:title"
-    content="پاراهور | آژانس تحقیقات سایبری و فارنزیک"
-  />
-  <meta
-    property="og:description"
-    content="پاراهور؛ آژانس خصوصی تحقیقات سایبری و فارنزیک. کشف شواهد دیجیتال، ردیابی جریان‌های مالی، تحلیل جرایم سایبری و آشکارسازی هویت‌های پنهان."
-  />
-<meta property="og:url" content="https://parahoor.com/" />
-
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content="پاراهور | آژانس تحقیقات سایبری و فارنزیک"
-  />
-  <meta
-    name="twitter:description"
-    content="پاراهور؛ آژانس خصوصی تحقیقات سایبری و فارنزیک. کشف شواهد دیجیتال، ردیابی جریان‌های مالی، تحلیل جرایم سایبری و آشکارسازی هویت‌های پنهان."
-  />
-<meta property="og:image" content="https://parahoor.com/logo.jpg" />
-
-<meta
-  name="twitter:image"
-  content="https://parahoor.com/logo.jpg"
-/>
-</Head>
+      <>
+      {caseOpen && <CaseReviewPanel onClose={() => setCaseOpen(false)} />}
       <div
       className="min-h-screen pt-20 cyber-grid-bg"
       style={{
@@ -1263,32 +1704,37 @@ export default function page() {
             </span>
           </div>
 
-          <h1
-            className="glow-text font-black leading-tight mb-6"
-            style={{
-              fontSize: "clamp(2rem, 5vw, 3.5rem)",
-              color: darkMode ? "#ffffff" : "#222222",
-              lineHeight: "1.3",
-              fontWeight: 900,
-              textShadow: darkMode
-                ? undefined
-                : "0 0 18px rgba(30,58,138,0.10)",
-            }}
-          >
-            هیچ مجرمی در دنیای دیجیتال
-            <br />
-            <span
-              style={{
-                color: darkMode ? "#00E5FF" : "#1E3A8A",
-                textShadow: darkMode
-                  ? undefined
-                  : "0 0 18px rgba(29,78,216,0.12)",
-              }}
-            >
-              بی‌ردپا
-            </span>{" "}
-            نیست.
-          </h1>
+        <h1
+  className="glow-text font-black leading-tight mb-6"
+  style={{
+    fontSize: "clamp(2rem, 5vw, 3.5rem)",
+    color: darkMode ? "#ffffff" : "#222222",
+    lineHeight: "1.3",
+    fontWeight: 900,
+    textShadow: darkMode
+      ? undefined
+      : "0 0 18px rgba(30,58,138,0.10)",
+  }}
+>
+  {seo.h1Title.split(" ").map((word, index) => (
+    <span key={index}>
+      {index === 5 && <br />}
+
+      <span
+        style={{
+          color:
+            index === 5
+              ? darkMode
+                ? "#00E5FF"
+                : "#1E3A8A"
+              : undefined,
+        }}
+      >
+        {word}
+      </span>{" "}
+    </span>
+  ))}
+</h1>
 
           <p
             className="max-w-2xl mx-auto mb-10 leading-relaxed"
@@ -1855,9 +2301,18 @@ export default function page() {
             </h2>
           </div>
 
+
+
+
+
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {blogPosts.map((post, i) => (
-              <article
+  {loading
+    ? Array.from({ length: 3 }).map((_, index) => (
+        <SkeletonCard key={index} />
+      ))
+    : latestBlogPosts.map((post, i) => (
+                      <article
                 key={i}
                 
                 className={`group flex flex-col rounded-2xl overflow-hidden transition-all ${
@@ -1905,54 +2360,74 @@ export default function page() {
                       : "#FFFFFF",
                   }}
                 >
-                  <img
-                    src={post.img}
-                    alt={post.alt}
-                    className="w-full h-full object-cover transition-transform duration-500"
-                    style={{
-                      filter:
-                        "brightness(0.75) saturate(0.8)",
-                    }}
-                    onMouseEnter={(e) =>
-                      ((e.target as HTMLImageElement).style.transform =
-                        "scale(1.04)")
-                    }
-                    onMouseLeave={(e) =>
-                      ((e.target as HTMLImageElement).style.transform =
-                        "scale(1)")
-                    }
-                  />
+
+                  {post.featuredImage ? (
+<div
+  className="relative overflow-hidden"
+  style={{
+    height: 180,
+    background: darkMode ? "#0A1128" : "#FFFFFF",
+  }}
+>
+  <img
+    src={post.featuredImage}
+    alt={post.featuredImageAlt || post.title}
+    className="block w-full h-full object-cover"
+    style={{
+      transition: "transform 500ms ease-out",
+      transform: "scale(1)",
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.transform = "scale(1.05)";
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.transform = "scale(1)";
+    }}
+    loading="lazy"
+  />
+
+  {/* بقیه لایه‌های روی عکس */}
+</div>
+                   ) : (
+                    <div style={{
+  borderBottom: darkMode ? "none" : "1px solid #4362815e",
+}}
+className="w-full h-full"
+>
+  <HeroImageFallback darkMode={darkMode} />
+</div>
+                   )
+                  }
 
                   <div
                     className="absolute inset-0"
                     style={{
                       background: darkMode
                         ? "linear-gradient(to bottom, transparent 40%, rgba(6,11,28,0.85) 100%)"
-                        : "linear-gradient(to bottom, transparent 40%, rgba(30,58,138,0.55) 100%)",
+                        : "linear-gradient(to bottom, transparent 40%, rgba(30, 59, 138, 0.21) 100%)",
                     }}
                   />
 
-                  <span
-                    className="absolute top-3 right-3 px-2.5 py-1 rounded-md text-xs font-semibold"
-                    style={{
-                      background: darkMode
-                        ? "rgba(6,11,28,0.82)"
-                        : "rgba(255,255,255,0.92)",
-                      border: `1px solid ${
-                        darkMode
-                          ? `${post.tagColor}44`
-                          : "rgba(30,58,138,0.22)"
-                      }`,
-                      color: darkMode
-                        ? post.tagColor
-                        : "#1D4ED8",
-                      backdropFilter: "blur(6px)",
-                      fontFamily:
-                        "Vazirmatn, sans-serif",
-                    }}
-                  >
-                    {post.tag}
-                  </span>
+<span
+  className="absolute top-3 right-3 px-2.5 py-1 rounded-md text-xs font-semibold"
+  style={{
+    background: darkMode
+      ? "rgba(6,11,28,0.82)"
+      : "rgba(255,255,255,0.92)",
+    border: `1px solid ${
+      darkMode
+        ? `${post.tagColor}44`
+        : "rgba(30,58,138,0.22)"
+    }`,
+    color: darkMode
+      ? post.tagColor
+      : "#1D4ED8",
+    backdropFilter: "blur(6px)",
+    fontFamily: "Vazirmatn, sans-serif",
+  }}
+>
+  {post.categoryId}
+</span>
                 </div>
 
                 <div className="flex flex-col flex-1 p-5">
@@ -1962,11 +2437,10 @@ export default function page() {
                         color: darkMode
                           ? "#64748b"
                           : "#475569",
-                        fontSize: "0.68rem",
-                        fontFamily: "monospace",
+                        fontSize: "0.68rem"
                       }}
                     >
-                      {post.date}
+                      {formatPersianDate(post.createdAt)}
                     </span>
 
                     <span
@@ -1987,10 +2461,9 @@ export default function page() {
                           ? "#64748b"
                           : "#475569",
                         fontSize: "0.68rem",
-                        fontFamily: "monospace",
                       }}
                     >
-                      {post.readTime} مطالعه
+                      {post.readingTime} مطالعه
                     </span>
                   </div>
 
@@ -2006,6 +2479,25 @@ export default function page() {
                   >
                     {post.title}
                   </h3>
+                <p
+  className="flex-1 mb-5"
+  style={{
+    color: darkMode ? "#94a3b8" : "#334155",
+    fontSize: "0.78rem",
+    lineHeight: 1.8,
+  }}
+>
+  {(() => {
+    const text = post.content
+      ?.replace(/<[^>]*>/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    return text.length > 50
+      ? text.slice(0, 50) + "..."
+      : text;
+  })()}
+</p>
 
                   <p
                     className="flex-1 mb-5"
@@ -2053,8 +2545,14 @@ export default function page() {
                   </button>
                 </div>
               </article>
-            ))}
-          </div>
+      ))}
+</div>
+
+
+
+
+
+
         </div>
       </motion.div>
     </div>

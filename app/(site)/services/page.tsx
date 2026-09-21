@@ -329,7 +329,27 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   const blue = darkMode ? "#00E5FF" : "#1E3A8A";
   const blueBright = darkMode ? "#00E5FF" : "#1D4ED8";
+    const [seo, setSeo] = useState({
+    h1Title: "خدمات اجرایی و مشاوره‌های تخصصی پاراهور",
+  });
 
+
+  useEffect(() => {
+  fetch("/api/admin/seo")
+    .then((res) => res.json())
+    .then((data) => {
+      const homeSeo = data?.pages?.find(
+        (page: any) => page.pageKey === "services"
+      );
+
+      if (homeSeo?.h1Title) {
+        setSeo({
+          h1Title: homeSeo.h1Title,
+        });
+      }
+    })
+    .catch(() => {});
+}, []);
 
 
 // _-_-_-_-_-_-_-_-_-_-_- fetch _-_-_-_-_-_-_-_-_-_-_-
@@ -450,23 +470,20 @@ useEffect(() => {
             </span>
           </div>
 
-          <h1
-            className="font-black mb-5 leading-snug"
-            style={{
-              fontSize: "clamp(1.7rem, 4vw, 2.8rem)",
-              color: darkMode ? "#fff" : "#0F172A",
-              textShadow: darkMode
-                ? "0 0 60px rgba(0,229,255,0.12)"
-                : "0 8px 30px rgba(30,58,138,0.08)",
-              lineHeight: 1.35,
-            }}
-          >
-            خدمات اجرایی و مشاوره‌های
-            <br />
-            <span style={{ color: darkMode ? blueBright : "#1E3A8A" }}>
-              تخصصی پاراهور
-            </span>
-          </h1>
+<h1
+  className="glow-text font-black leading-tight mb-6"
+  style={{
+    fontSize: "clamp(2rem, 5vw, 3.5rem)",
+    color: darkMode ? "#e8f4f8" : "#0c1a43",
+    lineHeight: "1.3",
+    fontWeight: 900,
+    textShadow: darkMode
+      ? undefined
+      : "0 0 18px rgba(30,58,138,0.10)",
+  }}
+>
+  {seo.h1Title}
+</h1>
 
           <p
             style={{
@@ -608,7 +625,7 @@ useEffect(() => {
                     fontSize: "0.62rem",
                     color: darkMode
                       ? "rgba(0,229,255,0.45)"
-                      : "rgba(30,58,138,0.7)",
+                      : "#1e3a8ab3",
                     letterSpacing: "0.18em",
                   }}
                   className="block mb-2"

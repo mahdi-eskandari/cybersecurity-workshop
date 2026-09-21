@@ -446,6 +446,28 @@ const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
 const [blogs, setBlogs] = useState<BlogPost[]>([]);
 const [filterFixed, setFilterFixed] = useState(false);
 const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
+    const [seo, setSeo] = useState({
+    h1Title: "رادار پاراهور",
+  });
+
+
+useEffect(() => {
+  fetch("/api/admin/seo")
+    .then((res) => res.json())
+    .then((data) => {
+      const homeSeo = data?.pages?.find(
+        (page: any) => page.pageKey === "blogs"
+      );
+
+      if (homeSeo?.h1Title) {
+        setSeo({
+          h1Title: homeSeo.h1Title,
+        });
+      }
+    })
+    .catch(() => {});
+}, []);
+
 
 
 useEffect(() => {
@@ -698,47 +720,6 @@ useEffect(() => {
 
   return (
     <>
-    <Head>
-  <title>وبلاگ پاراهور | مقالات تحقیقات سایبری و فارنزیک</title>
-
-  <meta
-    name="description"
-    content="وبلاگ پاراهور؛ مقالات و مطالب تخصصی درباره تحقیقات سایبری، فارنزیک دیجیتال، جرایم سایبری، امنیت اطلاعات و تحلیل شواهد دیجیتال."
-  />
-
-  <link rel="canonical" href="https://parahoor.com/blogs" />
-
-  <meta name="robots" content="index, follow" />
-  <meta name="googlebot" content="index, follow" />
-
-  <meta property="og:type" content="website" />
-  <meta property="og:locale" content="fa_IR" />
-  <meta property="og:site_name" content="پاراهور" />
-  <meta
-    property="og:title"
-    content="وبلاگ پاراهور | مقالات تحقیقات سایبری و فارنزیک"
-  />
-  <meta
-    property="og:description"
-    content="وبلاگ پاراهور؛ مقالات و مطالب تخصصی درباره تحقیقات سایبری، فارنزیک دیجیتال، جرایم سایبری، امنیت اطلاعات و تحلیل شواهد دیجیتال."
-  />
-  <meta property="og:url" content="https://parahoor.com/blogs" />
-  <meta property="og:image" content="https://parahoor.com/logo.jpg" />
-
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content="وبلاگ پاراهور | مقالات تحقیقات سایبری و فارنزیک"
-  />
-  <meta
-    name="twitter:description"
-    content="وبلاگ پاراهور؛ مقالات و مطالب تخصصی درباره تحقیقات سایبری، فارنزیک دیجیتال، جرایم سایبری، امنیت اطلاعات و تحلیل شواهد دیجیتال."
-  />
-  <meta
-    name="twitter:image"
-    content="https://parahoor.com/logo.jpg"
-  />
-</Head>
     
     <div
       dir="rtl"
@@ -791,13 +772,20 @@ useEffect(() => {
               آرشیو گزارش‌های تحلیلی و حقوقی
             </div>
 
-            <h1
-              className={`text-3xl md:text-4xl font-bold leading-tight mb-3 ${
-                darkMode ? "text-[#E6F7FF]" : "text-[#1E3A8A]"
-              }`}
-            >
-              رادار پاراهور
-            </h1>
+<h1
+  className="glow-text font-black leading-tight mb-6"
+  style={{
+    fontSize: "clamp(2rem, 5vw, 3.5rem)",
+    color: darkMode ? "#e8f4f8" : "#0c1a43",
+    lineHeight: "1.3",
+    fontWeight: 900,
+    textShadow: darkMode
+      ? undefined
+      : "0 0 18px rgba(30,58,138,0.10)",
+  }}
+>
+  {seo.h1Title}
+</h1>
 
             <p
               className={`text-base mb-10 ${

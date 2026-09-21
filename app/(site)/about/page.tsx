@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "../../../components/ThemeProvider";
 import {EmergencyModal} from "../../.../../../components/CrisisReportForm"
@@ -409,6 +409,28 @@ export default function App() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const { darkMode } = useTheme();
   const [crisisOpen, setCrisisOpen] = useState(false);
+    const [seo, setSeo] = useState({
+    h1Title: "ما تاریکی‌های دنیای دیجیتال را روشن می‌کنیم.",
+  });
+  
+
+
+useEffect(() => {
+  fetch("/api/admin/seo")
+    .then((res) => res.json())
+    .then((data) => {
+      const homeSeo = data?.pages?.find(
+        (page: any) => page.pageKey === "about"
+      );
+
+      if (homeSeo?.h1Title) {
+        setSeo({
+          h1Title: homeSeo.h1Title,
+        });
+      }
+    })
+    .catch(() => {});
+}, []);
 
 
   const values = [
@@ -514,24 +536,20 @@ export default function App() {
             </span>
           </div>
 
-          <h1
-            className="font-black mb-6 leading-tight"
-            style={{
-              fontSize: "clamp(2rem,5vw,3.4rem)",
-              color: darkMode ? "#fff" : "#0F172A",
-              lineHeight: 1.3,
-              textShadow: darkMode
-                ? "0 0 80px rgba(0,229,255,0.18), 0 0 160px rgba(0,229,255,0.08)"
-                : "0 10px 40px rgba(248, 250, 255, 0.16)",
-            }}
-          >
-            ما تاریکی‌های
-            <br />
-            <span style={{ color: accent }}>
-              دنیای دیجیتال
-            </span>{" "}
-            را روشن می‌کنیم.
-          </h1>
+        <h1
+  className="glow-text font-black leading-tight mb-6"
+  style={{
+    fontSize: "clamp(2rem, 5vw, 3.5rem)",
+    color: darkMode ? "#e8f4f8" : "#0c1a43",
+    lineHeight: "1.3",
+    fontWeight: 900,
+    textShadow: darkMode
+      ? undefined
+      : "0 0 18px rgba(30,58,138,0.10)",
+  }}
+>
+  {seo.h1Title}
+</h1>
 
           <p
             className="mx-auto mb-8"

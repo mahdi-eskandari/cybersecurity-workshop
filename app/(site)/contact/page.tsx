@@ -322,6 +322,26 @@ const ContactForm = ({ isDark }: { isDark: boolean }) => {
 export default function App() {
   const { darkMode } = useTheme();
   const [mounted, setMounted] = useState(false);
+    const [seo, setSeo] = useState({
+    h1Title: "ارتباط امن با پاراهور",
+  });
+  
+useEffect(() => {
+  fetch("/api/admin/seo")
+    .then((res) => res.json())
+    .then((data) => {
+      const homeSeo = data?.pages?.find(
+        (page: any) => page.pageKey === "contact"
+      );
+
+      if (homeSeo?.h1Title) {
+        setSeo({
+          h1Title: homeSeo.h1Title,
+        });
+      }
+    })
+    .catch(() => {});
+}, []);
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -354,9 +374,20 @@ export default function App() {
           <div className={`mb-7 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold ${isDark ? "border-[#00E5FF]/20 bg-[#00E5FF]/[0.07] text-[#00E5FF] " : "border-[#1E3A8A]/16 bg-[#1E3A8A]/[0.045] text-[#1E3A8A] "}`}>
             <PulseDot size={5} color={themeBlue} /><span className="font-mono tracking-[0.15em]">SECURE COMMUNICATION // END-TO-END ENCRYPTED</span>
           </div>
-          <h1 className={`mb-5 font-black leading-snug ${isDark ? "text-white" : "text-[#0F172A]"}`} style={{ fontSize: "clamp(1.8rem,4.5vw,3rem)", lineHeight: 1.35 }}>
-            ارتباط امن با <span className={`${isDark ? "text-[#00E5FF]" : "text-[#1E3A8A]"}`}>پاراهور</span>
-          </h1>
+<h1
+  className="glow-text font-black leading-tight mb-6"
+  style={{
+    fontSize: "clamp(2rem, 5vw, 3.5rem)",
+    color: darkMode ? "#e8f4f8" : "#0c1a43",
+    lineHeight: "1.3",
+    fontWeight: 900,
+    textShadow: darkMode
+      ? undefined
+      : "0 0 18px rgba(30,58,138,0.10)",
+  }}
+>
+  {seo.h1Title}
+</h1>
           <p className={`mx-auto max-w-[560px] text-[clamp(0.9rem,1.8vw,1.05rem)] leading-[1.9] ${isDark ? "text-[#64748B]" : "text-[#475569]"}`}>برای انتقاد، پیشنهاد و ارتباط با تیم پاراهور، از مسیرهای ارتباطی زیر با ما در تماس باشید.</p>
           <div className={`mt-8 flex items-center justify-center gap-5 ${isDark ? "text-[#334155]" : "text-[#64748B]"}`}>
             {["رمزنگاری سرتاسری", "بدون ذخیره‌سازی ابری", "پروتکل PGP"].map((label) => <div key={label} className="flex items-center gap-1.5 text-[0.72rem]"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={themeBlue} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg><span>{label}</span></div>)}

@@ -60,9 +60,14 @@ const baseUrl =
       };
     }
 
-    const title =
-      service.metaTitle?.trim() ||
-      `${service.title || "خدمات پاراهور"} | پاراهور`;
+const rawTitle =
+  service.metaTitle?.trim() ||
+  service.title?.trim() ||
+  "خدمات پاراهور";
+  
+  const title = rawTitle.includes("| پاراهور")
+  ? rawTitle
+  : `${rawTitle} | پاراهور`;
 
     const description =
       service.metaDescription?.trim() ||

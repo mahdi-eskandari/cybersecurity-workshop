@@ -143,7 +143,13 @@ icon: (
     <LuThumbsDown size={13} />
   </span>
 ),
-}
+},
+  {
+    id: "seo",
+    label: "SEO",
+    href: "/admin/seo",
+    icon: <IconWrench />,
+  },
 
 ];
 

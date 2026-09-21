@@ -264,6 +264,28 @@ export default function App() {
   const isDark = !mounted || darkMode;
 
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+    const [seo, setSeo] = useState({
+    h1Title: "سیاست حفظ حریم خصوصی و رازداری مطلق",
+  });
+
+useEffect(() => {
+  fetch("/api/admin/seo")
+    .then((res) => res.json())
+    .then((data) => {
+      const homeSeo = data?.pages?.find(
+        (page: any) => page.pageKey === "privacy"
+      );
+
+      if (homeSeo?.h1Title) {
+        setSeo({
+          h1Title: homeSeo.h1Title,
+        });
+      }
+    })
+    .catch(() => {});
+}, []);
+
+
 
   useEffect(() => {
     const handler = () => {
@@ -483,41 +505,6 @@ export default function App() {
 
   return (
     <>
-      <Head>
-  <title>حریم خصوصی | پاراهور</title>
-
-  <meta
-    name="description"
-    content="سیاست حریم خصوصی پاراهور؛ اطلاعات مربوط به نحوه جمع‌آوری، استفاده، حفاظت و مدیریت داده‌ها و اطلاعات کاربران."
-  />
-
-  <link rel="canonical" href="https://parahoor.com/privacy" />
-
-  <meta name="robots" content="index, follow" />
-  <meta name="googlebot" content="index, follow" />
-
-  <meta property="og:type" content="website" />
-  <meta property="og:locale" content="fa_IR" />
-  <meta property="og:site_name" content="پاراهور" />
-  <meta property="og:title" content="حریم خصوصی | پاراهور" />
-  <meta
-    property="og:description"
-    content="سیاست حریم خصوصی پاراهور؛ اطلاعات مربوط به نحوه جمع‌آوری، استفاده، حفاظت و مدیریت داده‌ها و اطلاعات کاربران."
-  />
-  <meta property="og:url" content="https://parahoor.com/privacy" />
-  <meta property="og:image" content="https://parahoor.com/logo.jpg" />
-
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="حریم خصوصی | پاراهور" />
-  <meta
-    name="twitter:description"
-    content="سیاست حریم خصوصی پاراهور؛ اطلاعات مربوط به نحوه جمع‌آوری، استفاده، حفاظت و مدیریت داده‌ها و اطلاعات کاربران."
-  />
-  <meta
-    name="twitter:image"
-    content="https://parahoor.com/logo.jpg"
-  />
-</Head>
 
       <div
         className="min-h-full privacy-page"
@@ -580,33 +567,34 @@ export default function App() {
               </span>
             </div>
 
-            <div className="flex items-start gap-4 mb-5">
-              <div
-                className="flex-shrink-0 mt-1 flex items-center justify-center w-12 h-12 rounded-xl privacy-header-icon"
-                style={{
-                  background: "rgba(0,229,255,0.08)",
-                  border: "1px solid rgba(0,229,255,0.2)"
-                }}
-              >
-                <IconShieldLock />
-              </div>
+<div className="flex items-start gap-4 mb-5">
+  <div
+    className="flex-shrink-0 translate-y-4 flex items-center justify-center w-12 h-12  rounded-xl privacy-header-icon"
+    style={{
+      background: "rgba(0,229,255,0.08)",
+      border: "1px solid rgba(0,229,255,0.2)",
+    }}
+  >
+    <IconShieldLock />
+  </div>
 
-              <div>
-                <h1
-                  className="font-black leading-snug privacy-main-title"
-                  style={{
-                    fontSize: "clamp(1.5rem,4vw,2.4rem)",
-                    color: "#fff",
-                    textShadow: "0 0 50px rgba(0,229,255,0.1)",
-                    lineHeight: 1.35
-                  }}
-                >
-                  سیاست حفظ حریم خصوصی
-                  <br />
-                  و رازداری مطلق
-                </h1>
-              </div>
-            </div>
+  <div className="pl-80">
+    <h1
+      className="glow-text font-black leading-tight mb-0"
+      style={{
+        fontSize: "clamp(2rem, 5vw, 3.5rem)",
+        color: darkMode ? "#e8f4f8" : "#0c1a43",
+        lineHeight: "1.3",
+        fontWeight: 900,
+        textShadow: darkMode
+          ? undefined
+          : "0 0 18px rgba(30,58,138,0.10)",
+      }}
+    >
+      {seo.h1Title}
+    </h1>
+  </div>
+</div>
 
             <p
               className="mb-5 max-w-2xl privacy-header-description"
