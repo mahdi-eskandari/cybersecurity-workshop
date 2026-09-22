@@ -169,10 +169,11 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useTheme } from "../components/ThemeProvider";
+import { useTheme } from "./ThemeProvider";
 import { usePathname } from "next/navigation";
+import { EmergencyModal } from "./CrisisReportForm";
 
 const IconMoon = () => (
   <svg
@@ -203,17 +204,72 @@ const IconSun = () => (
   </svg>
 );
 
+const NAV_ITEMS = [
+  { pageKey: "services", label: "خدمات ما" },
+  { pageKey: "blogs", label: "وبلاگ" },
+  { pageKey: "about", label: "درباره ما" },
+  { pageKey: "contact", label: "تماس با ما" },
+] as const;
+
+const DEFAULT_SLUGS: Record<string, string> = {
+  home: "",
+  services: "services",
+  blogs: "blogs",
+  about: "about",
+  contact: "contact",
+  privacy: "privacy",
+};
+
+function normalizePath(pathname: string) {
+  const path = pathname.split("?")[0].split("#")[0];
+
+  if (path === "/" || path === "") {
+    return "/";
+  }
+
+  return path.replace(/\/+$/, "");
+}
+
 export default function Header() {
   const { darkMode, toggleDarkMode } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
-  const path = usePathname()
+  const [slugs, setSlugs] = useState<Record<string, string> | null>(null);
+  const path = usePathname();
+  const [crisisOpen, setCrisisOpen] = useState(false);
 
-  const navItems = [
-    { label: "خدمات ما", href: "/services" },
-    { label: "وبلاگ", href: "/blogs" },
-    { label: "درباره ما", href: "/about" },
-    { label: "تماس با ما", href: "/contact" },
-  ];
+  // ---------------------------------------------------------
+  // گرفتن اسلاگ‌های فعلی صفحات از دیتابیس
+  // (فقط یه‌بار موقع mount شدن هدر)
+  // ---------------------------------------------------------
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch("/api/admin/seo/pages", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!cancelled && data?.success) {
+          setSlugs(data.pages || {});
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const resolvedSlugs: Record<string, string> = {
+    ...DEFAULT_SLUGS,
+    ...(slugs || {}),
+  };
+
+  const navItems = NAV_ITEMS.map((item) => ({
+    label: item.label,
+    href: `/${resolvedSlugs[item.pageKey] ?? DEFAULT_SLUGS[item.pageKey]}`,
+  }));
+
+  const currentPath = normalizePath(path || "/");
 
   return (
     <div className="min-h-full cyber-grid-bg text-gray-600 dark:text-[#]">
@@ -269,47 +325,47 @@ export default function Header() {
         </div>
 
         {/* لینک‌های دسکتاپ – وسط */}
-<div className="hidden md:flex items-center gap-6 lg:gap-8">
-  {navItems.map((item) => {
-    const isActive =
-      path === item.href ||
-      (item.href !== "/" && path.startsWith(`${item.href}/`));
+        <div className="hidden md:flex items-center gap-6 lg:gap-8">
+          {navItems.map((item) => {
+            const isActive =
+              currentPath === item.href ||
+              (item.href !== "/" && currentPath.startsWith(`${item.href}/`));
 
-    return (
-<Link
-  key={item.label}
-  href={item.href}
-  className={`group relative nav-link text-sm font-medium transition-all duration-300 ${
-    darkMode
-      ? isActive
-        ? "text-white"
-        : "text-slate-300 hover:text-cyan-300"
-      : isActive
-        ? "text-[#12266b]"
-        : "text-slate-400 hover:text-cyan-900"
-  }`}
->
-  {item.label}
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`group relative nav-link text-sm font-medium transition-all duration-300 ${
+                  darkMode
+                    ? isActive
+                      ? "text-white"
+                      : "text-slate-300 hover:text-cyan-300"
+                    : isActive
+                      ? "text-[#12266b]"
+                      : "text-slate-400 hover:text-cyan-900"
+                }`}
+              >
+                {item.label}
 
-  <span
-    className={`absolute -bottom-2 right-0 h-[2px] rounded-full transition-all duration-500 ease-out ${
-      darkMode
-        ? isActive
-          ? "w-full opacity-100 bg-[#00E5FF] shadow-[0_0_6px_#00E5FF,0_0_14px_rgba(0,229,255,0.55)]"
-          : "w-0 opacity-0 bg-[#00E5FF] group-hover:left-0 group-hover:w-full group-hover:opacity-100 group-hover:shadow-[0_0_6px_#00E5FF,0_0_14px_rgba(0,229,255,0.55)]"
-        : isActive
-          ? "w-full opacity-100 bg-[#12266b] shadow-[0_0_8px_rgba(18,38,107,0.55)]"
-          : "w-0 opacity-0 bg-[#12266b] group-hover:left-0 group-hover:w-full group-hover:opacity-100 group-hover:shadow-[0_0_8px_rgba(18,38,107,0.45)]"
-    }`}
-  />
+                <span
+                  className={`absolute -bottom-2 right-0 h-[2px] rounded-full transition-all duration-500 ease-out ${
+                    darkMode
+                      ? isActive
+                        ? "w-full opacity-100 bg-[#00E5FF] shadow-[0_0_6px_#00E5FF,0_0_14px_rgba(0,229,255,0.55)]"
+                        : "w-0 opacity-0 bg-[#00E5FF] group-hover:left-0 group-hover:w-full group-hover:opacity-100 group-hover:shadow-[0_0_6px_#00E5FF,0_0_14px_rgba(0,229,255,0.55)]"
+                      : isActive
+                        ? "w-full opacity-100 bg-[#12266b] shadow-[0_0_8px_rgba(18,38,107,0.55)]"
+                        : "w-0 opacity-0 bg-[#12266b] group-hover:left-0 group-hover:w-full group-hover:opacity-100 group-hover:shadow-[0_0_8px_rgba(18,38,107,0.45)]"
+                  }`}
+                />
 
-  {darkMode && isActive && (
-    <span className="absolute -bottom-2 right-0 h-[2px] w-1/3 rounded-full bg-white opacity-80 blur-[1px] animate-pulse" />
-  )}
-</Link>
-    );
-  })}
-</div>
+                {darkMode && isActive && (
+                  <span className="absolute -bottom-2 right-0 h-[2px] w-1/3 rounded-full bg-white opacity-80 blur-[1px] animate-pulse" />
+                )}
+              </Link>
+            );
+          })}
+        </div>
 
         {/* سمت چپ: تغییر تم و دکمه تماس */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
@@ -330,21 +386,24 @@ export default function Header() {
             {darkMode ? <IconSun /> : <IconMoon />}
           </button>
 
-          <Link
-            href="/contact"
-            className="px-2.5 py-1.5 sm:px-3.5 sm:py-2 md:px-4 rounded-lg text-[11px] sm:text-xs md:text-sm font-semibold transition-all whitespace-nowrap"
-            style={{
-              color: "#FFFFFF",
-              backgroundColor: "#EF4444",
-              border: "1px solid #EF4444"
+          <button
+  type="button"
+  onClick={() => setCrisisOpen(true)}
+  className="px-2.5 py-1.5 sm:px-3.5 sm:py-2 md:px-4 rounded-lg text-[11px] sm:text-xs md:text-sm font-semibold transition-all whitespace-nowrap"
+  style={{
+    color: "#FFFFFF",
+    backgroundColor: "#EF4444",
+    border: "1px solid #EF4444"
+  }}
+>
+  تماس اورژانسی
+</button>
 
-            }}
-            
-          >
-            تماس اورژانسی
-          </Link>
+          
         </div>
       </nav>
+
+{crisisOpen && <EmergencyModal onClose={() => setCrisisOpen(false)} />}
 
       {/* پس‌زمینه تاریک هنگام باز شدن منو */}
       {menuOpen && (

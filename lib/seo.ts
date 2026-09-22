@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import connectDB from "./mongodb";
 import PageSeo from "../app/model/PageSeo";
 
-const SITE_URL =
+export const SITE_URL =
 //   process.env.NEXT_PUBLIC_SITE_URL || "https://parahoor.com";
   process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
 
 const DEFAULT_OG_IMAGE = `${SITE_URL}/logo.jpg`;
 
@@ -179,5 +180,33 @@ export async function getPageMetadata(
 
       images: [DEFAULT_OG_IMAGE],
     },
+  };
+}
+
+const PAGE_ORDER: PageKey[] = [
+  "home",
+  "services",
+  "blogs",
+  "about",
+  "contact",
+  "privacy",
+];
+
+export async function getAdjacentPageLinks(pageKey: PageKey) {
+  const index = PAGE_ORDER.indexOf(pageKey);
+  const prevKey = index > 0 ? PAGE_ORDER[index - 1] : null;
+  const nextKey = index < PAGE_ORDER.length - 1 ? PAGE_ORDER[index + 1] : null;
+
+  const [prevSeo, nextSeo] = await Promise.all([
+    prevKey ? getPageSeo(prevKey) : Promise.resolve(null),
+    nextKey ? getPageSeo(nextKey) : Promise.resolve(null),
+  ]);
+
+  const toUrl = (slug: string) =>
+    new URL(slug ? `/${slug}` : "/", SITE_URL).toString();
+
+  return {
+    prevUrl: prevSeo ? toUrl(prevSeo.slug) : null,
+    nextUrl: nextSeo ? toUrl(nextSeo.slug) : null,
   };
 }

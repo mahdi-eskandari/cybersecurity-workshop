@@ -40,122 +40,17 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const requestedPath = cleanPath(rawPath);
+    const requestedPath =
+      cleanPath(rawPath);
 
     await connectDB();
 
-    // --------------------------------------------------
-    // 1. Redirect دقیق
-    // --------------------------------------------------
-
-    const exactRedirect =
-      await SeoRedirect.findOne({
-        $or: [
-          {
-            fromPath: requestedPath,
-          },
-          {
-            fromPath: withLeadingSlash(
-              requestedPath
-            ),
-          },
-        ],
-      })
-        .lean()
-        .exec();
-
-    if (exactRedirect) {
-      return NextResponse.json({
-        success: true,
-        redirect: {
-          toPath: withLeadingSlash(
-            String(exactRedirect.toPath || "")
-          ),
-          statusCode:
-            exactRedirect.statusCode === 302
-              ? 302
-              : 301,
-        },
-        page: null,
-      });
-    }
-
-    // --------------------------------------------------
-    // 2. Redirect مربوط به parent path
+    // ==================================================
+    // 1. اول PageSeo فعلی را پیدا کن
     //
-    // مثال:
-    //
-    // services -> services-test
-    //
-    // /services/my-service
-    // ->
-    // /services-test/my-service
-    // --------------------------------------------------
-
-    const redirects =
-      await SeoRedirect.find({})
-        .sort({
-          fromPath: -1,
-        })
-        .lean()
-        .exec();
-
-    for (const item of redirects) {
-      const fromPath = cleanPath(
-        String(item.fromPath || "")
-      );
-
-      if (!fromPath) {
-        continue;
-      }
-
-      if (
-        requestedPath.startsWith(
-          `${fromPath}/`
-        )
-      ) {
-        const remainingPath =
-          requestedPath.slice(
-            fromPath.length
-          );
-
-        const targetBase =
-          cleanPath(
-            String(item.toPath || "")
-          );
-
-        const targetPath =
-          `${targetBase}${remainingPath}`;
-
-        return NextResponse.json({
-          success: true,
-          redirect: {
-            toPath: withLeadingSlash(
-              targetPath
-            ),
-            statusCode:
-              item.statusCode === 302
-                ? 302
-                : 301,
-          },
-          page: null,
-        });
-      }
-    }
-
-    // --------------------------------------------------
-    // 3. صفحه‌ای که slug فعلی خودش را دارد
-    //
-    // مثال:
-    //
-    // PageSeo:
-    // pageKey = services
-    // slug = services-test
-    //
-    // /services-test
-    // ->
-    // page = services
-    // --------------------------------------------------
+    // خیلی مهم:
+    // PageSeo فعلی باید بر redirect قدیمی اولویت داشته باشد.
+    // ==================================================
 
     const exactPage =
       await PageSeo.findOne({
@@ -176,17 +71,17 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // --------------------------------------------------
-    // 4. صفحات دارای زیرمسیر
+    // ==================================================
+    // 2. بررسی زیرمسیرهای blogs / services
     //
-    // /services-test/my-service
-    // ->
-    // services
+    // مثال:
     //
-    // /blogs-test/my-post
-    // ->
-    // blogs
-    // --------------------------------------------------
+    // /blogs/my-post
+    // /services/my-service
+    //
+    // اگر slug فعلی باشند، نباید redirect قدیمی
+    // روی آنها اعمال شود.
+    // ==================================================
 
     const dynamicPages =
       await PageSeo.find({
@@ -202,9 +97,10 @@ export async function GET(request: NextRequest) {
         .exec();
 
     for (const page of dynamicPages) {
-      const pageSlug = cleanPath(
-        String(page.slug || "")
-      );
+      const pageSlug =
+        cleanPath(
+          String(page.slug || "")
+        );
 
       if (!pageSlug) {
         continue;
@@ -226,9 +122,144 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // --------------------------------------------------
+    // ==================================================
+    // 3. حالا Redirect دقیق را بررسی کن
+    //
+    // فقط مسیرهایی که دیگر slug فعلی نیستند
+    // به این قسمت می‌رسند.
+    // ==================================================
+
+    const exactRedirect =
+      await SeoRedirect.findOne({
+        $or: [
+          {
+            fromPath: requestedPath,
+          },
+          {
+            fromPath:
+              withLeadingSlash(
+                requestedPath
+              ),
+          },
+        ],
+      })
+        .lean()
+        .exec();
+
+    if (exactRedirect) {
+      const targetPath =
+        withLeadingSlash(
+          String(
+            exactRedirect.toPath || ""
+          )
+        );
+
+      // جلوگیری از self redirect
+      if (
+        cleanPath(targetPath) ===
+        requestedPath
+      ) {
+        return NextResponse.json({
+          success: true,
+          redirect: null,
+          page: null,
+        });
+      }
+
+      return NextResponse.json({
+        success: true,
+        redirect: {
+          toPath: targetPath,
+          statusCode:
+            exactRedirect.statusCode === 302
+              ? 302
+              : 301,
+        },
+        page: null,
+      });
+    }
+
+    // ==================================================
+    // 4. Redirect مربوط به parent path
+    //
+    // مثال:
+    //
+    // /services-old/my-service
+    // ->
+    // /services/my-service
+    // ==================================================
+
+    const redirects =
+      await SeoRedirect.find({})
+        .sort({
+          fromPath: -1,
+        })
+        .lean()
+        .exec();
+
+    for (const item of redirects) {
+      const fromPath =
+        cleanPath(
+          String(
+            item.fromPath || ""
+          )
+        );
+
+      if (!fromPath) {
+        continue;
+      }
+
+      if (
+        requestedPath.startsWith(
+          `${fromPath}/`
+        )
+      ) {
+        const remainingPath =
+          requestedPath.slice(
+            fromPath.length
+          );
+
+        const targetBase =
+          cleanPath(
+            String(
+              item.toPath || ""
+            )
+          );
+
+        const targetPath =
+          `${targetBase}${remainingPath}`;
+
+        const normalizedTarget =
+          cleanPath(targetPath);
+
+        // جلوگیری از self redirect
+        if (
+          normalizedTarget ===
+          requestedPath
+        ) {
+          continue;
+        }
+
+        return NextResponse.json({
+          success: true,
+          redirect: {
+            toPath:
+              withLeadingSlash(
+                targetPath
+              ),
+            statusCode:
+              item.statusCode === 302
+                ? 302
+                : 301,
+          },
+          page: null,
+        });
+      }
+    }
+
+    // ==================================================
     // 5. چیزی پیدا نشد
-    // --------------------------------------------------
+    // ==================================================
 
     return NextResponse.json({
       success: true,

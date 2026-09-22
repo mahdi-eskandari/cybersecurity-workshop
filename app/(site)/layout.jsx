@@ -4,14 +4,15 @@ import Footer from "../../components/Footer";
 
 export default function SiteLayout({ children }) {
   return (
+    <div>
 
-      <div >
-        <Header />
-        <main className="flex-1">
-          {children}
-        </main>
-        <Footer />
+      <Header />
 
-        </div>
+      <main className="flex-1">
+        {children}
+      </main>
+
+      <Footer />
+    </div>
   );
 }

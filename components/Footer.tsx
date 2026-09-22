@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useTheme } from "./ThemeProvider";
 import {Phone} from "lucide-react";
+import { EmergencyModal } from "./CrisisReportForm";
+
 
 const F_SERVICES = [
   {
@@ -76,6 +78,7 @@ const PulseDot = ({
 
 export default function Footer() {
   const { darkMode } = useTheme();
+    const [crisisOpen, setCrisisOpen] = useState(false);
 
   const footerMenus = [
     {
@@ -193,13 +196,13 @@ export default function Footer() {
                 <p className="text-xs text-white/50 mb-3">
                   در صورت حادثه فوری، ۲۴/۷ در دسترسیم
                 </p>
-                <a
-                  href="tel:+982188004000"
+                <button
+                    onClick={() => setCrisisOpen(true)}
                   className="flex items-center gap-2 px-3.5 py-2 bg-[#C62828] text-white text-xs font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors w-fit"
                 >
                   <Phone className="w-3.5 h-3.5" />
                   تماس اضطراری
-                </a>
+                </button>
               </div>
             </div>
 
@@ -234,6 +237,7 @@ export default function Footer() {
           </div>
         </div>
       </footer>
+      {crisisOpen && <EmergencyModal onClose={() => setCrisisOpen(false)} />}
     </div>
   );
 }

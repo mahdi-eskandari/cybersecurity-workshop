@@ -335,69 +335,43 @@ export async function POST(request: NextRequest) {
     //
     // ---------------------------------------------------------
 
-    if (oldSlug !== cleanSlug) {
-      const fromPath = oldSlug
-        ? `/${oldSlug}`
-        : "/";
+// ---------------------------------------------------------
+// 301 REDIRECT
+// ---------------------------------------------------------
 
-      const toPath = cleanSlug
-        ? `/${cleanSlug}`
-        : "/";
+if (oldSlug !== cleanSlug) {
+  const oldPath = oldSlug ? `/${oldSlug}` : "/";
+  const newPath = cleanSlug ? `/${cleanSlug}` : "/";
 
-      if (fromPath !== toPath) {
-        // -----------------------------------------------------
-        // Redirect مربوط به Route قبلی
-        // -----------------------------------------------------
+  if (oldPath !== newPath) {
+    // 1) هر ریدایرکت قدیمی که به oldPath ختم می‌شد رو
+    //    به‌جای پاک کردن، به newPath ری‌پوینت کن
+    //    (زنجیره قطع نشه، همیشه یه هاپ بمونه)
+    await SeoRedirect.updateMany(
+      { toPath: oldPath },
+      { $set: { toPath: newPath } }
+    );
 
-        await SeoRedirect.findOneAndUpdate(
-          {
-            fromPath,
-          },
-          {
-            $set: {
-              toPath,
-              statusCode: 301,
-            },
-          },
-          {
-            upsert: true,
-            returnDocument: "after",
-            setDefaultsOnInsert: true,
-          }
-        );
+    // 2) اگر newPath قبلاً خودش fromPath یه ریدایرکت دیگه بوده
+    //    (یعنی قبلاً یه مسیر ریدایرکتی بوده، الان قراره صفحه واقعی بشه)
+    //    اون تداخل رو پاک کن
+    await SeoRedirect.deleteMany({
+      fromPath: newPath,
+    });
 
-        // -----------------------------------------------------
-        // جلوگیری از Redirect Chain
-        //
-        // اگر قبلاً:
-        //
-        // /services -> /services-p
-        //
-        // وجود داشته و الان:
-        //
-        // /services-p -> /services-test
-        //
-        // ساخته شده، Redirect قبلی را مستقیم می‌کنیم:
-        //
-        // /services -> /services-test
-        // -----------------------------------------------------
-
-        await SeoRedirect.updateMany(
-          {
-            toPath: fromPath,
-            fromPath: {
-              $ne: toPath,
-            },
-          },
-          {
-            $set: {
-              toPath,
-              statusCode: 301,
-            },
-          }
-        );
-      }
-    }
+    // 3) خود ریدایرکت اصلی رو بساز/آپدیت کن: oldPath -> newPath
+    await SeoRedirect.findOneAndUpdate(
+      { fromPath: oldPath },
+      {
+        $set: {
+          toPath: newPath,
+          statusCode: 301,
+        },
+      },
+      { upsert: true }
+    );
+  }
+}
 
     // ---------------------------------------------------------
     // RESPONSE

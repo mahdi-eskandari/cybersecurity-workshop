@@ -278,6 +278,9 @@ const publicAdminApiRoutes = [
 
   // SEO resolver فقط اطلاعات عمومی SEO می‌خواند
   "/api/admin/seo/redirect",
+
+  // اسلاگ فعلی صفحات، برای prev/next سمت کلاینت
+  "/api/admin/seo/pages",
 ];
 
 function isPublicAdminApi(pathname: string): boolean {
@@ -415,27 +418,23 @@ async function handleSeo(
   }
 
   try {
-    const resolverUrl =
-      new URL(
-        "/api/admin/seo/redirect",
-        request.url
-      );
-
-    resolverUrl.searchParams.set(
-      "path",
-      pathname
+    const resolverUrl = new URL(
+      "/api/admin/seo/redirect",
+      request.url
     );
 
-    const response = await fetch(
-      resolverUrl,
-      {
-        method: "GET",
-        headers: {
-          "x-seo-resolver": "1",
-        },
-        cache: "no-store",
-      }
-    );
+    resolverUrl.searchParams.set("path", pathname);
+
+    const response = await fetch(resolverUrl, {
+      method: "GET",
+      headers: {
+        "x-seo-resolver": "1",
+      },
+      cache: "no-store",
+      next: {
+        revalidate: 0,
+      },
+    });
 
     if (!response.ok) {
       return null;
@@ -444,39 +443,58 @@ async function handleSeo(
     const data = await response.json();
 
     // --------------------------------------------------
-    // اگر redirect وجود دارد
+    // Redirect
     // --------------------------------------------------
 
     if (data?.redirect?.toPath) {
-      const targetPath =
-        String(data.redirect.toPath);
+      const targetPath = String(
+        data.redirect.toPath
+      );
 
-      const redirectUrl =
-        new URL(
-          targetPath.startsWith("/")
-            ? targetPath
-            : `/${targetPath}`,
-          request.url
-        );
+      const currentPath = cleanPath(pathname);
+      const normalizedTarget =
+        cleanPath(targetPath);
+
+      // هیچ‌وقت به خودش redirect نکن
+      if (
+        currentPath === normalizedTarget
+      ) {
+        return null;
+      }
+
+      const redirectUrl = new URL(
+        targetPath.startsWith("/")
+          ? targetPath
+          : `/${targetPath}`,
+        request.url
+      );
 
       const statusCode =
         data.redirect.statusCode === 302
           ? 302
           : 301;
 
-      return NextResponse.redirect(
-        redirectUrl,
-        statusCode
-      );
+const redirectResponse = NextResponse.redirect(
+  redirectUrl,
+  statusCode
+);
+
+redirectResponse.headers.set(
+  "Cache-Control",
+  "no-store, must-revalidate"
+);
+
+return redirectResponse;
     }
 
     // --------------------------------------------------
-    // اگر صفحه‌ای با slug فعلی پیدا شده
+    // Current Page
     // --------------------------------------------------
 
     if (data?.page?.pageKey) {
-      const pageKey =
-        String(data.page.pageKey);
+      const pageKey = String(
+        data.page.pageKey
+      );
 
       const basePath =
         getSeoBasePath(pageKey);
@@ -493,10 +511,7 @@ async function handleSeo(
           String(data.page.slug || "")
         );
 
-      // ------------------------------------------------
-      // صفحه اصلی سایت
-      // ------------------------------------------------
-
+      // Home
       if (pageKey === "home") {
         if (currentPath === "") {
           return null;
@@ -507,16 +522,7 @@ async function handleSeo(
         );
       }
 
-      // ------------------------------------------------
-      // اگر خود slug اصلی است،
-      // rewrite لازم نیست.
-      //
-      // /services
-      // /blogs
-      // /about
-      // ...
-      // ------------------------------------------------
-
+      // مسیر اصلی
       if (
         currentPath ===
         cleanPath(basePath)
@@ -524,18 +530,13 @@ async function handleSeo(
         return null;
       }
 
-      // ------------------------------------------------
-      // صفحه با slug سفارشی
-      //
-      // /services-test
-      // ->
-      // /services
+      // slug سفارشی
       //
       // /blogs-test
       // ->
       // /blogs
-      // ------------------------------------------------
-
+      //
+      // اینجا rewrite است، نه redirect
       if (
         currentSlug &&
         currentPath === currentSlug
@@ -548,18 +549,7 @@ async function handleSeo(
         );
       }
 
-      // ------------------------------------------------
-      // زیرمسیر صفحات blogs/services
-      //
-      // /services-test/my-service
-      // ->
-      // /services/my-service
-      //
-      // /blogs-test/my-post
-      // ->
-      // /blogs/my-post
-      // ------------------------------------------------
-
+      // زیرمسیر blogs/services
       if (
         currentSlug &&
         (pageKey === "blogs" ||
@@ -585,14 +575,6 @@ async function handleSeo(
       }
     }
 
-    // --------------------------------------------------
-    // هیچ SEO خاصی وجود ندارد
-    //
-    // مهم:
-    // اینجا حتماً null برمی‌گردانیم تا route
-    // عادی Next.js اجرا شود.
-    // --------------------------------------------------
-
     return null;
   } catch (error) {
     console.error(
@@ -600,7 +582,6 @@ async function handleSeo(
       error
     );
 
-    // SEO نباید باعث خراب شدن سایت شود.
     return null;
   }
 }

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Media from "../../model/media";
+import sharp from "sharp";
 
 export async function GET() {
   try {
@@ -57,25 +58,43 @@ export async function POST(request: Request) {
       );
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer());
+    const originalBuffer = Buffer.from(
+      await file.arrayBuffer()
+    );
 
-    // ذخیره خود تصویر به صورت Data URL داخل MongoDB
-    const base64 = buffer.toString("base64");
-    const dataUrl = `data:${file.type};base64,${base64}`;
+    // تبدیل تصویر به WebP
+    const image = sharp(originalBuffer);
+
+    const metadata = await image.metadata();
+
+    const webpBuffer = await image
+      .webp({
+        quality: 82,
+      })
+      .toBuffer();
+
+    // Data URL نهایی همیشه WebP است
+    const base64 = webpBuffer.toString("base64");
+    const dataUrl = `data:image/webp;base64,${base64}`;
+
+    // تبدیل نام فایل به .webp
+    const originalName = file.name.replace(/\.[^.]+$/, "");
+
+    const webpName = `${originalName}.webp`;
 
     const alt =
       typeof altValue === "string"
         ? altValue.trim()
-        : file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ");
+        : originalName.replace(/[-_]+/g, " ");
 
     const media = await Media.create({
-      name: file.name,
+      name: webpName,
       url: dataUrl,
       alt,
-      mimeType: file.type,
-      size: file.size,
-      width: null,
-      height: null,
+      mimeType: "image/webp",
+      size: webpBuffer.length,
+      width: metadata.width ?? null,
+      height: metadata.height ?? null,
     });
 
     return NextResponse.json(

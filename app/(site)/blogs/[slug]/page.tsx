@@ -77,6 +77,26 @@ function normalizePost(post: RawBlogPost): BlogPost | null {
 
 export const dynamic = "force-dynamic";
 
+async function fetchServerJson(
+  url: string,
+  timeoutMs = 10000
+): Promise<{ response: Response; data: any }> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(url, {
+      cache: "no-store",
+      signal: controller.signal,
+    });
+
+    const data = await response.json();
+    return { response, data };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 export default async function Page({
   params,
 }: {
@@ -105,27 +125,27 @@ export default async function Page({
   const baseUrl = `${protocol}://${host}`;
 
   try {
-    const [postsResponse, mediaResponse] = await Promise.all([
-      fetch(`${baseUrl}/api/posts`, {
-        cache: "no-store",
-      }),
-      fetch(`${baseUrl}/api/media`, {
-        cache: "no-store",
-      }),
+    const [postsResult, mediaResult] = await Promise.allSettled([
+      fetchServerJson(`${baseUrl}/api/posts`),
+      fetchServerJson(`${baseUrl}/api/media`),
     ]);
 
-    const postsResult = await postsResponse.json();
+    if (postsResult.status === "rejected") {
+      throw postsResult.reason;
+    }
+
+    const { response: postsResponse, data: postsData } = postsResult.value;
 
     if (!postsResponse.ok) {
       throw new Error(
-        postsResult?.message || "خطا در دریافت پست‌ها"
+        postsData?.message || "خطا در دریافت پست‌ها"
       );
     }
 
-    const rawPosts: RawBlogPost[] = Array.isArray(postsResult)
-      ? postsResult
-      : Array.isArray(postsResult?.posts)
-      ? postsResult.posts
+    const rawPosts: RawBlogPost[] = Array.isArray(postsData)
+      ? postsData
+      : Array.isArray(postsData?.posts)
+      ? postsData.posts
       : [];
 
     const normalizedPosts = rawPosts
@@ -147,16 +167,18 @@ export default async function Page({
 
     let mediaItems: MediaItem[] = [];
 
-    if (mediaResponse.ok) {
-      const mediaResult = await mediaResponse.json();
+    if (mediaResult.status === "fulfilled") {
+      const { response: mediaResponse, data: mediaData } = mediaResult.value;
 
-      mediaItems = Array.isArray(mediaResult)
-        ? mediaResult
-        : Array.isArray(mediaResult?.media)
-        ? mediaResult.media
-        : Array.isArray(mediaResult?.items)
-        ? mediaResult.items
-        : [];
+      if (mediaResponse.ok) {
+        mediaItems = Array.isArray(mediaData)
+          ? mediaData
+          : Array.isArray(mediaData?.media)
+          ? mediaData.media
+          : Array.isArray(mediaData?.items)
+          ? mediaData.items
+          : [];
+      }
     }
 
     return (
