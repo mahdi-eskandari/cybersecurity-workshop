@@ -1,16 +1,27 @@
 import { Schema, model, models } from "mongoose";
 
+const INCIDENT_TYPES = [
+  "پایش دارک‌وب و هوش تهدیدات",
+  "تست نفوذِ پسا-بحران",
+  "مقابله و مذاکره با باج‌افزارها",
+  "فارنزیک و کالبدشکافی دیجیتال",
+  "ردیابی رمزارز و تحلیل بلاک‌چین",
+  "هویت‌سنجی پنهان",
+  "مشاوره",
+] as const;
+
 const CrisisReportSchema = new Schema(
   {
     trackingCode: {
       type: String,
       required: true,
       unique: true,
+      trim: true,
     },
 
     incidentType: {
       type: String,
-      enum: ["مزاحمت و اخاذی", "هک و نفوذ", "سرقت کریپتو"],
+      enum: INCIDENT_TYPES,
       required: true,
       trim: true,
     },
@@ -19,6 +30,7 @@ const CrisisReportSchema = new Schema(
       type: String,
       trim: true,
       maxlength: 2000,
+      default: "",
     },
 
     contact: {
@@ -39,7 +51,9 @@ const CrisisReportSchema = new Schema(
       default: "pending",
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 export default models.CrisisReport ||

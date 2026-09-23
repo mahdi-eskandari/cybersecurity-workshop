@@ -47,17 +47,13 @@ export default function SiteLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="fa"
-      dir="rtl"
-      className="dark"
-      suppressHydrationWarning
-      
-    >
-      
-      <body
-        className={`${vazirmatn.variable} ${poppins.variable}`}
-      >
+<html
+  lang="fa"
+  dir="rtl"
+  className={`dark ${vazirmatn.variable} ${poppins.variable}`}
+  suppressHydrationWarning
+>
+  <body>
         <ThemeProvider>
           {children}
         </ThemeProvider>

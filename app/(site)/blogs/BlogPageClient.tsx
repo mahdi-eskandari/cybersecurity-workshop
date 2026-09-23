@@ -14,6 +14,30 @@ import { AnimatePresence, motion, type Variants } from "framer-motion";
 import Link from "next/link";
 
 
+const IconDot = ({
+  size = 7,
+  glow = true,
+  color = "#00E5FF",
+  glowColor = "rgba(0,229,255,0.9)",
+}: {
+  size?: number;
+  glow?: boolean;
+  color?: string;
+  glowColor?: string;
+}) => (
+  <span
+    style={{
+      display: "inline-block",
+      width: size,
+      height: size,
+      borderRadius: "50%",
+      background: color,
+      boxShadow: glow ? `0 0 8px ${glowColor}` : "none",
+      flexShrink: 0,
+    }}
+  />
+);
+
 // ── types & data ──────────────────────────────────────────────────────────────
 
 interface Article {
@@ -452,6 +476,7 @@ export type BlogPageInitialData = {
 export default function BlogPageClient({ initialData }: { initialData: BlogPageInitialData }) {
   const { darkMode } = useTheme();
   const pathname = usePathname();
+    const blueBright = darkMode ? "#00E5FF" : "#1D4ED8";
 
   const [activeCategory, setActiveCategory] = useState("همه");
   const [searchQuery, setSearchQuery] = useState("");
@@ -645,7 +670,7 @@ useEffect(() => {
           : "bg-white text-[#0F172A]"
       }`}
       style={{
-        fontFamily: "'Vazirmatn', sans-serif",
+        fontFamily: "var(--font-vazirmatn), sans-serif",
         backgroundImage: darkMode
           ? "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"
           : "linear-gradient(rgba(30,58,138,0.045) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,138,0.045) 1px,transparent 1px)",
@@ -677,16 +702,38 @@ useEffect(() => {
           }}
           >
             
-            <div
-              className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-6 ${
+<div
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 text-xs font-semibold"
+            style={{
+              background: darkMode
+                ? "rgba(0,229,255,0.07)"
+                : "rgba(30,58,138,0.07)",
+              border: darkMode
+                ? "1px solid rgba(0,229,255,0.18)"
+                : "1px solid rgba(30,58,138,0.20)",
+              color: blueBright,
+            }}
+          >
+            <IconDot
+              size={6}
+              color={blueBright}
+              glow={true}
+              glowColor={
                 darkMode
-                  ? "bg-[#062536] text-[#00E5FF]"
-                  : "bg-[rgba(30,58,138,0.06)] text-[#1E3A8A] border border-[rgba(29,78,216,0.20)]"
-              }`}
+                  ? "rgba(0,229,255,0.9)"
+                  : "rgba(30,58,138,0.45)"
+              }
+            />
+
+            <span
+              style={{
+                fontFamily: "monospace",
+                letterSpacing: "0.15em",
+              }}
             >
-              <BookOpen className="w-3.5 h-3.5" />
-              آرشیو گزارش‌های تحلیلی و حقوقی
-            </div>
+              PARAHOOR // ANALYTICAL & LEGAL REPORTS
+            </span>
+          </div>
 
 <h1
   className="glow-text font-black leading-tight mb-6"

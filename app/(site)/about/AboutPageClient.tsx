@@ -453,7 +453,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
           : "bg-white text-[#0F172A]"
       }`}
       style={{
-        fontFamily: "'Vazirmatn', sans-serif",
+        fontFamily: "var(--font-vazirmatn), sans-serif",
         backgroundImage: darkMode
           ? "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"
           : "linear-gradient(rgba(30,58,138,0.045) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,138,0.045) 1px,transparent 1px)",
@@ -508,7 +508,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                 letterSpacing: "0.15em",
               }}
             >
-              ABOUT PARAHOOR // SINCE ۱۴۰۲
+              ABOUT PARAHOOR // SINCE 1405
             </span>
           </div>
 
@@ -1321,7 +1321,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                 boxShadow:
                   "0 0 24px rgba(239,68,68,0.3)",
                 fontSize: "1rem",
-                fontFamily: "Vazirmatn,sans-serif",
+                fontFamily: "var(--font-vazirmatn), sans-serif",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.boxShadow =

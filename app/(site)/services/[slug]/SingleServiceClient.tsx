@@ -546,7 +546,7 @@ export default function App({
     className="min-h-full transition-colors duration-300"
     style={{
       color: darkMode ? "#E2E8F0" : "#0F172A",
-      fontFamily: "Vazirmatn, sans-serif",
+      fontFamily: "var(--font-vazirmatn), sans-serif",
       backgroundColor: darkMode ? "#0A1128" : "#FFFFFF",
       backgroundImage: darkMode
         ? "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"

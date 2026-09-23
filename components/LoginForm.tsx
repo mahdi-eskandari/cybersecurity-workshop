@@ -749,7 +749,7 @@ function Screen({ children }: { children: React.ReactNode }) {
     <div
       dir="rtl"
       className="min-h-screen bg-slate-100 flex flex-col items-center justify-center relative px-4"
-      style={{ fontFamily: "'Vazirmatn', sans-serif" }}
+      style={{ fontFamily: "var(--font-vazirmatn), sans-serif" }}
     >
       {/* Subtle dot watermark */}
 

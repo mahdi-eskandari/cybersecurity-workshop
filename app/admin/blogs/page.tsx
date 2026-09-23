@@ -544,8 +544,8 @@ function CodePanel({ editor, onClose }: { editor: Editor; onClose: () => void })
 }
 
 const ADMIN_AUTHORS = [
-  { id: "admin-1", name: "ادمین ۱ (محمدرضا)" },
-  { id: "admin-2", name: "ادمین ۲" },
+  { id: "admin-1", name: "محمدرضا یوسفی" },
+  { id: "admin-2", name: "علیرضا طباطبایی هاشمی" },
 ] as const;
 
 type PostFormValues = {

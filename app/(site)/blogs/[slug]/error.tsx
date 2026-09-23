@@ -2,7 +2,7 @@
 
 export default function Error({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
-    <div dir="rtl" className="flex min-h-screen items-center justify-center bg-[#0A1128] px-6 text-[#E2E8F0]" style={{ fontFamily: "Vazirmatn, sans-serif" }}>
+    <div dir="rtl" className="flex min-h-screen items-center justify-center bg-[#0A1128] px-6 text-[#E2E8F0]" style={{ fontFamily: "var(--font-vazirmatn), sans-serif" }}>
       <div className="w-full max-w-lg rounded-3xl border border-red-400/15 bg-[#07152d] p-8 text-center shadow-[0_25px_90px_rgba(0,0,0,.4)]">
         <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-red-500/10 text-red-400 text-xl">!</div>
         <h1 className="mt-5 text-xl font-black text-white">خطایی در دریافت مقاله رخ داد</h1>

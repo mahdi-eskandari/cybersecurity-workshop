@@ -155,7 +155,7 @@ export default function App() {
   };
 
   return (
-    <div style={{ background: "#050814", minHeight: "100vh", fontFamily: "Vazirmatn, sans-serif", color: "#E2E8F0", display: "flex" }}>
+    <div style={{ background: "#050814", minHeight: "100vh", fontFamily: "var(--font-vazirmatn), sans-serif", color: "#E2E8F0", display: "flex" }}>
 
      
 
@@ -202,7 +202,7 @@ export default function App() {
                             background: copied ? "rgba(16,185,129,0.1)" : "rgba(0,229,255,0.06)",
                             border: copied ? "1px solid rgba(16,185,129,0.3)" : "1px solid rgba(0,229,255,0.18)",
                             color: copied ? "#10B981" : "rgba(0,229,255,0.7)",
-                            transition: "all 0.2s", fontFamily: "Vazirmatn,sans-serif",
+                            transition: "all 0.2s", fontFamily: "var(--font-vazirmatn), sans-serif",
                           }}>
                           {copied ? <IconCheck /> : <IconCopy />}
                           {copied ? "کپی شد" : "کپی"}
@@ -257,7 +257,7 @@ export default function App() {
                       { label: "صرافی احتمالی مقصد:", value: "— در حال تحلیل —", mono: false, color: "#475569" },
                     ].map(({ label, value, mono, color }) => (
                       <FieldRow key={label} label={label}>
-                        <span style={{ fontFamily: mono ? "monospace" : "Vazirmatn,sans-serif", fontSize: "0.82rem", color }}>{value}</span>
+                        <span style={{ fontFamily: mono ? "monospace" : "var(--font-vazirmatn), sans-serif", fontSize: "0.82rem", color }}>{value}</span>
                       </FieldRow>
                     ))}
                   </div>
@@ -284,7 +284,7 @@ export default function App() {
                     background: referred ? "rgba(16,185,129,0.1)" : "transparent",
                     border: referred ? "1px solid rgba(16,185,129,0.35)" : "1px solid rgba(0,229,255,0.25)",
                     color: referred ? "#10B981" : "#00E5FF",
-                    fontFamily: "Vazirmatn,sans-serif", transition: "all 0.2s",
+                    fontFamily: "var(--font-vazirmatn), sans-serif", transition: "all 0.2s",
                   }}
                   onMouseEnter={(e) => { if (!referred) (e.currentTarget as HTMLButtonElement).style.background = "rgba(0,229,255,0.06)"; }}
                   onMouseLeave={(e) => { if (!referred) (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}>
@@ -299,7 +299,7 @@ export default function App() {
                     background: smsSent ? "rgba(16,185,129,0.1)" : "transparent",
                     border: smsSent ? "1px solid rgba(16,185,129,0.35)" : "1px solid rgba(0,229,255,0.25)",
                     color: smsSent ? "#10B981" : "#00E5FF",
-                    fontFamily: "Vazirmatn,sans-serif", transition: "all 0.2s",
+                    fontFamily: "var(--font-vazirmatn), sans-serif", transition: "all 0.2s",
                   }}
                   onMouseEnter={(e) => { if (!smsSent) (e.currentTarget as HTMLButtonElement).style.background = "rgba(0,229,255,0.06)"; }}
                   onMouseLeave={(e) => { if (!smsSent) (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}>
@@ -313,7 +313,7 @@ export default function App() {
                     width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
                     padding: "9px", borderRadius: 9, cursor: "pointer", fontSize: "0.78rem", fontWeight: 600,
                     background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.18)",
-                    color: "rgba(239,68,68,0.6)", fontFamily: "Vazirmatn,sans-serif",
+                    color: "rgba(239,68,68,0.6)", fontFamily: "var(--font-vazirmatn), sans-serif",
                   }}
                     onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "#EF4444"; (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(239,68,68,0.35)"; }}
                     onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "rgba(239,68,68,0.6)"; (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(239,68,68,0.18)"; }}>
@@ -350,7 +350,7 @@ export default function App() {
                       width: "100%", background: "#060B19", color: "#E2E8F0",
                       border: noteFocus ? "1px solid rgba(0,229,255,0.35)" : "1px solid rgba(255,255,255,0.06)",
                       borderRadius: 10, padding: "10px 12px", fontSize: "0.8rem",
-                      fontFamily: "Vazirmatn,sans-serif", lineHeight: 1.75, resize: "none",
+                      fontFamily:"var(--font-vazirmatn), sans-serif", lineHeight: 1.75, resize: "none",
                       outline: "none", caretColor: "#00E5FF",
                       boxShadow: noteFocus ? "0 0 0 3px rgba(0,229,255,0.05)" : "none",
                       transition: "border-color 0.15s, box-shadow 0.15s",
@@ -366,7 +366,7 @@ export default function App() {
                     background: noteText.trim() ? "rgba(0,229,255,0.1)" : "rgba(255,255,255,0.02)",
                     border: noteText.trim() ? "1px solid rgba(0,229,255,0.3)" : "1px solid rgba(255,255,255,0.05)",
                     color: noteText.trim() ? "#00E5FF" : "#1E293B",
-                    fontSize: "0.8rem", fontWeight: 600, fontFamily: "Vazirmatn,sans-serif",
+                    fontSize: "0.8rem", fontWeight: 600, fontFamily: "var(--font-vazirmatn), sans-serif",
                     transition: "all 0.15s",
                   }}>
                   <IconPlus />

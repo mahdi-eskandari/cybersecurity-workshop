@@ -1,23 +1,62 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import crypto from "crypto";
-import CrisisReport from "../../model/crisisReport";
 import { Types } from "mongoose";
+
+import CrisisReport from "../../model/crisisReport";
 import ConfidentialNote from "../../model/ConfidentialNote";
+
+const VALID_INCIDENT_TYPES = [
+  "پایش دارک‌وب و هوش تهدیدات",
+  "تست نفوذِ پسا-بحران",
+  "مقابله و مذاکره با باج‌افزارها",
+  "فارنزیک و کالبدشکافی دیجیتال",
+  "ردیابی رمزارز و تحلیل بلاک‌چین",
+  "هویت‌سنجی پنهان",
+  "مشاوره",
+] as const;
+
+const VALID_STATUSES = [
+  "pending",
+  "reviewing",
+  "consulting",
+  "resolved",
+  "closed",
+] as const;
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const {
-      incidentType,
-      description,
-      contact,
-    } = body;
+    const incidentType =
+      typeof body?.incidentType === "string"
+        ? body.incidentType.trim()
+        : "";
+
+    const description =
+      typeof body?.description === "string"
+        ? body.description.trim()
+        : "";
+
+    const contact =
+      typeof body?.contact === "string"
+        ? body.contact.trim()
+        : "";
 
     if (!incidentType) {
       return NextResponse.json(
         { message: "نوع حادثه را انتخاب کنید" },
+        { status: 400 }
+      );
+    }
+
+    if (
+      !VALID_INCIDENT_TYPES.includes(
+        incidentType as (typeof VALID_INCIDENT_TYPES)[number]
+      )
+    ) {
+      return NextResponse.json(
+        { message: "نوع حادثه انتخاب‌شده معتبر نیست" },
         { status: 400 }
       );
     }
@@ -29,7 +68,7 @@ export async function POST(req: Request) {
       );
     }
 
-    if (description && description.length > 2000) {
+    if (description.length > 2000) {
       return NextResponse.json(
         { message: "شرح مشکل نمی‌تواند بیشتر از ۲۰۰۰ کاراکتر باشد" },
         { status: 400 }
@@ -46,7 +85,7 @@ export async function POST(req: Request) {
     const report = await CrisisReport.create({
       trackingCode,
       incidentType,
-      description: description || "",
+      description,
       contact,
       status: "pending",
     });
@@ -67,14 +106,6 @@ export async function POST(req: Request) {
     );
   }
 }
-
-
-
-
-
-
-
-
 
 export async function GET() {
   try {
@@ -100,25 +131,12 @@ export async function GET() {
   }
 }
 
-
-
-
-
-
-
-
 export async function PATCH(req: Request) {
   try {
     const body = await req.json();
-    const { id, status } = body;
 
-    const allowedStatuses = [
-      "pending",
-      "reviewing",
-      "consulting",
-      "resolved",
-      "closed",
-    ];
+    const id = String(body?.id || "").trim();
+    const status = String(body?.status || "").trim();
 
     if (!id || !status) {
       return NextResponse.json(
@@ -127,7 +145,18 @@ export async function PATCH(req: Request) {
       );
     }
 
-    if (!allowedStatuses.includes(status)) {
+    if (!Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { message: "شناسه پرونده نامعتبر است" },
+        { status: 400 }
+      );
+    }
+
+    if (
+      !VALID_STATUSES.includes(
+        status as (typeof VALID_STATUSES)[number]
+      )
+    ) {
       return NextResponse.json(
         { message: "وضعیت نامعتبر است" },
         { status: 400 }
@@ -139,7 +168,10 @@ export async function PATCH(req: Request) {
     const report = await CrisisReport.findByIdAndUpdate(
       id,
       { status },
-      { new: true }
+      {
+        new: true,
+        runValidators: true,
+      }
     );
 
     if (!report) {
@@ -166,14 +198,6 @@ export async function PATCH(req: Request) {
   }
 }
 
-
-
-
-
-
-
-
-
 export async function DELETE(request: Request) {
   try {
     await connectDB();
@@ -198,7 +222,9 @@ export async function DELETE(request: Request) {
     }
 
     // یادداشت‌های محرمانه مربوط به پرونده هم پاک می‌شوند.
-    await ConfidentialNote.deleteMany({ reportId: id });
+    await ConfidentialNote.deleteMany({
+      reportId: id,
+    });
 
     return NextResponse.json(
       {

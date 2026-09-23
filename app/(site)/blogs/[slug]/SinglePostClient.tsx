@@ -693,7 +693,7 @@ function ErrorScreen({
       style={{
         background: darkMode ? "#0A1128" : "#FFFFFF",
         color: darkMode ? "#E2E8F0" : "#0F172A",
-        fontFamily: "Vazirmatn, sans-serif",
+        fontFamily: "var(--font-vazirmatn), sans-serif",
       }}
     >
       <div
@@ -990,7 +990,7 @@ export default function App({
     className="min-h-full transition-colors duration-300 mt-5"
     style={{
       color: darkMode ? "#E2E8F0" : "#0F172A",
-      fontFamily: "Vazirmatn, sans-serif",
+      fontFamily: "var(--font-vazirmatn), sans-serif",
       backgroundColor: darkMode ? "#0A1128" : "#FFFFFF",
       backgroundImage: darkMode
         ? "linear-gradient(rgba(83, 141, 148, 0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(83, 141, 148, 0.05) 1px,transparent 1px)"
@@ -1580,7 +1580,7 @@ export default function App({
               : "0 10px 30px rgba(30,58,138,0.24), 0 0 30px rgba(29,78,216,0.08)",
 
             fontFamily:
-              "Vazirmatn,sans-serif",
+              "var(--font-vazirmatn), sans-serif",
 
             fontSize: "0.98rem",
           }}

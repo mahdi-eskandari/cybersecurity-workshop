@@ -162,21 +162,13 @@ type Chip = {
 };
 
 const chips: Chip[] = [
-  {
-    id: "crypto",
-    label: "سرقت کریپتو",
-    icon: <IconCrypto />,
-  },
-  {
-    id: "hack",
-    label: "هک و نفوذ",
-    icon: <IconHack />,
-  },
-  {
-    id: "extort",
-    label: "مزاحمت و اخاذی",
-    icon: <IconExtort />,
-  },
+  { id: "darkweb-threat-intelligence", label: "پایش دارک‌وب و هوش تهدیدات", icon: <IconHack /> },
+  { id: "post-crisis-pentest", label: "تست نفوذِ پسا-بحران", icon: <IconHack /> },
+  { id: "ransomware-negotiation", label: "مقابله و مذاکره با باج‌افزارها", icon: <IconExtort /> },
+  { id: "digital-forensics", label: "فارنزیک و کالبدشکافی دیجیتال", icon: <IconHack /> },
+  { id: "crypto-blockchain-tracing", label: "ردیابی رمزارز و تحلیل بلاک‌چین", icon: <IconCrypto /> },
+  { id: "hidden-identity", label: "هویت‌سنجی پنهان", icon: <IconShieldCheck darkMode={false} /> },
+  { id: "consulting", label: "مشاوره", icon: <IconShieldCheck darkMode={false} /> },
 ];
 
 /* ────────────────────────────────
@@ -199,7 +191,7 @@ const HelperText = ({ message }: { message?: string }) => {
         color: "#EF4444",
         fontSize: "0.82rem",
         marginTop: 7,
-        fontFamily: "Vazirmatn, IRANSansX, Tahoma, Arial, sans-serif",
+        fontFamily: "var(--font-vazirmatn), IRANSansX, Tahoma, Arial, sans-serif",
       }}
     >
       {message}
@@ -213,13 +205,18 @@ const HelperText = ({ message }: { message?: string }) => {
 
 const LAST_INCIDENT_TYPE_COOKIE = "parahoor_last_incident_type";
 
-const isValidIncidentType = (value: string) => {
-  return (
-    value === "سرقت کریپتو" ||
-    value === "هک و نفوذ" ||
-    value === "مزاحمت و اخاذی"
-  );
-};
+const VALID_INCIDENT_TYPES = [
+  "پایش دارک‌وب و هوش تهدیدات",
+  "تست نفوذِ پسا-بحران",
+  "مقابله و مذاکره با باج‌افزارها",
+  "فارنزیک و کالبدشکافی دیجیتال",
+  "ردیابی رمزارز و تحلیل بلاک‌چین",
+  "هویت‌سنجی پنهان",
+  "مشاوره",
+] as const;
+
+const isValidIncidentType = (value: string) =>
+  VALID_INCIDENT_TYPES.includes(value as (typeof VALID_INCIDENT_TYPES)[number]);
 
 const getLastIncidentType = () => {
   if (typeof document === "undefined") {
@@ -270,6 +267,58 @@ const saveLastIncidentType = (incidentType: string) => {
   }
 };
 
+/*
+ * کوکی جداگانه و یک‌بارمصرف: فقط وقتی نقطه ورودی خاصی
+ * (مثل باتن «رزرو زمان مشاوره») صراحتاً بخواد یک نوع حادثه
+ * مشخص را فعال کند استفاده می‌شود. اگر این کوکی موجود نباشد،
+ * رفتار قبلی (خواندن از LAST_INCIDENT_TYPE_COOKIE) بدون تغییر
+ * ادامه پیدا می‌کند.
+ */
+const FORCE_INCIDENT_TYPE_COOKIE = "parahoor_force_incident_type";
+
+const getForceIncidentType = () => {
+  if (typeof document === "undefined") {
+    return "";
+  }
+
+  try {
+    const prefix = `${FORCE_INCIDENT_TYPE_COOKIE}=`;
+
+    const cookie = document.cookie
+      .split(";")
+      .map((item) => item.trim())
+      .find((item) => item.startsWith(prefix));
+
+    if (!cookie) {
+      return "";
+    }
+
+    const value = cookie.substring(prefix.length);
+
+    const decodedValue = decodeURIComponent(value);
+
+    if (!isValidIncidentType(decodedValue)) {
+      return "";
+    }
+
+    return decodedValue;
+  } catch {
+    return "";
+  }
+};
+
+const clearForceIncidentType = () => {
+  if (typeof document === "undefined") {
+    return;
+  }
+
+  try {
+    document.cookie = `${FORCE_INCIDENT_TYPE_COOKIE}=; path=/; max-age=0; SameSite=Lax`;
+  } catch {
+    // خطای Cookie نباید مانع باز شدن مدال شود.
+  }
+};
+
 /* ────────────────────────────────
    MODAL
 ──────────────────────────────── */
@@ -314,6 +363,19 @@ export const EmergencyModal = ({
   ───────────────────────────────── */
 
   useEffect(() => {
+    const forcedIncidentType = getForceIncidentType();
+
+    if (forcedIncidentType) {
+      setValue("incidentType", forcedIncidentType, {
+        shouldValidate: false,
+        shouldDirty: false,
+        shouldTouch: false,
+      });
+
+      clearForceIncidentType();
+      return;
+    }
+
     const savedIncidentType = getLastIncidentType();
 
     if (!savedIncidentType) {
@@ -941,7 +1003,7 @@ export const EmergencyModal = ({
                 })}
               />
 
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {chips.map(({ id, label, icon }) => {
                   const isActive = selected === label;
 
@@ -960,7 +1022,7 @@ export const EmergencyModal = ({
                           }
                         )
                       }
-                      className="flex-1 flex items-center justify-center gap-2 px-2 py-3 rounded-xl font-medium text-[11px] transition-all"
+                      className="w-full min-h-[52px] flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl font-medium text-[11px] leading-5 text-center transition-all"
                       style={{
                         background: isActive
                           ? darkMode
@@ -995,18 +1057,22 @@ export const EmergencyModal = ({
                           : "none",
 
                         fontFamily:
-                          "Vazirmatn, IRANSansX, Tahoma, Arial, sans-serif",
+                          "var(--font-vazirmatn), IRANSansX, Tahoma, Arial, sans-serif",
                       }}
                     >
+
+
                       <span
                         style={{
-                          opacity: isActive ? 1 : 0.5,
+                          minWidth: 0,
+                          flex: 1,
+                          textAlign: "center",
+                          whiteSpace: "normal",
+                          overflowWrap: "anywhere",
                         }}
                       >
-                        {icon}
+                        {label}
                       </span>
-
-                      {label}
 
                       {isActive && (
                         <span
@@ -1104,7 +1170,7 @@ export const EmergencyModal = ({
                     color: darkMode ? "#b8bfc8" : "#1E293B",
 
                     fontFamily:
-                      "Vazirmatn, IRANSansX, Tahoma, Arial, sans-serif",
+                      "var(--font-vazirmatn), IRANSansX, Tahoma, Arial, sans-serif",
 
                     lineHeight: 1.8,
 
@@ -1218,7 +1284,7 @@ export const EmergencyModal = ({
                     color: darkMode ? "#E2E8F0" : "#1E293B",
 
                     fontFamily:
-                      "Vazirmatn, IRANSansX, Tahoma, Arial, sans-serif",
+                      "var(--font-vazirmatn), IRANSansX, Tahoma, Arial, sans-serif",
 
                     boxShadow: focusContact
                       ? darkMode
@@ -1357,7 +1423,7 @@ export const EmergencyModal = ({
                 fontSize: "0.98rem",
 
                 fontFamily:
-                  "Vazirmatn, IRANSansX, Tahoma, Arial, sans-serif",
+                  "var(--font-vazirmatn), IRANSansX, Tahoma, Arial, sans-serif",
 
                 cursor: isSubmitting
                   ? "not-allowed"

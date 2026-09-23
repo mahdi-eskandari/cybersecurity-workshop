@@ -345,7 +345,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
     className="min-h-full transition-colors duration-300"
     style={{
       color: darkMode ? "#E2E8F0" : "#0F172A",
-      fontFamily: "Vazirmatn, sans-serif",
+      fontFamily: "var(--font-vazirmatn), sans-serif",
       backgroundColor: darkMode ? "#0A1128" : "#FFFFFF",
       backgroundImage: darkMode
         ? "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"
@@ -599,7 +599,16 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
               <div className="flex-shrink-0">
                 <button
-                     onClick={() => setCrisisOpen(true)}
+                     onClick={() => {
+                       try {
+                         document.cookie = `parahoor_force_incident_type=${encodeURIComponent(
+                           "مشاوره"
+                         )}; path=/; max-age=120; SameSite=Lax`;
+                       } catch {
+                         // خطای Cookie نباید مانع باز شدن مدال شود.
+                       }
+                       setCrisisOpen(true);
+                     }}
                   className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl font-semibold text-sm transition-all"
                   style={{
                     background: "transparent",

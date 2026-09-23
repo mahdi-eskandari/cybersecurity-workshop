@@ -412,6 +412,31 @@ const IconCrypto = ({ color = "#00E5FF" }: { color?: string }) => (
   </svg>
 )
 
+
+const IconDot = ({
+  size = 7,
+  glow = true,
+  color = "#00E5FF",
+  glowColor = "rgba(0,229,255,0.9)",
+}: {
+  size?: number;
+  glow?: boolean;
+  color?: string;
+  glowColor?: string;
+}) => (
+  <span
+    style={{
+      display: "inline-block",
+      width: size,
+      height: size,
+      borderRadius: "50%",
+      background: color,
+      boxShadow: glow ? `0 0 8px ${glowColor}` : "none",
+      flexShrink: 0,
+    }}
+  />
+);
+
 const IconForensics = ({ color = "#00E5FF" }: { color?: string }) => (
   <svg
     width="36"
@@ -1479,6 +1504,8 @@ export default function HomePageClient({
   const [menuOpen, setMenuOpen] = useState(false)
   const [crisisOpen, setCrisisOpen] = useState(false)
   const [caseOpen, setCaseOpen] = useState(false)
+      const blueBright = darkMode ? "#00E5FF" : "#1D4ED8";
+
 
   // SEO-critical data is supplied by the server in the initial HTML.
   const seo = initialData.seo;
@@ -1645,7 +1672,7 @@ export default function HomePageClient({
           : "bg-white text-[#0F172A]"
       }`}
       style={{
-        fontFamily: "'Vazirmatn', sans-serif",
+        fontFamily: "var(--font-vazirmatn), sans-serif",
         backgroundImage: darkMode
           ? "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"
           : "linear-gradient(rgba(30,58,138,0.045) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,138,0.045) 1px,transparent 1px)",
@@ -1722,33 +1749,35 @@ export default function HomePageClient({
 
         <div className="relative z-10 w-[90%] max-w-4xl mx-auto">
           <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 text-xs"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 text-xs font-semibold"
             style={{
               background: darkMode
                 ? "rgba(0,229,255,0.07)"
                 : "rgba(30,58,138,0.07)",
               border: darkMode
-                ? "1px solid rgba(0,229,255,0.2)"
+                ? "1px solid rgba(0,229,255,0.18)"
                 : "1px solid rgba(30,58,138,0.20)",
-              color: darkMode ? "#00E5FF" : "#1D4ED8",
+              color: blueBright,
             }}
           >
-            <span
-              className="node-dot pulse-dot"
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
-                background: darkMode ? "#00E5FF" : "#1D4ED8",
-                display: "inline-block",
-                boxShadow: darkMode
-                  ? undefined
-                  : "0 0 7px rgba(30,58,138,0.22)",
-              }}
+            <IconDot
+              size={6}
+              color={blueBright}
+              glow={true}
+              glowColor={
+                darkMode
+                  ? "rgba(0,229,255,0.9)"
+                  : "rgba(30,58,138,0.45)"
+              }
             />
 
-            <span className="data-label">
-              سیستم آنلاین // PARAHOOR ACTIVE
+            <span
+              style={{
+                fontFamily: "monospace",
+                letterSpacing: "0.15em",
+              }}
+            >
+              PARAHOOR // SYSTEM ONLINE
             </span>
           </div>
 
@@ -1917,9 +1946,39 @@ export default function HomePageClient({
       >
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <span className="data-label block mb-3">
+
+             <div
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 text-xs font-semibold"
+            style={{
+              background: darkMode
+                ? "rgba(0,229,255,0.07)"
+                : "rgba(30,58,138,0.07)",
+              border: darkMode
+                ? "1px solid rgba(0,229,255,0.18)"
+                : "1px solid rgba(30,58,138,0.20)",
+              color: blueBright,
+            }}
+          >
+            <IconDot
+              size={6}
+              color={blueBright}
+              glow={true}
+              glowColor={
+                darkMode
+                  ? "rgba(0,229,255,0.9)"
+                  : "rgba(30,58,138,0.45)"
+              }
+            />
+
+            <span
+              style={{
+                fontFamily: "monospace",
+                letterSpacing: "0.15em",
+              }}
+            >
               INVESTIGATION PIPELINE
             </span>
+          </div>
 
             <h2
               className="font-bold"
@@ -2098,9 +2157,39 @@ export default function HomePageClient({
       >
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <span className="data-label block mb-3">
+
+            <div
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 text-xs font-semibold"
+            style={{
+              background: darkMode
+                ? "rgba(0,229,255,0.07)"
+                : "rgba(30,58,138,0.07)",
+              border: darkMode
+                ? "1px solid rgba(0,229,255,0.18)"
+                : "1px solid rgba(30,58,138,0.20)",
+              color: blueBright,
+            }}
+          >
+            <IconDot
+              size={6}
+              color={blueBright}
+              glow={true}
+              glowColor={
+                darkMode
+                  ? "rgba(0,229,255,0.9)"
+                  : "rgba(30,58,138,0.45)"
+              }
+            />
+
+            <span
+              style={{
+                fontFamily: "monospace",
+                letterSpacing: "0.15em",
+              }}
+            >
               SPECIALIZATION DOMAINS
             </span>
+          </div>
 
             <h2
               className="font-bold"

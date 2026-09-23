@@ -208,7 +208,7 @@ const EmergencyModal = ({ onClose }: { onClose: () => void }) => {
                     background: "#060B19",
                     border: "1px solid rgba(0,229,255,0.1)",
                     color: "#E2E8F0",
-                    fontFamily: "Vazirmatn,sans-serif"
+                    fontFamily: "var(--font-vazirmatn), sans-serif"
                   }}
                   onFocus={(e) => (e.target.style.borderColor = "rgba(0,229,255,0.35)")}
                   onBlur={(e) => (e.target.style.borderColor = "rgba(0,229,255,0.1)")}
@@ -224,7 +224,7 @@ const EmergencyModal = ({ onClose }: { onClose: () => void }) => {
                     background: "#060B19",
                     border: "1px solid rgba(0,229,255,0.1)",
                     color: "#E2E8F0",
-                    fontFamily: "Vazirmatn,sans-serif"
+                    fontFamily: "var(--font-vazirmatn), sans-serif"
                   }}
                   onFocus={(e) => (e.target.style.borderColor = "rgba(0,229,255,0.35)")}
                   onBlur={(e) => (e.target.style.borderColor = "rgba(0,229,255,0.1)")}
@@ -239,7 +239,7 @@ const EmergencyModal = ({ onClose }: { onClose: () => void }) => {
                   color: "#fff",
                   border: "1px solid rgba(239,68,68,0.5)",
                   boxShadow: "0 0 20px rgba(239,68,68,0.25)",
-                  fontFamily: "Vazirmatn,sans-serif"
+                  fontFamily: "var(--font-vazirmatn), sans-serif"
                 }}
               >
                 ثبت امن گزارش و درخواست تماس
@@ -500,7 +500,7 @@ export default function PrivacyPageClient({
         style={{
           background: "#0A1128",
           color: "#E2E8F0",
-          fontFamily: "Vazirmatn, sans-serif",
+          fontFamily: "var(--font-vazirmatn), sans-serif",
           backgroundImage:
             "linear-gradient(rgba(0,229,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.025) 1px,transparent 1px)",
           backgroundSize: "52px 52px"
@@ -760,7 +760,7 @@ export default function PrivacyPageClient({
                               ? "#00E5FF"
                               : "#475569",
                             fontFamily:
-                              "Vazirmatn,sans-serif"
+                              "var(--font-vazirmatn), sans-serif"
                           }}
                           onMouseEnter={(e) => {
                             if (!isActive) {
@@ -1520,7 +1520,7 @@ export default function PrivacyPageClient({
     color: "#00E5FF",
     boxShadow:
       "0 0 16px rgba(0,229,255,0.06), inset 0 0 16px rgba(0,229,255,0.03)",
-    fontFamily: "Vazirmatn,sans-serif"
+    fontFamily: "var(--font-vazirmatn), sans-serif"
   }}
   onMouseEnter={(e) => {
     (e.currentTarget as HTMLElement).style.background =

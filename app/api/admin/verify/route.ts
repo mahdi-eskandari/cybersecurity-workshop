@@ -47,16 +47,19 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("LOGIN USERNAME:", normalizedUsername);
-    console.log("LOGIN EMAIL:", normalizedEmail);
-    console.log("USER FOUND:", !!user);
-    console.log("USER ROLE:", user?.role);
-    console.log("PASSWORD EXISTS:", !!user?.password);
 
-    const isPasswordValid = await bcrypt.compare(
-      password,
-      user.password
-    );
+console.log("PASSWORD LENGTH:", password.length);
+console.log("PASSWORD JSON:", JSON.stringify(password));
+
+console.log("HASH:", user.password);
+console.log("HASH LENGTH:", user.password.length);
+
+const isPasswordValid = await bcrypt.compare(
+  password,
+  user.password
+);
+
+console.log("PASSWORD VALID:", isPasswordValid);
 
     console.log("PASSWORD VALID:", isPasswordValid);
 
