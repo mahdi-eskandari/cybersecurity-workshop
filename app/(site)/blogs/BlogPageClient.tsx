@@ -507,7 +507,7 @@ useEffect(() => {
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setSearchQuery(searchInput);
-      setCurrentPage(1);
+      updatePage(1);
     }, 300);
 
     return () => window.clearTimeout(timer);
@@ -610,36 +610,47 @@ useEffect(() => {
 
   const page = Math.min(currentPage, totalPages);
 
+  const updatePage = (nextPage: number) => {
+    const normalizedPage = Math.max(1, Math.min(nextPage, totalPages));
+
+    setCurrentPage(normalizedPage);
+
+    if (typeof window !== "undefined") {
+      const nextUrl = getBlogsPageUrl(normalizedPage, pathname);
+      const currentUrl = `${window.location.pathname}${window.location.search}`;
+
+      if (currentUrl !== nextUrl) {
+        window.History.prototype.replaceState.call(
+          window.history,
+          null,
+          "",
+          nextUrl
+        );
+      }
+    }
+  };
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const params = new URLSearchParams(window.location.search);
-    const requestedPage = Number(params.get("page") || "1");
-    const normalizedPage = Number.isFinite(requestedPage)
-      ? Math.max(1, Math.min(Math.floor(requestedPage), totalPages))
-      : 1;
+    const syncPageFromUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      const requestedPage = Number(params.get("page") || "1");
+      const normalizedPage = Number.isFinite(requestedPage)
+        ? Math.max(1, Math.min(Math.floor(requestedPage), totalPages))
+        : 1;
 
-    if (normalizedPage !== currentPage) {
-      setCurrentPage(normalizedPage);
-    }
-  }, [totalPages, currentPage]);
+      setCurrentPage((prev) =>
+        prev === normalizedPage ? prev : normalizedPage
+      );
+    };
 
-useEffect(() => {
-  if (typeof window === "undefined") return;
+    window.addEventListener("popstate", syncPageFromUrl);
 
-  const nextUrl = getBlogsPageUrl(page, pathname);
-  const currentUrl = `${window.location.pathname}${window.location.search}`;
-
-  if (currentUrl !== nextUrl) {
-    window.history.replaceState(null, "", nextUrl);
-  }
-}, [page, pathname]);
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
+    return () => {
+      window.removeEventListener("popstate", syncPageFromUrl);
+    };
+  }, [totalPages]);
 
   const pageArticles = useMemo(() => {
     const start = (page - 1) * PER_PAGE;
@@ -648,7 +659,7 @@ useEffect(() => {
 
   const handleCategoryChange = (cat: string) => {
     setActiveCategory(cat);
-    setCurrentPage(1);
+    updatePage(1);
   };
 
   const articleCount = (cat: string) =>
@@ -798,7 +809,7 @@ useEffect(() => {
                   onClick={() => {
                     setSearchInput("");
                     setSearchQuery("");
-                    setCurrentPage(1);
+                    updatePage(1);
                   }}
                   className={`mt-3 text-xs hover:underline ${
                     darkMode
@@ -1363,9 +1374,7 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
               <button
                 type="button"
                 onClick={() =>
-                  setCurrentPage((prev) =>
-                    Math.max(prev - 1, 1)
-                  )
+                  updatePage(Math.max(page - 1, 1))
                 }
                 disabled={page === 1}
                 className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-all ${
@@ -1390,7 +1399,7 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
                       key={pageNumber}
                       type="button"
                       onClick={() =>
-                        setCurrentPage(pageNumber)
+                        updatePage(pageNumber)
                       }
                       className={`w-10 h-10 rounded-lg border flex items-center justify-center text-sm font-medium transition-all ${
                         page === pageNumber
@@ -1413,9 +1422,7 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
               <button
                 type="button"
                 onClick={() =>
-                  setCurrentPage((prev) =>
-                    Math.min(prev + 1, totalPages)
-                  )
+                  updatePage(Math.min(page + 1, totalPages))
                 }
                 disabled={page === totalPages}
                 className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-all ${

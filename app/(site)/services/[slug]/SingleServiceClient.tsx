@@ -965,10 +965,7 @@ export default function App({
                 style={{ 
                   fontSize: "clamp(1.75rem, 3.8vw, 2.55rem)", 
                   color: darkMode ? "#00E5FF" : "#1E3A8A", 
- 
-                  // یک فونت ثابت و تمیز در هر دو مود 
-                  fontFamily: 
-                    "Inter, Vazirmatn, IRANSansX, Arial, sans-serif", 
+                   
  
                   fontWeight: 800, 
  
@@ -1049,7 +1046,62 @@ export default function App({
   transition={{ duration: 0.7 }}
   viewport={{ once: true, amount: 0.2 }}
 >
-        <div className="max-w-2xl mx-auto"> 
+        <div
+  className={`max-w-2xl mx-auto`}
+  style={{
+        background: darkMode
+          ? "linear-gradient(135deg, #010f27 0%, #010f27 48%, #010f27 100%)"
+          : "linear-gradient(135deg, #FFFFFF 0%, #F8FAFF 48%, #EEF4FF 100%)",
+
+
+
+        boxShadow: darkMode
+          ? "0 18px 60px rgba(0, 229, 255, 0), 0 0 70px rgba(0,229,255,0.05)"
+          : "0 18px 50px rgba(30,58,138,0.10)",
+
+        transition:
+          "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
+      }}
+
+      onMouseEnter={(e) => {
+        if (!darkMode) {
+          e.currentTarget.style.borderColor = "#1D4ED8";
+          e.currentTarget.style.background =
+            "linear-gradient(135deg, #FFFFFF 0%, rgba(30,58,138,0.035) 50%, rgba(29,78,216,0.06) 100%)";
+          e.currentTarget.style.boxShadow =
+            "0 18px 50px rgba(30,58,138,0.16), 0 0 45px rgba(29,78,216,0.08)";
+
+        } else {
+          e.currentTarget.style.borderColor =
+            "rgba(0, 229, 255, 0.55)";
+          e.currentTarget.style.background =
+            "linear-gradient(135deg, #010f27 0%, #010f27 48%, #010f27 100%)";
+          e.currentTarget.style.boxShadow =
+            "0 20px 65px rgba(0,229,255,0.12), 0 0 70px rgba(0,229,255,0.07)";
+
+        }
+      }}
+
+      onMouseLeave={(e) => {
+        if (!darkMode) {
+          e.currentTarget.style.borderColor =
+            "rgba(30,58,138,0.22)";
+          e.currentTarget.style.background =
+            "linear-gradient(135deg, #FFFFFF 0%, #F8FAFF 48%, #EEF4FF 100%)";
+          e.currentTarget.style.boxShadow =
+            "0 18px 50px rgba(30,58,138,0.10)";
+          e.currentTarget.style.transform = "none";
+        } else {
+          e.currentTarget.style.borderColor =
+            "rgba(0,229,255,0.30)";
+          e.currentTarget.style.background =
+            "linear-gradient(135deg, #010f27 0%, #010f27 48%, #010f27 100%)";
+          e.currentTarget.style.boxShadow =
+            "0 18px 60px rgba(0,229,255,0.08), 0 0 70px rgba(0,229,255,0.05)";
+          e.currentTarget.style.transform = "none";
+        }
+      }}
+>
           <div 
             className="relative p-8 md:p-12 rounded-2xl text-center overflow-hidden" 
             style={{ 

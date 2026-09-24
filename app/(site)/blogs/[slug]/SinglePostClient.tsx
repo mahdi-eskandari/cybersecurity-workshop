@@ -59,6 +59,22 @@ type MediaItem = {
   url: string;
 };
 
+
+const TelegramIcon = ({ size = 16 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M20.665 3.717 2.935 10.708c-1.21.503-1.203 1.201-.222 1.502l4.552 1.419 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l.002.001-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15 4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.427Z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
 /* ─────────────────────────────────────────────────────────────
    CONSTANTS
 ───────────────────────────────────────────────────────────── */
@@ -233,25 +249,21 @@ function getCategoryBadgeStyle(
         border: "1px solid rgba(84,184,255,0.25)",
         color: "#54B8FF",
       },
-
       "اخبار حقوقی": {
         background: "rgba(158,175,255,0.08)",
         border: "1px solid rgba(158,175,255,0.24)",
         color: "#9EAFFF",
       },
-
       "پرونده‌های حل‌شده": {
         background: "rgba(34,197,94,0.08)",
         border: "1px solid rgba(34,197,94,0.24)",
         color: "#7BE495",
       },
-
       "هشدارهای امنیتی": {
         background: "rgba(248,200,90,0.08)",
         border: "1px solid rgba(248,200,90,0.24)",
         color: "#F8C85A",
       },
-
       "آموزش امنیت و تهدیدات سایبری": {
         background: "rgba(125,211,252,0.08)",
         border: "1px solid rgba(125,211,252,0.24)",
@@ -268,11 +280,42 @@ function getCategoryBadgeStyle(
     );
   }
 
-  return {
-    background: "rgba(30,58,138,0.06)",
-    border: "1px solid rgba(30,58,138,0.20)",
-    color: "#1E3A8A",
+  // ← این بخش قبلاً خالی از منطق رنگی بود، حالا برای هر دسته رنگ جدا داره
+  const lightStyles: Record<string, React.CSSProperties> = {
+    "گزارش‌های جرم‌شناسی": {
+      background: "rgba(29,78,216,0.06)",
+      border: "1px solid rgba(29,78,216,0.18)",
+      color: "#1D4ED8",
+    },
+    "اخبار حقوقی": {
+      background: "rgba(99,102,241,0.06)",
+      border: "1px solid rgba(99,102,241,0.18)",
+      color: "#4F46E5",
+    },
+    "پرونده‌های حل‌شده": {
+      background: "rgba(16,185,129,0.08)",
+      border: "1px solid rgba(16,185,129,0.20)",
+      color: "#047857",
+    },
+    "هشدارهای امنیتی": {
+      background: "rgba(245,158,11,0.08)",
+      border: "1px solid rgba(245,158,11,0.20)",
+      color: "#B45309",
+    },
+    "آموزش امنیت و تهدیدات سایبری": {
+      background: "rgba(2,132,199,0.08)",
+      border: "1px solid rgba(2,132,199,0.18)",
+      color: "#0369A1",
+    },
   };
+
+  return (
+    lightStyles[category] || {
+      background: "rgba(30,58,138,0.06)",
+      border: "1px solid rgba(30,58,138,0.20)",
+      color: "#1E3A8A",
+    }
+  );
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -956,21 +999,21 @@ export default function App({
     );
   };
 
-  const handleTwitterShare = () => {
-    const url = encodeURIComponent(
-      window.location.href
-    );
+//   const handleTwitterShare = () => {
+//     const url = encodeURIComponent(
+//       window.location.href
+//     );
 
-    const text = encodeURIComponent(
-      post?.title || ""
-    );
+//     const text = encodeURIComponent(
+//       post?.title || ""
+//     );
 
-    window.open(
-      `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
-      "_blank",
-      "noopener,noreferrer"
-    );
-  };
+// window.open(
+//   `https://x.com/intent/post?url=${url}&text=${text}`,
+//   "_blank",
+//   "noopener,noreferrer"
+// );
+//   };
 
   if (error) {
     return (
@@ -986,19 +1029,22 @@ export default function App({
   }
 
   return (
-<div
-    className="min-h-full transition-colors duration-300 mt-5"
-    style={{
-      color: darkMode ? "#E2E8F0" : "#0F172A",
-      fontFamily: "var(--font-vazirmatn), sans-serif",
-      backgroundColor: darkMode ? "#0A1128" : "#FFFFFF",
-      backgroundImage: darkMode
-        ? "linear-gradient(rgba(83, 141, 148, 0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(83, 141, 148, 0.05) 1px,transparent 1px)"
-        : "linear-gradient(rgba(30, 59, 138, 0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(30, 59, 138, 0.02) 1px,transparent 1px)",
-      backgroundSize: "52px 52px",
-      backgroundAttachment: "fixed",
-    }}
-  >
+    <div
+      dir="rtl"
+      className={`min-h-screen transition-colors duration-300 pt-5 ${
+        darkMode
+          ? "bg-[#0A1128] text-[#E6F7FF]"
+          : "bg-white text-[#0F172A]"
+      }`}
+      style={{
+        fontFamily: "var(--font-vazirmatn), sans-serif",
+        backgroundImage: darkMode
+          ? "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"
+          : "linear-gradient(rgba(30,58,138,0.045) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,138,0.045) 1px,transparent 1px)",
+        backgroundSize: "52px 52px",
+      backgroundAttachment: "fixed"
+      }}
+    >
       {/* ───────────────── ARTICLE HEADER ───────────────── */}
 
       <header className="px-6 pt-14 pb-10 md:px-12 md:pt-20">
@@ -1071,20 +1117,6 @@ export default function App({
               darkMode
             )}
           >
-            <span
-              style={{
-                width: 5,
-                height: 5,
-                borderRadius: "50%",
-                background: darkMode
-                  ? "#00E5FF"
-                  : "#1E3A8A",
-                display: "inline-block",
-                boxShadow: darkMode
-                  ? "0 0 5px rgba(0,229,255,0.9)"
-                  : "none",
-              }}
-            />
 
             {category}
           </div>
@@ -1147,8 +1179,8 @@ export default function App({
               >
                 <IconUser />
                 <span>
-                  {/* {post.author} */}
-تیم تخصصی پاراهور
+                  {post.author}
+{/* تیم تخصصی پاراهور */}
                 </span>
               </div>
             )}
@@ -1209,7 +1241,7 @@ export default function App({
                       ? "#EF4444"
                       : "#22C55E",
                   fontSize: "0.68rem",
-                  fontFamily: "monospace",
+                  // fontFamily: "monospace",
                   letterSpacing: "0.1em",
                 }}
               >
@@ -1493,35 +1525,7 @@ export default function App({
 
       <div className="relative z-10">
 
-        {/* Warning Badge */}
-        <div
-          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg mb-5 text-xs font-semibold"
-          style={{
-            background: darkMode
-              ? "rgba(239,68,68,0.10)"
-              : "rgba(239,68,68,0.07)",
-
-            border: darkMode
-              ? "1px solid rgba(239,68,68,0.28)"
-              : "1px solid rgba(239,68,68,0.22)",
-
-            color: "#EF4444",
-          }}
-        >
-          <span
-            style={{
-              width: 5,
-              height: 5,
-              borderRadius: "50%",
-              background: "#EF4444",
-              display: "inline-block",
-              boxShadow:
-                "0 0 5px rgba(239,68,68,0.9)",
-            }}
-          />
-
-          توجه فوری
-        </div>
+       
 
         {/* Title */}
         <h3
@@ -1656,62 +1660,38 @@ export default function App({
                 type="button"
                 onClick={handleTelegramShare}
                 title="تلگرام"
-                className="flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-300 hover:-translate-y-0.5 hover:scale-110"
-                style={{
-                  background: darkMode
-                    ? "rgba(255,255,255,0.04)"
-                    : "rgba(30,58,138,0.05)",
-                  border: darkMode
-                    ? "1px solid rgba(255,255,255,0.07)"
-                    : "1px solid rgba(30,58,138,0.12)",
-                  color: darkMode
-                    ? "#475569"
-                    : "#64748B",
-                }}
+                  className={`flex items-center justify-center w-[38px] h-[38px] rounded-[10px] transition-all duration-[180ms] ${
+        darkMode
+          ? "bg-white/[0.04] border border-white/[0.08] text-[#475569] hover:bg-[rgba(0,229,255,0.1)] hover:border-[rgba(0,229,255,0.4)] hover:text-[#00E5FF] hover:shadow-[0_0_14px_rgba(0,229,255,0.18)]"
+          : "bg-[rgba(30,58,138,0.03)] border border-[rgba(30,58,138,0.12)] text-[#64748B] hover:bg-[rgba(29,78,216,0.08)] hover:border-[rgba(29,78,216,0.35)] hover:text-[#1D4ED8] hover:shadow-[0_0_14px_rgba(29,78,216,0.12)]"
+      }`}
+
               >
-                <IconTelegram />
+                <TelegramIcon size={16}/>
               </button>
 
-              <button
+              {/* <button
                 type="button"
                 onClick={handleTwitterShare}
                 title="توییتر"
-                className="flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-300 hover:-translate-y-0.5 hover:scale-110"
-                style={{
-                  background: darkMode
-                    ? "rgba(255,255,255,0.04)"
-                    : "rgba(30,58,138,0.05)",
-                  border: darkMode
-                    ? "1px solid rgba(255,255,255,0.07)"
-                    : "1px solid rgba(30,58,138,0.12)",
-                  color: darkMode
-                    ? "#475569"
-                    : "#64748B",
-                }}
+ className={`flex items-center justify-center w-[38px] h-[38px] rounded-[10px] transition-all duration-[180ms] ${
+        darkMode
+          ? "bg-white/[0.04] border border-white/[0.08] text-[#475569] hover:bg-[rgba(0,229,255,0.1)] hover:border-[rgba(0,229,255,0.4)] hover:text-[#00E5FF] hover:shadow-[0_0_14px_rgba(0,229,255,0.18)]"
+          : "bg-[rgba(30,58,138,0.03)] border border-[rgba(30,58,138,0.12)] text-[#64748B] hover:bg-[rgba(29,78,216,0.08)] hover:border-[rgba(29,78,216,0.35)] hover:text-[#1D4ED8] hover:shadow-[0_0_14px_rgba(29,78,216,0.12)]"
+      }`}
               >
                 <IconShare />
-              </button>
+              </button> */}
 
               <button
                 type="button"
                 onClick={handleCopy}
                 title="کپی لینک"
-                className="flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-300 hover:-translate-y-0.5 hover:scale-110"
-                style={{
-                  background: darkMode
-                    ? "rgba(255,255,255,0.04)"
-                    : "rgba(30,58,138,0.05)",
-                  border: darkMode
-                    ? "1px solid rgba(255,255,255,0.07)"
-                    : "1px solid rgba(30,58,138,0.12)",
-                  color: copied
-                    ? darkMode
-                      ? "#00E5FF"
-                      : "#1E3A8A"
-                    : darkMode
-                    ? "#475569"
-                    : "#64748B",
-                }}
+ className={`flex items-center justify-center w-[38px] h-[38px] rounded-[10px] transition-all duration-[180ms] ${
+        darkMode
+          ? "bg-white/[0.04] border border-white/[0.08] text-[#475569] hover:bg-[rgba(0,229,255,0.1)] hover:border-[rgba(0,229,255,0.4)] hover:text-[#00E5FF] hover:shadow-[0_0_14px_rgba(0,229,255,0.18)]"
+          : "bg-[rgba(30,58,138,0.03)] border border-[rgba(30,58,138,0.12)] text-[#64748B] hover:bg-[rgba(29,78,216,0.08)] hover:border-[rgba(29,78,216,0.35)] hover:text-[#1D4ED8] hover:shadow-[0_0_14px_rgba(29,78,216,0.12)]"
+      }`}
               >
                 {copied ? (
                   <svg
@@ -1778,214 +1758,152 @@ export default function App({
                 </h3>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                {relatedPosts.map((related) => {
-                  const relatedImage = getMediaUrl(
-                    related.featuredImage,
-                    mediaItems
-                  );
 
-                  const relatedCategory =
-                    getCategoryLabel(
-                      related.categoryId
-                    );
 
-                  return (
-<article
-  key={related._id}
-  className={`group w-[92%] sm:w-[94%] md:w-full mx-auto flex flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
-    darkMode
-      ? "bg-cyan-900/10 border border-cyan-500/30 hover:border-cyan-500 hover:bg-cyan-800/15 hover:shadow-[0_10px_30px_rgba(0,229,255,0.06)]"
-      : "bg-white border border-[rgba(29,78,216,0.20)] hover:border-[rgba(29,78,216,0.52)] hover:bg-[rgba(30,58,138,0.04)] hover:shadow-[0_12px_30px_rgba(30,58,138,0.12)]"
-  }`}
-  style={
-  darkMode
-    ? undefined
-    : {
-        border: "1px solid rgba(30,58,138,0.20)",
-        background: "#F8FAFF",
-        transition:
-          "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
-      }
-}
 
-onMouseEnter={(e) => {
-  if (!darkMode) {
-    e.currentTarget.style.borderColor = "#1D4ED8"
-    e.currentTarget.style.background =
-      "#F3F6FF"
-    e.currentTarget.style.boxShadow =
-      "0 16px 40px rgba(30,58,138,0.16)"
-    e.currentTarget.style.transform =
-      "translateY(-3px)"
-  }
-}}
-onMouseLeave={(e) => {
-  if (!darkMode) {
-    e.currentTarget.style.borderColor =
-      "rgba(30,58,138,0.20)"
-    e.currentTarget.style.background =
-      "#F8FAFF"
-    e.currentTarget.style.boxShadow = "none"
-    e.currentTarget.style.transform = "none"
-  }
-}}
->
-  {/* Thumbnail */}
 
-  <div
-    className={`aspect-video overflow-hidden flex-shrink-0 ${
-      darkMode
-        ? "bg-[#0D1B29]"
-        : "bg-[#EEF4FA]"
-    }`}
-  >
-    {relatedImage ? (
-      <img
-        src={relatedImage}
-        alt={
-          related.featuredImageAlt?.trim() ||
-          related.title
-        }
-        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-style={{
-  borderBottom: darkMode ? "none" : "1px solid #43628123",
-}}
-        loading="lazy"
-      />
-    ) : (
-      <div className="w-full h-full border-b-2 border-indigo-100"
-style={{
-  borderBottom: darkMode ? "none" : "1px solid #43628123",
-}}
->
-        <HeroImageFallback darkMode={darkMode} />
-      </div>
-    )}
-  </div>
 
-  {/* Content */}
 
-  <div className="flex flex-col p-5">
 
-    {/* Category */}
 
-    <div className="flex items-center gap-2.5 mb-3">
-      <span
-        className="text-[11px] font-bold px-2.5 py-1 rounded-full"
-        style={{
-          background: darkMode
-            ? "rgba(0,229,255,0.10)"
-            : "rgba(30,58,138,0.07)",
-          color: darkMode
-            ? "#67E8F9"
-            : "#1E3A8A",
-          border: darkMode
-            ? "1px solid rgba(0,229,255,0.30)"
-            : "1px solid rgba(30,58,138,0.18)",
-        }}
+
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+  {relatedPosts.map((related) => {
+    const relatedImage = getMediaUrl(related.featuredImage, mediaItems);
+    const relatedCategory = getCategoryLabel(related.categoryId);
+    const relatedExcerpt =
+      related.content
+        ?.replace(/<[^>]*>/g, "")
+        .replace(/\s+/g, " ")
+        .trim() || "";
+
+    return (
+      <article
+        key={related._id}
+        className={`group flex h-full min-w-0 flex-col border rounded-2xl overflow-hidden transition-all duration-200 ${
+          darkMode
+            ? "bg-cyan-900/15 border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/20 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
+            : "bg-white border-[rgba(29,78,216,0.20)] hover:border-[rgba(29,78,216,0.52)] hover:bg-[rgba(237,242,255,0.52)] hover:shadow-[0_16px_40px_rgba(30,58,138,0.34)]"
+        }`}
       >
-        {relatedCategory}
-      </span>
-    </div>
-
-    {/* Title */}
-
-    <h3
-      className="text-base font-bold leading-6 mb-2 line-clamp-2 min-h-[48px]"
-      style={{
-        color: darkMode
-          ? "#E6F7FF"
-          : "#0F172A",
-      }}
-    >
-      {related.title}
-    </h3>
-
-    {/* Short Description */}
-
-    <p
-      className="text-sm leading-6 line-clamp-1 h-6 mb-4"
-      style={{
-        color: darkMode
-          ? "#9DB0C0"
-          : "#64748B",
-      }}
-    >
-      {related.content
-        ?.replace(/<[^>]*>/g, "")
-        .replace(/\s+/g, " ")
-        .trim()
-        .slice(0, 50)}
-      {related.content
-        ?.replace(/<[^>]*>/g, "")
-        .replace(/\s+/g, " ")
-        .trim().length > 50
-        ? "..."
-        : ""}
-    </p>
-
-    {/* Footer */}
-
-    <div
-      className="pt-4 border-t flex items-center justify-between gap-3"
-      style={{
-        borderColor: darkMode
-          ? "#1E334A"
-          : "#E2E8F0",
-      }}
-    >
-      {/* Author */}
-
-      <div className="flex items-center gap-2.5 min-w-0">
+        {/* Thumbnail */}
         <div
-          className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0"
-          style={{
-            background: darkMode
-              ? "rgba(0,229,255,0.20)"
-              : "rgba(30,58,138,0.08)",
-            color: darkMode
-              ? "#67E8F9"
-              : "#1E3A8A",
-          }}
+          className={`relative aspect-video overflow-hidden flex-shrink-0 ${
+            darkMode ? "bg-[#0D1B29]" : "bg-[#F1F5F9]"
+          }`}
         >
-          پ
+          {relatedImage ? (
+            <img
+              src={relatedImage}
+              alt={related.featuredImageAlt?.trim() || related.title}
+              className="block w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              loading="lazy"
+            />
+          ) : (
+            <div
+              className="w-full h-full group-hover:scale-105 transition-transform duration-500"
+              style={{
+                borderBottom: darkMode ? "none" : "1px solid #43628123",
+              }}
+            >
+              <HeroImageFallback darkMode={darkMode} />
+            </div>
+          )}
+
+          {/* سایه‌ی پایین عکس تا از بدنه‌ی کارت جدا بشه */}
+          <div
+            aria-hidden="true"
+            className={`pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t to-transparent ${
+              darkMode ? "from-[#050C1E]/70" : "from-[#0F172A]/15"
+            }`}
+          />
+
+          {/* دسته‌بندی روی گوشه‌ی عکس */}
+
+<span
+  className="absolute top-3 right-3 z-10 max-w-[calc(100%-1.5rem)] truncate text-[11px] font-bold px-2.5 py-1 rounded-full ring-1 ring-inset shadow-sm backdrop-blur-sm"
+  style={getCategoryBadgeStyle(relatedCategory, darkMode)}
+>
+  {relatedCategory}
+</span>
         </div>
 
-        <div className="min-w-0">
-          <p
-            className="text-xs font-semibold truncate pb-1"
-            style={{
-              color: darkMode
-                ? "#9DB0C0"
-                : "#475569",
-            }}
+        {/* Content */}
+        <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-5 lg:p-6">
+          {/* Title */}
+          <h3
+            className={`text-base font-bold leading-snug mb-3 break-words line-clamp-2 ${
+              darkMode
+                ? "text-[#E6F7FF]"
+                : "text-[#111827] group-hover:text-[#1E3A8A] transition-colors duration-300"
+            }`}
           >
-            تیم تخصصی پاراهور
+            {related.title}
+          </h3>
+
+          {/* Excerpt */}
+          <p
+            className={`text-sm leading-relaxed line-clamp-3 break-words mb-5 flex-1 ${
+              darkMode ? "text-[#9DB0C0]" : "text-[#334155]"
+            }`}
+          >
+            {relatedExcerpt.length > 70
+              ? relatedExcerpt.slice(0, 70).trim() + "..."
+              : relatedExcerpt}
           </p>
-        </div>
-      </div>
 
-      {/* Read More */}
-
-      <Link
-        href={`/blogs/${related.slug || related._id}`}
-        className="flex items-center gap-1 text-xs font-semibold hover:gap-1.5 transition-all flex-shrink-0"
-        style={{
-          color: darkMode
-            ? "#00E5FF"
-            : "#1E3A8A",
-        }}
-      >
-        ادامه مطلب
-        <ChevronLeft className="w-3 h-3" />
-      </Link>
-    </div>
-  </div>
-</article>
-                  );
-                })}
+          {/* Footer */}
+          <div
+            className={`mt-auto pt-4 border-t flex flex-wrap items-center justify-between gap-x-3 gap-y-3 ${
+              darkMode ? "border-[#1E334A]" : "border-[#E2E8F0]"
+            }`}
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div
+                className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 ${
+                  darkMode
+                    ? "bg-cyan-400/10 text-cyan-300"
+                    : "bg-blue-100 text-[#1565C0]"
+                }`}
+              >
+                پ
               </div>
+
+              <div className="min-w-0">
+                <p
+                  className={`text-xs font-semibold truncate pb-1 ${
+                    darkMode ? "text-[#9DB0C0]" : "text-[#475569]"
+                  }`}
+                >
+                  تیم تخصصی پاراهور
+                </p>
+              </div>
+            </div>
+
+            <Link
+              href={`/blogs/${related.slug || related._id}`}
+              className={`flex items-center gap-1 text-xs font-semibold whitespace-nowrap hover:gap-1.5 transition-all flex-shrink-0 ${
+                darkMode ? "text-[#00E5FF]" : "text-[#1E3A8A]"
+              }`}
+            >
+              ادامه مطلب
+              <ChevronLeft className="w-3 h-3" />
+            </Link>
+          </div>
+        </div>
+      </article>
+    );
+  })}
+</div>
+
+
+
+
+
+
+
+
+              
             </div>
           )}
         </div>

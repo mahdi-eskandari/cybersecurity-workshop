@@ -711,7 +711,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                         ? `${col}09`
                         : `${col}08`,
                       border: darkMode
-                        ? `1px solid ${col}20`
+                        ? `1px solid ${col}70`
                         : `1px solid ${col}25`,
                       color:
                           darkMode
@@ -796,19 +796,37 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
       >
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <span
-              style={{
-                fontFamily: "monospace",
-                fontSize: "0.62rem",
-                color: darkMode
-                  ? "rgba(0,229,255,0.4)"
-                  : "rgba(30,58,138,0.90)",
-                letterSpacing: "0.2em",
-              }}
-              className="block mb-3"
-            >
-              CORE PRINCIPLES // PARAHOOR
-            </span>
+            <div className="inline-flex items-center gap-2 mb-2 justify-center">
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: darkMode
+                    ? "#00E5FF"
+                    : "#1D4ED8",
+                  display: "inline-block",
+                  boxShadow: darkMode
+                    ? "0 0 7px rgba(0,229,255,0.9)"
+                    : "0 0 7px rgba(30,58,138,0.22)",
+                }}
+              />
+
+              <span
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: "0.65rem",
+                  color: darkMode
+                    ? "rgba(0,229,255,0.5)"
+                    : "#1D4ED8",
+                  letterSpacing: "0.18em",
+                }}
+              >
+                CORE PRINCIPLES // PARAHOOR
+              </span>
+            </div>
+              
+
 
             <h2
               className="font-bold"
@@ -990,19 +1008,37 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
       >
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
-            <span
-              style={{
-                fontFamily: "monospace",
-                fontSize: "0.62rem",
-                color: darkMode
-                  ? "rgba(0,229,255,0.4)"
-                  : "rgba(30,58,138,0.90)",
-                letterSpacing: "0.2em",
-              }}
-              className="block mb-3"
-            >
-              OPERATIONAL HISTORY
-            </span>
+             <div className="inline-flex items-center gap-2 mb-2 justify-center">
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: darkMode
+                    ? "#00E5FF"
+                    : "#1D4ED8",
+                  display: "inline-block",
+                  boxShadow: darkMode
+                    ? "0 0 7px rgba(0,229,255,0.9)"
+                    : "0 0 7px rgba(30,58,138,0.22)",
+                }}
+              />
+
+              <span
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: "0.65rem",
+                  color: darkMode
+                    ? "rgba(0,229,255,0.5)"
+                    : "#1D4ED8",
+                  letterSpacing: "0.18em",
+                }}
+              >
+                OPERATIONAL HISTORY
+              </span>
+            </div>
+              
+
 
             <h2
               className="font-bold"
@@ -1073,27 +1109,35 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                           ? "none"
                           : "0 8px 24px rgba(15,23,42,0.04)",
                       }}
-                    onMouseEnter={(e) => {
-                      if (!darkMode) {
-                        e.currentTarget.style.background = "#eff6ffe8";
-                        e.currentTarget.style.borderColor = "rgba(29,78,216,0.52)";
-                        e.currentTarget.style.transform = "translateY(-2px)";
-                        e.currentTarget.style.boxShadow = "0 8px 22px rgba(30,58,138,0.24)";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!darkMode) {
-                        e.currentTarget.style.background = "#FFFFFF";
-                        e.currentTarget.style.borderColor = "rgba(30,58,138,0.34)";
-                        e.currentTarget.style.transform = "none";
-                        e.currentTarget.style.boxShadow = "none";
-                      }
-                    }}
+onMouseEnter={(e) => {
+  if (!darkMode) {
+    e.currentTarget.style.background = "#eff6ffe8";
+    e.currentTarget.style.borderColor = "rgba(29,78,216,0.52)";
+    e.currentTarget.style.boxShadow = "0 8px 22px rgba(30,58,138,0.24)";
+  } else {
+    e.currentTarget.style.background = "rgba(0, 229, 255, 0.02)";
+    e.currentTarget.style.borderColor = "rgba(0,229,255,0.42)";
+    e.currentTarget.style.boxShadow =
+      "0 8px 22px rgba(0,229,255,0.14)";
+  }
+}}
+
+onMouseLeave={(e) => {
+  if (!darkMode) {
+    e.currentTarget.style.background = "#FFFFFF";
+    e.currentTarget.style.borderColor = "rgba(30,58,138,0.34)";
+    e.currentTarget.style.boxShadow = "none";
+  } else {
+    e.currentTarget.style.background = "transparent";
+    e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+    e.currentTarget.style.boxShadow = "none";
+  }
+}}
                     >
                       <span
                         style={{
-                          fontFamily: "monospace",
-                          fontSize: "0.62rem",
+                          // fontFamily: "monospace",
+                          fontSize: "0.68rem",
                           color: darkMode
                             ? "rgba(0,229,255,0.5)"
                             : "rgba(30,64,175,0.78)",
@@ -1221,7 +1265,61 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
         viewport={{ once: true, amount: 0.2 }}
         className="px-6 py-20 md:px-12"
       >
-        <div className="max-w-2xl mx-auto text-center">
+        <div 
+          className={`max-w-2xl mx-auto text-center`}
+  style={{
+        background: darkMode
+          ? "linear-gradient(135deg, #010f27 0%, #010f27 48%, #010f27 100%)"
+          : "linear-gradient(135deg, #FFFFFF 0%, #F8FAFF 48%, #EEF4FF 100%)",
+
+
+
+        boxShadow: darkMode
+          ? "0 18px 60px rgba(0, 229, 255, 0), 0 0 70px rgba(0,229,255,0.05)"
+          : "0 18px 50px rgba(30,58,138,0.10)",
+
+        transition:
+          "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
+      }}
+        onMouseEnter={(e) => {
+        if (!darkMode) {
+          e.currentTarget.style.borderColor = "#1D4ED8";
+          e.currentTarget.style.background =
+            "linear-gradient(135deg, #FFFFFF 0%, rgba(30,58,138,0.035) 50%, rgba(29,78,216,0.06) 100%)";
+          e.currentTarget.style.boxShadow =
+            "0 18px 50px rgba(30,58,138,0.16), 0 0 45px rgba(29,78,216,0.08)";
+
+        } else {
+          e.currentTarget.style.borderColor =
+            "rgba(0, 229, 255, 0.55)";
+          e.currentTarget.style.background =
+            "linear-gradient(135deg, #010f27 0%, #010f27 48%, #010f27 100%)";
+          e.currentTarget.style.boxShadow =
+            "0 20px 65px rgba(0,229,255,0.12), 0 0 70px rgba(0,229,255,0.07)";
+
+        }
+      }}
+
+      onMouseLeave={(e) => {
+        if (!darkMode) {
+          e.currentTarget.style.borderColor =
+            "rgba(30,58,138,0.22)";
+          e.currentTarget.style.background =
+            "linear-gradient(135deg, #FFFFFF 0%, #F8FAFF 48%, #EEF4FF 100%)";
+          e.currentTarget.style.boxShadow =
+            "0 18px 50px rgba(30,58,138,0.10)";
+          e.currentTarget.style.transform = "none";
+        } else {
+          e.currentTarget.style.borderColor =
+            "rgba(0,229,255,0.30)";
+          e.currentTarget.style.background =
+            "linear-gradient(135deg, #010f27 0%, #010f27 48%, #010f27 100%)";
+          e.currentTarget.style.boxShadow =
+            "0 18px 60px rgba(0,229,255,0.08), 0 0 70px rgba(0,229,255,0.05)";
+          e.currentTarget.style.transform = "none";
+        }
+      }}
+        >
           <div
             className="relative overflow-hidden rounded-2xl px-8 py-14"
             style={{
@@ -1325,14 +1423,11 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.boxShadow =
-                  "0 0 40px rgba(239,68,68,0.5)";
-                e.currentTarget.style.transform =
-                  "translateY(-1px)";
+                  "0 0 30px rgba(239,68,68,0.5)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.boxShadow =
                   "0 0 24px rgba(239,68,68,0.3)";
-                e.currentTarget.style.transform = "none";
               }}
             >
               <IconWarning />

@@ -1484,7 +1484,7 @@ const REPORT_CARD_DARK =
   "bg-cyan-800/10 border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]";
 
 const REPORT_CARD_LIGHT =
-  "bg-white border-[rgba(29,78,216,0.20)] shadow-[0_4px_24px_rgba(30,58,138,0.08)] hover:border-[rgba(29,78,216,0.52)] hover:bg-[rgba(237,242,255,0.52)] hover:shadow-[0_16px_40px_rgba(30,58,138,0.34)]";
+  "bg-white border-[rgba(29,78,216,0.20)] shadow-[0_4px_20px_rgba(15,23,42,0.06)] hover:border-[rgba(29,78,216,0.52)] hover:bg-[rgba(237,242,255,0.52)] hover:shadow-[0_16px_40px_rgba(30,58,138,0.22)] hover:-translate-y-1";
 
 
 export type HomePageInitialData = {
@@ -1725,7 +1725,7 @@ export default function HomePageClient({
           style={{
             background: darkMode
               ? "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(0,229,255,0.06) 0%, transparent 70%)"
-              : "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(30,58,138,0.08) 0%, rgba(29,78,216,0.04) 38%, transparent 70%)",
+              : "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(84, 128, 215, 0.16) 0%, transparent 70%)",
           }}
         />
 
@@ -1785,7 +1785,7 @@ export default function HomePageClient({
   className="glow-text font-black leading-tight mb-6"
   style={{
     fontSize: "clamp(2rem, 5vw, 3.5rem)",
-    color: darkMode ? "#ffffff" : "#222222",
+    color: darkMode ? "#ffffff" : "#0c1a43",
     lineHeight: "1.3",
     fontWeight: 900,
     textShadow: darkMode
@@ -1797,16 +1797,7 @@ export default function HomePageClient({
     <span key={index}>
       {index === 5 && <br />}
 
-      <span
-        style={{
-          color:
-            index === 5
-              ? darkMode
-                ? "#00E5FF"
-                : "#1E3A8A"
-              : undefined,
-        }}
-      >
+      <span>
         {word}
       </span>{" "}
     </span>
@@ -1816,7 +1807,7 @@ export default function HomePageClient({
           <p
             className="max-w-2xl mx-auto mb-10 leading-relaxed"
             style={{
-              color: darkMode ? "#94A3B8" : "#334155",
+              color: darkMode ? "#94A3B8" : "#475569",
               fontSize: "clamp(0.95rem, 2vw, 1.15rem)",
               fontWeight: 400,
             }}
@@ -1838,22 +1829,22 @@ export default function HomePageClient({
                   : "1px solid rgba(30,58,138,0.6)",
                 boxShadow: darkMode
                   ? "0 0 15px rgba(239,68,68,0.35)"
-                  : "0 0 15px rgba(30,58,138,0.18)",
+                  : "0 8px 22px rgba(30,58,138,0.22)",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.boxShadow = darkMode
                   ? "0 0 22px rgba(239,68,68,0.55)"
-                  : "0 0 22px rgba(29,78,216,0.28)"
+                  : "0 12px 30px rgba(29,78,216,0.32)"
 
                 if (!darkMode) {
-                  e.currentTarget.style.background = "#1D4ED8"
-                  e.currentTarget.style.borderColor = "#1D4ED8"
+                  e.currentTarget.style.background = "#153178"
+                  e.currentTarget.style.borderColor = "#153178"
                 }
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.boxShadow = darkMode
                   ? "0 0 15px rgba(239,68,68,0.35)"
-                  : "0 0 15px rgba(30,58,138,0.18)"
+                  : "0 8px 22px rgba(30,58,138,0.22)"
 
                 if (!darkMode) {
                   e.currentTarget.style.background = "#1E3A8A"
@@ -1871,22 +1862,22 @@ export default function HomePageClient({
               style={{
                 background: darkMode
                   ? "rgba(0,229,255,0.07)"
-                  : "rgba(255,255,255,0.95)",
-                color: darkMode ? "#00E5FF" : "#1E3A8A",
+                  : "transparent",
+                color: darkMode ? "#00E5FF" : "#1D4ED8",
                 border: darkMode
                   ? "1px solid rgba(0,229,255,0.25)"
-                  : "1px solid rgba(30,58,138,0.28)",
+                  : "1px solid rgba(30,58,138,0.45)",
                 boxShadow: darkMode
                   ? "0 0 15px rgba(6,182,212,0.35)"
-                  : "0 0 15px rgba(30,58,138,0.10)",
+                  : "0 8px 22px rgba(30,58,138,0.06)",
               }}
               onMouseEnter={(e) => {
                 if (!darkMode) {
-                  e.currentTarget.style.borderColor = "#1D4ED8"
-                  e.currentTarget.style.background =
-                    "rgba(30,58,138,0.06)"
+                  e.currentTarget.style.borderColor = "#142a65"
+                  e.currentTarget.style.background = "#142a65"
+                  e.currentTarget.style.color = "#FFFFFF"
                   e.currentTarget.style.boxShadow =
-                    "0 8px 25px rgba(30,58,138,0.10)"
+                    "0 12px 30px rgba(30,58,138,0.20)"
                 } else {
                   e.currentTarget.style.boxShadow =
                     "0 0 22px rgba(6,182,212,0.55)"
@@ -1897,11 +1888,11 @@ export default function HomePageClient({
               onMouseLeave={(e) => {
                 if (!darkMode) {
                   e.currentTarget.style.borderColor =
-                    "rgba(30,58,138,0.28)"
-                  e.currentTarget.style.background =
-                    "rgba(255,255,255,0.95)"
+                    "rgba(30,58,138,0.45)"
+                  e.currentTarget.style.background = "transparent"
+                  e.currentTarget.style.color = "#1D4ED8"
                   e.currentTarget.style.boxShadow =
-                    "0 0 15px rgba(30,58,138,0.10)"
+                    "0 8px 22px rgba(30,58,138,0.06)"
                 } else {
                   e.currentTarget.style.boxShadow =
                     "0 0 15px rgba(6,182,212,0.35)"
@@ -1931,11 +1922,11 @@ export default function HomePageClient({
           !darkMode
             ? {
                 background:
-                  "linear-gradient(180deg, rgba(239,246,255,0.78), rgba(248,250,252,0.52))",
+                  "linear-gradient(180deg, rgba(248,250,252,0.92), rgba(248,250,252,0.5))",
                 borderTop:
-                  "1px solid rgba(30,58,138,0.12)",
+                  "1px solid rgba(15,23,42,0.07)",
                 borderBottom:
-                  "1px solid rgba(30,58,138,0.12)",
+                  "1px solid rgba(15,23,42,0.07)",
               }
             : undefined
         }
@@ -1947,44 +1938,43 @@ export default function HomePageClient({
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
 
-             <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 text-xs font-semibold"
-            style={{
-              background: darkMode
-                ? "rgba(0,229,255,0.07)"
-                : "rgba(30,58,138,0.07)",
-              border: darkMode
-                ? "1px solid rgba(0,229,255,0.18)"
-                : "1px solid rgba(30,58,138,0.20)",
-              color: blueBright,
-            }}
-          >
-            <IconDot
-              size={6}
-              color={blueBright}
-              glow={true}
-              glowColor={
-                darkMode
-                  ? "rgba(0,229,255,0.9)"
-                  : "rgba(30,58,138,0.45)"
-              }
-            />
+            
+              
+             <div className="inline-flex items-center gap-2 mb-2 justify-center">
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: darkMode
+                    ? "#00E5FF"
+                    : "#1D4ED8",
+                  display: "inline-block",
+                  boxShadow: darkMode
+                    ? "0 0 7px rgba(0,229,255,0.9)"
+                    : "0 0 7px rgba(30,58,138,0.22)",
+                }}
+              />
 
-            <span
-              style={{
-                fontFamily: "monospace",
-                letterSpacing: "0.15em",
-              }}
-            >
-              INVESTIGATION PIPELINE
-            </span>
-          </div>
+              <span
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: "0.65rem",
+                  color: darkMode
+                    ? "rgba(0,229,255,0.5)"
+                    : "#1D4ED8",
+                  letterSpacing: "0.18em",
+                }}
+              >
+                INVESTIGATION PIPELINE
+              </span>
+            </div>
 
             <h2
               className="font-bold"
               style={{
                 fontSize: "clamp(1.4rem, 3vw, 2rem)",
-                color: darkMode ? "#ffffff" : "#1E3A8A",
+                color: darkMode ? "#ffffff" : "#0F172A",
               }}
             >
               مسیر بررسی پرونده شما
@@ -2026,7 +2016,7 @@ export default function HomePageClient({
             ].map((step, index) => (
               <React.Fragment key={index}>
                 <div
-                  className={`glass-card w-full max-w-[310px] md:max-w-none md:flex-1 h-[340px] flex flex-col justify-center items-center p-6 md:p-8 text-center group transition-all duration-300 rounded-2xl ${
+                  className={`glass-card w-full max-w-[310px] md:max-w-none md:flex-1 h-[315px] flex flex-col justify-center items-center p-6 md:p-8 text-center group transition-all duration-300 rounded-2xl ${
                     darkMode
                       ? "border border-cyan-500/30 hover:border-cyan-500 bg-cyan-900/10 hover:bg-cyan-800/15"
                       : ""
@@ -2036,27 +2026,33 @@ export default function HomePageClient({
                       ? undefined
                       : {
                           border:
-                            "1px solid rgba(30,58,138,0.22)",
+                            "1px solid rgba(29,78,216,0.20)",
                           background: "#FFFFFF",
+                          boxShadow:
+                            "0 4px 20px rgba(15,23,42,0.06)",
                           transition:
-                            "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease",
+                            "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
                         }
                   }
                   onMouseEnter={(e) => {
                     if (!darkMode) {
                       e.currentTarget.style.borderColor =
-                        "#1D4ED8"
+                        "rgba(29,78,216,0.52)"
+                      e.currentTarget.style.background =
+                        "rgba(237,242,255,0.52)"
                       e.currentTarget.style.boxShadow =
-                        "0 16px 40px rgba(30,58,138,0.16)"
+                        "0 16px 40px rgba(30,58,138,0.20)"
                       e.currentTarget.style.transform =
-                        "translateY(-3px)"
+                        "translateY(-4px)"
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!darkMode) {
                       e.currentTarget.style.borderColor =
-                        "rgba(30,58,138,0.22)"
-                      e.currentTarget.style.boxShadow = "none"
+                        "rgba(29,78,216,0.20)"
+                      e.currentTarget.style.background = "#FFFFFF"
+                      e.currentTarget.style.boxShadow =
+                        "0 4px 20px rgba(15,23,42,0.06)"
                       e.currentTarget.style.transform = "none"
                     }
                   }}
@@ -2085,18 +2081,20 @@ export default function HomePageClient({
                     style={
                       darkMode
                         ? undefined
-                        : { color: "#1D4ED8" }
+                        : { color: "rgba(30,58,138,0.72)" }
                     }
                   >
                     {step.step}
                   </span>
 
                   <h3
-                    className="font-bold text-base mb-2"
+                    className={`font-bold text-base mb-2 transition-colors duration-300 ${
+                      darkMode
+                        ? ""
+                        : "text-[#111827] group-hover:text-[#1E3A8A]"
+                    }`}
                     style={{
-                      color: darkMode
-                        ? "#ffffff"
-                        : "#1E3A8A",
+                      color: darkMode ? "#ffffff" : undefined,
                     }}
                   >
                     {step.title}
@@ -2107,8 +2105,8 @@ export default function HomePageClient({
                       color: darkMode
                         ? "#64748B"
                         : "#334155",
-                      fontSize: "0.82rem",
-                      lineHeight: 1.7,
+                      fontSize: darkMode ? "0.82rem" : "0.86rem",
+                      lineHeight: darkMode ? 1.7 : 1.9,
                     }}
                   >
                     {step.text}
@@ -2158,44 +2156,43 @@ export default function HomePageClient({
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
 
-            <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 text-xs font-semibold"
-            style={{
-              background: darkMode
-                ? "rgba(0,229,255,0.07)"
-                : "rgba(30,58,138,0.07)",
-              border: darkMode
-                ? "1px solid rgba(0,229,255,0.18)"
-                : "1px solid rgba(30,58,138,0.20)",
-              color: blueBright,
-            }}
-          >
-            <IconDot
-              size={6}
-              color={blueBright}
-              glow={true}
-              glowColor={
-                darkMode
-                  ? "rgba(0,229,255,0.9)"
-                  : "rgba(30,58,138,0.45)"
-              }
-            />
+             <div className="inline-flex items-center gap-2 mb-2 justify-center">
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: darkMode
+                    ? "#00E5FF"
+                    : "#1D4ED8",
+                  display: "inline-block",
+                  boxShadow: darkMode
+                    ? "0 0 7px rgba(0,229,255,0.9)"
+                    : "0 0 7px rgba(30,58,138,0.22)",
+                }}
+              />
 
-            <span
-              style={{
-                fontFamily: "monospace",
-                letterSpacing: "0.15em",
-              }}
-            >
-              SPECIALIZATION DOMAINS
-            </span>
-          </div>
+              <span
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: "0.65rem",
+                  color: darkMode
+                    ? "rgba(0,229,255,0.5)"
+                    : "#1D4ED8",
+                  letterSpacing: "0.18em",
+                }}
+              >
+                SPECIALIZATION DOMAINS
+              </span>
+            </div>
+              
+
 
             <h2
               className="font-bold"
               style={{
                 fontSize: "clamp(1.4rem, 3vw, 2rem)",
-                color: darkMode ? "#ffffff" : "#1E3A8A",
+                color: darkMode ? "#ffffff" : "#0F172A",
               }}
             >
               حوزه‌های تخصصی پاراهور
@@ -2247,8 +2244,10 @@ export default function HomePageClient({
                     ? undefined
                     : {
                         border:
-                          "1px solid rgba(30,58,138,0.22)",
+                          "1px solid rgba(29,78,216,0.20)",
                         background: "#FFFFFF",
+                        boxShadow:
+                          "0 4px 20px rgba(15,23,42,0.06)",
                         transition:
                           "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
                       }
@@ -2256,22 +2255,23 @@ export default function HomePageClient({
                 onMouseEnter={(e) => {
                   if (!darkMode) {
                     e.currentTarget.style.borderColor =
-                      "#1D4ED8"
+                      "rgba(29,78,216,0.52)"
                     e.currentTarget.style.background =
-                      "rgba(30,58,138,0.04)"
+                      "rgba(237,242,255,0.52)"
                     e.currentTarget.style.boxShadow =
-                      "0 16px 40px rgba(30,58,138,0.16)"
+                      "0 16px 40px rgba(30,58,138,0.20)"
                     e.currentTarget.style.transform =
-                      "translateY(-3px)"
+                      "translateY(-4px)"
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!darkMode) {
                     e.currentTarget.style.borderColor =
-                      "rgba(30,58,138,0.22)"
+                      "rgba(29,78,216,0.20)"
                     e.currentTarget.style.background =
                       "#FFFFFF"
-                    e.currentTarget.style.boxShadow = "none"
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 20px rgba(15,23,42,0.06)"
                     e.currentTarget.style.transform = "none"
                   }
                 }}
@@ -2297,18 +2297,20 @@ export default function HomePageClient({
                       style={
                         darkMode
                           ? undefined
-                          : { color: "#1D4ED8" }
+                          : { color: "rgba(30,58,138,0.72)" }
                       }
                     >
                       {service.label}
                     </span>
 
                     <h3
-                      className="font-bold mb-2"
+                      className={`font-bold mb-2 transition-colors duration-300 ${
+                        darkMode
+                          ? ""
+                          : "text-[#111827] group-hover:text-[#1E3A8A]"
+                      }`}
                       style={{
-                        color: darkMode
-                          ? "#ffffff"
-                          : "#1E3A8A",
+                        color: darkMode ? "#ffffff" : undefined,
                         fontSize: "1rem",
                       }}
                     >
@@ -2320,8 +2322,8 @@ export default function HomePageClient({
                         color: darkMode
                           ? "#64748B"
                           : "#334155",
-                        fontSize: "0.82rem",
-                        lineHeight: 1.75,
+                        fontSize: darkMode ? "0.82rem" : "0.86rem",
+                        lineHeight: darkMode ? 1.75 : 1.9,
                       }}
                     >
                       {service.text}
@@ -2334,7 +2336,7 @@ export default function HomePageClient({
                   style={{
                     background: darkMode
                       ? "linear-gradient(90deg, rgba(0,229,255,0.3), transparent)"
-                      : "linear-gradient(90deg, rgba(30,58,138,0.32), rgba(29,78,216,0.18), transparent)",
+                      : "linear-gradient(90deg, rgba(15,23,42,0.14), transparent)",
                   }}
                 />
 
@@ -2382,9 +2384,9 @@ export default function HomePageClient({
           ...(darkMode
             ? {}
             : {
-                borderTop: "1px solid rgba(29,78,216,0.12)",
-                borderBottom: "1px solid rgba(29,78,216,0.12)",
-                boxShadow: "0 10px 35px rgba(30,58,138,0.10)",
+                borderTop: "1px solid rgba(15,23,42,0.07)",
+                borderBottom: "1px solid rgba(15,23,42,0.07)",
+                boxShadow: "0 10px 35px rgba(30,58,138,0.05)",
               }),
         }}
         initial={{ opacity: 0, y: 60 }}
@@ -2413,10 +2415,10 @@ export default function HomePageClient({
               <span
                 style={{
                   fontFamily: "monospace",
-                  fontSize: "0.62rem",
+                  fontSize: "0.65rem",
                   color: darkMode
                     ? "rgba(0,229,255,0.5)"
-                    : "#475569",
+                    : "#1D4ED8",
                   letterSpacing: "0.18em",
                 }}
               >
@@ -2427,17 +2429,13 @@ export default function HomePageClient({
             <h2
               className="text-2xl md:text-3xl font-black"
               style={{
-                color: darkMode ? "#fff" : "#1E3A8A",
+                color: darkMode ? "#fff" : "#0F172A",
               }}
             >
               آخرین گزارش‌های{" "}
-              <span
-                style={{
-                  color: darkMode ? "#00E5FF" : "#1D4ED8",
-                }}
-              >
+
                 میدانی
-              </span>
+
             </h2>
           </div>
 
@@ -2501,7 +2499,7 @@ export default function HomePageClient({
                         <div
                           aria-hidden="true"
                           className={`pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t to-transparent ${
-                            darkMode ? "from-[#050C1E]/70" : "from-[#1E3A8A]/20"
+                            darkMode ? "from-[#050C1E]/70" : "from-[#0F172A]/15"
                           }`}
                         />
 
@@ -2521,7 +2519,9 @@ export default function HomePageClient({
                         {/* Title */}
                         <h3
                           className={`text-base font-bold leading-snug mb-3 break-words line-clamp-2 ${
-                            darkMode ? "text-[#E6F7FF]" : "text-[#1E3A8A]"
+                            darkMode
+                              ? "text-[#E6F7FF]"
+                              : "text-[#111827] group-hover:text-[#1E3A8A] transition-colors duration-300"
                           }`}
                         >
                           {post.title}
@@ -2530,7 +2530,7 @@ export default function HomePageClient({
                         {/* Excerpt */}
                         <p
                           className={`text-sm leading-relaxed line-clamp-3 break-words mb-5 flex-1 ${
-                            darkMode ? "text-[#9DB0C0]" : "text-[#475569]"
+                            darkMode ? "text-[#9DB0C0]" : "text-[#334155]"
                           }`}
                         >
                           {summary.length > 70?

@@ -6,6 +6,12 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}", // 👈 این خیلی مهمه
   ],
-  theme: { extend: {} },
+ theme: {
+  extend: {
+    fontFamily: {
+      mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "var(--font-vazirmatn)", "monospace"],
+    },
+  },
+},
   plugins: [],
 };

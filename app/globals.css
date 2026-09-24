@@ -12,10 +12,10 @@ body {
   overflow-x: hidden;
 }
 
-/* body,
+body,
 body *:not(code):not(pre):not(kbd) {
   font-family: var(--font-vazirmatn), sans-serif !important;
-} */
+}
 
 .admin-panel,
 .admin-panel * {
