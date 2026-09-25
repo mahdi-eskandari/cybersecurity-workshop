@@ -259,6 +259,7 @@
 
 
 
+
 import { jwtVerify, JWTPayload } from "jose";
 import {
   NextRequest,
@@ -382,6 +383,9 @@ function getSeoBasePath(
 
     case "privacy":
       return "/privacy";
+
+    case "authors":
+      return "/authors";
 
     default:
       return null;
@@ -517,9 +521,9 @@ return redirectResponse;
           return null;
         }
 
-        return NextResponse.rewrite(
-          new URL("/", request.url)
-        );
+        const homeUrl = request.nextUrl.clone();
+        homeUrl.pathname = "/";
+        return NextResponse.rewrite(homeUrl);
       }
 
       // مسیر اصلی
@@ -541,19 +545,18 @@ return redirectResponse;
         currentSlug &&
         currentPath === currentSlug
       ) {
-        return NextResponse.rewrite(
-          new URL(
-            basePath,
-            request.url
-          )
-        );
+        const customSlugUrl = request.nextUrl.clone();
+        customSlugUrl.pathname = basePath;
+        return NextResponse.rewrite(customSlugUrl);
       }
 
       // زیرمسیر blogs/services
+            // زیرمسیر blogs/services/authors
       if (
         currentSlug &&
         (pageKey === "blogs" ||
-          pageKey === "services") &&
+          pageKey === "services" ||
+          pageKey === "authors") &&
         currentPath.startsWith(
           `${currentSlug}/`
         )
@@ -566,12 +569,9 @@ return redirectResponse;
         const internalPath =
           `${basePath}${remainingPath}`;
 
-        return NextResponse.rewrite(
-          new URL(
-            internalPath,
-            request.url
-          )
-        );
+        const subPathUrl = request.nextUrl.clone();
+        subPathUrl.pathname = internalPath;
+        return NextResponse.rewrite(subPathUrl);
       }
     }
 
