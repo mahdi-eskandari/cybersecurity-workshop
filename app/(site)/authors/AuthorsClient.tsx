@@ -804,12 +804,16 @@ export default function AuthorsClient({
   showAllPosts,
   currentPage,
   postsError = "",
+  seoH1,
+  basePath: basePathProp,
 }: {
   posts: Post[];
   authorSlug: string;
   showAllPosts: boolean;
   currentPage: number;
   postsError?: string;
+  seoH1?: string;
+  basePath?: string;
 }) {
   const { darkMode } = useTheme();
     const blueBright = darkMode ? "#00E5FF" : "#1D4ED8";
@@ -845,7 +849,7 @@ export default function AuthorsClient({
       : stat
   );
 
-  const basePath = `/authors/${author.id}`;
+  const basePath = basePathProp || `/authors/${author.id}`;
   const allPostsPath = `${basePath}?view=all&page=1`;
 
   return (
@@ -942,9 +946,21 @@ export default function AuthorsClient({
             </span>
           </div>
 
-            <h1 className="m-0 text-[clamp(1.55rem,3vw,2.2rem)] font-extrabold tracking-[-0.03em]">
-              پژوهشگران و کارشناسان
-            </h1>
+
+            <h1
+  className="glow-text font-black leading-tight mb-6"
+  style={{
+    fontSize: "clamp(2rem, 5vw, 3.5rem)",
+    color: darkMode ? "#e8f4f8" : "#0c1a43",
+    lineHeight: "1.3",
+    fontWeight: 900,
+    textShadow: darkMode
+      ? undefined
+      : "0 0 18px rgba(30,58,138,0.10)",
+  }}
+>
+  {seoH1}
+</h1>
 
             <p
               className="text-[0.8rem] mt-[10px]"
