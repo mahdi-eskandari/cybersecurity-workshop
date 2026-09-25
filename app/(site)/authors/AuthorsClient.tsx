@@ -1,59 +1,17 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
 import { useTheme } from "../../../components/ThemeProvider";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import Link from "next/link";
+import {
+  type Post,
+  normalizeAuthor,
+  authors,
+  POSTS_PER_PAGE,
+} from "./authorsData";
 
-/* =========================================================
-   TYPES
-========================================================= */
-
-export type Post = {
-  _id?: string;
-  title: string;
-  slug: string;
-  content: string;
-  status: "draft" | "published";
-  postType: "normal" | "special";
-  author: string;
-  categoryId: string;
-  tags: string[];
-  featuredImage?: string | null;
-  featuredImageAlt?: string | null;
-  wordCount?: number;
-  readingTime?: number;
-  metaTitle?: string;
-  metaDescription?: string;
-  createdAt?: string;
-  updatedAt?: string;
-};
-
-type Author = {
-  id: string;
-  name: string;
-  authorKey: string;
-  title: string;
-  subtitle: string;
-  photo: string;
-  accent: string;
-  accentLight: string;
-  ctaLabel: string;
-
-  bio: string[];
-
-  stats: {
-    label: string;
-    val: string;
-  }[];
-
-  focus: {
-    label: string;
-    pct: number;
-  }[];
-
-  certs: string[];
-  tags: string[];
-};
+export type { Post };
 
 /* =========================================================
    ICONS
@@ -219,13 +177,6 @@ const ChevronLeft = ({ size = 18 }: { size?: number }) => (
    HELPERS
 ========================================================= */
 
-const normalizeAuthor = (value: string | undefined) => {
-  return (value || "")
-    .trim()
-    .toLowerCase()
-    .replace(/\u200c/g, "")
-    .replace(/\s+/g, " ");
-};
 
 const formatDate = (date?: string) => {
   if (!date) {
@@ -681,87 +632,7 @@ const ArticleCard = ({
    AUTHORS
 ========================================================= */
 
-export const authors: Author[] = [
-  {
-    id: "mohammadreza-yousefi",
-    name: "محمدرضا یوسفی",
-    authorKey: "محمدرضا یوسفی",
-    title: "پژوهشگر ارشد جرائم رایانه‌ای",
-    subtitle: "دارای بیش از یک دهه سابقه کاری.",
-    photo:
-      "/mohammadreza.webp",
-    accent: "#00E5FF",
-    accentLight: "#0E7490",
-    ctaLabel: "سوابق ردیابی و تحلیل بلاکچین",
-    bio: [
-      "من یک متخصص ۲۸ ساله در حوزه امنیت اطلاعات و جرم‌شناسی دیجیتال (Digital Forensics) مستقر در تهران هستم. ماموریت حرفه‌ای من ارائه خدمات پیشرفته امنیتی و تحقیقاتی در مجموعه «پاراهور» است. تمرکز اصلی من بر کشف، تحلیل و خنثی‌سازی تهدیدات پیچیده سایبری و ارائه مستندات فنی دقیق برای پیگیری‌های قانونی است.",
-    ],
-    stats: [
-      { label: "پرونده های موفق", val: "+100" },
-      { label: "شروع فعالیت در پاراهور", val: "1405" },
-      { label: "مقالات منتشرشده", val: "0" },
-    ],
-    focus: [
-      { label: "رهگیری رمز ارز", pct: 90 },
-      { label: "کشف هویت پنهان", pct: 80 },
-      { label: "تحلیل حملات سایبری", pct: 80 },
-      { label: "تست نفوذ", pct: 90 },
-    ],
-    certs: [
-      "گواهینامه LPIC",
-      "گواهینامه CCNP",
-      "گواهینامه Security+",
-      "گواهینامه CEH",
-      "گواهینامه MCSA",
-    ],
-    tags: [
-      "#OSINT",
-      "#Blockchain_Investigator",
-      "#Python",
-      "#Linux",
-      "#Cisco",
-      "#Digital_Forensic",
-      "#Docker",
-      "#Git",
-    ],
-  },
-  {
-    id: "alireza-tabatabaei-hashemi",
-    name: "علیرضا طباطبایی هاشمی",
-    authorKey: "علیرضا طباطبایی هاشمی",
-    title: "وکیل پایه یک دادگستری",
-    subtitle: "معاون فنی اسبق پلیس فتا فراجا | بیش از پانزده سال سابقه تخصصی",
-    photo:
-      "/alireza.webp",
-    accent: "#10B981",
-    accentLight: "#047857",
-    ctaLabel: "سوابق حقوقی و پی‌جویی جرائم رایانه‌ای",
-    bio: [
-      "من علیرضا طباطبایی هاشمی، وکیل پایه یک دادگستری و معاون فنی اسبق پلیس فتای فراجا هستم و با بیش از پانزده سال سابقه عملیاتی و تخصصی در زمینه شناسایی، ردیابی و پی‌جویی جرائم رایانه‌ای و اقتصادی فعالیت می‌کنم. من در مجموعه «پاراهور» هدایت و راهبری حقوقی مجموعه را بر عهده دارم. رسالت اصلی من در این مجموعه، ایجاد یک پیوند دقیق میان تحقیقات پیچیده سایبری (فارنزیک) و الزامات قضایی است؛ تا اطمینان حاصل شود تمامی فرآیندهای کشف جرایم دیجیتال با بالاترین استانداردهای محرمانگی همسو بوده و نتایج تحقیقات به مستنداتی بی‌نقص، معتبر و کاملاً قابل استناد در مراجع حقوقی تبدیل می‌شوند.",
-    ],
-    stats: [
-      { label: "پرونده های موفق", val: "+150" },
-      { label: "شروع فعالیت در پاراهور", val: "1405" },
-      { label: "مقالات منتشرشده", val: "0" },
-    ],
-    focus: [
-      { label: "OSINT", pct: 90 },
-      { label: "جرائم رایانه‌ای", pct: 95 },
-      { label: "جرائم اقتصادی", pct: 90 },
-    ],
-    certs: [
-      "گواهینامه MCSE",
-      "گواهینامه MCSes",
-      "گواهینامه MCDbA",
-      "گواهینامه OSINT",
-    ],
-    tags: [
-      "#OSINT",
-      "#جرائم_رایانه‌ای",
-      "#جرائم_اقتصادی",
-    ],
-  },
-];
+
 
 /* =========================================================
    BACKGROUND
@@ -792,6 +663,24 @@ const Background = () => {
       />
     </div>
   );
+};
+
+
+
+
+const contentVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 18,
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
 };
 
 /* =========================================================
@@ -835,9 +724,39 @@ export default function AuthorsClient({
       return dateB - dateA;
     });
 
-  const postsPerPage = 6;
+  const postsPerPage = POSTS_PER_PAGE;
   const totalPages = Math.max(1, Math.ceil(authorPosts.length / postsPerPage));
   const safePage = Math.min(Math.max(currentPage, 1), totalPages);
+
+  const basePath = basePathProp || `/authors/${author.id}`;
+  const allPostsPath = `${basePath}?view=all&page=1`;
+
+    // Sync canonical with the current author/page without a full page reload.
+  // Pagination uses client-side navigation with ?view=all&page=N,
+  // so the server-generated canonical may otherwise remain stale.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const canonicalPath = showAllPosts
+      ? `${basePath}?view=all&page=${safePage}`
+      : basePath;
+
+    const canonicalUrl = `${window.location.origin}${canonicalPath}`;
+
+    let link = document.querySelector<HTMLLinkElement>(
+      'link[rel="canonical"]'
+    );
+
+    if (!link) {
+      link = document.createElement("link");
+      link.setAttribute("rel", "canonical");
+      document.head.appendChild(link);
+    }
+
+    if (link.href !== canonicalUrl) {
+      link.href = canonicalUrl;
+    }
+  }, [basePath, safePage, showAllPosts]);
 
   const displayedPosts = showAllPosts
     ? authorPosts.slice((safePage - 1) * postsPerPage, safePage * postsPerPage)
@@ -849,8 +768,6 @@ export default function AuthorsClient({
       : stat
   );
 
-  const basePath = basePathProp || `/authors/${author.id}`;
-  const allPostsPath = `${basePath}?view=all&page=1`;
 
   return (
     <div
@@ -871,48 +788,24 @@ export default function AuthorsClient({
     >
 
 
-      {/* =====================================================
-          NAV
-      ===================================================== */}
-
-      <nav
-        className="h-[60px] px-12 max-[720px]:px-[18px] border-b flex items-center justify-between sticky top-0 z-20 backdrop-blur-[16px]"
-        style={{
-          borderColor: darkMode
-            ? "rgba(255,255,255,0.05)"
-            : "rgba(30,58,138,0.08)",
-          background: darkMode
-            ? "rgba(10,17,40,0.86)"
-            : "rgba(255,255,255,0.86)",
-        }}
-      >
-        <div
-          className="flex items-center gap-2 text-[0.9rem] font-extrabold"
-          style={{ color: darkMode ? "#00E5FF" : "#1D4ED8" }}
-        >
-          <IconShield />
-          پاراهور
-        </div>
-
-        <div
-          className="text-[0.68rem] font-mono tracking-[0.08em] max-[500px]:hidden"
-          style={{ color: darkMode ? "#334155" : "#94A3B8" }}
-        >
-          RESEARCH & DIGITAL FORENSICS
-        </div>
-      </nav>
 
       {/* =====================================================
           MAIN
       ===================================================== */}
 
-      <main className="relative z-[1] pt-[58px] pb-20 px-6 max-[720px]:px-[14px]">
+      <main className="relative z-[1] pt-[58px] pb-20 px-6 max-[720px]:px-[14px] mt-[65px]">
         <div className="max-w-[1180px] mx-auto">
           {/* ===================================================
               TITLE
           =================================================== */}
 
-          <div className="text-center mb-[30px]">
+                                 <motion.div
+        className="text-center mb-[30px]"
+    initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+  viewport={{ once: true, amount: 0.2 }}
+>
 <div
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 text-xs font-semibold"
             style={{
@@ -969,13 +862,20 @@ export default function AuthorsClient({
               تیم متخصص پاراهور در تحقیقات سایبری، فارنزیک دیجیتال و پیگیری
               حقوقی
             </p>
-          </div>
+          </motion.div>
 
           {/* ===================================================
               AUTHORS SELECTOR
           =================================================== */}
 
-          <div className="flex justify-center items-center gap-[10px] mb-[38px] flex-wrap">
+          
+            <motion.div
+        className="flex justify-center items-center gap-[10px] mb-[38px] flex-wrap"
+    initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+  viewport={{ once: true, amount: 0.25 }}
+>
             {authors.map((item, index) => {
               const active = author.id === item.id;
               const itemAccent = darkMode ? item.accent : item.accentLight;
@@ -1029,14 +929,15 @@ export default function AuthorsClient({
                 </Link>
               );
             })}
-          </div>
+          </motion.div>
 
           {/* ===================================================
               PROFILE CARD
           =================================================== */}
 
-          <section
-            className="max-w-[900px] mx-auto mb-[34px] px-6 py-[22px] rounded-[20px]"
+
+                        <motion.div
+        className="max-w-[900px] mx-auto mb-[34px] px-6 py-[22px] rounded-[20px]"
             style={{
               background: darkMode
                 ? "linear-gradient(145deg, rgba(255,255,255,0.035), rgba(255,255,255,0.018))"
@@ -1046,7 +947,11 @@ export default function AuthorsClient({
                 ? "0 20px 70px rgba(0,0,0,0.22)"
                 : "0 20px 50px rgba(30,58,138,0.08)",
             }}
-          >
+    initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+  viewport={{ once: true, amount: 0.3 }}
+>
             <div className="flex items-center gap-5 max-[720px]:flex-wrap">
               <div
                 className="w-[92px] h-[92px] flex-shrink-0 rounded-full p-[3px]"
@@ -1115,14 +1020,15 @@ export default function AuthorsClient({
             >
               {author.ctaLabel}
             </div>
-          </section>
+          </motion.div>
 
           {/* ===================================================
               BIO
           =================================================== */}
 
-          <section
-            className="max-w-[1180px] mx-auto mb-5 px-[26px] py-[23px] rounded-[17px]"
+
+           <motion.div
+        className="max-w-[1180px] mx-auto mb-5 px-[26px] py-[23px] rounded-[17px]"
             style={{
               background: darkMode
                 ? "linear-gradient(145deg, rgba(255,255,255,0.035), rgba(255,255,255,0.018))"
@@ -1131,7 +1037,11 @@ export default function AuthorsClient({
                 ? "1px solid rgba(255,255,255,0.06)"
                 : "1px solid rgba(30,58,138,0.1)",
             }}
-          >
+    initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+  viewport={{ once: true, amount: 0.2 }}
+>
             <div className="flex items-center gap-[9px] mb-[15px]">
               <span style={{ color: accent }}>
                 <IconShield />
@@ -1146,13 +1056,19 @@ export default function AuthorsClient({
             >
               {author.bio.join(" ")}
             </p>
-          </section>
+          </motion.div>
 
           {/* ===================================================
               ACTIVITY + CREDENTIALS
           =================================================== */}
 
-          <section className="max-w-[1180px] mx-auto mb-[34px] grid grid-cols-2 max-[900px]:grid-cols-1 gap-5 items-stretch">
+            <motion.div
+        className="max-w-[1180px] mx-auto mb-[34px] grid grid-cols-2 max-[900px]:grid-cols-1 gap-5 items-stretch"
+    initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+  viewport={{ once: true, amount: 0.2 }}
+>
             {/* ACTIVITY */}
             <div
               className="p-[23px] rounded-[17px] min-h-[390px]"
@@ -1347,13 +1263,19 @@ export default function AuthorsClient({
                 ))}
               </div>
             </div>
-          </section>
+          </motion.div>
 
           {/* ===================================================
               ARTICLES
           =================================================== */}
 
-          <section className="max-w-[1180px] mx-auto">
+            <motion.div
+        className="max-w-[1180px] mx-auto"
+    initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+  viewport={{ once: true, amount: 0.3 }}
+>
             <div className="flex items-end justify-between mb-[17px] gap-[15px] flex-wrap">
               <div>
                 <div
@@ -1462,18 +1384,35 @@ export default function AuthorsClient({
               </div>
             )}
 
-            {!postsError && displayedPosts.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {displayedPosts.map((post, index) => (
-                  <ArticleCard
-                    key={post._id || post.slug || `${post.title}-${index}`}
-                    post={post}
-                    accent={accent}
-                    seed={index}
-                  />
-                ))}
-              </div>
-            )}
+{!postsError && displayedPosts.length > 0 && (
+  <motion.div
+    key={`author-page-${safePage}-${showAllPosts}`}
+    variants={contentVariants}
+    initial="hidden"
+    animate="show"
+    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+  >
+    {displayedPosts.map((post, index) => (
+      <motion.div
+        key={post._id || post.slug || `${post.title}-${index}`}
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 0.4,
+          delay: index * 0.06,
+          ease: "easeOut",
+        }}
+        className="min-w-0"
+      >
+        <ArticleCard
+          post={post}
+          accent={accent}
+          seed={index}
+        />
+      </motion.div>
+    ))}
+  </motion.div>
+)}
 
             {showAllPosts && !postsError && authorPosts.length > postsPerPage && (
               <div className="flex flex-wrap items-center justify-center gap-2 mt-10 sm:mt-12 pb-12">
@@ -1557,7 +1496,7 @@ export default function AuthorsClient({
                 </Link>
               </div>
             )}
-          </section>
+          </motion.div>
         </div>
       </main>
 

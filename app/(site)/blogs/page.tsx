@@ -1805,19 +1805,11 @@
 //   );
 // }
 import { headers } from "next/headers";
-import BlogPageClient, {
-  type BlogPageInitialData,
-} from "./BlogPageClient";
-import {
-  getPageMetadata,
-  getPageSeo,
-  getAdjacentPageLinks,
-  SITE_URL,
-} from "@/lib/seo";
-import {
-  buildOrganizationSchema,
-  buildBreadcrumbSchema,
-} from "@/lib/schema";
+import type { Metadata } from "next";
+import BlogPageClient, { type BlogPageInitialData } from "./BlogPageClient";
+import { buildBlogsPaginationLinks, getPageMetadata } from "@/lib/seo";
+
+const PER_PAGE = 6;
 
 type RawBlogPost = {
   _id?: string;
@@ -1840,6 +1832,26 @@ type RawBlogPost = {
   updatedAt?: string;
 };
 
+type BlogPost = {
+  _id: string;
+  title: string;
+  slug: string;
+  author: string;
+  categoryId: string;
+  tags: string[];
+  status: "draft" | "published";
+  postType: "normal" | "special";
+  featuredImage: string | null;
+  featuredImageAlt: string | null;
+  content: string;
+  wordCount: number;
+  readingTime: number;
+  metaTitle: string;
+  metaDescription: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
 type MediaItem = {
   id: string;
   name: string;
@@ -1847,263 +1859,206 @@ type MediaItem = {
   url: string;
 };
 
-function normalizePosts(result: any): BlogPageInitialData["blogs"] {
-  const posts: RawBlogPost[] = Array.isArray(result)
-    ? result
-    : Array.isArray(result?.posts)
-      ? result.posts
-      : [];
+function normalizePost(post: RawBlogPost): BlogPost | null {
+  const id = post._id || post.id;
+  if (!id) return null;
 
-  return posts.flatMap((post) => {
-    const id = post?._id || post?.id;
-
-    if (!id) return [];
-
-    return [
-      {
-        _id: String(id),
-        title: String(post.title || ""),
-        slug: String(post.slug || ""),
-        author: String(post.author || ""),
-        categoryId: String(post.categoryId || ""),
-        tags: Array.isArray(post.tags) ? post.tags.map(String) : [],
-        status: post.status === "published" ? "published" : "draft",
-        postType: post.postType === "special" ? "special" : "normal",
-        featuredImage: post.featuredImage || null,
-        featuredImageAlt: post.featuredImageAlt || null,
-        content: String(post.content || ""),
-        wordCount: Number(post.wordCount || 0),
-        readingTime: Number(post.readingTime || 0),
-        metaTitle: String(post.metaTitle || ""),
-        metaDescription: String(post.metaDescription || ""),
-        createdAt: post.createdAt,
-        updatedAt: post.updatedAt,
-      },
-    ];
-  });
+  return {
+    _id: String(id),
+    title: String(post.title || ""),
+    slug: String(post.slug || ""),
+    author: String(post.author || ""),
+    categoryId: String(post.categoryId || ""),
+    tags: Array.isArray(post.tags) ? post.tags.map(String) : [],
+    status: post.status === "published" ? "published" : "draft",
+    postType: post.postType === "special" ? "special" : "normal",
+    featuredImage: post.featuredImage || null,
+    featuredImageAlt: post.featuredImageAlt || null,
+    content: String(post.content || ""),
+    wordCount: Number(post.wordCount || 0),
+    readingTime: Number(post.readingTime || 0),
+    metaTitle: String(post.metaTitle || ""),
+    metaDescription: String(post.metaDescription || ""),
+    createdAt: post.createdAt,
+    updatedAt: post.updatedAt,
+  };
 }
 
-/**
- * Server-side fetch used only for the initial HTML render.
- * A timeout is important here: a non-critical API must never leave the whole
- * route suspended behind app/loading.tsx forever.
- */
-async function fetchJson(
-  path: string,
-  cookie: string,
-  timeoutMs = 8000
-) {
-  const requestHeaders: HeadersInit = {};
-
-  if (cookie) {
-    requestHeaders.cookie = cookie;
-  }
-
+async function fetchServerJson(
+  url: string,
+  timeoutMs = 10000
+): Promise<{ response: Response; data: any }> {
   const controller = new AbortController();
-
-  const timeout = setTimeout(
-    () => controller.abort(),
-    timeoutMs
-  );
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const response = await fetch(path, {
-      headers: requestHeaders,
+    const response = await fetch(url, {
       cache: "no-store",
       signal: controller.signal,
     });
-
-    if (!response.ok) {
-      throw new Error(`Request failed: ${response.status}`);
-    }
-
-    return response.json();
+    const data = await response.json();
+    return { response, data };
   } finally {
     clearTimeout(timeout);
   }
 }
 
-async function getInitialData(
-  initialPage: number,
-  seo: Awaited<ReturnType<typeof getPageSeo>>
-): Promise<BlogPageInitialData> {
+async function getBaseUrl() {
   const requestHeaders = await headers();
+  const host = requestHeaders.get("host");
+  if (!host) return null;
+  const protocol = requestHeaders.get("x-forwarded-proto") || "http";
+  return `${protocol}://${host}`;
+}
 
-  const forwardedProto =
-    requestHeaders.get("x-forwarded-proto");
+async function getPublishedPosts(baseUrl: string): Promise<BlogPost[]> {
+  const { response, data } = await fetchServerJson(`${baseUrl}/api/posts`);
+  if (!response.ok) return [];
 
-  const forwardedHost =
-    requestHeaders.get("x-forwarded-host");
-
-  const host =
-    forwardedHost || requestHeaders.get("host");
-
-  const protocol =
-    forwardedProto?.split(",")[0] ||
-    (host?.includes("localhost") ? "http" : "https");
-
-  const origin = host
-    ? `${protocol}://${host}`
-    : process.env.NEXT_PUBLIC_SITE_URL ||
-      "http://localhost:3000";
-
-  const cookie =
-    requestHeaders.get("cookie") || "";
-
-  // The posts response is the SEO-critical payload.
-  // It is the only API that must complete before the page is rendered.
-  const postsResult = await fetchJson(
-    `${origin}/api/posts`,
-    cookie,
-    8000
-  ).catch(() => null);
-
-  // Media is optional and uses a short timeout so it can never
-  // keep the route on loading.tsx.
-  const mediaResult = await fetchJson(
-    `${origin}/api/media`,
-    cookie,
-    1500
-  ).catch(() => null);
-
-  const posts = postsResult
-    ? normalizePosts(postsResult)
+  const rawPosts: RawBlogPost[] = Array.isArray(data)
+    ? data
+    : Array.isArray(data?.posts)
+    ? data.posts
     : [];
 
-  const mediaItems: MediaItem[] = mediaResult
-    ? Array.isArray(mediaResult)
-      ? mediaResult
-      : Array.isArray(mediaResult?.media)
-        ? mediaResult.media
-        : Array.isArray(mediaResult?.items)
-          ? mediaResult.items
-          : []
-    : [];
-
-  return {
-    blogs: posts,
-
-    mediaItems,
-
-    seo: {
-      h1Title: seo.h1Title || "رادار پاراهور",
-    },
-
-    initialPage,
-  };
+  return rawPosts
+    .map(normalizePost)
+    .filter((item): item is BlogPost => item !== null)
+    .filter((item) => item.status === "published");
 }
 
-export async function generateMetadata() {
-  return getPageMetadata("blogs");
+function getSafePage(pageParam: string | undefined, totalPages: number) {
+  const requested = Number(pageParam || "1");
+  if (!Number.isFinite(requested)) return 1;
+  return Math.max(1, Math.min(Math.floor(requested), totalPages));
 }
 
-function BlogPageJsonLd({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
-  const canonical = `${SITE_URL}/blogs`;
+export const dynamic = "force-dynamic";
 
-  const jsonLd = {
-    "@context": "https://schema.org",
+type BlogsSearchParams = { page?: string };
 
-    "@graph": [
-      {
-        "@type": "CollectionPage",
-        "@id": `${canonical}#webpage`,
-        url: canonical,
-        name: title,
-        description,
-        inLanguage: "fa-IR",
-
-        isPartOf: {
-          "@type": "WebSite",
-          "@id": `${SITE_URL}/#website`,
-          url: `${SITE_URL}/`,
-          name: "پاراهور",
-        },
-      },
-
-      buildOrganizationSchema(),
-
-      buildBreadcrumbSchema([
-        {
-          name: "صفحه اصلی",
-          url: `${SITE_URL}/`,
-        },
-        {
-          name: "وبلاگ",
-          url: canonical,
-        },
-      ]),
-    ],
-  };
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(jsonLd),
-      }}
-    />
-  );
-}
-
-export default async function BlogPage({
+export async function generateMetadata({
   searchParams,
 }: {
-  searchParams: Promise<{
-    page?: string;
-  }>;
+  searchParams: Promise<BlogsSearchParams>;
+}): Promise<Metadata> {
+  const { page: pageParam } = await searchParams;
+  const baseMetadata = await getPageMetadata("blogs");
+
+  const baseUrl = await getBaseUrl();
+  if (!baseUrl) return baseMetadata;
+
+  try {
+    const publishedPosts = await getPublishedPosts(baseUrl);
+    const totalPages = Math.max(1, Math.ceil(publishedPosts.length / PER_PAGE));
+    const currentPage = getSafePage(pageParam, totalPages);
+
+    const { canonical } = buildBlogsPaginationLinks({
+      basePath: "/blogs",
+      currentPage,
+      totalPages,
+    });
+
+    return {
+      ...baseMetadata,
+      alternates: {
+        ...(baseMetadata.alternates || {}),
+        canonical,
+      },
+    };
+  } catch (error) {
+    console.error("generateMetadata /blogs error:", error);
+    return baseMetadata;
+  }
+}
+
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<BlogsSearchParams>;
 }) {
-  const params = await searchParams;
+  const { page: pageParam } = await searchParams;
+  const baseUrl = await getBaseUrl();
 
-  const parsedPage = Number(
-    params?.page || "1"
-  );
+  const emptyData: BlogPageInitialData = {
+    blogs: [],
+    mediaItems: [],
+    seo: { h1Title: "بلاگ پاراهور" },
+    initialPage: 1,
+  };
 
-  const initialPage = Number.isFinite(parsedPage)
-    ? Math.max(1, Math.floor(parsedPage))
-    : 1;
+  if (!baseUrl) {
+    return (
+      <div className="min-h-screen">
+        <BlogPageClient initialData={emptyData} />
+      </div>
+    );
+  }
 
-  // SEO is fetched only once here.
-  const [seo, adjacent] = await Promise.all([
-    getPageSeo("blogs"),
-    getAdjacentPageLinks("blogs"),
-  ]);
+  try {
+    const [postsResult, mediaResult] = await Promise.allSettled([
+      fetchServerJson(`${baseUrl}/api/posts`),
+      fetchServerJson(`${baseUrl}/api/media`),
+    ]);
 
-  // Pass the already-fetched SEO into initial data.
-  const initialData = await getInitialData(
-    initialPage,
-    seo
-  );
+    if (postsResult.status === "rejected") {
+      throw postsResult.reason;
+    }
 
-  return (
-    <>
-      {adjacent.prevUrl && (
-        <link
-          rel="prev"
-          href={adjacent.prevUrl}
-        />
-      )}
+    const { response: postsResponse, data: postsData } = postsResult.value;
 
-      {adjacent.nextUrl && (
-        <link
-          rel="next"
-          href={adjacent.nextUrl}
-        />
-      )}
+    if (!postsResponse.ok) {
+      throw new Error(postsData?.message || "خطا در دریافت پست‌ها");
+    }
 
-      <BlogPageJsonLd
-        title={seo.metaTitle}
-        description={seo.metaDescription}
-      />
+    const rawPosts: RawBlogPost[] = Array.isArray(postsData)
+      ? postsData
+      : Array.isArray(postsData?.posts)
+      ? postsData.posts
+      : [];
 
-      <BlogPageClient
-        initialData={initialData}
-      />
-    </>
-  );
+    const publishedPosts = rawPosts
+      .map(normalizePost)
+      .filter((item): item is BlogPost => item !== null)
+      .filter((item) => item.status === "published");
+
+    let mediaItems: MediaItem[] = [];
+
+    if (mediaResult.status === "fulfilled") {
+      const { response: mediaResponse, data: mediaData } = mediaResult.value;
+      if (mediaResponse.ok) {
+        mediaItems = Array.isArray(mediaData)
+          ? mediaData
+          : Array.isArray(mediaData?.media)
+          ? mediaData.media
+          : Array.isArray(mediaData?.items)
+          ? mediaData.items
+          : [];
+      }
+    }
+
+    const totalPages = Math.max(1, Math.ceil(publishedPosts.length / PER_PAGE));
+    const initialPage = getSafePage(pageParam, totalPages);
+
+    const initialData: BlogPageInitialData = {
+      blogs: publishedPosts,
+      mediaItems,
+      seo: { h1Title: "بلاگ پاراهور" },
+      initialPage,
+    };
+
+    return (
+      <div className="min-h-screen">
+        <BlogPageClient initialData={initialData} />
+      </div>
+    );
+  } catch (error) {
+    console.error("GET blogs list error:", error);
+
+    return (
+      <div className="min-h-screen">
+        <BlogPageClient initialData={emptyData} />
+      </div>
+    );
+  }
 }

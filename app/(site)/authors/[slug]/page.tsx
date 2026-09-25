@@ -1,8 +1,15 @@
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { cache } from "react";
-import { getPageMetadata, getPageSeo, type PageKey } from "@/lib/seo";
-import AuthorsClient, { type Post } from "../AuthorsClient";
+import {
+  getPageMetadata,
+  getPageSeo,
+  buildPaginationLinks,
+  getAdjacentPageLinks,
+  type PageKey,
+} from "@/lib/seo";
+import AuthorsClient from "../AuthorsClient";
+import { type Post, getAuthorPosts, POSTS_PER_PAGE } from "../authorsData";
 
 async function getPosts(): Promise<Post[]> {
   try {
@@ -64,15 +71,41 @@ const resolveAuthorByRouteSlug = cache(async (routeSlug: string) => {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ view?: string; page?: string }>;
 }) {
-  const { slug } = await params;
+  const [{ slug }, query] = await Promise.all([params, searchParams]);
   const match = await resolveAuthorByRouteSlug(slug);
 
   if (!match) return {};
 
-  return getPageMetadata(toPageKey(match.identity));
+  const showAllPosts = query.view === "all";
+  const currentPage = parsePage(query.page);
+
+  const posts = await getPosts();
+  const authorPosts = getAuthorPosts(posts, match.identity);
+  const totalPages = Math.max(
+    1,
+    Math.ceil(authorPosts.length / POSTS_PER_PAGE)
+  );
+
+  const base = await getPageMetadata(toPageKey(match.identity));
+  const pagination = buildPaginationLinks({
+    basePath: `/authors/${match.seo.slug}`,
+    showAllPosts,
+    currentPage,
+    totalPages,
+  });
+
+  return {
+    ...base,
+    alternates: {
+      ...base.alternates,
+      canonical: pagination.canonical,
+    },
+  };
 }
 
 export default async function AuthorPage({
@@ -88,19 +121,47 @@ export default async function AuthorPage({
 
   if (!match) notFound();
 
-  const posts = await getPosts();
+  const [posts, adjacent] = await Promise.all([
+    getPosts(),
+    getAdjacentPageLinks(toPageKey(match.identity)),
+  ]);
 
+  const showAllPosts = query.view === "all";
+  const currentPage = parsePage(query.page);
+  const basePath = `/authors/${match.seo.slug}`;
 
+  const authorPosts = getAuthorPosts(posts, match.identity);
+  const totalPages = Math.max(
+    1,
+    Math.ceil(authorPosts.length / POSTS_PER_PAGE)
+  );
 
-  
+  const pagination = buildPaginationLinks({
+    basePath,
+    showAllPosts,
+    currentPage,
+    totalPages,
+  });
+
+  // مثل صفحه‌ی /authors: وقتی تو حالت پجینیشن‌شده (view=all) هستیم،
+  // prev/next باید بین صفحات مقاله‌های همین نویسنده باشه؛ وقتی نیستیم
+  // (تب پیش‌فرض)، prev/next باید بین بخش‌های سایت (زنجیره‌ی سراسری) باشه.
+  const prevUrl = showAllPosts ? pagination.prevUrl : adjacent.prevUrl;
+  const nextUrl = showAllPosts ? pagination.nextUrl : adjacent.nextUrl;
+
   return (
-    <AuthorsClient
-      posts={posts}
-      authorSlug={match.identity}
-      showAllPosts={query.view === "all"}
-      currentPage={parsePage(query.page)}
-      seoH1={match.seo.h1Title}
-      basePath={`/authors/${match.seo.slug}`}
-    />
+    <>
+      {prevUrl && <link rel="prev" href={prevUrl} />}
+      {nextUrl && <link rel="next" href={nextUrl} />}
+
+      <AuthorsClient
+        posts={posts}
+        authorSlug={match.identity}
+        showAllPosts={showAllPosts}
+        currentPage={currentPage}
+        seoH1={match.seo.h1Title}
+        basePath={basePath}
+      />
+    </>
   );
 }

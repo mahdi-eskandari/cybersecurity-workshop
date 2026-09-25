@@ -4,21 +4,18 @@ import {
   getStaticPageMetadata,
   getPageSeo,
   getAdjacentPageLinks,
+  buildPaginationLinks,
   SITE_URL,
 } from "@/lib/seo";
 import {
   buildOrganizationSchema,
   buildBreadcrumbSchema,
 } from "@/lib/schema";
-import AuthorsClient, { type Post } from "./AuthorsClient";
+import AuthorsClient from "./AuthorsClient";
+import { type Post, getAuthorPosts, POSTS_PER_PAGE } from "./authorsData";
 
-// این پیج عمداً از getPageMetadata استفاده نمی‌کنه چون اون از
-// دیتابیس/پنل ادمین می‌خونه؛ اینجا همیشه باید همون تایتل ثابتِ
-// SEO_DEFAULTS.authors روی تب مرورگر بیاد، نه چیزی که تو پنل
-// برای pageKey "authors" ست شده.
-export async function generateMetadata(): Promise<Metadata> {
-  return getStaticPageMetadata("authors");
-}
+const AUTHOR_ID = "mohammadreza-yousefi";
+const BASE_PATH = "/authors";
 
 async function getPosts(): Promise<Post[]> {
   try {
@@ -57,6 +54,44 @@ const parsePage = (value?: string) => {
   return Number.isInteger(page) && page > 0 ? page : 1;
 };
 
+// این پیج عمداً از getPageMetadata استفاده نمی‌کنه چون اون از
+// دیتابیس/پنل ادمین می‌خونه؛ اینجا همیشه باید همون تایتل ثابتِ
+// SEO_DEFAULTS.authors روی تب مرورگر بیاد، نه چیزی که تو پنل
+// برای pageKey "authors" ست شده. فقط canonical (که به page/view
+// وابسته‌ست) رو روش override می‌کنیم.
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ view?: string; page?: string }>;
+}): Promise<Metadata> {
+  const params = await searchParams;
+  const showAllPosts = params.view === "all";
+  const currentPage = parsePage(params.page);
+
+  const posts = await getPosts();
+  const authorPosts = getAuthorPosts(posts, AUTHOR_ID);
+  const totalPages = Math.max(
+    1,
+    Math.ceil(authorPosts.length / POSTS_PER_PAGE)
+  );
+
+  const base = getStaticPageMetadata("authors");
+  const pagination = buildPaginationLinks({
+    basePath: BASE_PATH,
+    showAllPosts,
+    currentPage,
+    totalPages,
+  });
+
+  return {
+    ...base,
+    alternates: {
+      ...base.alternates,
+      canonical: pagination.canonical,
+    },
+  };
+}
+
 /* =========================================================
    JSON-LD — دقیقاً همون الگوی HomePageJsonLd
 ========================================================= */
@@ -68,7 +103,7 @@ function AuthorsJsonLd({
   title: string;
   description: string;
 }) {
-  const canonical = `${SITE_URL}/authors`;
+  const canonical = `${SITE_URL}${BASE_PATH}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -123,10 +158,28 @@ export default async function AuthorsPage({
   const showAllPosts = params.view === "all";
   const currentPage = parsePage(params.page);
 
+  const authorPosts = getAuthorPosts(posts, AUTHOR_ID);
+  const totalPages = Math.max(
+    1,
+    Math.ceil(authorPosts.length / POSTS_PER_PAGE)
+  );
+
+  const pagination = buildPaginationLinks({
+    basePath: BASE_PATH,
+    showAllPosts,
+    currentPage,
+    totalPages,
+  });
+
+  // وقتی تو حالت صفحه‌بندی‌شده (view=all) هستیم، prev/next باید بین
+  // صفحات مقاله‌ها باشه، نه بین بخش‌های سایت (که adjacent میده).
+  const prevUrl = showAllPosts ? pagination.prevUrl : adjacent.prevUrl;
+  const nextUrl = showAllPosts ? pagination.nextUrl : adjacent.nextUrl;
+
   return (
     <>
-      {adjacent.prevUrl && <link rel="prev" href={adjacent.prevUrl} />}
-      {adjacent.nextUrl && <link rel="next" href={adjacent.nextUrl} />}
+      {prevUrl && <link rel="prev" href={prevUrl} />}
+      {nextUrl && <link rel="next" href={nextUrl} />}
 
       <AuthorsJsonLd
         title={seo.metaTitle}
@@ -135,11 +188,11 @@ export default async function AuthorsPage({
 
       <AuthorsClient
         posts={posts}
-        authorSlug="mohammadreza-yousefi"
+        authorSlug={AUTHOR_ID}
         showAllPosts={showAllPosts}
         currentPage={currentPage}
         seoH1={seo.h1Title}
-        basePath="/authors"
+        basePath={BASE_PATH}
       />
     </>
   );
