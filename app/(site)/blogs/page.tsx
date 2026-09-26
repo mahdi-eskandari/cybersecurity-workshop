@@ -1804,12 +1804,42 @@
 //     </article>
 //   );
 // }
+
+
+
+
+
+
+
+
+
+
+
+
+
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 import BlogPageClient, { type BlogPageInitialData } from "./BlogPageClient";
-import { buildBlogsPaginationLinks, getPageMetadata } from "@/lib/seo";
+import {
+  buildBlogsPaginationLinks,
+  buildBlogsCategoryLinks,
+  getAdjacentPageLinks,
+  getPageMetadata,
+} from "@/lib/seo";
 
 const PER_PAGE = 6;
+
+// همون idهای BLOG_CATEGORIES تو BlogPageClient.tsx (اونجا "use client"ه
+// و نمی‌شه ازش تابع/آرایه رو مستقیم سمت سرور import کرد) — هر وقت اونجا
+// دسته‌بندی اضافه/کم شد، همینجا هم دستی sync کن.
+const VALID_CATEGORY_IDS = [
+  "all",
+  "forensic-reports",
+  "legal-news",
+  "solved-cases",
+  "security-alerts",
+  "security-education",
+];
 
 type RawBlogPost = {
   _id?: string;
@@ -1933,31 +1963,56 @@ function getSafePage(pageParam: string | undefined, totalPages: number) {
   return Math.max(1, Math.min(Math.floor(requested), totalPages));
 }
 
+function getSafeCategory(categoryParam: string | undefined) {
+  if (!categoryParam) return "all";
+  return VALID_CATEGORY_IDS.includes(categoryParam) ? categoryParam : "all";
+}
+
+function filterByCategory(posts: BlogPost[], category: string) {
+  if (category === "all") return posts;
+  return posts.filter((post) => post.categoryId === category);
+}
+
 export const dynamic = "force-dynamic";
 
-type BlogsSearchParams = { page?: string };
+type BlogsSearchParams = { page?: string; category?: string };
 
 export async function generateMetadata({
   searchParams,
 }: {
   searchParams: Promise<BlogsSearchParams>;
 }): Promise<Metadata> {
-  const { page: pageParam } = await searchParams;
+  const { page: pageParam, category: categoryParam } = await searchParams;
   const baseMetadata = await getPageMetadata("blogs");
 
   const baseUrl = await getBaseUrl();
   if (!baseUrl) return baseMetadata;
 
+  // روت خام (بدون هیچ queryای) → canonical همون baseMetadata (پایه‌ی /blogs).
+  const hasQuery = pageParam !== undefined || categoryParam !== undefined;
+  if (!hasQuery) return baseMetadata;
+
   try {
+    const category = getSafeCategory(categoryParam);
     const publishedPosts = await getPublishedPosts(baseUrl);
-    const totalPages = Math.max(1, Math.ceil(publishedPosts.length / PER_PAGE));
+    const scopedPosts = filterByCategory(publishedPosts, category);
+    const totalPages = Math.max(1, Math.ceil(scopedPosts.length / PER_PAGE));
     const currentPage = getSafePage(pageParam, totalPages);
 
-    const { canonical } = buildBlogsPaginationLinks({
-      basePath: "/blogs",
-      currentPage,
-      totalPages,
-    });
+    // اگه صریحاً category تو URL بوده (حتی "all")، صفحه‌بندی مخصوص همون
+    // دسته حساب می‌شه؛ وگرنه (فقط ?page=N بدون category) همون رفتار قبلی.
+    const { canonical } = categoryParam
+      ? buildBlogsCategoryLinks({
+          basePath: "/blogs",
+          category,
+          currentPage,
+          totalPages,
+        })
+      : buildBlogsPaginationLinks({
+          basePath: "/blogs",
+          currentPage,
+          totalPages,
+        });
 
     return {
       ...baseMetadata,
@@ -1977,14 +2032,19 @@ export default async function Page({
 }: {
   searchParams: Promise<BlogsSearchParams>;
 }) {
-  const { page: pageParam } = await searchParams;
+  const { page: pageParam, category: categoryParam } = await searchParams;
   const baseUrl = await getBaseUrl();
+
+  const hasQuery = pageParam !== undefined || categoryParam !== undefined;
+  const category = getSafeCategory(categoryParam);
 
   const emptyData: BlogPageInitialData = {
     blogs: [],
     mediaItems: [],
     seo: { h1Title: "بلاگ پاراهور" },
     initialPage: 1,
+    initialCategory: category,
+    isBare: !hasQuery,
   };
 
   if (!baseUrl) {
@@ -2037,18 +2097,41 @@ export default async function Page({
       }
     }
 
-    const totalPages = Math.max(1, Math.ceil(publishedPosts.length / PER_PAGE));
+    const scopedPosts = filterByCategory(publishedPosts, category);
+    const totalPages = Math.max(1, Math.ceil(scopedPosts.length / PER_PAGE));
     const initialPage = getSafePage(pageParam, totalPages);
+
+    // روت خام (بدون query): prev/next سطح سایت (خدمات ↔ درباره ما).
+    // هر حالت دیگه (category و/یا page تو URL): prev/next صفحه‌بندی
+    // همون دسته.
+    const { prevUrl, nextUrl } = !hasQuery
+      ? await getAdjacentPageLinks("blogs")
+      : categoryParam
+      ? buildBlogsCategoryLinks({
+          basePath: "/blogs",
+          category,
+          currentPage: initialPage,
+          totalPages,
+        })
+      : buildBlogsPaginationLinks({
+          basePath: "/blogs",
+          currentPage: initialPage,
+          totalPages,
+        });
 
     const initialData: BlogPageInitialData = {
       blogs: publishedPosts,
       mediaItems,
       seo: { h1Title: "بلاگ پاراهور" },
       initialPage,
+      initialCategory: category,
+      isBare: !hasQuery,
     };
 
     return (
       <div className="min-h-screen">
+        {prevUrl && <link rel="prev" href={prevUrl} />}
+        {nextUrl && <link rel="next" href={nextUrl} />}
         <BlogPageClient initialData={initialData} />
       </div>
     );
@@ -2062,3 +2145,4 @@ export default async function Page({
     );
   }
 }
+

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Clock, ChevronLeft } from "lucide-react";
 import { useTheme } from "../../../../components/ThemeProvider";
 import {EmergencyModal} from "../../.../../../../components/CrisisReportForm"
+import CommentSection from "@/components/CommentSection";
+import type { ApprovedComment } from "@/components/CommentSection";
 
 
 /* ─────────────────────────────────────────────────────────────
@@ -60,6 +62,11 @@ type MediaItem = {
 };
 
 
+
+
+
+
+
 const TelegramIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     width={size}
@@ -74,6 +81,54 @@ const TelegramIcon = ({ size = 16 }: { size?: number }) => (
     />
   </svg>
 );
+
+
+
+
+const ArticleThumb = ({
+  accent = "#00E5FF",
+  seed = 0,
+}: {
+  accent?: string;
+  seed?: number;
+}) => {
+  const { darkMode } = useTheme();
+  const offsets = [0, 60, 120, 30, 90, 150];
+  const ox = offsets[seed % offsets.length];
+
+  return (
+    <svg width="100%" height="100%" viewBox="0 0 340 180" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <radialGradient id={`article-gradient-${seed}`} cx="40%" cy="50%" r="55%">
+          <stop offset="0%" stopColor={accent} stopOpacity="0.14" />
+          <stop offset="100%" stopColor="transparent" />
+        </radialGradient>
+      </defs>
+      <rect width="340" height="180" fill={darkMode ? "#060B19" : "#F1F5FB"} />
+      <rect width="340" height="180" fill={`url(#article-gradient-${seed})`} />
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <line key={`horizontal-${i}`} x1="0" y1={i * 36} x2="340" y2={i * 36}
+          stroke={darkMode ? "rgba(0,229,255,0.04)" : "rgba(30,58,138,0.05)"} strokeWidth="1" />
+      ))}
+      {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+        <line key={`vertical-${i}`} x1={i * 42} y1="0" x2={i * 42} y2="180"
+          stroke={darkMode ? "rgba(0,229,255,0.04)" : "rgba(30,58,138,0.05)"} strokeWidth="1" />
+      ))}
+      <path
+        d={`M${40 + ox} 90 L${100 + ox} 60 L${160 + ox} 90 L${220 + ox} 50 L${280 + ox} 80`}
+        stroke={accent} strokeWidth="1.5" fill="none" opacity="0.4"
+      />
+      {[[100 + ox, 60], [160 + ox, 90], [220 + ox, 50]].map(([x, y], index) => (
+        <g key={index}>
+          <circle cx={x} cy={y} r="12" fill={accent} fillOpacity="0.06" stroke={accent} strokeWidth="1" strokeOpacity="0.3" />
+          <circle cx={x} cy={y} r="4" fill={accent} fillOpacity="0.6" />
+        </g>
+      ))}
+      <rect x="16" y="154" width="60" height="3" rx="1.5" fill={accent} fillOpacity="0.15" />
+      <rect x="82" y="154" width="40" height="3" rx="1.5" fill={darkMode ? "rgba(255,255,255,0.07)" : "rgba(30,58,138,0.08)"} />
+    </svg>
+  );
+};
 
 /* ─────────────────────────────────────────────────────────────
    CONSTANTS
@@ -389,17 +444,18 @@ const IconClock = () => (
 
 const IconUser = () => (
   <svg
-    width="12"
-    height="12"
+    width="18"
+    height="18"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="2"
+    strokeWidth="1.8"
     strokeLinecap="round"
     strokeLinejoin="round"
+    className="text-[#475569] "
   >
-    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-    <circle cx="12" cy="7" r="4" />
+    <circle cx="12" cy="8" r="3.5" />
+    <path d="M5 20c.8-3.2 3.2-5 7-5s6.2 1.8 7 5" />
   </svg>
 );
 
@@ -813,14 +869,17 @@ export default function App({
   initialPost,
   initialAllPosts,
   initialMediaItems,
+  initialComments,
   initialError = false,
 }: {
   initialPost: BlogPost | null;
   initialAllPosts: BlogPost[];
   initialMediaItems: MediaItem[];
+  initialComments: ApprovedComment[];
   initialError?: boolean;
 }) {
   const { darkMode } = useTheme();
+  const accent = darkMode ? "#00E5FF" : "#1D4ED8";
 
   const [modalOpen, setModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -1168,21 +1227,23 @@ export default function App({
             )}
 
             {post.author && (
-              <div
-                className="flex items-center gap-1.5"
-                style={{
-                  color: darkMode
-                    ? "#475569"
-                    : "#64748B",
-                  fontSize: "0.78rem",
-                }}
+              <Link
+              href={post.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"}
+              style={{
+                  
+                fontSize: "0.78rem",
+              }}
+                className={`flex items-center gap-1.5  ${darkMode
+                  ? "text-gray-600 hover:text-gray-500"
+                  : "text-[#475569]"
+                }`}
               >
-                <IconUser />
-                <span>
+
+                       <IconUser />
+                <div >
                   {post.author}
-{/* تیم تخصصی پاراهور */}
-                </span>
-              </div>
+                </div>
+              </Link>
             )}
 
             {post.readingTime > 0 && (
@@ -1621,6 +1682,32 @@ export default function App({
           درخواست بررسی و ردیابی پرونده
         </button>
 
+
+                    {/* <button
+               onClick={() => setCrisisOpen(true)}
+              className="inline-flex items-center gap-2.5 px-9 py-4 rounded-xl font-bold transition-all"
+              style={{
+                background: "#EF4444",
+                color: "#fff",
+                border: "1px solid rgba(239,68,68,0.55)",
+                boxShadow:
+                  "0 0 24px rgba(239,68,68,0.3)",
+                fontSize: "1rem",
+                fontFamily: "var(--font-vazirmatn), sans-serif",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow =
+                  "0 0 30px rgba(239,68,68,0.5)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow =
+                  "0 0 24px rgba(239,68,68,0.3)";
+              }}
+            >
+              <IconWarning />
+              درخواست بررسی و ردیابی پرونده
+            </button> */}
+
       </div>
     </div>
   </div>
@@ -1800,15 +1887,15 @@ export default function App({
               loading="lazy"
             />
           ) : (
-            <div
-              className="w-full h-full group-hover:scale-105 transition-transform duration-500"
-              style={{
-                borderBottom: darkMode ? "none" : "1px solid #43628123",
-              }}
-            >
-              <HeroImageFallback darkMode={darkMode} />
-            </div>
-          )}
+              <div
+                className="w-full h-full group-hover:scale-105 transition-transform duration-500"
+                style={{
+                  borderBottom: darkMode ? "none" : "1px solid #43628123",
+                }}
+              >
+                <ArticleThumb accent={accent} seed={relatedPosts.indexOf(related)} />
+              </div>
+            )}
 
           {/* سایه‌ی پایین عکس تا از بدنه‌ی کارت جدا بشه */}
           <div
@@ -1858,7 +1945,10 @@ export default function App({
               darkMode ? "border-[#1E334A]" : "border-[#E2E8F0]"
             }`}
           >
-            <div className="flex items-center gap-2.5 min-w-0">
+            <Link
+            href={post.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"}
+             className="flex items-center gap-2.5 min-w-0 pt-1"
+             >
               <div
                 className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 ${
                   darkMode
@@ -1866,19 +1956,23 @@ export default function App({
                     : "bg-blue-100 text-[#1565C0]"
                 }`}
               >
-                پ
+                     <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center flex-shrink-0">
+                       <IconUser />
+                     </div>
               </div>
 
               <div className="min-w-0">
-                <p
-                  className={`text-xs font-semibold truncate pb-1 ${
-                    darkMode ? "text-[#9DB0C0]" : "text-[#475569]"
+                <div 
+                
+                  className={`text-xs font-semibold truncate pb-1 transition-all duration-300 ${
+                    darkMode ? "text-[#9DB0C0] hover:text-white/80" : "text-[#475569]"
                   }`}
                 >
-                  تیم تخصصی پاراهور
-                </p>
+                  {post.author}
+                  {/* تیم تخصصی پاراهور */}
+                </div>
               </div>
-            </div>
+            </Link>
 
             <Link
               href={`/blogs/${related.slug || related._id}`}
@@ -1894,16 +1988,14 @@ export default function App({
       </article>
     );
   })}
+
+  
 </div>
 
 
 
 
-
-
-
-
-              
+<CommentSection postId={post._id} darkMode={darkMode} initialComments={initialComments} />
             </div>
           )}
         </div>

@@ -1,5 +1,3 @@
-
-
 import type { Metadata } from "next";
 import connectDB from "./mongodb";
 import PageSeo from "../app/model/PageSeo";
@@ -344,6 +342,38 @@ export function buildBlogsPaginationLinks({
     page <= 1
       ? `${SITE_URL}${basePath}`
       : `${SITE_URL}${basePath}?page=${page}`;
+
+  return {
+    canonical: pageUrl(safePage),
+    prevUrl: safePage > 1 ? pageUrl(safePage - 1) : null,
+    nextUrl: safePage < safeTotalPages ? pageUrl(safePage + 1) : null,
+  };
+}
+
+// ─────────────────────────────────────────────────────────────
+// buildBlogsCategoryLinks — مثل buildBlogsPaginationLinks ولی
+// برای حالتی که کاربر رو یه فیلتر/تب دسته‌بندیه (یا صراحتاً روی
+// category=all زده). برخلاف buildBlogsPaginationLinks، اینجا
+// page=1 هم همیشه صریح تو URL میاد (چون این حالت با روت خامِ
+// /blogs یه محتوای متفاوته، نه صرفاً صفحه‌ی اول همون چیز).
+// ─────────────────────────────────────────────────────────────
+
+export function buildBlogsCategoryLinks({
+  basePath,
+  category,
+  currentPage,
+  totalPages,
+}: {
+  basePath: string;
+  category: string;
+  currentPage: number;
+  totalPages: number;
+}) {
+  const safeTotalPages = Math.max(1, totalPages);
+  const safePage = Math.min(Math.max(currentPage, 1), safeTotalPages);
+
+  const pageUrl = (page: number) =>
+    `${SITE_URL}${basePath}?category=${category}&page=${page}`;
 
   return {
     canonical: pageUrl(safePage),

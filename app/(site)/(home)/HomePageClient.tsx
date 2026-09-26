@@ -17,6 +17,73 @@ import { EmergencyModal } from "../../../components/CrisisReportForm"
    HERO IMAGE FALLBACK
 ───────────────────────────────────────────────────────────── */
 
+const ArticleThumb = ({
+  accent = "#00E5FF",
+  seed = 0,
+}: {
+  accent?: string;
+  seed?: number;
+}) => {
+  const { darkMode } = useTheme();
+  const offsets = [0, 60, 120, 30, 90, 150];
+  const ox = offsets[seed % offsets.length];
+
+  return (
+    <svg width="100%" height="100%" viewBox="0 0 340 180" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <radialGradient id={`article-gradient-${seed}`} cx="40%" cy="50%" r="55%">
+          <stop offset="0%" stopColor={accent} stopOpacity="0.14" />
+          <stop offset="100%" stopColor="transparent" />
+        </radialGradient>
+      </defs>
+      <rect width="340" height="180" fill={darkMode ? "#060B19" : "#F1F5FB"} />
+      <rect width="340" height="180" fill={`url(#article-gradient-${seed})`} />
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <line key={`horizontal-${i}`} x1="0" y1={i * 36} x2="340" y2={i * 36}
+          stroke={darkMode ? "rgba(0,229,255,0.04)" : "rgba(30,58,138,0.05)"} strokeWidth="1" />
+      ))}
+      {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+        <line key={`vertical-${i}`} x1={i * 42} y1="0" x2={i * 42} y2="180"
+          stroke={darkMode ? "rgba(0,229,255,0.04)" : "rgba(30,58,138,0.05)"} strokeWidth="1" />
+      ))}
+      <path
+        d={`M${40 + ox} 90 L${100 + ox} 60 L${160 + ox} 90 L${220 + ox} 50 L${280 + ox} 80`}
+        stroke={accent} strokeWidth="1.5" fill="none" opacity="0.4"
+      />
+      {[[100 + ox, 60], [160 + ox, 90], [220 + ox, 50]].map(([x, y], index) => (
+        <g key={index}>
+          <circle cx={x} cy={y} r="12" fill={accent} fillOpacity="0.06" stroke={accent} strokeWidth="1" strokeOpacity="0.3" />
+          <circle cx={x} cy={y} r="4" fill={accent} fillOpacity="0.6" />
+        </g>
+      ))}
+      <rect x="16" y="154" width="60" height="3" rx="1.5" fill={accent} fillOpacity="0.15" />
+      <rect x="82" y="154" width="40" height="3" rx="1.5" fill={darkMode ? "rgba(255,255,255,0.07)" : "rgba(30,58,138,0.08)"} />
+    </svg>
+  );
+};
+
+
+
+
+const IconUser = () => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="text-[#475569] "
+  >
+    <circle cx="12" cy="8" r="3.5" />
+    <path d="M5 20c.8-3.2 3.2-5 7-5s6.2 1.8 7 5" />
+  </svg>
+);
+
+
+
 const HeroImageFallback = ({
   darkMode,
 }: {
@@ -1503,7 +1570,6 @@ export default function HomePageClient({
   const { darkMode } = useTheme()
   const [menuOpen, setMenuOpen] = useState(false)
   const [crisisOpen, setCrisisOpen] = useState(false)
-  const [caseOpen, setCaseOpen] = useState(false)
       const blueBright = darkMode ? "#00E5FF" : "#1D4ED8";
 
 
@@ -1527,14 +1593,7 @@ export default function HomePageClient({
 
 
 
-  useEffect(() => {
-    if (!caseOpen) return
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setCaseOpen(false)
-    }
-    window.addEventListener("keydown", onKeyDown)
-    return () => window.removeEventListener("keydown", onKeyDown)
-  }, [caseOpen])
+
 
   useEffect(() => {
     if (darkMode) {
@@ -1545,6 +1604,7 @@ export default function HomePageClient({
   }, [darkMode])
 
   const iconColor = darkMode ? "#00E5FF" : "#1D4ED8"
+  const accent = darkMode ? "#00E5FF" : "#1D4ED8" 
 
 
 
@@ -1663,7 +1723,6 @@ export default function HomePageClient({
   
   return (
       <>
-      {caseOpen && <CaseReviewPanel onClose={() => setCaseOpen(false)} />}
 <div
             dir="rtl"
       className={`min-h-screen transition-colors duration-300 pt-20 cyber-grid-bg ${
@@ -2482,18 +2541,16 @@ export default function HomePageClient({
                             className="block w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             loading="lazy"
                           />
-                        ) : (
-                          <div
-                            className="w-full h-full group-hover:scale-105 transition-transform duration-500"
-                            style={{
-                              borderBottom: darkMode
-                                ? "none"
-                                : "1px solid #43628123",
-                            }}
-                          >
-                            <HeroImageFallback darkMode={darkMode} />
-                          </div>
-                        )}
+                         ) : (
+                           <div
+                             className="w-full h-full group-hover:scale-105 transition-transform duration-500"
+                             style={{
+                               borderBottom: darkMode ? "none" : "1px solid #43628123",
+                             }}
+                           >
+                             <ArticleThumb accent={accent} seed={i} />
+                           </div>
+                         )}
 
                         {/* سایه‌ی پایین عکس تا از بدنه‌ی کارت جدا بشه */}
                         <div
@@ -2546,24 +2603,24 @@ export default function HomePageClient({
                           }`}
                         >
                           <div className="flex items-center gap-2.5 min-w-0">
-                            <div
-                              className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 ${
-                                darkMode
-                                  ? "bg-cyan-400/10 text-cyan-300"
-                                  : "bg-blue-100 text-[#1565C0]"
-                              }`}
+                            <Link 
+                            href={post.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"} 
                             >
-                              {getInitials(post.author)}
-                            </div>
-
-                            <div className="min-w-0">
-                              <p
-                                className={`text-xs font-semibold truncate pb-1 ${
-                                  darkMode ? "text-[#9DB0C0]" : "text-[#475569]"
-                                }`}
-                              >
-                                تیم تخصصی پاراهور
-                              </p>
+                      <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center flex-shrink-0">
+                        <IconUser />
+                      </div>
+                            </Link>
+                      
+                         <div className="min-w-0">
+                      <Link 
+                        href={post.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"} 
+                        className={`inline-flex items-center gap-1.5 text-xs font-semibold truncate pb-1 transition-all duration-300 ${
+                          darkMode ? "text-[#9DB0C0] hover:text-white/80" : "text-[#475569]"
+                        }`}
+                      >
+                        {post.author}
+                        {/* تیم تخصصی پاراهور */}
+                      </Link>
 
                               <div
                                 className={`flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] ${
@@ -2577,9 +2634,8 @@ export default function HomePageClient({
                             </div>
                           </div>
 
-                          <button
-                            type="button"
-                            onClick={() => setCaseOpen(true)}
+                          <Link
+href={`/blogs/${post.slug}`}
                             className={`flex items-center gap-1 text-xs font-semibold whitespace-nowrap hover:gap-1.5 transition-all flex-shrink-0 ${
                               darkMode ? "text-[#00E5FF]" : "text-[#1E3A8A]"
                             }`}
@@ -2597,7 +2653,7 @@ export default function HomePageClient({
                             >
                               <path d="m15 18-6-6 6-6" />
                             </svg>
-                          </button>
+                          </Link>
                         </div>
                       </div>
                     </article>

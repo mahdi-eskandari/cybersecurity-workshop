@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import SinglePostClient from "./SinglePostClient";
+import type { ApprovedComment } from "@/components/CommentSection";
 
 type RawBlogPost = {
   _id?: string;
@@ -97,6 +98,27 @@ async function fetchServerJson(
   }
 }
 
+// نظراتِ تایید و منتشرشده‌ی یک پست را سمت سرور می‌گیرد.
+// عمداً خطاها را می‌بلعد و [] برمی‌گرداند تا یک خطای موقتِ روتر
+// کامنت‌ها، کل صفحه‌ی پست را از کار نیندازد.
+async function fetchApprovedComments(
+  baseUrl: string,
+  postId: string
+): Promise<ApprovedComment[]> {
+  try {
+    const { response, data } = await fetchServerJson(
+      `${baseUrl}/api/comments?postId=${encodeURIComponent(postId)}&status=approved&limit=200`
+    );
+
+    if (!response.ok) return [];
+
+    return Array.isArray(data?.comments) ? data.comments : [];
+  } catch (error) {
+    console.error("GET approved comments error:", error);
+    return [];
+  }
+}
+
 export default async function Page({
   params,
 }: {
@@ -116,6 +138,7 @@ export default async function Page({
           initialPost={null}
           initialAllPosts={[]}
           initialMediaItems={[]}
+          initialComments={[]}
           initialError
         />
       </div>
@@ -125,16 +148,8 @@ export default async function Page({
   const baseUrl = `${protocol}://${host}`;
 
   try {
-    const [postsResult, mediaResult] = await Promise.allSettled([
-      fetchServerJson(`${baseUrl}/api/posts`),
-      fetchServerJson(`${baseUrl}/api/media`),
-    ]);
-
-    if (postsResult.status === "rejected") {
-      throw postsResult.reason;
-    }
-
-    const { response: postsResponse, data: postsData } = postsResult.value;
+    const { response: postsResponse, data: postsData } =
+      await fetchServerJson(`${baseUrl}/api/posts`);
 
     if (!postsResponse.ok) {
       throw new Error(
@@ -165,6 +180,15 @@ export default async function Page({
           item._id === slug
       ) || null;
 
+    // media و comments مستقل از هم هستن، پس با هم موازی می‌گیریمشون.
+    // comments فقط وقتی معنی داره که پستی پیدا شده باشه.
+    const [mediaResult, commentsResult] = await Promise.allSettled([
+      fetchServerJson(`${baseUrl}/api/media`),
+      currentPost
+        ? fetchApprovedComments(baseUrl, currentPost._id)
+        : Promise.resolve([] as ApprovedComment[]),
+    ]);
+
     let mediaItems: MediaItem[] = [];
 
     if (mediaResult.status === "fulfilled") {
@@ -181,12 +205,16 @@ export default async function Page({
       }
     }
 
+    const initialComments: ApprovedComment[] =
+      commentsResult.status === "fulfilled" ? commentsResult.value : [];
+
     return (
       <div className="min-h-screen">
         <SinglePostClient
           initialPost={currentPost}
           initialAllPosts={publishedPosts}
           initialMediaItems={mediaItems}
+          initialComments={initialComments}
         />
       </div>
     );
@@ -199,6 +227,7 @@ export default async function Page({
           initialPost={null}
           initialAllPosts={[]}
           initialMediaItems={[]}
+          initialComments={[]}
           initialError
         />
       </div>

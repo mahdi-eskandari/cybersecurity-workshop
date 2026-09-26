@@ -1603,6 +1603,7 @@ export default function SeoAdminPage() {
 
   const [error, setError] =
     useState("");
+    
 
   const selectedPage = useMemo(
     () =>
@@ -1873,12 +1874,12 @@ export default function SeoAdminPage() {
   // RENDER
   // ---------------------------------------------------------
 
-  return (
+return (
     <div
       dir="rtl"
-      className="min-h-screen bg-[#060B19] text-slate-200"
+      className="min-h-screen w-full bg-[#050814] text-slate-200 "
     >
-      <div className="mx-auto max-w-6xl px-6 py-8">
+      <div className="mx-auto w-full px-6 py-8 ">
 
         {/* HEADER */}
 
@@ -2212,7 +2213,7 @@ export default function SeoAdminPage() {
 
           </div>
 
-          <button
+<button
             type="button"
             disabled={
               saving ||
@@ -2224,11 +2225,36 @@ export default function SeoAdminPage() {
             className={`flex items-center justify-center gap-2 rounded-lg border px-5 py-2.5 text-[12px] font-black transition-all ${
               saving ||
               loading
-                ? "cursor-not-allowed border-white/[0.06] bg-white/[0.04] text-slate-600"
+                ? "cursor-not-allowed border-white/[0.06] bg-white/[0.04] text-slate-400"
                 : "cursor-pointer border-cyan-300/30 bg-cyan-400 text-[#04111C] shadow-[0_8px_24px_rgba(0,229,255,0.12)] hover:bg-cyan-300"
             }`}
           >
-            <IconSave />
+            {saving ? (
+              // اسپینر لودینگ چرخان هنگام ذخیره
+              <svg
+                className="h-4 w-4 animate-spin text-cyan-300"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeOpacity="0.25"
+                  fill="none"
+                />
+                <path
+                  d="M12 2a10 10 0 0110 10"
+                  stroke="currentColor"
+                  fill="none"
+                />
+              </svg>
+            ) : (
+              <IconSave />
+            )}
 
             {saving
               ? "در حال ذخیره..."

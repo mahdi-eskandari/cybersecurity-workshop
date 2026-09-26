@@ -144,12 +144,23 @@ icon: (
   </span>
 ),
 },
-  {
-    id: "seo",
-    label: "SEO",
-    href: "/admin/seo",
-    icon: <IconWrench />,
-  },
+{
+  id: "seo",
+  label: "SEO",
+  href: "/admin/seo",
+  icon: <IconWrench />,
+},
+{
+  id: "comments",
+  label: "مدیریت نظرات پست ها",
+  href: "/admin/comments",
+  icon: (
+  <span style={{ display: "flex", gap: 1 }}>
+    <LuThumbsUp size={13} />
+    <LuThumbsDown size={13} />
+  </span>
+),
+},
 
 ];
 
