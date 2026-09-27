@@ -1,3 +1,5 @@
+
+
 // "use client";
 
 // import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -645,6 +647,130 @@
 // }
 
 // /* ─────────────────────────────────────────────
+//    PAGINATION
+// ───────────────────────────────────────────── */
+
+// function IconChevronLeft() {
+//   return (
+//     <svg
+//       width="14"
+//       height="14"
+//       viewBox="0 0 24 24"
+//       fill="none"
+//       stroke="currentColor"
+//       strokeWidth="2.3"
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//     >
+//       <polyline points="15 18 9 12 15 6" />
+//     </svg>
+//   );
+// }
+
+// function IconChevronRight() {
+//   return (
+//     <svg
+//       width="14"
+//       height="14"
+//       viewBox="0 0 24 24"
+//       fill="none"
+//       stroke="currentColor"
+//       strokeWidth="2.3"
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//     >
+//       <polyline points="9 18 15 12 9 6" />
+//     </svg>
+//   );
+// }
+
+// function getPaginationRange(currentPage: number, totalPages: number): (number | "...")[] {
+//   const range: (number | "...")[] = [];
+//   const siblingCount = 1;
+
+//   const start = Math.max(2, currentPage - siblingCount);
+//   const end = Math.min(totalPages - 1, currentPage + siblingCount);
+
+//   range.push(1);
+
+//   if (start > 2) {
+//     range.push("...");
+//   }
+
+//   for (let page = start; page <= end; page++) {
+//     range.push(page);
+//   }
+
+//   if (end < totalPages - 1) {
+//     range.push("...");
+//   }
+
+//   if (totalPages > 1) {
+//     range.push(totalPages);
+//   }
+
+//   return range;
+// }
+
+// function Pagination({
+//   currentPage,
+//   totalPages,
+//   onChange,
+// }: {
+//   currentPage: number;
+//   totalPages: number;
+//   onChange: (page: number) => void;
+// }) {
+//   const pages = getPaginationRange(currentPage, totalPages).reverse();
+
+//   return (
+//     <div dir="ltr" className="mt-6 flex items-center justify-center gap-2">
+//       <button
+//         type="button"
+//         onClick={() => onChange(Math.min(totalPages, currentPage + 1))}
+//         disabled={currentPage === totalPages}
+//         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border border-white/[0.07] bg-[#0B1224] text-slate-500 transition-all hover:border-cyan-400/25 hover:text-cyan-300 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-white/[0.07] disabled:hover:text-slate-500"
+//       >
+//         <IconChevronLeft />
+//       </button>
+
+//       {pages.map((page, index) =>
+//         page === "..." ? (
+//           <span
+//             key={`ellipsis-${index}`}
+//             className="flex h-9 w-9 shrink-0 items-center justify-center text-[12px] font-black text-slate-700"
+//           >
+//             …
+//           </span>
+//         ) : (
+//           <button
+//             key={page}
+//             type="button"
+//             onClick={() => onChange(page)}
+//             className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border text-[12px] font-black transition-all ${
+//               page === currentPage
+//                 ? "border-cyan-400 bg-cyan-400 text-[#050814] shadow-[0_0_16px_rgba(0,229,255,0.35)]"
+//                 : "border-white/[0.07] bg-[#0B1224] text-slate-400 hover:border-cyan-400/25 hover:text-cyan-300"
+//             }`}
+//           >
+//             {page}
+//           </button>
+//         )
+//       )}
+
+//       <button
+//         type="button"
+//         onClick={() => onChange(Math.max(1, currentPage - 1))}
+//         disabled={currentPage === 1}
+//         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border border-white/[0.07] bg-[#0B1224] text-slate-500 transition-all hover:border-cyan-400/25 hover:text-cyan-300 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-white/[0.07] disabled:hover:text-slate-500"
+//       >
+//         <IconChevronRight />
+//       </button>
+//     </div>
+//   );
+// }
+
+// /* ─────────────────────────────────────────────
 //    MAIN
 // ───────────────────────────────────────────── */
 
@@ -705,6 +831,9 @@
 //   const [search, setSearch] = useState("");
 //   const [statusFilter, setStatusFilter] = useState<"all" | "draft" | "published">("all");
 //   const [authorFilter, setAuthorFilter] = useState<"all" | "admin-1" | "admin-2">("all");
+
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const pageSize = 12;
 
 //   const { register, setValue, handleSubmit, reset: resetForm, formState: { errors } } = useForm<PostFormValues>({
 //     defaultValues: { title: "", slug: "", content: "", metaTitle: "", metaDescription: "", authorId: "" },
@@ -1086,6 +1215,18 @@
 //     if (authorFilter !== "all" && post.authorId !== authorFilter) return false;
 //     return true;
 //   });
+
+//   useEffect(() => {
+//     setCurrentPage(1);
+//   }, [search, statusFilter, authorFilter]);
+
+//   const totalPages = Math.max(1, Math.ceil(filteredPosts.length / pageSize));
+
+//   useEffect(() => {
+//     setCurrentPage((prev) => Math.min(prev, totalPages));
+//   }, [totalPages]);
+
+//   const paginatedPosts = filteredPosts.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 //   useEffect(() => {
 //     setValue("title", title, { shouldValidate: false });
 //     setValue("slug", normalizedSlug, { shouldValidate: false });
@@ -1232,7 +1373,7 @@
 //                   </tr>
 //                 </thead>
 //                 <tbody>
-//                   {postsLoading ? <tr><td colSpan={6} className="px-5 py-14 text-center text-xs text-slate-700">در حال دریافت پست‌ها...</td></tr> : filteredPosts.length === 0 ? <tr><td colSpan={6} className="px-5 py-14 text-center text-xs text-slate-700">{posts.length === 0 ? "هنوز پستی ثبت نشده است." : "پستی با این فیلترها پیدا نشد."}</td></tr> : filteredPosts.map((post) => <tr key={post.id} className="border-b border-white/[0.03] transition-colors hover:bg-cyan-400/[0.025]">
+//                   {postsLoading ? <tr><td colSpan={6} className="px-5 py-14 text-center text-xs text-slate-700">در حال دریافت پست‌ها...</td></tr> : filteredPosts.length === 0 ? <tr><td colSpan={6} className="px-5 py-14 text-center text-xs text-slate-700">{posts.length === 0 ? "هنوز پستی ثبت نشده است." : "پستی با این فیلترها پیدا نشد."}</td></tr> : paginatedPosts.map((post) => <tr key={post.id} className="border-b border-white/[0.03] transition-colors hover:bg-cyan-400/[0.025]">
 //                     <td className="px-5 py-4">
 //                       <div className="flex items-center gap-3">
 //                         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-cyan-400/10 bg-cyan-400/[0.05] text-cyan-300"><IconHeading /></div>
@@ -1266,6 +1407,14 @@
 //               </table>
 //             </div>
 //           </div>
+
+//           {totalPages > 1 && (
+//             <Pagination
+//               currentPage={currentPage}
+//               totalPages={totalPages}
+//               onChange={setCurrentPage}
+//             />
+//           )}
 //         </div>
 //         {deletePostId && <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-5 backdrop-blur-sm"><div className="w-full max-w-sm rounded-2xl border border-white/[0.08] bg-[#0B1224] p-5 text-right shadow-2xl" dir="rtl"><h3 className="text-sm font-black text-white">حذف پست</h3><p className="mt-2 text-xs leading-6 text-slate-300">آیا مطمئن هستید که این پست حذف شود؟ این عملیات قابل بازگشت نیست.</p><div className="mt-5 flex gap-2"><button type="button" onClick={() => setDeletePostId(null)} className="flex-1 cursor-pointer rounded-lg border border-white/[0.07] bg-white/[0.035] py-2 text-[12px] font-bold text-slate-300">انصراف</button><button type="button" onClick={confirmDeletePost} className="flex-1 cursor-pointer rounded-lg border border-red-400/20 bg-red-400/[0.08] py-2 text-[12px] font-bold text-red-300">حذف پست</button></div></div></div>}
 //       </div>
@@ -1666,6 +1815,9 @@
 //     {view !== "list" && <button type="button" onClick={() => setView("list")} className="fixed bottom-5 left-5 z-50 rounded-lg border border-white/[0.08] bg-[#0B1224]/95 px-3 py-2 font-mono text-[12px] text-slate-300 shadow-xl hover:border-cyan-400/20 hover:text-cyan-300">بازگشت به فهرست پست‌ها</button>}
 //   </div>;
 // }
+
+
+
 
 
 
@@ -2358,6 +2510,12 @@ function IconChevronRight() {
 }
 
 function getPaginationRange(currentPage: number, totalPages: number): (number | "...")[] {
+  // تا ۴ صفحه، همه‌شون رو کامل نشون بده — نقطه‌گذاری فقط از
+  // ۵ صفحه به بالا شروع می‌شه (مطابق همون رفتاری که توی فیدبک داریم).
+  if (totalPages <= 4) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
   const range: (number | "...")[] = [];
   const siblingCount = 1;
 
@@ -2741,7 +2899,10 @@ export default function PostsAdminPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    if (!response.ok) throw new Error("ذخیره پست انجام نشد");
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(errorData?.message || "ذخیره پست انجام نشد");
+    }
     const data = await response.json();
     return normalizePost(data?.post ?? data);
   };
@@ -2833,7 +2994,9 @@ export default function PostsAdminPage() {
       setEditingPostId(null);
     } catch (error) {
       console.error(error);
-      setPostsError("ذخیره پست انجام نشد. دوباره تلاش کنید.");
+      const message = error instanceof Error ? error.message : "ذخیره پست انجام نشد. دوباره تلاش کنید.";
+      alert(message);
+      setPostsError(message);
     }
   };
 

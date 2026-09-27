@@ -924,12 +924,12 @@ const [selectedReport, setSelectedReport] =
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [filterStatus]);
+  }, [search, filterStatus, incidentFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filteredData.length / pageSize));
   useEffect(() => {
-    if (currentPage > totalPages) setCurrentPage(totalPages);
-  }, [currentPage, totalPages]);
+    setCurrentPage((prev) => Math.min(prev, totalPages));
+  }, [totalPages]);
 
   const paginatedData = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
@@ -1928,44 +1928,15 @@ function CustomSelect({ value, onChange, options }: { value: string; onChange: (
             </table>
           </div>
 
-          {/* Table footer */}
-
-          <div
-            style={{
-              padding:
-                "12px 22px",
-              borderTop:
-                "1px solid rgba(255,255,255,0.04)",
-              display:
-                "flex",
-              alignItems:
-                "center",
-              justifyContent:
-                "space-between",
-            }}
-          >
-            <span
-              style={{
-                color:
-                  "#515f76",
-                fontSize:
-                  "0.68rem",
-                fontFamily:
-                  "monospace",
-              }}
-            >
-              نمایش {filteredData.length === 0 ? 0 : ((currentPage - 1) * pageSize) + 1} تا {Math.min(currentPage * pageSize, filteredData.length)} از {filteredData.length} پرونده <span style={{color:"#334155",marginRight:6}}>• {pageSize} پرونده در هر صفحه</span>
-            </span>
-
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <button type="button" disabled={currentPage === 1} onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} style={{ width: 30, height: 30, borderRadius: 7, background: "rgba(255,255,255,.03)", border: "1px solid rgba(255,255,255,.06)", color: currentPage === 1 ? "#334155" : "#94A3B8", cursor: currentPage === 1 ? "not-allowed" : "pointer" }}>←</button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).slice(Math.max(0, currentPage - 3), Math.min(totalPages, currentPage + 2)).map((page) => (
-                <button key={page} type="button" onClick={() => setCurrentPage(page)} style={{ minWidth: 30, height: 30, padding: "0 7px", borderRadius: 7, background: page === currentPage ? "rgba(0,229,255,.1)" : "rgba(255,255,255,.03)", border: page === currentPage ? "1px solid rgba(0,229,255,.3)" : "1px solid rgba(255,255,255,.06)", color: page === currentPage ? "#00E5FF" : "#64748B", cursor: "pointer", fontFamily: "var(--font-vazirmatn), sans-serif", fontSize: ".68rem" }}>{page.toLocaleString("fa-IR")}</button>
-              ))}
-              <button type="button" disabled={currentPage === totalPages} onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} style={{ width: 30, height: 30, borderRadius: 7, background: "rgba(255,255,255,.03)", border: "1px solid rgba(255,255,255,.06)", color: currentPage === totalPages ? "#334155" : "#94A3B8", cursor: currentPage === totalPages ? "not-allowed" : "pointer" }}>→</button>
-            </div>
-          </div>
         </div>
+
+        {totalPages > 1 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onChange={setCurrentPage}
+          />
+        )}
       </main>
 
         </>
@@ -2036,5 +2007,150 @@ function CustomSelect({ value, onChange, options }: { value: string; onChange: (
 
 
     </div>
+  );
+}
+/* -------------------------------------------------------------------------- */
+/* PAGINATION */
+/* -------------------------------------------------------------------------- */
+
+function IconChevronLeft() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  );
+}
+
+function IconChevronRight() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  );
+}
+
+function getPaginationRange(
+  currentPage: number,
+  totalPages: number
+): (number | "...")[] {
+  // تا ۴ صفحه، همه‌شون رو کامل نشون بده — نقطه‌گذاری فقط از
+  // ۵ صفحه به بالا شروع می‌شه (مطابق همون رفتاری که توی فیدبک داریم).
+  if (totalPages <= 4) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  const range: (number | "...")[] = [];
+  const siblingCount = 1;
+
+  const start = Math.max(2, currentPage - siblingCount);
+  const end = Math.min(
+    totalPages - 1,
+    currentPage + siblingCount
+  );
+
+  range.push(1);
+
+  if (start > 2) {
+    range.push("...");
+  }
+
+  for (let page = start; page <= end; page++) {
+    range.push(page);
+  }
+
+  if (end < totalPages - 1) {
+    range.push("...");
+  }
+
+  if (totalPages > 1) {
+    range.push(totalPages);
+  }
+
+  return range;
+}
+
+function Pagination({
+  currentPage,
+  totalPages,
+  onChange,
+}: {
+  currentPage: number;
+  totalPages: number;
+  onChange: (page: number) => void;
+}) {
+  const pages = getPaginationRange(
+    currentPage,
+    totalPages
+  ).reverse();
+
+  return (
+   <div
+  dir="ltr"
+  className="mt-6 flex items-center justify-center gap-2"
+>
+  <button
+    type="button"
+    onClick={() =>
+      onChange(Math.min(totalPages, currentPage + 1))
+    }
+    disabled={currentPage === totalPages}
+    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border border-white/[0.07] bg-[#0B1224] text-slate-500 transition-all hover:border-cyan-400/25 hover:text-cyan-300 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-white/[0.07] disabled:hover:text-slate-500"
+  >
+    <IconChevronLeft />
+  </button>
+
+  {pages.map((page, index) =>
+    page === "..." ? (
+      <span
+        key={`ellipsis-${index}`}
+        className="flex h-9 w-9 shrink-0 items-center justify-center text-[12px] font-black text-slate-700"
+      >
+        …
+      </span>
+    ) : (
+      <button
+        key={page}
+        type="button"
+        onClick={() => onChange(page)}
+        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border text-[12px] font-black transition-all ${
+          page === currentPage
+            ? "border-cyan-400 bg-cyan-400 text-[#050814] shadow-[0_0_16px_rgba(0,229,255,0.35)]"
+            : "border-white/[0.07] bg-[#0B1224] text-slate-400 hover:border-cyan-400/25 hover:text-cyan-300"
+        }`}
+      >
+        {page}
+      </button>
+    )
+  )}
+
+  <button
+    type="button"
+    onClick={() =>
+      onChange(Math.max(1, currentPage - 1))
+    }
+    disabled={currentPage === 1}
+    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border border-white/[0.07] bg-[#0B1224] text-slate-500 transition-all hover:border-cyan-400/25 hover:text-cyan-300 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-white/[0.07] disabled:hover:text-slate-500"
+  >
+    <IconChevronRight />
+  </button>
+</div>
   );
 }

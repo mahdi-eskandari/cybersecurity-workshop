@@ -1136,7 +1136,6 @@ import ServicesPageClient, {
 import {
   getPageMetadata,
   getPageSeo,
-  getAdjacentPageLinks,
   SITE_URL,
 } from "@/lib/seo";
 import {
@@ -1170,6 +1169,36 @@ type ApiResponse<T> = {
 type Service = ServicesPageInitialData["services"][number];
 
 const FALLBACK_H1 = "خدمات اجرایی و مشاوره‌های تخصصی پاراهور";
+
+// باید دقیقاً با pageSize توی ServicesPageClient.tsx یکی باشه.
+const SERVICES_PAGE_SIZE = 6;
+
+const parsePage = (value?: string) => {
+  const page = Number(value);
+  return Number.isInteger(page) && page > 0 ? page : 1;
+};
+
+// همون منطقِ canonical/prev/next پجینیشن (مثل authors/blog)، ولی برای
+// /services که فرمت کوئری‌اش صرفاً ?page=N هست (نه ?view=all&page=N)
+// و صفحه‌ی ۱ همیشه یعنی خودِ روتِ خام /services، دقیقاً مطابق
+// buildPageHref توی ServicesPageClient.tsx.
+function buildServicesPaginationLinks({
+  currentPage,
+  totalPages,
+}: {
+  currentPage: number;
+  totalPages: number;
+}) {
+  const safePage = Math.min(Math.max(currentPage, 1), totalPages);
+  const pageUrl = (page: number) =>
+    page <= 1 ? `${SITE_URL}/services` : `${SITE_URL}/services?page=${page}`;
+
+  return {
+    canonical: pageUrl(safePage),
+    prevUrl: safePage > 1 ? pageUrl(safePage - 1) : null,
+    nextUrl: safePage < totalPages ? pageUrl(safePage + 1) : null,
+  };
+}
 
 async function fetchJson<T>(url: string, cookie: string) {
   const controller = new AbortController();
@@ -1251,8 +1280,40 @@ async function getInitialData(): Promise<ServicesPageInitialData> {
   };
 }
 
-export async function generateMetadata() {
-  return getPageMetadata("services");
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const base = await getPageMetadata("services");
+
+  const query = await searchParams;
+  const currentPage = parsePage(query.page);
+
+  // صفحه‌ی ۱ (یعنی خودِ /services بدون کوئری) دقیقاً همون canonical
+  // قبلی رو نگه می‌داره — هیچ تغییری نمی‌کنه.
+  if (currentPage <= 1) {
+    return base;
+  }
+
+  const initialData = await getInitialData();
+  const activeCount = initialData.services.filter(
+    (s) => s.status === "active"
+  ).length;
+  const totalPages = Math.max(1, Math.ceil(activeCount / SERVICES_PAGE_SIZE));
+
+  const pagination = buildServicesPaginationLinks({
+    currentPage,
+    totalPages,
+  });
+
+  return {
+    ...base,
+    alternates: {
+      ...base.alternates,
+      canonical: pagination.canonical,
+    },
+  };
 }
 
 function ServicesPageJsonLd({
@@ -1305,17 +1366,38 @@ function ServicesPageJsonLd({
   );
 }
 
-export default async function ServicesPage() {
-  const [initialData, seo, adjacent] = await Promise.all([
+export default async function ServicesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const query = await searchParams;
+  const currentPage = parsePage(query.page);
+
+  const [initialData, seo] = await Promise.all([
     getInitialData(),
     getPageSeo("services"),
-    getAdjacentPageLinks("services"),
   ]);
+
+  const activeCount = initialData.services.filter(
+    (s) => s.status === "active"
+  ).length;
+  const totalPages = Math.max(1, Math.ceil(activeCount / SERVICES_PAGE_SIZE));
+  const pagination = buildServicesPaginationLinks({
+    currentPage,
+    totalPages,
+  });
+
+  // prev/next همیشه از پجینیشنِ واقعیه: صفحه‌ی ۱ خودش prevUrl=null
+  // می‌گیره (چون صفحه‌ی قبل‌تری وجود نداره) و nextUrl رو به صفحه‌ی
+  // بعدی می‌ده اگه وجود داشته باشه — نه زنجیره‌ی سراسریِ سایت.
+  const prevUrl = pagination.prevUrl;
+  const nextUrl = pagination.nextUrl;
 
   return (
     <>
-      {adjacent.prevUrl && <link rel="prev" href={adjacent.prevUrl} />}
-      {adjacent.nextUrl && <link rel="next" href={adjacent.nextUrl} />}
+      {prevUrl && <link rel="prev" href={prevUrl} />}
+      {nextUrl && <link rel="next" href={nextUrl} />}
 
       <ServicesPageJsonLd
         title={seo.metaTitle}

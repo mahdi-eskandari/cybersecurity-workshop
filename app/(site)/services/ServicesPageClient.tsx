@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useTheme } from "../../../components/ThemeProvider";
 import { motion } from "framer-motion";
 import EmergencyModal from "@/components/CrisisReportForm";
@@ -335,6 +336,23 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const blue = darkMode ? "#00E5FF" : "#1E3A8A";
   const blueBright = darkMode ? "#00E5FF" : "#1D4ED8";
     const seo = initialData.seo;
+
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const activeServices = services.filter((s) => s.status === "active");
+  const pageSize = 6;
+  const totalPages = Math.max(1, Math.ceil(activeServices.length / pageSize));
+  const requestedPage = Number(searchParams.get("page"));
+  const currentPage = Math.min(
+    Math.max(1, Number.isFinite(requestedPage) && requestedPage > 0 ? requestedPage : 1),
+    totalPages
+  );
+  const paginatedServices = activeServices.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+  const buildPageHref = (page: number) =>
+    page <= 1 ? pathname : `${pathname}?page=${page}`;
 
 
   return (
@@ -765,8 +783,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
           {/* Grid */}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {services.map((s) => {
-               if (s.status !== "active") return null;
+            {paginatedServices.map((s) => {
               const isHovered = hoveredCard === s.id;
 
               return (
@@ -1067,9 +1084,165 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
               );
             })}
           </div>
+
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              buildHref={buildPageHref}
+              darkMode={darkMode}
+            />
+          )}
         </div>
       </motion.div>
     </div>
 
+  );
+}
+
+/* ─────────────────────────────────────────────
+   PAGINATION
+───────────────────────────────────────────── */
+
+function IconChevronLeft() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  );
+}
+
+function IconChevronRight() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  );
+}
+
+function getPaginationRange(currentPage: number, totalPages: number): (number | "...")[] {
+  const range: (number | "...")[] = [];
+  const siblingCount = 1;
+
+  const start = Math.max(2, currentPage - siblingCount);
+  const end = Math.min(totalPages - 1, currentPage + siblingCount);
+
+  range.push(1);
+
+  if (start > 2) {
+    range.push("...");
+  }
+
+  for (let page = start; page <= end; page++) {
+    range.push(page);
+  }
+
+  if (end < totalPages - 1) {
+    range.push("...");
+  }
+
+  if (totalPages > 1) {
+    range.push(totalPages);
+  }
+
+  return range;
+}
+
+function Pagination({
+  currentPage,
+  totalPages,
+  buildHref,
+  darkMode,
+}: {
+  currentPage: number;
+  totalPages: number;
+  buildHref: (page: number) => string;
+  darkMode: boolean;
+}) {
+  const pages = getPaginationRange(currentPage, totalPages).reverse();
+  const nextPage = currentPage + 1;
+  const prevPage = currentPage - 1;
+  const isFirst = currentPage <= 1;
+  const isLast = currentPage >= totalPages;
+
+  const baseClass =
+    "w-10 h-10 rounded-lg border flex items-center justify-center transition-all";
+
+  const idleClass = darkMode
+    ? `${baseClass} border-[#263B4E] text-[#8FA5B8] hover:border-[#496276] hover:text-[#E6F7FF]`
+    : `${baseClass} border-[rgba(29,78,216,0.20)] text-[#475569] hover:border-[rgba(29,78,216,0.52)] hover:text-[#1E3A8A]`;
+
+  const disabledClass = `${idleClass} disabled:opacity-30 opacity-30 cursor-not-allowed`;
+
+  const activeClass = darkMode
+    ? `${baseClass} bg-[#00B8D4] text-[#031018] border-cyan-400 shadow-[0_0_16px_rgba(0,229,255,0.45)]`
+    : `${baseClass} bg-[#1E3A8A] text-white border-[#1E3A8A] shadow-[0_4px_15px_rgba(30,58,138,0.20)]`;
+
+  return (
+    <nav
+      dir="ltr"
+      aria-label="صفحه‌بندی خدمات"
+      className="mt-10 flex flex-wrap items-center justify-center gap-2"
+    >
+      {isLast ? (
+        <span className={disabledClass} aria-disabled="true">
+          <IconChevronLeft />
+        </span>
+      ) : (
+        <Link href={buildHref(nextPage)} className={idleClass} aria-label="صفحه بعد">
+          <IconChevronLeft />
+        </Link>
+      )}
+
+      {pages.map((page, index) =>
+        page === "..." ? (
+          <span
+            key={`ellipsis-${index}`}
+            className={`flex h-10 w-10 shrink-0 items-center justify-center text-sm font-medium ${
+              darkMode ? "text-[#8FA5B8]" : "text-[#475569]"
+            }`}
+          >
+            …
+          </span>
+        ) : (
+          <Link
+            key={page}
+            href={buildHref(page)}
+            aria-current={page === currentPage ? "page" : undefined}
+            className={`${page === currentPage ? activeClass : idleClass} text-sm font-medium`}
+          >
+            {page}
+          </Link>
+        )
+      )}
+
+      {isFirst ? (
+        <span className={disabledClass} aria-disabled="true">
+          <IconChevronRight />
+        </span>
+      ) : (
+        <Link href={buildHref(prevPage)} className={idleClass} aria-label="صفحه قبل">
+          <IconChevronRight />
+        </Link>
+      )}
+    </nav>
   );
 }

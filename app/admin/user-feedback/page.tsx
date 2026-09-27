@@ -3292,6 +3292,12 @@ function getPaginationRange(
   currentPage: number,
   totalPages: number
 ): (number | "...")[] {
+  // تا ۴ صفحه، همه‌شون رو کامل نشون بده — نقطه‌گذاری فقط از
+  // ۵ صفحه به بالا شروع می‌شه (مطابق همون رفتاری که توی خدمات داریم).
+  if (totalPages <= 4) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
   const range: (number | "...")[] = [];
   const siblingCount = 1;
 

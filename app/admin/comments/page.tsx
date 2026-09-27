@@ -120,6 +120,43 @@ function truncateText(value: string, maxLength = 75) {
   return `${value.slice(0, maxLength).trim()}...`;
 }
 
+// تا ۴ صفحه، همه‌شون رو کامل نشون بده — نقطه‌گذاری فقط از ۵ صفحه
+// به بالا شروع می‌شه (عیناً همون منطق پیجینیشن صفحه‌ی فیدبک‌ها).
+function getPaginationRange(
+  currentPage: number,
+  totalPages: number
+): (number | "...")[] {
+  if (totalPages <= 4) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  const range: (number | "...")[] = [];
+  const siblingCount = 1;
+
+  const start = Math.max(2, currentPage - siblingCount);
+  const end = Math.min(totalPages - 1, currentPage + siblingCount);
+
+  range.push(1);
+
+  if (start > 2) {
+    range.push("...");
+  }
+
+  for (let page = start; page <= end; page++) {
+    range.push(page);
+  }
+
+  if (end < totalPages - 1) {
+    range.push("...");
+  }
+
+  if (totalPages > 1) {
+    range.push(totalPages);
+  }
+
+  return range;
+}
+
 /* -------------------------------------------------------------------------- */
 /* ICONS */
 /* -------------------------------------------------------------------------- */
@@ -595,20 +632,29 @@ export default function PostCommentsAdminPage() {
               <IconChevronRight />
             </button>
 
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-              <button
-                key={p}
-                type="button"
-                onClick={() => void loadComments(p, statusFilter)}
-                className={`flex h-9 min-w-9 items-center justify-center rounded-[8px] border px-2 text-[11px] font-black transition-all ${
-                  p === currentPage
-                    ? "border-[#00E5FF]/60 bg-[#00E5FF] text-[#050814]"
-                    : "border-white/[0.07] bg-[#0B1224] text-slate-400 hover:border-[#00E5FF]/25 hover:text-cyan-300"
-                }`}
-              >
-                {p}
-              </button>
-            ))}
+            {getPaginationRange(currentPage, totalPages).map((p, index) =>
+              p === "..." ? (
+                <span
+                  key={`ellipsis-${index}`}
+                  className="flex h-9 w-9 items-center justify-center text-[11px] font-black text-slate-700"
+                >
+                  …
+                </span>
+              ) : (
+                <button
+                  key={p}
+                  type="button"
+                  onClick={() => void loadComments(p, statusFilter)}
+                  className={`flex h-9 min-w-9 items-center justify-center rounded-[8px] border px-2 text-[11px] font-black transition-all ${
+                    p === currentPage
+                      ? "border-[#00E5FF]/60 bg-[#00E5FF] text-[#050814]"
+                      : "border-white/[0.07] bg-[#0B1224] text-slate-400 hover:border-[#00E5FF]/25 hover:text-cyan-300"
+                  }`}
+                >
+                  {p}
+                </button>
+              )
+            )}
 
             <button
               type="button"

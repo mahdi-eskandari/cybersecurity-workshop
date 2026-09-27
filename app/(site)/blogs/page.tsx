@@ -1817,6 +1817,11 @@
 
 
 
+
+
+
+
+
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 import BlogPageClient, { type BlogPageInitialData } from "./BlogPageClient";
@@ -1988,20 +1993,27 @@ export async function generateMetadata({
   const baseUrl = await getBaseUrl();
   if (!baseUrl) return baseMetadata;
 
-  // روت خام (بدون هیچ queryای) → canonical همون baseMetadata (پایه‌ی /blogs).
-  const hasQuery = pageParam !== undefined || categoryParam !== undefined;
-  if (!hasQuery) return baseMetadata;
+  // category=all (یا نبودنش) یعنی بدون فیلتر واقعی، و page=1 (یا نبودنش)
+  // یعنی صفحه‌ی اول — یعنی این حالت دقیقاً همون محتوای روتِ خامِ /blogs
+  // رو نشون می‌ده (چون پایین‌تر هم دقیقاً همین دوتا default حساب می‌شن)،
+  // پس نباید canonical جدا از /blogs بگیره.
+  const category = getSafeCategory(categoryParam);
+  const isFirstPageParam = !pageParam || Number(pageParam) <= 1;
+  const isBareEquivalent = category === "all" && isFirstPageParam;
+
+  if (isBareEquivalent) return baseMetadata;
 
   try {
-    const category = getSafeCategory(categoryParam);
     const publishedPosts = await getPublishedPosts(baseUrl);
     const scopedPosts = filterByCategory(publishedPosts, category);
     const totalPages = Math.max(1, Math.ceil(scopedPosts.length / PER_PAGE));
     const currentPage = getSafePage(pageParam, totalPages);
 
-    // اگه صریحاً category تو URL بوده (حتی "all")، صفحه‌بندی مخصوص همون
-    // دسته حساب می‌شه؛ وگرنه (فقط ?page=N بدون category) همون رفتار قبلی.
-    const { canonical } = categoryParam
+    // "all" یعنی «بدون فیلتر دسته»، پس دقیقاً مثل نبودن categoryParam
+    // حساب می‌شه؛ وگرنه /blogs?category=all یه کانونیکال جدا از /blogs
+    // می‌گرفت و می‌شد محتوای تکراری. فقط دسته‌های واقعی صفحه‌بندی
+    // مخصوص خودشون رو می‌گیرن.
+    const { canonical } = categoryParam && categoryParam !== "all"
       ? buildBlogsCategoryLinks({
           basePath: "/blogs",
           category,
@@ -2101,12 +2113,14 @@ export default async function Page({
     const totalPages = Math.max(1, Math.ceil(scopedPosts.length / PER_PAGE));
     const initialPage = getSafePage(pageParam, totalPages);
 
-    // روت خام (بدون query): prev/next سطح سایت (خدمات ↔ درباره ما).
-    // هر حالت دیگه (category و/یا page تو URL): prev/next صفحه‌بندی
-    // همون دسته.
-    const { prevUrl, nextUrl } = !hasQuery
-      ? await getAdjacentPageLinks("blogs")
-      : categoryParam
+
+    // rel=next/prev همیشه باید پجینیشنِ واقعی رو نشون بده -- مستقل از
+    // اینکه URL «خام» بوده یا صریح. این با canonical فرق داره: کنونیکال
+    // حق داره دو تا URL همسان رو یکی حساب کنه، ولی prev/next یه مفهوم
+    // جداگانه‌ست (آیا صفحه‌ی بعدی/قبلیِ همین لیست وجود داره یا نه) و
+    // نباید با ناوبریِ سطح‌سایت (خدمات/درباره‌ما) قاطی بشه -- دقیقاً
+    // همون قانونی که توی /services داریم.
+    const { prevUrl, nextUrl } = categoryParam && categoryParam !== "all"
       ? buildBlogsCategoryLinks({
           basePath: "/blogs",
           category,
