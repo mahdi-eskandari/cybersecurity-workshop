@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 import SinglePostClient from "./SinglePostClient";
 import type { ApprovedComment } from "@/components/CommentSection";
 
@@ -147,6 +148,12 @@ export default async function Page({
 
   const baseUrl = `${protocol}://${host}`;
 
+  // ── مرحله‌ی fetch: فقط خطاهای واقعیِ شبکه/API اینجا catch می‌شن ──
+  let publishedPosts: BlogPost[] = [];
+  let currentPost: BlogPost | null = null;
+  let mediaItems: MediaItem[] = [];
+  let initialComments: ApprovedComment[] = [];
+
   try {
     const { response: postsResponse, data: postsData } =
       await fetchServerJson(`${baseUrl}/api/posts`);
@@ -169,11 +176,11 @@ export default async function Page({
         (item): item is BlogPost => item !== null
       );
 
-    const publishedPosts = normalizedPosts.filter(
+    publishedPosts = normalizedPosts.filter(
       (item) => item.status === "published"
     );
 
-    const currentPost =
+    currentPost =
       publishedPosts.find(
         (item) =>
           item.slug === slug ||
@@ -189,8 +196,6 @@ export default async function Page({
         : Promise.resolve([] as ApprovedComment[]),
     ]);
 
-    let mediaItems: MediaItem[] = [];
-
     if (mediaResult.status === "fulfilled") {
       const { response: mediaResponse, data: mediaData } = mediaResult.value;
 
@@ -205,19 +210,8 @@ export default async function Page({
       }
     }
 
-    const initialComments: ApprovedComment[] =
+    initialComments =
       commentsResult.status === "fulfilled" ? commentsResult.value : [];
-
-    return (
-      <div className="min-h-screen">
-        <SinglePostClient
-          initialPost={currentPost}
-          initialAllPosts={publishedPosts}
-          initialMediaItems={mediaItems}
-          initialComments={initialComments}
-        />
-      </div>
-    );
   } catch (error) {
     console.error("GET single blog error:", error);
 
@@ -233,4 +227,22 @@ export default async function Page({
       </div>
     );
   }
+
+  // ── این چک عمداً بیرون از try/catch است ──
+  // notFound() خودش یه throw داخلیه؛ اگه داخل try می‌بود،
+  // catch بالا قاپش می‌زد و به‌جای صفحه‌ی 404 سفارشی، مدال ارور نشون داده می‌شد.
+  if (!currentPost) {
+    notFound();
+  }
+
+  return (
+    <div className="min-h-screen">
+      <SinglePostClient
+        initialPost={currentPost}
+        initialAllPosts={publishedPosts}
+        initialMediaItems={mediaItems}
+        initialComments={initialComments}
+      />
+    </div>
+  );
 }

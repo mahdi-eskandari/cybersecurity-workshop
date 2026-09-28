@@ -41,23 +41,30 @@ export async function PATCH(
 
     return NextResponse.json(post);
   } catch (error: any) {
-    console.error("PATCH /api/posts/[id] error:", error);
+  console.error("PATCH /api/posts/[id] error:", error);
 
-    if (error?.name === "ValidationError") {
-      return NextResponse.json(
-        {
-          message: "اطلاعات پست معتبر نیست",
-          errors: error.errors,
-        },
-        { status: 400 }
-      );
-    }
-
+  if (error?.code === 11000) {
     return NextResponse.json(
-      { message: "خطا در ویرایش پست" },
-      { status: 500 }
+      { message: "این Slug قبلاً استفاده شده است" },
+      { status: 409 }
     );
   }
+
+  if (error?.name === "ValidationError") {
+    return NextResponse.json(
+      {
+        message: "اطلاعات پست معتبر نیست",
+        errors: error.errors,
+      },
+      { status: 400 }
+    );
+  }
+
+  return NextResponse.json(
+    { message: "خطا در ویرایش پست" },
+    { status: 500 }
+  );
+}
 }
 
 export async function DELETE(

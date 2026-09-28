@@ -8,6 +8,8 @@ if (!cached) {
   cached = (global as any).mongoose = { conn: null, promise: null };
 }
 
+const MONGODB_URI = "mongodb+srv://mhdieskndari_db_user:f0ksF68nuW7I1Ape@cluster1.lcozciy.mongodb.net/cybersecurity?retryWrites=true&w=majority"
+
 async function dbConnect() {
   if (cached.conn) {
     return cached.conn;
@@ -19,7 +21,7 @@ async function dbConnect() {
     };
 
     console.log("🔄 Connecting to MongoDB...");
-    cached.promise = mongoose.connect(process.env.MONGODB_URI!, opts)
+    cached.promise = mongoose.connect(MONGODB_URI!, opts)
       .then((mongoose) => {
         console.log("✅ MongoDB Connected Successfully");
         return mongoose;

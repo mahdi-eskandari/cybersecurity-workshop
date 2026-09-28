@@ -392,38 +392,41 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
         />
 
         <div className="relative z-10 max-w-3xl mx-auto">
+
+
           <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 text-xs font-semibold"
-            style={{
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 text-xs"
+
+                        style={{
               background: darkMode
                 ? "rgba(0,229,255,0.07)"
                 : "rgba(30,58,138,0.07)",
               border: darkMode
-                ? "1px solid rgba(0,229,255,0.18)"
+                ? "1px solid rgba(0,229,255,0.2)"
                 : "1px solid rgba(30,58,138,0.20)",
-              color: blueBright,
+              
             }}
           >
-            <IconDot
-              size={5}
-              color={blueBright}
-              glow={true}
-              glowColor={
-                darkMode
-                  ? "rgba(0,229,255,0.9)"
-                  : "rgba(30,58,138,0.45)"
-              }
-            />
 
-            <span
-              style={{
-                fontFamily: "monospace",
-                letterSpacing: "0.15em",
-              }}
-            >
-              PARAHOOR // SERVICE ARCHIVE
-            </span>
+            <span 
+            className="data-label"
+            style={{
+              color: darkMode ? "#00E5FF" : "#102254ce",
+                fontWeight: "500"
+            }}
+            >PARAHOOR // SERVICE ARCHIVE</span>
+
+                        <span className="node-dot pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
+                    background: darkMode
+                ? "#00E5FF"
+                : "rgba(13, 34, 93, 0.78)",
+
+             }}
+            
+            />
           </div>
+
+
 
 <h1
   className="glow-text font-black leading-tight mb-6"
@@ -575,15 +578,10 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
               <div className="flex-1">
                 <span
-                  style={{
-                    fontFamily: "monospace",
-                    fontSize: "0.62rem",
-                    color: darkMode
-                      ? "rgba(0,229,255,0.45)"
-                      : "#1e3a8ab3",
-                    letterSpacing: "0.18em",
-                  }}
-                  className="block mb-2"
+            className="data-label"
+              style={{
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce",
+            }}
                 >
                   TECHNICAL CONSULTATION // AVAILABLE
                 </span>
@@ -746,14 +744,10 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
               />
 
               <span
-                style={{
-                  fontFamily: "monospace",
-                  fontSize: "0.62rem",
-                  color: darkMode
-                    ? "rgba(0,229,255,0.4)"
-                    : "rgba(30,58,138,0.68)",
-                  letterSpacing: "0.2em",
-                }}
+            className="data-label"
+              style={{
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce",
+            }}
               >
                 FORENSICS & INVESTIGATION
               </span>
@@ -843,8 +837,9 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
                     <div className="flex items-center justify-between mb-4">
                       <span
+                      className="data-label"
                         style={{
-                          fontFamily: "monospace",
+
                           fontSize: "0.58rem",
                           color: darkMode
                             ? "rgba(0,229,255,0.4)"

@@ -85,6 +85,79 @@ const TelegramIcon = ({ size = 16 }: { size?: number }) => (
 
 
 
+
+/* ─── FEATURED IMAGE SVG ─── */
+const HeroImage = () => (
+  <svg width="100%" height="100%" viewBox="0 0 1000 380" preserveAspectRatio="xMidYMid slice" style={{ display: "block" }}>
+    <defs>
+      <radialGradient id="hg1" cx="25%" cy="50%" r="55%">
+        <stop offset="0%" stopColor="rgba(0,229,255,0.1)" />
+        <stop offset="100%" stopColor="transparent" />
+      </radialGradient>
+      <radialGradient id="hg2" cx="75%" cy="40%" r="45%">
+        <stop offset="0%" stopColor="rgba(239,68,68,0.07)" />
+        <stop offset="100%" stopColor="transparent" />
+      </radialGradient>
+      <filter id="hblur"><feGaussianBlur stdDeviation="3" /></filter>
+    </defs>
+    <rect width="1000" height="380" fill="#050C1E" />
+    <rect width="1000" height="380" fill="url(#hg1)" />
+    <rect width="1000" height="380" fill="url(#hg2)" />
+    {/* Grid */}
+    {Array.from({ length: 14 }).map((_, i) => (
+      <line key={`h${i}`} x1="0" y1={i * 28} x2="1000" y2={i * 28} stroke="rgba(0,229,255,0.035)" strokeWidth="1" />
+    ))}
+    {Array.from({ length: 34 }).map((_, i) => (
+      <line key={`v${i}`} x1={i * 30} y1="0" x2={i * 30} y2="380" stroke="rgba(0,229,255,0.035)" strokeWidth="1" />
+    ))}
+    {/* Main chain path */}
+    <path d="M80 190 L200 140 L340 190 L480 120 L600 170 L740 110 L880 160 L960 140"
+      stroke="rgba(0,229,255,0.4)" strokeWidth="1.5" fill="none" filter="url(#hblur)" />
+    <path d="M80 190 L200 140 L340 190 L480 120 L600 170 L740 110 L880 160 L960 140"
+      stroke="rgba(0,229,255,0.2)" strokeWidth="1" fill="none" />
+    {/* Block nodes */}
+    {[
+      { x: 200, y: 140 }, { x: 340, y: 190 }, { x: 480, y: 120 },
+      { x: 600, y: 170 }, { x: 740, y: 110 }, { x: 880, y: 160 }
+    ].map((p, i) => (
+      <g key={i}>
+        <rect x={p.x - 20} y={p.y - 22} width="40" height="44" rx="4" fill="rgba(0,229,255,0.05)" stroke="rgba(0,229,255,0.3)" strokeWidth="1" />
+        <rect x={p.x - 12} y={p.y - 14} width="24" height="3" rx="1" fill="rgba(0,229,255,0.3)" />
+        <rect x={p.x - 12} y={p.y - 7} width="17" height="2.5" rx="1" fill="rgba(0,229,255,0.18)" />
+        <rect x={p.x - 12} y={p.y - 1} width="20" height="2.5" rx="1" fill="rgba(0,229,255,0.15)" />
+        <rect x={p.x - 12} y={p.y + 6} width="12" height="2" rx="1" fill="rgba(0,229,255,0.1)" />
+        <circle cx={p.x} cy={p.y - 22} r="3.5" fill="#00E5FF" opacity="0.7" />
+      </g>
+    ))}
+    {/* Alert node – the "caught" point */}
+    <circle cx="480" cy="120" r="22" fill="transparent" stroke="rgba(239,68,68,0.2)" strokeWidth="1" />
+    <circle cx="480" cy="120" r="14" fill="transparent" stroke="rgba(239,68,68,0.3)" strokeWidth="1" />
+    <circle cx="480" cy="120" r="5" fill="rgba(239,68,68,0.5)" stroke="rgba(239,68,68,0.8)" strokeWidth="1.5" />
+    {/* USDT labels */}
+    {[{ x: 200, y: 110 }, { x: 600, y: 140 }].map((p, i) => (
+      <g key={i}>
+        <rect x={p.x - 20} y={p.y - 10} width="40" height="14" rx="3" fill="rgba(0,229,255,0.07)" stroke="rgba(0,229,255,0.2)" strokeWidth="1" />
+        <text x={p.x} y={p.y} textAnchor="middle" fontSize="7" fill="rgba(0,229,255,0.5)" fontFamily="monospace">USDT</text>
+      </g>
+    ))}
+    {/* Scatter nodes */}
+    {[[120, 60], [300, 300], [700, 280], [900, 60], [150, 310], [820, 300]].map(([x, y], i) => (
+      <circle key={i} cx={x} cy={y} r="3" fill="rgba(0,229,255,0.15)" stroke="rgba(0,229,255,0.3)" strokeWidth="1" />
+    ))}
+    {/* Dashed lines to scatter */}
+    <line x1="200" y1="140" x2="120" y2="60" stroke="rgba(0,229,255,0.1)" strokeWidth="1" strokeDasharray="4 4" />
+    <line x1="740" y1="110" x2="900" y2="60" stroke="rgba(0,229,255,0.1)" strokeWidth="1" strokeDasharray="4 4" />
+    {/* Bottom scan line */}
+    <line x1="0" y1="370" x2="1000" y2="370" stroke="rgba(0,229,255,0.08)" strokeWidth="1" />
+    <rect x="0" y="355" width="1000" height="25" fill="rgba(5,12,30,0.5)" />
+    <text x="20" y="368" fontSize="8" fill="rgba(0,229,255,0.25)" fontFamily="monospace">PARAHOOR FORENSICS // CASE ANALYSIS // ON-CHAIN TRACE // REF-48291</text>
+  </svg>
+);
+
+
+
+
+
 const ArticleThumb = ({
   accent = "#00E5FF",
   seed = 0,
@@ -1058,21 +1131,6 @@ export default function App({
     );
   };
 
-//   const handleTwitterShare = () => {
-//     const url = encodeURIComponent(
-//       window.location.href
-//     );
-
-//     const text = encodeURIComponent(
-//       post?.title || ""
-//     );
-
-// window.open(
-//   `https://x.com/intent/post?url=${url}&text=${text}`,
-//   "_blank",
-//   "noopener,noreferrer"
-// );
-//   };
 
   if (error) {
     return (
@@ -1315,65 +1373,21 @@ export default function App({
         </div>
       </header>
 
-      {/* ───────────────── FEATURED IMAGE ───────────────── */}
-
+            {/* ─── FEATURED IMAGE ─── */}
       <div className="px-6 pb-12 md:px-12">
-        <div className="max-w-5xl mx-auto">
-          <div
-            className="relative overflow-hidden rounded-2xl"
-            style={{
-              height:
-                "clamp(200px,40vw,380px)",
-              border: darkMode
-                ? "1px solid rgba(0,229,255,0.12)"
-                : "1px solid rgba(30,58,138,0.20)",
-              background: darkMode
-                ? "#050C1E"
-                : "#F8FAFC",
-              boxShadow: darkMode
-                ? "none"
-                : "0 12px 35px rgba(30,58,138,0.08)",
-            }}
-          >
-            {featuredImageUrl ? (
-              <img
-                src={featuredImageUrl}
-                alt={featuredImageAlt}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <HeroImageFallback
-                darkMode={darkMode}
-              />
-            )}
-
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: darkMode
-                  ? "linear-gradient(to bottom, transparent 60%, rgba(10,17,40,0.7) 100%)"
-                  : "linear-gradient(to bottom, transparent 60%, rgba(15,23,42,0.20) 100%)",
-              }}
-            />
+        <div className="max-w-6xl mx-auto">
+          <div className="relative overflow-hidden rounded-2xl"
+            style={{ height: "clamp(200px,40vw,380px)", border: "1px solid rgba(0,229,255,0.12)" }}>
+            <HeroImage />
+            {/* Overlay vignette */}
+            <div className="absolute inset-0 pointer-events-none"
+              style={{ background: "linear-gradient(to bottom, transparent 60%, rgba(10,17,40,0.7) 100%)" }} />
           </div>
-
-          {/* {post.featuredImageAlt?.trim() && (
-            <p
-              className="mt-2.5 text-xs text-center"
-              style={{
-                color: darkMode
-                  ? "#1E293B"
-                  : "#64748B",
-                fontFamily: "monospace",
-                letterSpacing: "0.08em",
-              }}
-            >
-              {post.featuredImageAlt}
-            </p>
-          )} */}
+          <p className="mt-2.5 text-xs text-center" style={{ color: "#1E293B", fontFamily: "monospace", letterSpacing: "0.1em" }}>
+            نمودار ردیابی جریان تراکنش‌ها — پرونده MySol // REF-48291
+          </p>
         </div>
       </div>
-
       {/* ───────────────── ARTICLE CONTENT ───────────────── */}
 
       <article className="px-6 pb-6 md:px-12">
@@ -1995,9 +2009,9 @@ export default function App({
 
 
 
-<CommentSection postId={post._id} darkMode={darkMode} initialComments={initialComments} />
             </div>
           )}
+<CommentSection postId={post._id} darkMode={darkMode} initialComments={initialComments} />
         </div>
       </div>
 

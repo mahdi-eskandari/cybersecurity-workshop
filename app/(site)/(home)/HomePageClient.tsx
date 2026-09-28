@@ -1570,7 +1570,10 @@ export default function HomePageClient({
   const { darkMode } = useTheme()
   const [menuOpen, setMenuOpen] = useState(false)
   const [crisisOpen, setCrisisOpen] = useState(false)
-      const blueBright = darkMode ? "#00E5FF" : "#1D4ED8";
+      // const blueBright = darkMode ? "#00E5FF" : "#1D4ED8";
+
+      
+
 
 
   // SEO-critical data is supplied by the server in the initial HTML.
@@ -1807,37 +1810,37 @@ export default function HomePageClient({
         </div>
 
         <div className="relative z-10 w-[90%] max-w-4xl mx-auto">
-          <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 text-xs font-semibold"
-            style={{
+
+
+                    <div
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 text-xs"
+
+                        style={{
               background: darkMode
                 ? "rgba(0,229,255,0.07)"
                 : "rgba(30,58,138,0.07)",
               border: darkMode
-                ? "1px solid rgba(0,229,255,0.18)"
+                ? "1px solid rgba(0,229,255,0.2)"
                 : "1px solid rgba(30,58,138,0.20)",
-              color: blueBright,
+              
             }}
           >
-            <IconDot
-              size={6}
-              color={blueBright}
-              glow={true}
-              glowColor={
-                darkMode
-                  ? "rgba(0,229,255,0.9)"
-                  : "rgba(30,58,138,0.45)"
-              }
-            />
 
-            <span
-              style={{
-                fontFamily: "monospace",
-                letterSpacing: "0.15em",
-              }}
-            >
-              PARAHOOR // SYSTEM ONLINE
-            </span>
+            <span 
+            className="data-label"
+            style={{
+              color: darkMode ? "#00E5FF" : "#102254ce",
+            }}
+            >PARAHOOR // SYSTEM ONLINE</span>
+
+                        <span className="node-dot pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
+                    background: darkMode
+                ? "#00E5FF"
+                : "rgba(13, 34, 93, 0.78)",
+
+             }}
+            
+            />
           </div>
 
         <h1
@@ -1997,38 +2000,8 @@ export default function HomePageClient({
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
 
-            
-              
-             <div className="inline-flex items-center gap-2 mb-2 justify-center">
-              <span
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background: darkMode
-                    ? "#00E5FF"
-                    : "#1D4ED8",
-                  display: "inline-block",
-                  boxShadow: darkMode
-                    ? "0 0 7px rgba(0,229,255,0.9)"
-                    : "0 0 7px rgba(30,58,138,0.22)",
-                }}
-              />
-
-              <span
-                style={{
-                  fontFamily: "monospace",
-                  fontSize: "0.65rem",
-                  color: darkMode
-                    ? "rgba(0,229,255,0.5)"
-                    : "#1D4ED8",
-                  letterSpacing: "0.18em",
-                }}
-              >
-                INVESTIGATION PIPELINE
-              </span>
-            </div>
-
+                
+<span className="data-label block mb-3">INVESTIGATION PIPELINE</span>
             <h2
               className="font-bold"
               style={{
@@ -2075,7 +2048,7 @@ export default function HomePageClient({
             ].map((step, index) => (
               <React.Fragment key={index}>
                 <div
-                  className={`glass-card w-full max-w-[310px] md:max-w-none md:flex-1 h-[315px] flex flex-col justify-center items-center p-6 md:p-8 text-center group transition-all duration-300 rounded-2xl ${
+                  className={`glass-card w-full max-w-[310px] md:max-w-none md:flex-1 h-[310px] max-w-[300px] flex flex-col  justify-center items-center p-6 md:p-8 text-center group transition-all duration-300 rounded-2xl ${
                     darkMode
                       ? "border border-cyan-500/30 hover:border-cyan-500 bg-cyan-900/10 hover:bg-cyan-800/15"
                       : ""
@@ -2138,8 +2111,9 @@ export default function HomePageClient({
                   <span
                     className="step-number block mb-2"
                     style={
+                      
                       darkMode
-                        ? undefined
+                        ? {color: "#13a0af"}
                         : { color: "rgba(30,58,138,0.72)" }
                     }
                   >
@@ -2175,12 +2149,12 @@ export default function HomePageClient({
                 {index < 2 && (
                   <>
                     <div
-                      className="hidden md:block w-12 flex-shrink-0"
+                      className="hidden md:block w-10 flex-shrink-0"
                       style={{
                         height: 1,
                         background: darkMode
                           ? index === 0
-                            ? "linear-gradient(1270deg, rgba(0,229,255,0.1), rgb(0,229,255))"
+                            ? "linear-gradient(1270deg, rgba(0,229,255,0.1), #00e5ff)"
                             : "linear-gradient(270deg, rgba(0,229,255,0.1), rgb(0,229,255))"
                           : index === 0
                             ? "linear-gradient(1270deg, rgba(30,58,138,0.08), rgb(29,78,216))"
@@ -2215,38 +2189,8 @@ export default function HomePageClient({
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
 
-             <div className="inline-flex items-center gap-2 mb-2 justify-center">
-              <span
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background: darkMode
-                    ? "#00E5FF"
-                    : "#1D4ED8",
-                  display: "inline-block",
-                  boxShadow: darkMode
-                    ? "0 0 7px rgba(0,229,255,0.9)"
-                    : "0 0 7px rgba(30,58,138,0.22)",
-                }}
-              />
-
-              <span
-                style={{
-                  fontFamily: "monospace",
-                  fontSize: "0.65rem",
-                  color: darkMode
-                    ? "rgba(0,229,255,0.5)"
-                    : "#1D4ED8",
-                  letterSpacing: "0.18em",
-                }}
-              >
-                SPECIALIZATION DOMAINS
-              </span>
-            </div>
-              
-
-
+<span className="data-label block mb-3">SPECIALIZATION DOMAINS</span>
+            
             <h2
               className="font-bold"
               style={{
@@ -2257,7 +2201,17 @@ export default function HomePageClient({
               حوزه‌های تخصصی پاراهور
             </h2>
 
-            <div className="scan-line w-24 mx-auto mt-4" />
+                        <div className="scan-line w-24 mx-auto mt-4" />
+
+            <div
+              className="hidden md:block w-20 mt-4 flex-shrink-0 mx-auto"
+              style={{
+                height: "1px",
+                background: darkMode
+                  ? "linear-gradient(to right, rgba(0,229,255,0.1), rgba(0,229,255,1), rgba(31,74,79,0.1))"
+                  : "linear-gradient(to right, rgba(30,58,138,0.08), rgba(30,58,138,1), rgba(30,58,138,0.08))",
+              }}
+            />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -2455,47 +2409,29 @@ export default function HomePageClient({
       >
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 mb-2 justify-center">
-              <span
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background: darkMode
-                    ? "#00E5FF"
-                    : "#1D4ED8",
-                  display: "inline-block",
-                  boxShadow: darkMode
-                    ? "0 0 7px rgba(0,229,255,0.9)"
-                    : "0 0 7px rgba(30,58,138,0.22)",
-                }}
-              />
 
-              <span
-                style={{
-                  fontFamily: "monospace",
-                  fontSize: "0.65rem",
-                  color: darkMode
-                    ? "rgba(0,229,255,0.5)"
-                    : "#1D4ED8",
-                  letterSpacing: "0.18em",
-                }}
-              >
-                FORENSIC RADAR
-              </span>
-            </div>
-
+                
+<span className="data-label block mb-3">FORENSIC RADAR</span>
             <h2
               className="text-2xl md:text-3xl font-black"
               style={{
                 color: darkMode ? "#fff" : "#0F172A",
               }}
             >
-              آخرین گزارش‌های{" "}
-
-                میدانی
+              آخرین گزارش‌های میدانی
 
             </h2>
+            <div className="scan-line w-24 mx-auto mt-4" />
+
+            <div
+              className="hidden md:block w-20 mt-4 flex-shrink-0 mx-auto"
+              style={{
+                height: "1px",
+                background: darkMode
+                  ? "linear-gradient(to right, rgba(0,229,255,0.1), rgba(0,229,255,1), rgba(31,74,79,0.1))"
+                  : "linear-gradient(to right, rgba(30,58,138,0.08), rgba(30,58,138,1), rgba(30,58,138,0.08))",
+              }}
+            />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">

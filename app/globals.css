@@ -12,14 +12,28 @@ body {
   overflow-x: hidden;
 }
 
-body,
+/* body,
 body *:not(code):not(pre):not(kbd) {
   font-family: var(--font-vazirmatn), sans-serif !important;
-}
+} */
 
 .admin-panel,
 .admin-panel * {
   font-family: var(--font-vazirmatn), sans-serif !important;
+}
+
+.step-number {
+  font-family: 'JetBrains Mono', monospace;
+  color: rgba(0, 229, 255, 0.5);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+}
+.data-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: rgba(0, 229, 255, 0.5);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
 }
 
 @media (max-width: 760px) {

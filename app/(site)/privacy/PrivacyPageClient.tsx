@@ -2,6 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useTheme } from "../../../components/ThemeProvider";
+import { motion } from "framer-motion";
+
+
 
 type PrivacyPageClientProps = {
   h1Title: string;
@@ -513,7 +516,13 @@ export default function PrivacyPageClient({
         )}
 
         {/* ─── HEADER ─── */}
-
+ <motion.div
+ className="pt-5"
+    initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+  viewport={{ once: true, amount: 0.2 }}
+>
         <header className="relative px-6 pt-16 pb-14 md:px-12 md:pt-24 overflow-hidden privacy-header">
           <div
             className="absolute inset-0 pointer-events-none"
@@ -655,16 +664,24 @@ export default function PrivacyPageClient({
             </div>
           </div>
         </header>
+        </motion.div>
 
         {/* ─── LAYOUT ─── */}
+
 
         <div className="px-6 pb-20 md:px-12">
           <div className="max-w-5xl mx-auto flex flex-col lg:flex-row gap-8 items-start">
 
             {/* ─── TOC ─── */}
 
-            <aside className="lg:w-64 flex-shrink-0">
-              <button
+ <motion.div
+ className="lg:w-64 flex-shrink-0"
+    initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+  viewport={{ once: true, amount: 0.2 }}
+>
+                <button
                 className="lg:hidden w-full flex items-center justify-between px-4 py-3 rounded-xl mb-2 text-sm font-semibold privacy-toc-mobile"
                 style={{
                   background: "rgba(0,229,255,0.07)",
@@ -727,13 +744,10 @@ export default function PrivacyPageClient({
                     </svg>
 
                     <span
-                      className="privacy-toc-label"
-                      style={{
-                        fontFamily: "monospace",
-                        fontSize: "0.62rem",
-                        color: "rgba(0,229,255,0.5)",
-                        letterSpacing: "0.14em"
-                      }}
+            className="data-label"
+              style={{
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce",
+            }}
                     >
                       TABLE OF CONTENTS
                     </span>
@@ -835,8 +849,8 @@ export default function PrivacyPageClient({
                         className="privacy-progress-label"
                         style={{
                           fontFamily: "monospace",
-                          fontSize: "0.58rem",
-                          color: "#1E293B"
+                          fontSize: "0.64rem",
+                          color: "#46556d"
                         }}
                       >
                         پیشرفت مطالعه
@@ -846,7 +860,7 @@ export default function PrivacyPageClient({
                         className="privacy-progress-percent"
                         style={{
                           fontFamily: "monospace",
-                          fontSize: "0.58rem",
+                          fontSize: "0.64rem",
                           color: "rgba(0,229,255,0.35)"
                         }}
                       >
@@ -887,19 +901,23 @@ export default function PrivacyPageClient({
                   </div>
                 </div>
               </div>
-            </aside>
+  </motion.div>
 
             {/* ─── CONTENT ─── */}
 
             <main className="flex-1 min-w-0">
 
               {/* SECTION 1 */}
-
-              <section
-                ref={setRef("s1")}
+             <motion.div
+               ref={setRef("s1")}
                 id="s1"
                 className="mb-2 privacy-section"
-              >
+                initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, amount: 0.2 }}
+               >
+
                 <div className="flex items-center gap-3 mb-6">
                   <div
                     className="privacy-section-accent"
@@ -914,15 +932,10 @@ export default function PrivacyPageClient({
 
                   <div>
                     <span
-                      className="privacy-section-label"
-                      style={{
-                        fontFamily: "monospace",
-                        fontSize: "0.6rem",
-                        color: "rgba(0,229,255,0.4)",
-                        letterSpacing: "0.15em",
-                        display: "block",
-                        marginBottom: 3
-                      }}
+            className="data-label"
+              style={{
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce",
+            }}
                     >
                       SECTION 01
                     </span>
@@ -1053,17 +1066,21 @@ export default function PrivacyPageClient({
                     </li>
                   ))}
                 </ul>
-              </section>
+               </motion.div>
 
               <Divider />
 
               {/* SECTION 2 */}
 
-              <section
+                <motion.div
                 ref={setRef("s2")}
                 id="s2"
                 className="mb-2 privacy-section"
-              >
+                initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, amount: 0.3 }}
+               >
                 <div className="flex items-center gap-3 mb-6">
                   <div
                     className="privacy-section-accent"
@@ -1078,15 +1095,10 @@ export default function PrivacyPageClient({
 
                   <div>
                     <span
-                      className="privacy-section-label"
-                      style={{
-                        fontFamily: "monospace",
-                        fontSize: "0.6rem",
-                        color: "rgba(167,139,250,0.5)",
-                        letterSpacing: "0.15em",
-                        display: "block",
-                        marginBottom: 3
-                      }}
+              className="data-label"
+              style={{
+              color: darkMode ? "rgba(167,139,250,0.5)" : "#102254ce",
+            }}
                     >
                       SECTION 02
                     </span>
@@ -1192,17 +1204,22 @@ export default function PrivacyPageClient({
                     </p>
                   </div>
                 </div>
-              </section>
+</motion.div>
 
               <Divider />
 
               {/* SECTION 3 */}
 
-              <section
+
+                 <motion.div
                 ref={setRef("s3")}
                 id="s3"
                 className="mb-2 privacy-section"
-              >
+                initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, amount: 0.32 }}
+               >
                 <div className="flex items-center gap-3 mb-6">
                   <div
                     className="privacy-section-accent"
@@ -1217,15 +1234,10 @@ export default function PrivacyPageClient({
 
                   <div>
                     <span
-                      className="privacy-section-label"
-                      style={{
-                        fontFamily: "monospace",
-                        fontSize: "0.6rem",
-                        color: "rgba(34,197,94,0.5)",
-                        letterSpacing: "0.15em",
-                        display: "block",
-                        marginBottom: 3
-                      }}
+                     className="data-label"
+                     style={{
+                     color: darkMode ? "rgba(34,197,94,0.5)" : "#102254ce",
+                       }}
                     >
                       SECTION 03
                     </span>
@@ -1281,12 +1293,12 @@ export default function PrivacyPageClient({
                     <span
                       style={{
                         fontFamily: "monospace",
-                        fontSize: "0.62rem",
+                        fontSize: "0.7rem",
                         color: "rgba(0,229,255,0.4)",
                         letterSpacing: "0.12em"
                       }}
                     >
-                      خلاصه سیاست اشتراک‌گذاری
+                      خلاصه سیاست اشتراک‌ گذاری
                     </span>
                   </div>
 
@@ -1349,17 +1361,22 @@ export default function PrivacyPageClient({
                     )
                   )}
                 </div>
-              </section>
+              </motion.div>
 
               <Divider />
 
               {/* SECTION 4 */}
 
-              <section
+
+                <motion.div
                 ref={setRef("s4")}
                 id="s4"
                 className="mb-2 privacy-section"
-              >
+                initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, amount: 0.32 }}
+               >
                 <div className="flex items-center gap-3 mb-6">
                   <div
                     className="privacy-section-accent"
@@ -1374,15 +1391,10 @@ export default function PrivacyPageClient({
 
                   <div>
                     <span
-                      className="privacy-section-label"
-                      style={{
-                        fontFamily: "monospace",
-                        fontSize: "0.6rem",
-                        color: "rgba(0,229,255,0.4)",
-                        letterSpacing: "0.15em",
-                        display: "block",
-                        marginBottom: 3
-                      }}
+            className="data-label"
+              style={{
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce",
+            }}
                     >
                       SECTION 04
                     </span>
@@ -1415,23 +1427,24 @@ export default function PrivacyPageClient({
                 >
                   در صورت مشاهده هرگونه رفتار مشکوک یا آسیب‌پذیری امنیتی در این وبسایت، لطفاً از طریق ایمیل{" "}
                   <span
-                    className="privacy-brand-text"
-                    style={{
-                      color: "#00E5FF",
-                      fontFamily: "monospace"
-                    }}
+                 className=" font-medium"
+              style={{
+              color: darkMode ? "rgba(34, 211, 231, 0.93)" : "#102254ce",
+                letterSpacing: "0.09rem"
+            }}
                   >
                     security@parahoor.io
                   </span>{" "}
                   گزارش دهید.
                 </Callout>
-              </section>
+              </motion.div>
 
               <Divider />
 
               {/* ─── CONTACT ─── */}
 
-              <section
+
+                <motion.div
                 className="relative overflow-hidden rounded-2xl p-8 privacy-contact-card"
                 style={{
                   background: "rgba(6,11,28,0.8)",
@@ -1441,7 +1454,11 @@ export default function PrivacyPageClient({
                     "0 0 50px rgba(0,229,255,0.05), inset 0 0 30px rgba(0,229,255,0.02)",
                   backdropFilter: "blur(10px)"
                 }}
-              >
+                initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, amount: 0.32 }}
+               >
                 <div
                   className="privacy-contact-corner privacy-contact-corner-top"
                   style={{
@@ -1477,13 +1494,10 @@ export default function PrivacyPageClient({
                 />
 
                 <span
-                  className="block mb-4 privacy-contact-label"
-                  style={{
-                    fontFamily: "monospace",
-                    fontSize: "0.6rem",
-                    color: "rgba(0,229,255,0.4)",
-                    letterSpacing: "0.18em"
-                  }}
+                className="data-label block mb-4"
+              style={{
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce"
+                }}
                 >
                   LEGAL DEPARTMENT // PRIVACY CONTACT
                 </span>
@@ -1557,7 +1571,7 @@ export default function PrivacyPageClient({
 
                   <div
                     className="flex items-center gap-2.5 text-xs privacy-contact-email"
-                    style={{ color: "#334155" }}
+                    style={{ color: "#445367",letterSpacing: "0.01rem" }}
                   >
                     <svg
                       className="privacy-brand-icon"
@@ -1578,7 +1592,7 @@ export default function PrivacyPageClient({
                     </span>
                   </div>
                 </div>
-              </section>
+              </motion.div>
             </main>
           </div>
         </div>
@@ -2085,6 +2099,14 @@ export default function PrivacyPageClient({
             box-shadow .24s ease,
             border-color .24s ease !important;
         }
+            
+            [data-theme="dark"].privacy-page .privacy-contact-card {
+
+          transition:
+            transform .24s ease,
+            box-shadow .24s ease,
+            border-color .24s ease !important;
+        }
 
         [data-theme="light"].privacy-page .privacy-contact-card:hover {
           transform:
@@ -2095,6 +2117,19 @@ export default function PrivacyPageClient({
 
           box-shadow:
             0 24px 55px rgba(30,58,138,.20) !important;
+        }
+
+        
+            
+        [data-theme="dark"].privacy-page .privacy-contact-card:hover {
+          transform:
+            translateY(-5px) !important;
+
+          border-color:
+            rgba(38, 177, 177, 0.33) !important;
+
+          box-shadow:
+           0 0 50px rgba(0, 229, 255, 0.08), inset 0 0 30px rgba(0,229,255,0.02) !important;
         }
 
         [data-theme="light"].privacy-page .privacy-contact-corner {

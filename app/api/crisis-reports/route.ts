@@ -90,13 +90,24 @@ export async function POST(req: Request) {
       status: "pending",
     });
 
-    return NextResponse.json(
+        const res = NextResponse.json(
       {
         message: "گزارش با موفقیت ثبت شد",
         trackingCode: report.trackingCode,
       },
       { status: 201 }
     );
+
+    res.cookies.set("report_submitted", report.trackingCode, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 15, // 15 دقیقه
+      // maxAge: 10, // ۱۰ ثانیه (فقط برای تست)
+    });
+
+    return res;
   } catch (error) {
     console.error("Crisis report error:", error);
 

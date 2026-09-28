@@ -5,6 +5,11 @@ import Link from "next/link";
 import { useTheme } from "./ThemeProvider";
 import {Phone} from "lucide-react";
 import { EmergencyModal } from "./CrisisReportForm";
+import {
+  Shield,
+  Mail,
+  MapPin,
+} from "lucide-react"
 
 
 const F_SERVICES = [
@@ -115,11 +120,11 @@ export default function Footer() {
         <div className="max-w-6xl mx-auto px-6 pt-14 pb-8">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-8 lg:gap-12 mb-12">
             <div className="md:col-span-2 space-y-4">
-              <div className="flex items-center gap-2.5 mb-3">
-                <PulseDot
-                  color={darkMode ? "#00E5FF" : "#60A5FA"}
-                />
 
+                <div className="flex items-center gap-2.5 mb-5">
+                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                  <Shield className="w-4 h-4 text-white" />
+                </div>
                 <Link
                   href="/"
                   className="font-black text-lg"
@@ -143,10 +148,26 @@ export default function Footer() {
                 نمی‌دهد. تمام گزارش‌ها صرفاً جنبه فنی داشته و برای استفاده وکلا
                 آماده می‌شوند.
               </p>
+                            <div className="space-y-3">
+                <div className="flex items-center gap-2.5 text-sm text-[#818fa0]">
+                  <Phone className="w-4 h-4 flex-shrink-0" />
+                  <span dir="ltr" className="text-[#818fa0]">
+                    021-44097162
+                  </span>
+                </div>
+                <div className="flex items-center gap-2.5 text-sm text-[#818fa0]">
+                  <Mail className="w-4 h-4 flex-shrink-0" />
+                  <span>info@parahoor.com</span>
+                </div>
+                <div className="flex items-center gap-2.5 text-sm text-[#818fa0]">
+                  <MapPin className="w-4 h-4 flex-shrink-0" />
+                  <span>آیت الله کاشانی، بلوار اباذر، نبش خیابان شالی، پلاک9، طبقه چهارم، واحد6</span>
+                </div>
+              </div>
             </div>
 
             {/* ۳ ستون منو */}
-            {footerMenus.map(({ title, links }) => (
+            {footerMenus.map(({ title, links }, index) => (
               <div key={title} className="md:col-span-1">
                 <h4
                   className="text-[14px] font-semibold mb-5"
@@ -164,7 +185,7 @@ export default function Footer() {
                     <li key={link.title}>
                       <Link
                         href={link.href}
-                        className="text-[13px] transition-colors block"
+                        className="text-[13px] transition-colors"
                         style={{
                           color: darkMode ? "#818fa0" : "#CBD5E1",
                         }}
@@ -172,11 +193,14 @@ export default function Footer() {
                           e.currentTarget.style.color = darkMode
                             ? "#00E5FF"
                             : "#60A5FA";
+
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.color = darkMode
                             ? "#818fa0"
                             : "#CBD5E1";
+
+
                         }}
                       >
                         {link.title}
@@ -184,11 +208,27 @@ export default function Footer() {
                     </li>
                   ))}
                 </ul>
+
+                {index === footerMenus.length - 1 && (
+                 <div className="ml-60 mt-8 bg-[#C62828]/20 border border-[#C62828]/35 rounded-xl p-4 w-[300px]">
+                    <p className="text-xs font-semibold text-red-300 mb-1.5">
+                      اورژانس سایبری
+                    </p>
+                    <p className="text-xs text-white/50 mb-3">
+                      در صورت حادثه فوری، ۲۴/۷ در دسترسیم
+                    </p>
+                    <button
+                      onClick={() => setCrisisOpen(true)}
+                      className="flex items-center gap-2 px-3.5 py-2 bg-[#C62828] text-white text-xs font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors"
+                    >
+                      <Phone className="w-3.5 h-3.5" />
+                      تماس اضطراری
+                    </button>
+                  </div>
+                )}
               </div>
-              
             ))}
-                         <div>
-              
+             {/* <div>
               <div className="bg-[#C62828]/20 border border-[#C62828]/35 rounded-xl p-4 w-[300px]">
                 <p className="text-xs font-semibold text-red-300 mb-1.5">
                   اورژانس سایبری
@@ -198,14 +238,13 @@ export default function Footer() {
                 </p>
                 <button
                     onClick={() => setCrisisOpen(true)}
-                  className="flex items-center gap-2 px-3.5 py-2 bg-[#C62828] text-white text-xs font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors w-fit"
+                  className="flex items-center gap-2 px-3.5 py-2 bg-[#C62828] text-white text-xs font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors"
                 >
                   <Phone className="w-3.5 h-3.5" />
                   تماس اضطراری
                 </button>
               </div>
-            </div>
-
+            </div> */}
           </div>
 
           {/* کپی‌رایت پایین */}

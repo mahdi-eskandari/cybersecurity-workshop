@@ -45,6 +45,7 @@ const HeroBg = ({ darkMode = true }: { darkMode?: boolean }) => (
     className="absolute inset-0 w-full h-full pointer-events-none"
     viewBox="0 0 1200 520"
     preserveAspectRatio="xMidYMid slice"
+    style={{ transform: "translateY(-16px)" }}
   >
     <defs>
       <radialGradient id="hbg" cx="50%" cy="50%" r="60%">
@@ -438,7 +439,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
 
   const accent = darkMode ? "#00E5FF" : "#1E3A8A";
   const textMain = darkMode ? "#E2E8F0" : "#0F172A";
-  const textMuted = darkMode ? "#475569" : "#475569";
+  const textMuted = darkMode ? "#636f81" : "#475569";
   const cardBg = darkMode
     ? "rgba(255,255,255,0.028)"
     : "#FFFFFF";
@@ -474,7 +475,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         viewport={{ once: true, amount: 0.2 }}
-        className="relative overflow-hidden px-6 pt-24 pb-28 md:px-12 md:pt-32 md:pb-36 text-center"
+        className="relative overflow-hidden px-6 pt-24 pb-28 md:px-12 md:pt-32 md:pb-36 text-center pt-20"
       >
         <HeroBg darkMode={darkMode} />
 
@@ -488,30 +489,38 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
         />
 
         <div className="relative z-10 max-w-3xl mx-auto">
+
           <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 text-xs font-semibold"
-            style={{
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 text-xs"
+
+                        style={{
               background: darkMode
                 ? "rgba(0,229,255,0.07)"
-                : "rgba(30,58,138,0.12)",
+                : "rgba(30,58,138,0.07)",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.2)"
-                : "1px solid rgba(30,58,138,0.42)",
-              color: accent,
+                : "1px solid rgba(30,58,138,0.20)",
+              
             }}
           >
-            <PulseDot size={5} darkMode={darkMode} />
 
-            <span
-              style={{
-                fontFamily: "monospace",
-                letterSpacing: "0.15em",
-              }}
-            >
-              ABOUT PARAHOOR // SINCE 1405
-            </span>
+            <span 
+            className="data-label"
+            style={{
+              color: darkMode ? "#00E5FF" : "#102254ce",
+                fontWeight: "500"
+            }}
+            >ABOUT PARAHOOR // SINCE 1405</span>
+
+                        <span className="node-dot pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
+                    background: darkMode
+                ? "#00E5FF"
+                : "rgba(13, 34, 93, 0.78)",
+
+             }}
+            
+            />
           </div>
-
         <h1
   className="glow-text font-black leading-tight mb-6"
   style={{
@@ -536,10 +545,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
               maxWidth: 580,
             }}
           >
-            پاراهور، نخستین آژانس تخصصی کارآگاهان سایبری است
-            که با هدف کشف حقیقت، ردیابی جریان‌های مالی پنهان
-            و تأمین ادله دیجیتال برای محاکم قضایی تأسیس شده
-            است.
+پاراهور، نخبه‌ترین آژانس خصوصی تحقیقات سایبری و دیجیتال فارنزیک است. مأموریت ما کشف حقیقت در تاریک‌ترین لایه‌های شبکه است. با رهگیری پیچیده رمزارزهای سرقتی، خدمات اوسینت و کالبدشکافی سرورهای هک‌شده، ادله‌ای قطعی و دادگاه‌پسند خلق می‌کنیم.
           </p>
 
           <div className="flex flex-wrap justify-center gap-8 mt-10">
@@ -566,7 +572,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
 
                 <div
                   style={{
-                    color: darkMode ? "#334155" : "#64748B",
+                    color: darkMode ? "#404e62eb" : "#64748B",
                     fontSize: "0.75rem",
                     marginTop: 3,
                   }}
@@ -614,14 +620,10 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                 />
 
                 <span
-                  style={{
-                    fontFamily: "monospace",
-                    fontSize: "0.62rem",
-                    color: darkMode
-                      ? "rgba(0,229,255,0.45)"
-                      : "rgba(30,64,175,0.78)",
-                    letterSpacing: "0.18em",
-                  }}
+            className="data-label"
+              style={{
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce",
+            }}
                 >
                   CYBER INTELLIGENCE + LEGAL EXPERTISE
                 </span>
@@ -640,49 +642,52 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                 و بینش حقوقی
               </h2>
 
-              <p
-                style={{
-                  color: textMuted,
-                  fontSize: "clamp(0.9rem,1.8vw,1rem)",
-                  lineHeight: 1.95,
-                }}
-              >
-                پاراهور با بهره‌گیری از برترین متخصصان امنیت
-                سایبری و در کنار مشاوره حقوقیِ وکلای برجسته
-                دادگستری از جمله جناب آقای{" "}
-                <span
-                  style={{
-                    color: darkMode ? "#E2E8F0" : "#1E293B",
-                    fontWeight: 600,
-                  }}
-                >
-                  علیرضا طباطبایی
-                </span>{" "}
-                بنا شده است. هدف ما این است که گزارش‌های
-                پیچیده فنی، به دقیق‌ترین و دادگاه‌پسندترین
-                مستنداتِ قانونی تبدیل شوند.
-              </p>
+
+
+
+
 
               <p
-                className="mt-4"
                 style={{
                   color: textMuted,
                   fontSize: "clamp(0.9rem,1.8vw,1rem)",
                   lineHeight: 1.95,
                 }}
               >
-                ما تمرکز خود را منحصراً بر{" "}
+              آژانس تحقیقاتی پاراهور، حاصل پیوند قدرتمندِ دانشِ عمیقِ فنی و اقتدارِ قاطعِ حقوقی است. این مجموعه توسط
+              {" "}
                 <span
                   style={{
                     color: darkMode ? "#E2E8F0" : "#1E293B",
                     fontWeight: 600,
                   }}
                 >
-                  خدمات فارنزیک و کارآگاهی خصوصی
+                 محمدرضا یوسفی،
                 </span>{" "}
-                قرار داده‌ایم تا بی‌نقص‌ترین بازوی فنی برای
-                شما و وکلایتان باشیم.
+              پژوهشگر جرائم رایانه‌ای، با مأموریتِ نفوذ به تاریک‌ترین شبکه‌های کلاهبرداری، گراف‌کاوی بلاک‌چین و کالبدشکافی دیجیتال پایه‌گذاری شد.<br /> از آنجا که کشف سرنخِ سایبری بدون استنادپذیریِ قانونی در دادگاه بی‌ارزش است، همراهی جناب آقای &nbsp;&nbsp;&nbsp;&nbsp;
+                             {" "}
+                <span
+                  style={{
+                    color: darkMode ? "#E2E8F0" : "#1E293B",
+                    fontWeight: 600,
+                  }}
+                >
+              علیرضا طباطبایی،
+                </span>{" "}
+                وکیل سایبری برجسته در این تیم، تضمین می‌کند که تمامی داده‌های استخراج‌شده، به ادله‌ای کاملاً محکمه‌پسند و غیرقابل‌انکار برای مراجع قضایی تبدیل شوند. <br />پاراهور، خط پایانِ گمنامیِ مجرمانِ دیجیتال است.
               </p>
+
+
+              <p>
+                
+              </p>
+
+
+
+
+
+
+             
 
               <div className="flex flex-wrap gap-3 mt-8">
                 {[
@@ -813,18 +818,15 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
               />
 
               <span
-                style={{
-                  fontFamily: "monospace",
-                  fontSize: "0.65rem",
-                  color: darkMode
-                    ? "rgba(0,229,255,0.5)"
-                    : "#1D4ED8",
-                  letterSpacing: "0.18em",
-                }}
+            className="data-label"
+              style={{
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce",
+            }}
               >
                 CORE PRINCIPLES // PARAHOOR
               </span>
             </div>
+            
               
 
 
@@ -1025,14 +1027,10 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
               />
 
               <span
-                style={{
-                  fontFamily: "monospace",
-                  fontSize: "0.65rem",
-                  color: darkMode
-                    ? "rgba(0,229,255,0.5)"
-                    : "#1D4ED8",
-                  letterSpacing: "0.18em",
-                }}
+            className="data-label"
+              style={{
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce",
+            }}
               >
                 OPERATIONAL HISTORY
               </span>
@@ -1246,12 +1244,7 @@ onMouseLeave={(e) => {
             >
               توجه:{" "}
             </span>
-            پاراهور یک آژانس تحقیقات فنی است. ما مستقیماً
-            خدمات نمایندگی در دادگاه یا کمپین‌های حقوقی ارائه
-            نمی‌دهیم، بلکه حقیقت و شواهد را برای موفقیت در
-            دادگاه کشف می‌کنیم. تمام گزارش‌های ما برای
-            بهره‌برداری توسط وکیل یا مراجع قضایی آماده‌سازی
-            می‌شوند.
+           پاراهور منحصراً یک آژانس «کشف ادله فنی و دیجیتال» است و مستقیماً خدمات حقوقی را ارائه نمی‌دهد. تمامی گزارش‌های فارنزیکِ این مجموعه، جهت تضمین بالاترین سطح استنادپذیری در محاکم قضایی، تحت نظارت و مشاوره مستمر وکلای پایه یک دادگستری (از جمله جناب آقای علیرضا طباطبایی) تدوین و اعتبارسنجی می‌شوند.
           </p>
         </div>
       </div>
@@ -1371,15 +1364,11 @@ onMouseLeave={(e) => {
             />
 
             <span
+
+              className="data-label block mb-5"
               style={{
-                fontFamily: "monospace",
-                fontSize: "0.62rem",
-                color: darkMode
-                  ? "rgba(0,229,255,0.4)"
-                  : "rgba(30,58,138,0.90)",
-                letterSpacing: "0.2em",
-              }}
-              className="block mb-5"
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce",
+            }}
             >
               FREE INITIAL ASSESSMENT
             </span>
@@ -1437,7 +1426,7 @@ onMouseLeave={(e) => {
             <p
               className="mt-4 text-xs"
               style={{
-                color: darkMode ? "#1E293B" : "#94A3B8",
+                color: darkMode ? "#4c5c77b1" : "#94A3B8",
               }}
             >
               بدون تعهد مالی • کاملاً محرمانه • پاسخ در کمتر
