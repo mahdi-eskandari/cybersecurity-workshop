@@ -1,18 +1,18 @@
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+// import Header from "../../components/Header";
+// import Footer from "../../components/Footer";
 // import {ThemeProvider} from "../../components/ThemeProvider"
 
 export default function SiteLayout({ children }) {
   return (
     <div>
 
-      <Header />
+      {/* <Header /> */}
 
       <main className="flex-1">
         {children}
       </main>
 
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }
