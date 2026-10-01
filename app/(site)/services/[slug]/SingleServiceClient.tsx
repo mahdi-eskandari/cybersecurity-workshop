@@ -281,6 +281,935 @@ const BlockchainHeroArt = ({
     ))} 
   </svg> 
 ); 
+
+
+
+const PostCrisisPentestHeroArt = ({
+  darkMode = true,
+}: {
+  darkMode?: boolean;
+}) => {
+  const c = (dark: string, light: string) => (darkMode ? dark : light);
+  const strong = c("rgba(0,229,255,0.85)", "rgba(37,99,235,0.7)");
+  const mid = c("rgba(0,229,255,0.55)", "rgba(37,99,235,0.5)");
+  const soft = c("rgba(0,229,255,0.3)", "rgba(37,99,235,0.28)");
+  const fillMid = c("rgba(0,229,255,0.28)", "rgba(37,99,235,0.24)");
+  const fillSoft = c("rgba(0,229,255,0.12)", "rgba(37,99,235,0.1)");
+  const solid = c("#00E5FF", "#2563EB");
+
+  const leftNodes = [
+    { x: 50, y: 150 },
+    { x: 120, y: 85 },
+    { x: 195, y: 140 }, // compromised
+    { x: 270, y: 80 },
+    { x: 345, y: 125 },
+  ];
+  const leftEdges = [
+    [0, 1],
+    [1, 2],
+    [2, 3],
+    [3, 4],
+    [1, 3],
+  ];
+
+  const probePoints = [
+    { x: 800, y: 70 },
+    { x: 760, y: 110 },
+    { x: 700, y: 110 },
+    { x: 660, y: 80 },
+    { x: 590, y: 80 },
+    { x: 540, y: 110 },
+  ];
+
+  const attackPath = `M900 70 L${probePoints.map((p) => `${p.x} ${p.y}`).join(" L")} L482 110`;
+  const healPath = "M418 110 L345 125 L270 80 L195 140";
+  const shieldPath =
+    "M450 72 L482 84 V112 C482 134 468 148 450 156 C432 148 418 134 418 112 V84 Z";
+
+  return (
+    <svg
+      width="100%"
+      height="220"
+      viewBox="0 0 900 220"
+      preserveAspectRatio="xMidYMid meet"
+      className="w-full"
+      style={{ opacity: darkMode ? 0.4 : 0.7 }}
+    >
+      <defs>
+        <filter id="pentestGlow">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        <clipPath id="pentestShieldClip">
+          <path d={shieldPath} />
+        </clipPath>
+      </defs>
+
+      {/* Target rings around the shield */}
+      {[50, 78, 105].map((r, i) => (
+        <circle
+          key={r}
+          cx={450}
+          cy={110}
+          r={r}
+          fill="none"
+          stroke={c(
+            `rgba(0,229,255,${0.45 - i * 0.1})`,
+            `rgba(37,99,235,${0.42 - i * 0.08})`
+          )}
+          strokeWidth="1.5"
+          strokeDasharray={i === 1 ? "4 4" : undefined}
+        />
+      ))}
+      {/* Expanding pulse ring */}
+      <circle cx={450} cy={110} r={50} fill="none" stroke={solid} strokeWidth="1.5">
+        <animate attributeName="r" values="50;108" dur="4s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.6;0" dur="4s" repeatCount="indefinite" />
+      </circle>
+      <line x1={450} y1={5} x2={450} y2={18} stroke={mid} strokeWidth="1.5" />
+
+      {/* Damaged network (left) */}
+      {leftEdges.map(([a, b], i) => {
+        const touchesBroken = a === 2 || b === 2;
+        return (
+          <line
+            key={i}
+            x1={leftNodes[a].x}
+            y1={leftNodes[a].y}
+            x2={leftNodes[b].x}
+            y2={leftNodes[b].y}
+            stroke={c("rgba(0,229,255,0.55)", "rgba(37,99,235,0.5)")}
+            strokeWidth="1.5"
+            strokeDasharray={touchesBroken ? "3 4" : undefined}
+          />
+        );
+      })}
+
+      {/* Link from network to shield */}
+      <line
+        x1={345}
+        y1={125}
+        x2={418}
+        y2={110}
+        stroke={c("rgba(0,229,255,0.65)", "rgba(37,99,235,0.55)")}
+        strokeWidth="1.5"
+        filter="url(#pentestGlow)"
+      />
+
+      {leftNodes.map((n, i) =>
+        i === 2 ? (
+          <g key={i}>
+            {/* rotating dashed ring */}
+            <circle
+              cx={n.x}
+              cy={n.y}
+              r={13}
+              fill="none"
+              stroke={c("rgba(0,229,255,0.75)", "rgba(37,99,235,0.65)")}
+              strokeWidth="1.5"
+              strokeDasharray="3 3"
+            >
+              <animateTransform
+                attributeName="transform"
+                type="rotate"
+                from={`0 ${n.x} ${n.y}`}
+                to={`360 ${n.x} ${n.y}`}
+                dur="10s"
+                repeatCount="indefinite"
+              />
+            </circle>
+            {/* heal flash */}
+            <circle cx={n.x} cy={n.y} r={13} fill="none" stroke={solid} strokeWidth="1.5">
+              <animate attributeName="r" values="13;13;24;24" keyTimes="0;0.45;0.6;1" dur="6s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0;0.9;0;0" keyTimes="0;0.45;0.6;1" dur="6s" repeatCount="indefinite" />
+            </circle>
+            {/* X (compromised) */}
+            <g filter="url(#pentestGlow)">
+              <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.45;0.5;0.9;1" dur="6s" repeatCount="indefinite" />
+              <line x1={n.x - 5} y1={n.y - 5} x2={n.x + 5} y2={n.y + 5} stroke={solid} strokeWidth="2.2" strokeLinecap="round" />
+              <line x1={n.x + 5} y1={n.y - 5} x2={n.x - 5} y2={n.y + 5} stroke={solid} strokeWidth="2.2" strokeLinecap="round" />
+            </g>
+            {/* Check (recovered) */}
+            <path
+              d={`M${n.x - 5} ${n.y} L${n.x - 1} ${n.y + 4} L${n.x + 6} ${n.y - 4}`}
+              fill="none"
+              stroke={solid}
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              filter="url(#pentestGlow)"
+            >
+              <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.45;0.5;0.9;1" dur="6s" repeatCount="indefinite" />
+            </path>
+          </g>
+        ) : (
+          <circle
+            key={i}
+            cx={n.x}
+            cy={n.y}
+            r={5.5}
+            fill={c("rgba(0,229,255,0.28)", "rgba(37,99,235,0.24)")}
+            stroke={c("rgba(0,229,255,0.75)", "rgba(37,99,235,0.6)")}
+            strokeWidth="1.5"
+          />
+        )
+      )}
+
+      {/* Healing packet: shield → compromised node */}
+      <circle r={3.5} fill={solid} filter="url(#pentestGlow)">
+        <animateMotion
+          dur="6s"
+          repeatCount="indefinite"
+          path={healPath}
+          calcMode="linear"
+          keyPoints="0;0;1;1"
+          keyTimes="0;0.15;0.45;1"
+        />
+        <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.15;0.45;0.5;1" dur="6s" repeatCount="indefinite" />
+      </circle>
+
+      {/* Shield */}
+      <path
+        d={shieldPath}
+        fill={c("rgba(0,229,255,0.16)", "rgba(37,99,235,0.12)")}
+        stroke={strong}
+        strokeWidth="2"
+        filter="url(#pentestGlow)"
+      />
+      {/* Scan line inside shield */}
+      <g clipPath="url(#pentestShieldClip)">
+        <line x1={414} y1={72} x2={486} y2={72} stroke={solid} strokeWidth="2" strokeLinecap="round">
+          <animate attributeName="y1" values="72;156;72" dur="3s" repeatCount="indefinite" />
+          <animate attributeName="y2" values="72;156;72" dur="3s" repeatCount="indefinite" />
+        </line>
+      </g>
+      {/* Lock */}
+      <rect
+        x={440}
+        y={108}
+        width="20"
+        height="16"
+        rx="2"
+        fill={c("rgba(0,229,255,0.35)", "rgba(37,99,235,0.28)")}
+        stroke={strong}
+        strokeWidth="1.5"
+      />
+      <path d="M444 108 V102 a6 6 0 0 1 12 0 V108" fill="none" stroke={strong} strokeWidth="1.8" />
+      <circle cx={450} cy={116} r={2.5} fill={solid} filter="url(#pentestGlow)" />
+
+      {/* Probe / attack path (right) */}
+      <path
+        d={attackPath}
+        fill="none"
+        stroke={strong}
+        strokeWidth="1.8"
+        strokeDasharray="6 6"
+        filter="url(#pentestGlow)"
+      >
+        <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="2s" repeatCount="indefinite" />
+      </path>
+      {probePoints.map((p, i) => (
+        <circle
+          key={i}
+          cx={p.x}
+          cy={p.y}
+          r={4}
+          fill={c("rgba(0,229,255,0.5)", "rgba(37,99,235,0.4)")}
+          stroke={strong}
+          strokeWidth="1.5"
+        />
+      ))}
+
+      {/* Attack packets + impact ripples */}
+      {[0, 1.75].map((delay) => (
+        <g key={delay}>
+          <circle r={4} fill={solid} filter="url(#pentestGlow)">
+            <animateMotion
+              dur="3.5s"
+              begin={`${delay}s`}
+              repeatCount="indefinite"
+              path={attackPath}
+              calcMode="linear"
+              keyPoints="0;1;1"
+              keyTimes="0;0.85;1"
+            />
+            <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.85;1" dur="3.5s" begin={`${delay}s`} repeatCount="indefinite" />
+          </circle>
+          <circle cx={482} cy={110} r={4} fill="none" stroke={solid} strokeWidth="1.8">
+            <animate attributeName="r" values="4;4;26" keyTimes="0;0.85;1" dur="3.5s" begin={`${delay}s`} repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0;0.9;0" keyTimes="0;0.85;1" dur="3.5s" begin={`${delay}s`} repeatCount="indefinite" />
+          </circle>
+        </g>
+      ))}
+
+      {/* Timeline: crisis → recovery → retest */}
+      <line x1={60} y1={202} x2={840} y2={202} stroke={c("rgba(0,229,255,0.35)", "rgba(37,99,235,0.32)")} strokeWidth="1.5" />
+      <line x1={60} y1={202} x2={60} y2={202} stroke={solid} strokeWidth="2" strokeLinecap="round">
+        <animate attributeName="x2" values="60;840;840" keyTimes="0;0.9;1" dur="6s" repeatCount="indefinite" />
+      </line>
+      <circle cx={200} cy={202} r={4.5} fill={c("rgba(0,229,255,0.7)", "rgba(37,99,235,0.6)")} />
+      <circle cx={450} cy={202} r={5.5} fill="none" stroke={strong} strokeWidth="1.5" />
+      <circle cx={700} cy={202} r={8} fill={c("rgba(0,229,255,0.2)", "rgba(37,99,235,0.15)")} stroke={strong} strokeWidth="1.5" />
+      <path d="M696 202 L699 205 L705 198" fill="none" stroke={solid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx={60} cy={202} r={3.5} fill={solid} filter="url(#pentestGlow)">
+        <animate attributeName="cx" values="60;840;840" keyTimes="0;0.9;1" dur="6s" repeatCount="indefinite" />
+      </circle>
+    </svg>
+  );
+};
+
+
+
+const RansomwareNegotiationHeroArt = ({
+  darkMode = true,
+}: {
+  darkMode?: boolean;
+}) => {
+  const c = (dark: string, light: string) => (darkMode ? dark : light);
+  const strong = c("rgba(0,229,255,0.85)", "rgba(37,99,235,0.7)");
+  const mid = c("rgba(0,229,255,0.55)", "rgba(37,99,235,0.5)");
+  const soft = c("rgba(0,229,255,0.3)", "rgba(37,99,235,0.28)");
+  const fillMid = c("rgba(0,229,255,0.28)", "rgba(37,99,235,0.24)");
+  const fillSoft = c("rgba(0,229,255,0.12)", "rgba(37,99,235,0.1)");
+  const solid = c("#00E5FF", "#2563EB");
+
+  return (
+    <svg
+      width="100%"
+      height="220"
+      viewBox="0 0 900 220"
+      preserveAspectRatio="xMidYMid meet"
+      className="w-full"
+      style={{ opacity: darkMode ? 0.4 : 0.7 }}
+    >
+      <defs>
+        <filter id="ransomGlow">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      {/* Encrypted files (left) */}
+      {[62, 92, 122].map((y, i) => (
+        <g key={i}>
+          <rect x={50} y={y} width={90} height={24} rx={4} fill={fillSoft} stroke={mid} strokeWidth="1.5" />
+          <rect x={58} y={y + 8} width={44} height={3} rx={1} fill={soft} />
+          <rect x={58} y={y + 14} width={28} height={3} rx={1} fill={soft} />
+          <line x1={118} y1={y + 8} x2={128} y2={y + 16} stroke={solid} strokeWidth="1.5" strokeLinecap="round" />
+          <line x1={128} y1={y + 8} x2={118} y2={y + 16} stroke={solid} strokeWidth="1.5" strokeLinecap="round" />
+        </g>
+      ))}
+
+      {/* Big padlock */}
+      <path
+        d="M163 112 V105 a9 9 0 0 1 18 0 V112"
+        fill="none"
+        stroke={strong}
+        strokeWidth="2"
+      />
+      <rect
+        x={156}
+        y={112}
+        width={32}
+        height={24}
+        rx={3}
+        fill={fillMid}
+        stroke={strong}
+        strokeWidth="2"
+        filter="url(#ransomGlow)"
+      />
+      <circle cx={172} cy={123} r={3} fill={solid} />
+      <line x1={172} y1={123} x2={172} y2={130} stroke={solid} strokeWidth="1.5" />
+
+      {/* Countdown timer (top center) */}
+      <circle cx={450} cy={40} r={18} fill="none" stroke={soft} strokeWidth="1.5" />
+      <circle
+        cx={450}
+        cy={40}
+        r={18}
+        fill="none"
+        stroke={strong}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeDasharray="113"
+        strokeDashoffset="0"
+        transform="rotate(-90 450 40)"
+        filter="url(#ransomGlow)"
+      >
+        <animate attributeName="stroke-dashoffset" from="0" to="113" dur="6s" repeatCount="indefinite" />
+      </circle>
+      <line x1={450} y1={40} x2={450} y2={30} stroke={solid} strokeWidth="1.5" strokeLinecap="round" />
+      <line x1={450} y1={40} x2={457} y2={44} stroke={solid} strokeWidth="1.5" strokeLinecap="round" />
+
+      {/* Chat bubble A (negotiator) */}
+      <rect x={250} y={95} width={100} height={46} rx={10} fill={fillSoft} stroke={strong} strokeWidth="1.5" />
+      <polygon points="266,141 258,158 282,141" fill={fillSoft} stroke={strong} strokeWidth="1.5" strokeLinejoin="round" />
+      {[284, 300, 316].map((x, i) => (
+        <circle key={i} cx={x} cy={118} r={3.5} fill={solid}>
+          <animate
+            attributeName="opacity"
+            values="0.2;1;0.2"
+            dur="1.4s"
+            begin={`${i * 0.25}s`}
+            repeatCount="indefinite"
+          />
+        </circle>
+      ))}
+
+      {/* Chat bubble B (attacker) */}
+      <rect x={550} y={122} width={100} height={46} rx={10} fill={fillSoft} stroke={strong} strokeWidth="1.5" />
+      <polygon points="622,168 644,168 646,184" fill={fillSoft} stroke={strong} strokeWidth="1.5" strokeLinejoin="round" />
+      <rect x={566} y={134} width={58} height={3} rx={1} fill={mid} />
+      <rect x={566} y={144} width={40} height={3} rx={1} fill={soft} />
+      <rect x={566} y={154} width={50} height={3} rx={1} fill={soft} />
+
+      {/* Negotiation link */}
+      <path
+        d="M350 118 C 420 118, 480 145, 550 145"
+        fill="none"
+        stroke={strong}
+        strokeWidth="1.8"
+        strokeDasharray="6 6"
+        filter="url(#ransomGlow)"
+      >
+        <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="2s" repeatCount="indefinite" />
+      </path>
+      <polygon points="450,122 458,131 450,140 442,131" fill={fillMid} stroke={strong} strokeWidth="1.5">
+        <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite" />
+      </polygon>
+
+      {/* Link to key */}
+      <path
+        d="M650 145 C 700 145, 720 110, 754 110"
+        fill="none"
+        stroke={mid}
+        strokeWidth="1.5"
+        strokeDasharray="6 6"
+      >
+        <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="2s" repeatCount="indefinite" />
+      </path>
+
+      {/* Recovery key (right) */}
+      <circle cx={770} cy={110} r={16} fill={fillMid} stroke={strong} strokeWidth="2" filter="url(#ransomGlow)" />
+      <circle cx={770} cy={110} r={5} fill={solid} />
+      <line x1={786} y1={110} x2={860} y2={110} stroke={strong} strokeWidth="2.2" strokeLinecap="round" />
+      <line x1={840} y1={110} x2={840} y2={124} stroke={strong} strokeWidth="2.2" strokeLinecap="round" />
+      <line x1={852} y1={110} x2={852} y2={120} stroke={strong} strokeWidth="2.2" strokeLinecap="round" />
+
+      {/* Timeline */}
+      <line x1={60} y1={202} x2={840} y2={202} stroke={c("rgba(0,229,255,0.35)", "rgba(37,99,235,0.32)")} strokeWidth="1.5" />
+      <circle cx={200} cy={202} r={4.5} fill={mid} />
+      <circle cx={450} cy={202} r={5.5} fill="none" stroke={strong} strokeWidth="1.5" />
+      <circle cx={700} cy={202} r={8} fill={fillMid} stroke={strong} strokeWidth="1.5" />
+      <path d="M696 202 L699 205 L705 198" fill="none" stroke={solid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+};
+
+
+
+
+const DigitalForensicsHeroArt = ({
+  darkMode = true,
+}: {
+  darkMode?: boolean;
+}) => {
+  const c = (dark: string, light: string) => (darkMode ? dark : light);
+  const strong = c("rgba(0,229,255,0.85)", "rgba(37,99,235,0.7)");
+  const mid = c("rgba(0,229,255,0.55)", "rgba(37,99,235,0.5)");
+  const soft = c("rgba(0,229,255,0.3)", "rgba(37,99,235,0.28)");
+  const fillMid = c("rgba(0,229,255,0.28)", "rgba(37,99,235,0.24)");
+  const fillSoft = c("rgba(0,229,255,0.12)", "rgba(37,99,235,0.1)");
+  const solid = c("#00E5FF", "#2563EB");
+
+  const treeNodes = {
+    root: { x: 760, y: 55 },
+    mids: [
+      { x: 700, y: 105 },
+      { x: 820, y: 105 },
+    ],
+    leaves: [
+      { x: 665, y: 155, p: 0 },
+      { x: 725, y: 155, p: 0 },
+      { x: 795, y: 155, p: 1 },
+      { x: 855, y: 155, p: 1 },
+    ],
+  };
+
+  return (
+    <svg
+      width="100%"
+      height="220"
+      viewBox="0 0 900 220"
+      preserveAspectRatio="xMidYMid meet"
+      className="w-full"
+      style={{ opacity: darkMode ? 0.4 : 0.7 }}
+    >
+      <defs>
+        <filter id="forensicGlow">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      {/* Hex dump (left) */}
+      {[0, 1, 2, 3, 4].map((r) =>
+        [0, 1, 2, 3, 4, 5].map((col) => {
+          const hot = r === 2 && (col === 2 || col === 3);
+          return (
+            <rect
+              key={`${r}-${col}`}
+              x={60 + col * 24}
+              y={55 + r * 24}
+              width={14}
+              height={8}
+              rx={1.5}
+              fill={hot ? solid : (r + col) % 3 === 0 ? mid : soft}
+              filter={hot ? "url(#forensicGlow)" : undefined}
+            >
+              {hot && (
+                <animate attributeName="opacity" values="0.4;1;0.4" dur="1.8s" repeatCount="indefinite" />
+              )}
+            </rect>
+          );
+        })
+      )}
+      <rect x={50} y={45} width={154} height={124} rx={6} fill="none" stroke={soft} strokeWidth="1.5" />
+
+      {/* Link hex → disk */}
+      <path d="M204 107 L372 105" fill="none" stroke={mid} strokeWidth="1.5" strokeDasharray="6 6">
+        <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="2s" repeatCount="indefinite" />
+      </path>
+
+      {/* Disk platter */}
+      <circle cx={450} cy={105} r={78} fill={fillSoft} stroke={mid} strokeWidth="1.5" strokeDasharray="4 4" />
+      <circle cx={450} cy={105} r={60} fill="none" stroke={mid} strokeWidth="1.5" />
+      <circle cx={450} cy={105} r={40} fill="none" stroke={soft} strokeWidth="1.5" />
+      <circle cx={450} cy={105} r={18} fill={fillMid} stroke={strong} strokeWidth="1.5" />
+      <circle cx={450} cy={105} r={5} fill={solid} filter="url(#forensicGlow)" />
+      {Array.from({ length: 12 }).map((_, i) => (
+        <line
+          key={i}
+          x1={450}
+          y1={27}
+          x2={450}
+          y2={45}
+          stroke={soft}
+          strokeWidth="1.5"
+          transform={`rotate(${i * 30} 450 105)`}
+        />
+      ))}
+
+      {/* Radar sweep */}
+      <g>
+        <animateTransform
+          attributeName="transform"
+          type="rotate"
+          from="0 450 105"
+          to="360 450 105"
+          dur="5s"
+          repeatCount="indefinite"
+        />
+        <path d="M450 105 L450 27 A78 78 0 0 1 489 37.5 Z" fill={fillMid} />
+        <line x1={450} y1={105} x2={450} y2={27} stroke={strong} strokeWidth="1.8" filter="url(#forensicGlow)" />
+      </g>
+
+      {/* Magnifier */}
+      <circle cx={528} cy={138} r={24} fill={fillSoft} stroke={strong} strokeWidth="2" filter="url(#forensicGlow)" />
+      <line x1={545} y1={155} x2={568} y2={178} stroke={strong} strokeWidth="4" strokeLinecap="round" />
+
+      {/* Link disk → tree */}
+      <path
+        d="M528 92 C 600 92, 680 55, 745 55"
+        fill="none"
+        stroke={strong}
+        strokeWidth="1.8"
+        strokeDasharray="6 6"
+        filter="url(#forensicGlow)"
+      >
+        <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="2s" repeatCount="indefinite" />
+      </path>
+
+      {/* Artifact tree (right) */}
+      {treeNodes.mids.map((m, i) => (
+        <line key={`r${i}`} x1={treeNodes.root.x} y1={treeNodes.root.y} x2={m.x} y2={m.y} stroke={mid} strokeWidth="1.5" />
+      ))}
+      {treeNodes.leaves.map((l, i) => (
+        <line
+          key={`l${i}`}
+          x1={treeNodes.mids[l.p].x}
+          y1={treeNodes.mids[l.p].y}
+          x2={l.x}
+          y2={l.y}
+          stroke={soft}
+          strokeWidth="1.5"
+        />
+      ))}
+      <circle cx={treeNodes.root.x} cy={treeNodes.root.y} r={7} fill={fillMid} stroke={strong} strokeWidth="1.5" />
+      {treeNodes.mids.map((m, i) => (
+        <circle key={`m${i}`} cx={m.x} cy={m.y} r={6} fill={fillSoft} stroke={mid} strokeWidth="1.5" />
+      ))}
+      {treeNodes.leaves.map((l, i) => (
+        <rect key={`n${i}`} x={l.x - 7} y={l.y - 7} width={14} height={14} rx={2} fill={fillSoft} stroke={mid} strokeWidth="1.5" />
+      ))}
+      {/* Highlighted evidence */}
+      <circle cx={795} cy={155} r={10} fill="none" stroke={solid} strokeWidth="1.5" filter="url(#forensicGlow)">
+        <animate attributeName="r" values="9;15;9" dur="2s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
+      </circle>
+      <rect x={788} y={148} width={14} height={14} rx={2} fill={fillMid} stroke={strong} strokeWidth="1.5" />
+
+      {/* Timeline ticks */}
+      <line x1={60} y1={205} x2={840} y2={205} stroke={c("rgba(0,229,255,0.35)", "rgba(37,99,235,0.32)")} strokeWidth="1.5" />
+      {Array.from({ length: 20 }).map((_, i) => {
+        const x = 60 + i * 40;
+        const hot = x === 580;
+        return (
+          <line
+            key={i}
+            x1={x}
+            y1={hot ? 197 : 200}
+            x2={x}
+            y2={hot ? 213 : 210}
+            stroke={hot ? solid : mid}
+            strokeWidth={hot ? 2.2 : 1.5}
+            strokeLinecap="round"
+          />
+        );
+      })}
+    </svg>
+  );
+};
+
+
+
+
+const hexPoints = (cx: number, cy: number, r: number) =>
+  [0, 1, 2, 3, 4, 5]
+    .map((i) => {
+      const a = (Math.PI / 3) * i - Math.PI / 6;
+      return `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)}`;
+    })
+    .join(" ");
+
+const CryptoTracingHeroArt = ({
+  darkMode = true,
+}: {
+  darkMode?: boolean;
+}) => {
+  const c = (dark: string, light: string) => (darkMode ? dark : light);
+  const strong = c("rgba(0,229,255,0.85)", "rgba(37,99,235,0.7)");
+  const mid = c("rgba(0,229,255,0.55)", "rgba(37,99,235,0.5)");
+  const soft = c("rgba(0,229,255,0.3)", "rgba(37,99,235,0.28)");
+  const fillMid = c("rgba(0,229,255,0.28)", "rgba(37,99,235,0.24)");
+  const fillSoft = c("rgba(0,229,255,0.12)", "rgba(37,99,235,0.1)");
+  const solid = c("#00E5FF", "#2563EB");
+
+  const src = { x: 70, y: 110 };
+  const l1 = [
+    { x: 215, y: 50 },
+    { x: 215, y: 110 },
+    { x: 215, y: 170 },
+  ];
+  const mixer = { x: 370, y: 110 };
+  const l2 = [
+    { x: 520, y: 65 },
+    { x: 520, y: 155 },
+  ];
+  const exch = { x: 665, y: 110 };
+  const target = { x: 810, y: 110 };
+
+  const edges: [typeof src, typeof src][] = [
+    ...l1.map((n) => [src, n] as [typeof src, typeof src]),
+    ...l1.map((n) => [n, mixer] as [typeof src, typeof src]),
+    ...l2.map((n) => [mixer, n] as [typeof src, typeof src]),
+    ...l2.map((n) => [n, exch] as [typeof src, typeof src]),
+    [exch, target],
+  ];
+
+  const tracePath = `M96 110 L215 50 L370 110 L520 155 L665 110 L786 110`;
+
+  return (
+    <svg
+      width="100%"
+      height="220"
+      viewBox="0 0 900 220"
+      preserveAspectRatio="xMidYMid meet"
+      className="w-full"
+      style={{ opacity: darkMode ? 0.4 : 0.7 }}
+    >
+      <defs>
+        <filter id="cryptoGlow">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      {/* All transaction edges */}
+      {edges.map(([a, b], i) => (
+        <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={soft} strokeWidth="1.5" />
+      ))}
+
+      {/* Traced path */}
+      <path
+        d={tracePath}
+        fill="none"
+        stroke={strong}
+        strokeWidth="1.8"
+        strokeDasharray="6 6"
+        filter="url(#cryptoGlow)"
+      >
+        <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="2s" repeatCount="indefinite" />
+      </path>
+      <circle r={4} fill={solid} filter="url(#cryptoGlow)">
+        <animateMotion dur="4.5s" repeatCount="indefinite" path={tracePath} />
+      </circle>
+
+      {/* Source wallet */}
+      <polygon points={hexPoints(src.x, src.y, 26)} fill={fillMid} stroke={strong} strokeWidth="2" filter="url(#cryptoGlow)" />
+      <circle cx={src.x} cy={src.y} r={10} fill="none" stroke={solid} strokeWidth="1.5" />
+      <line x1={src.x} y1={src.y - 5} x2={src.x} y2={src.y + 5} stroke={solid} strokeWidth="1.5" strokeLinecap="round" />
+
+      {/* Layer 1 */}
+      {l1.map((n, i) => (
+        <circle key={i} cx={n.x} cy={n.y} r={8} fill={i === 0 ? fillMid : fillSoft} stroke={i === 0 ? strong : mid} strokeWidth="1.5" />
+      ))}
+
+      {/* Mixer */}
+      <polygon
+        points={hexPoints(mixer.x, mixer.y, 22)}
+        fill={fillSoft}
+        stroke={strong}
+        strokeWidth="1.5"
+        strokeDasharray="3 3"
+      />
+      {[-7, 0, 7].map((dx, i) => (
+        <circle key={i} cx={mixer.x + dx} cy={mixer.y + (i === 1 ? -4 : 4)} r={2.5} fill={solid}>
+          <animate attributeName="opacity" values="0.3;1;0.3" dur="1.6s" begin={`${i * 0.3}s`} repeatCount="indefinite" />
+        </circle>
+      ))}
+
+      {/* Layer 2 */}
+      {l2.map((n, i) => (
+        <circle key={i} cx={n.x} cy={n.y} r={8} fill={i === 1 ? fillMid : fillSoft} stroke={i === 1 ? strong : mid} strokeWidth="1.5" />
+      ))}
+
+      {/* Exchange */}
+      <rect x={exch.x - 20} y={exch.y - 20} width={40} height={40} rx={6} fill={fillSoft} stroke={strong} strokeWidth="1.8" />
+      <line x1={exch.x - 10} y1={exch.y - 5} x2={exch.x + 10} y2={exch.y - 5} stroke={mid} strokeWidth="1.5" strokeLinecap="round" />
+      <line x1={exch.x - 10} y1={exch.y + 5} x2={exch.x + 10} y2={exch.y + 5} stroke={mid} strokeWidth="1.5" strokeLinecap="round" />
+
+      {/* Target wallet + magnifier */}
+      <circle cx={target.x} cy={target.y} r={12} fill={fillMid} stroke={strong} strokeWidth="2" />
+      <circle cx={target.x} cy={target.y} r={5} fill={solid} />
+      <circle cx={target.x} cy={target.y} r={26} fill="none" stroke={strong} strokeWidth="2" filter="url(#cryptoGlow)">
+        <animate attributeName="r" values="24;30;24" dur="2.4s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="1;0.35;1" dur="2.4s" repeatCount="indefinite" />
+      </circle>
+      <line x1={target.x + 19} y1={target.y + 19} x2={target.x + 38} y2={target.y + 38} stroke={strong} strokeWidth="4" strokeLinecap="round" />
+
+      {/* Block chain (bottom) */}
+      <line x1={60} y1={202} x2={840} y2={202} stroke={c("rgba(0,229,255,0.25)", "rgba(37,99,235,0.24)")} strokeWidth="1.5" />
+      {Array.from({ length: 14 }).map((_, i) => {
+        const x = 60 + i * 60;
+        const hot = i === 3 || i === 7 || i === 11;
+        return (
+          <rect
+            key={i}
+            x={x - 7}
+            y={195}
+            width={14}
+            height={14}
+            rx={2}
+            fill={hot ? fillMid : fillSoft}
+            stroke={hot ? strong : mid}
+            strokeWidth="1.5"
+          />
+        );
+      })}
+    </svg>
+  );
+};
+
+
+
+const HiddenIdentityHeroArt = ({
+  darkMode = true,
+}: {
+  darkMode?: boolean;
+}) => {
+  const c = (dark: string, light: string) => (darkMode ? dark : light);
+  const strong = c("rgba(0,229,255,0.85)", "rgba(37,99,235,0.7)");
+  const mid = c("rgba(0,229,255,0.55)", "rgba(37,99,235,0.5)");
+  const soft = c("rgba(0,229,255,0.3)", "rgba(37,99,235,0.28)");
+  const fillMid = c("rgba(0,229,255,0.28)", "rgba(37,99,235,0.24)");
+  const fillSoft = c("rgba(0,229,255,0.12)", "rgba(37,99,235,0.1)");
+  const solid = c("#00E5FF", "#2563EB");
+
+  const printRings = [
+    { r: 12, dash: "30 6" },
+    { r: 24, dash: "50 8 14 6" },
+    { r: 36, dash: "80 10" },
+    { r: 48, dash: "110 8 20 6" },
+  ];
+
+  const traceNodes = [
+    { x: 55, y: 50 },
+    { x: 80, y: 168 },
+    { x: 245, y: 48 },
+    { x: 250, y: 168 },
+  ];
+
+  return (
+    <svg
+      width="100%"
+      height="220"
+      viewBox="0 0 900 220"
+      preserveAspectRatio="xMidYMid meet"
+      className="w-full"
+      style={{ opacity: darkMode ? 0.4 : 0.7 }}
+    >
+      <defs>
+        <filter id="identityGlow">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      {/* Digital traces around the fingerprint */}
+      {traceNodes.map((n, i) => (
+        <g key={i}>
+          <line x1={n.x} y1={n.y} x2={150} y2={105} stroke={soft} strokeWidth="1.5" strokeDasharray="3 4" />
+          <circle cx={n.x} cy={n.y} r={5} fill={fillSoft} stroke={mid} strokeWidth="1.5" />
+        </g>
+      ))}
+
+      {/* Fingerprint (left) */}
+      {printRings.map((p, i) => (
+        <ellipse
+          key={p.r}
+          cx={150}
+          cy={105}
+          rx={p.r}
+          ry={p.r * 1.2}
+          fill="none"
+          stroke={i > 1 ? mid : strong}
+          strokeWidth="1.5"
+          strokeDasharray={p.dash}
+          strokeLinecap="round"
+        >
+          <animate
+            attributeName="stroke-dashoffset"
+            from="0"
+            to={i % 2 === 0 ? "-60" : "60"}
+            dur="8s"
+            repeatCount="indefinite"
+          />
+        </ellipse>
+      ))}
+      <circle cx={150} cy={105} r={3} fill={solid} filter="url(#identityGlow)" />
+
+      {/* Link fingerprint → subject */}
+      <path
+        d="M202 105 C 290 105, 340 125, 400 125"
+        fill="none"
+        stroke={strong}
+        strokeWidth="1.8"
+        strokeDasharray="6 6"
+        filter="url(#identityGlow)"
+      >
+        <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="2s" repeatCount="indefinite" />
+      </path>
+
+      {/* Hidden subject silhouette */}
+      <circle
+        cx={450}
+        cy={82}
+        r={26}
+        fill={fillSoft}
+        stroke={strong}
+        strokeWidth="2"
+        strokeDasharray="4 4"
+        filter="url(#identityGlow)"
+      />
+      <path
+        d="M398 162 C398 132 420 118 450 118 C480 118 502 132 502 162 Z"
+        fill={fillSoft}
+        stroke={strong}
+        strokeWidth="2"
+        strokeDasharray="4 4"
+      />
+
+      {/* Scan frame */}
+      <path d="M416 58 V48 H426" fill="none" stroke={solid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M474 48 H484 V58" fill="none" stroke={solid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M416 106 V116 H426" fill="none" stroke={solid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M474 116 H484 V106" fill="none" stroke={solid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+
+      {/* Scan line */}
+      <line x1={418} y1={50} x2={482} y2={50} stroke={solid} strokeWidth="2" strokeLinecap="round" filter="url(#identityGlow)">
+        <animateTransform
+          attributeName="transform"
+          type="translate"
+          values="0 0; 0 62; 0 0"
+          dur="3s"
+          repeatCount="indefinite"
+        />
+      </line>
+
+      {/* Link subject → ID card */}
+      <path
+        d="M502 120 C 540 120, 560 112, 600 112"
+        fill="none"
+        stroke={strong}
+        strokeWidth="1.8"
+        strokeDasharray="6 6"
+        filter="url(#identityGlow)"
+      >
+        <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="2s" repeatCount="indefinite" />
+      </path>
+
+      {/* ID card (right) */}
+      <rect x={600} y={70} width={160} height={90} rx={8} fill={fillSoft} stroke={strong} strokeWidth="1.8" />
+      <rect x={614} y={84} width={38} height={48} rx={4} fill={fillMid} stroke={mid} strokeWidth="1.5" />
+      <circle cx={633} cy={101} r={7} fill="none" stroke={strong} strokeWidth="1.5" />
+      <path d="M621 128 C621 118 626 114 633 114 C640 114 645 118 645 128" fill="none" stroke={strong} strokeWidth="1.5" strokeLinecap="round" />
+      <rect x={666} y={86} width={78} height={4} rx={1.5} fill={mid} />
+      <rect x={666} y={98} width={60} height={3} rx={1} fill={soft} />
+      <rect x={666} y={108} width={70} height={3} rx={1} fill={soft} />
+      <rect x={666} y={118} width={46} height={3} rx={1} fill={soft} />
+      <rect x={614} y={142} width={130} height={4} rx={1.5} fill={soft} />
+
+      {/* Match badge */}
+      <circle cx={760} cy={70} r={14} fill={fillMid} stroke={strong} strokeWidth="2" filter="url(#identityGlow)">
+        <animate attributeName="r" values="13;16;13" dur="2.2s" repeatCount="indefinite" />
+      </circle>
+      <path d="M753 70 L758 75 L767 64" fill="none" stroke={solid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+
+      {/* Timeline */}
+      <line x1={60} y1={202} x2={840} y2={202} stroke={c("rgba(0,229,255,0.35)", "rgba(37,99,235,0.32)")} strokeWidth="1.5" />
+      <circle cx={200} cy={202} r={4.5} fill={c("rgba(0,229,255,0.7)", "rgba(37,99,235,0.6)")} />
+      <circle cx={450} cy={202} r={5.5} fill="none" stroke={strong} strokeWidth="1.5" />
+      <circle cx={700} cy={202} r={8} fill={c("rgba(0,229,255,0.2)", "rgba(37,99,235,0.15)")} stroke={strong} strokeWidth="1.5" />
+      <path d="M696 202 L699 205 L705 198" fill="none" stroke={solid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+};
  
 /* ─── RICH TEXT DISPLAY ─── */
 const EMPTY_TIPTAP_CONTENT = { type: "doc", content: [] };
@@ -540,19 +1469,37 @@ export default function App({
   const closeModal = () => setModalOpen(false);
 
  
+const HERO_ARTS: Record<string, React.ComponentType<{ darkMode?: boolean }>> = {
+  "تست نفوذِ پسا-بحران": PostCrisisPentestHeroArt,
+  "مقابله و مذاکره با باج‌افزارها": RansomwareNegotiationHeroArt,
+  "فارنزیک و کالبدشکافی دیجیتال": DigitalForensicsHeroArt,
+  "ردیابی رمزارز و تحلیل بلاک‌چین": CryptoTracingHeroArt,
+  "هویت‌سنجی پنهان": HiddenIdentityHeroArt,
+};
+
+
+const DEPARTMENTS: Record<string, string> = {
+  "تست نفوذِ پسا-بحران": "دپارتمان کشف آسیب‌پذیری",
+  "مقابله و مذاکره با باج‌افزارها": "دپارتمان مهندسی معکوس",
+  "فارنزیک و کالبدشکافی دیجیتال": "دپارتمان پزشکی قانونی دیجیتال",
+  "هویت‌سنجی پنهان": "دپارتمان کشف هویت",
+  "ردیابی رمزارز و تحلیل بلاک‌چین": "دپارتمان ردیابی مالی",
+};
+
+const department =
+  DEPARTMENTS[service?.title ?? ""] ||
+  service?.categoryLabel ||
+  "دپارتمان ردیابی مالی";
+
+
   return ( 
     
  <div
-    className="min-h-full transition-colors duration-300"
+    className="min-h-full transition-colors duration-300 pt-[70px]"
     style={{
       color: darkMode ? "#E2E8F0" : "#0F172A",
       fontFamily: "var(--font-vazirmatn), sans-serif",
       backgroundColor: darkMode ? "#0A1128" : "#FFFFFF",
-      backgroundImage: darkMode
-        ? "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"
-        : "linear-gradient(rgba(30,58,138,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,138,0.035) 1px,transparent 1px)",
-      backgroundSize: "52px 52px",
-      backgroundAttachment: "fixed",
     }}
   > 
 
@@ -578,13 +1525,13 @@ export default function App({
           <div 
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 text-xs font-semibold" 
             style={{ 
-              background: darkMode ? "rgba(0,229,255,0.07)" : "rgba(30,58,138,0.06)", 
-              border: darkMode ? "1px solid rgba(0,229,255,0.2)" : "1px solid rgba(29,78,216,0.20)", 
-              color: darkMode ? "#00E5FF" : "#1E3A8A" 
+              background: darkMode ? "rgba(0,229,255,0.07)" : "#EBF3FF", 
+              border: darkMode ? "1px solid rgba(0,229,255,0.2)" : "1px solid rgba(93, 126, 218, 0.08)", 
+              color: darkMode ? "#00E5FF" : "#1565C0" 
             }} 
           > 
             <IconBitcoin darkMode={darkMode} /> 
-            {service?.categoryLabel || "دپارتمان ردیابی مالی و بلاک‌چین"} 
+            {department}
           </div> 
  
           {/* H1 */} 
@@ -616,44 +1563,43 @@ export default function App({
           </p> 
  
           {/* Primary CTA */} 
-          <Link 
+          <button 
             onClick={() => setCrisisOpen(true)} 
-            href="mailto:secure@parahoor.io" 
             className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold transition-all duration-300 mb-4" 
-            style={{ 
-              background: darkMode ? "#EF4444" : "#2563EB", 
-              color: "#ffffff", 
-              border: darkMode 
-                ? "1px solid rgba(239, 68, 68, 0.6)" 
-                : "1px solid rgba(37,99,235,0.6)", 
-              boxShadow: darkMode 
-                ? "0 0 15px rgba(239,68,68,0.35)" 
-                : "0 0 15px rgba(37,99,235,0.18)", 
-            }} 
-            onMouseEnter={(e) => { 
-              e.currentTarget.style.boxShadow = darkMode 
-                ? "0 0 22px rgba(239,68,68,0.55)" 
-                : "0 0 22px rgba(37,99,235,0.28)" 
+           style={{ 
+                background: darkMode ? "#EF4444" : "#1565C0", 
+                color: "#ffffff", 
+                border: darkMode 
+                  ? "1px solid rgba(239, 68, 68, 0.6)" 
+                  : "1px solid rgba(37,99,235,0.6)", 
+                boxShadow: darkMode 
+                  ? "0 0 15px rgba(239,68,68,0.35)" 
+                  : "0 0 15px rgba(37,99,235,0.18)", 
+              }} 
+              onMouseEnter={(e) => { 
+                e.currentTarget.style.boxShadow = darkMode 
+                  ? "0 0 22px rgba(239,68,68,0.55)" 
+                  : "0 0 22px rgba(37,99,235,0.28)" 
  
-              if (!darkMode) { 
-                e.currentTarget.style.background = "#3B82F6" 
-                e.currentTarget.style.borderColor = "#3B82F6" 
-              } 
-            }} 
-            onMouseLeave={(e) => { 
-              e.currentTarget.style.boxShadow = darkMode 
-                ? "0 0 15px rgba(239,68,68,0.35)" 
-                : "0 0 15px rgba(37,99,235,0.18)" 
+                if (!darkMode) { 
+                  e.currentTarget.style.background = "#0D47A1" 
+                  e.currentTarget.style.borderColor = "#0D47A1" 
+                } 
+              }} 
+              onMouseLeave={(e) => { 
+                e.currentTarget.style.boxShadow = darkMode 
+                  ? "0 0 15px rgba(239,68,68,0.35)" 
+                  : "0 0 15px rgba(37,99,235,0.18)" 
  
-              if (!darkMode) { 
-                e.currentTarget.style.background = "#2563EB" 
-                e.currentTarget.style.borderColor = "rgba(37,99,235,0.6)" 
-              } 
-            }} 
+                if (!darkMode) { 
+                  e.currentTarget.style.background = "#1565C0" 
+                  e.currentTarget.style.borderColor = "rgba(37,99,235,0.6)" 
+                } 
+              }} 
           > 
             <IconWarning /> 
-            درخواست ردیابی فوری      
-          </Link> 
+            درخواست فوری      
+          </button> 
  
           {/* Trust micro-signals */} 
           <div className="flex flex-wrap items-center justify-center gap-4 mt-2"> 
@@ -672,7 +1618,10 @@ export default function App({
  
         {/* Blockchain art */} 
         <div className="relative z-10 w-full max-w-4xl mt-10 -mb-4"> 
-          <BlockchainHeroArt darkMode={darkMode} /> 
+{(() => {
+  const HeroArt = HERO_ARTS[service?.title ?? ""] ?? BlockchainHeroArt;
+  return <HeroArt darkMode={darkMode} />;
+})()}
         </div>  
 </motion.div>
  
@@ -683,9 +1632,9 @@ export default function App({
        <motion.div
         className="px-6 py-16 md:px-12"  
         style={{ 
-          background: darkMode ? "#060B19" : "#F8FAFC", 
+          background: darkMode ? "#060b1986" : "#F8FAFC", 
           borderBottom: darkMode 
-            ? "1px solid rgba(0,229,255,0.07)" 
+            ? "1px solid #060b1986" 
             : "1px solid rgba(29,78,216,0.12)" 
         }}  
   initial={{ opacity: 0, y: 60 }}
@@ -729,10 +1678,10 @@ export default function App({
           {/* Header */} 
           <div className="text-center mb-14"> 
             <span 
-              style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.65rem", color: darkMode ? "rgba(0,229,255,0.45)" : "#1E3A8A", letterSpacing: "0.18em", textTransform: "uppercase" }} 
+              style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.65rem", color: darkMode ? "rgba(0,229,255,0.45)" : "#1565C0", letterSpacing: "0.18em", textTransform: "uppercase" }} 
               className="block mb-3" 
             > 
-              INVESTIGATION PIPELINE 
+              HOW IT WORK 
             </span> 
 
             <h2  
@@ -760,35 +1709,34 @@ export default function App({
  
                   {/* Card */} 
                   <div 
-                    className="glass-card p-7 flex items-start gap-6 group transition-all duration-300 border border-cyan-500/30 hover:border-cyan-500 bg-cyan-900/10 hover:bg-cyan-800/15 rounded-2xl" 
+                    className="glass-card p-7 flex items-start gap-6 group transition-all duration-300 border border-cyan-500/30 hover:border-cyan-500 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-800/15 rounded-2xl" 
                     style={{ 
                       textAlign: "right", 
                       background: darkMode ? undefined : "#FFFFFF", 
                       borderColor: darkMode 
                         ? undefined 
-                        : "rgba(141, 166, 228, 0.86)", 
+                        : "rgba(155, 178, 236, 0.72)", 
                       boxShadow: darkMode 
                         ? undefined 
                         : "0 4px 20px rgba(15,23,42,0.06)", 
+                         backdropFilter: "blur(10px)" 
                     }} 
                     onMouseEnter={(e) => {
                       if (!darkMode) { 
-                        e.currentTarget.style.transform = "translateY(-3px)"; 
                         e.currentTarget.style.boxShadow = 
-                          "0  16px 40px rgba(66, 91, 158, 0.34)"; 
+                          "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"; 
                         e.currentTarget.style.borderColor = 
-                          "rgba(53, 95, 211, 0.52)"; 
+                          "#1565C0"; 
                         e.currentTarget.style.background = 
-                          "rgba(243, 248, 255, 0.6)"; 
+                          "rgba(243, 248, 255, 0.26)"; 
                       } 
                     }} 
                     onMouseLeave={(e) => { 
                       if (!darkMode) { 
-                        e.currentTarget.style.transform = "translateY(0)"; 
                         e.currentTarget.style.boxShadow = 
                           "0 4px 20px rgba(15,23,42,0.06)"; 
                         e.currentTarget.style.borderColor = 
-                          "rgba(139, 158, 208, 0.2)"; 
+                          "rgba(155, 178, 236, 0.72)"; 
                         e.currentTarget.style.background = "#FFFFFF"; 
                       } 
                     }} 
@@ -802,7 +1750,7 @@ export default function App({
                           : "#EFF6FF", 
                         border: darkMode 
                           ? "1px solid rgba(0,229,255,0.2)" 
-                          : "1px solid rgba(29,78,216,0.20)", 
+                          : "1px solid #4685ccc2", 
                       }} 
                     > 
                       <StepIcon
@@ -821,7 +1769,7 @@ export default function App({
                             fontSize: "0.65rem", 
                             color: darkMode 
                               ? "rgba(0,229,255,0.4)" 
-                              : "#1E3A8A", 
+                              : "#1565C0", 
                             letterSpacing: "0.12em", 
                           }} 
                         > 
@@ -834,7 +1782,7 @@ export default function App({
                             height: 1, 
                             background: darkMode 
                               ? "rgba(0,229,255,0.08)" 
-                              : "rgba(29,78,216,0.12)", 
+                              : "rgba(105, 142, 244, 0.35)", 
                           }} 
                         /> 
                       </div> 
@@ -842,7 +1790,7 @@ export default function App({
                       <h3 
                         className="font-bold mb-2" 
                         style={{ 
-                          color: darkMode ? "#fff" : "#0F172A", 
+                          color: darkMode ? "#fff" : "#1565C0", 
                           fontSize: "1.05rem", 
                         }} 
                       > 
@@ -875,10 +1823,10 @@ export default function App({
                                     : "rgba(30,58,138,0.06)", 
                                   border: darkMode 
                                     ? "1px solid rgba(0,229,255,0.12)" 
-                                    : "1px solid rgba(29,78,216,0.20)", 
+                                    : "1px solid #1565c082", 
                                   color: darkMode 
                                     ? "rgba(0,229,255,0.5)" 
-                                    : "#1E3A8A", 
+                                    : "#1565C0", 
                                   fontFamily: "monospace", 
                                   fontWeight: 700, 
                                 }} 
@@ -899,13 +1847,13 @@ export default function App({
                       style={{ opacity: 1 }} 
                     > 
                       <div 
-                      className="mt-2"
+                      className="mt-3"
                         style={{ 
                           height: 24, 
                           width: 1, 
                           background: darkMode 
                             ? "linear-gradient(1270deg, rgba(0,229,255,0.1), rgb(0, 229, 255))" 
-                            : "linear-gradient(180deg, rgba(29,78,216,0.16), rgba(29,78,216,0.58))", 
+                            : "linear-gradient(180deg, rgba(29,78,216,0.16), #1565C0)", 
                           marginRight: "auto", 
                           marginLeft: "auto", 
                         }} 
@@ -941,21 +1889,20 @@ export default function App({
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center"> 
           {[ 
             { 
-              value: "+۳۰۰", 
+              value: "۵۰", 
               label: "پرونده بسته‌شده", 
             }, 
             { 
-              value: "۴.۵", 
-              unit: "M$", 
-              label: "دارایی ردیابی‌شده", 
+              value: "۱۰",
+              label: "پرونده های در حال بررسی", 
             }, 
             { 
-              value: "۱۴", 
-              label: "شبکه بلاک‌چین پشتیبانی", 
+              value: "۸۰%", 
+              label: "میزان موفقیت", 
             }, 
             { 
               value: "۲", 
-              unit: "h", 
+              unit: "H", 
               label: "میانگین پاسخ اولیه", 
             }, 
           ].map(({ value, unit, label }) => ( 
@@ -964,7 +1911,7 @@ export default function App({
                 className="font-black mb-1" 
                 style={{ 
                   fontSize: "clamp(1.75rem, 3.8vw, 2.55rem)", 
-                  color: darkMode ? "#00E5FF" : "#1E3A8A", 
+                  color: darkMode ? "#00E5FF" : "#1565C0", 
                    
  
                   fontWeight: 800, 
@@ -1047,70 +1994,25 @@ export default function App({
   viewport={{ once: true, amount: 0.2 }}
 >
         <div
-  className={`max-w-2xl mx-auto`}
-  style={{
-        background: darkMode
-          ? "linear-gradient(135deg, #010f27 0%, #010f27 48%, #010f27 100%)"
-          : "linear-gradient(135deg, #FFFFFF 0%, #F8FAFF 48%, #EEF4FF 100%)",
-
-
-
+      className={`max-w-2xl mx-auto rounded-2xl`}
+      style={{
         boxShadow: darkMode
           ? "0 18px 60px rgba(0, 229, 255, 0), 0 0 70px rgba(0,229,255,0.05)"
-          : "0 18px 50px rgba(30,58,138,0.10)",
+          : "0 18px 50px rgba(48, 94, 175, 0.32)",
 
         transition:
           "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
-      }}
-
-      onMouseEnter={(e) => {
-        if (!darkMode) {
-          e.currentTarget.style.borderColor = "#1D4ED8";
-          e.currentTarget.style.background =
-            "linear-gradient(135deg, #FFFFFF 0%, rgba(30,58,138,0.035) 50%, rgba(29,78,216,0.06) 100%)";
-          e.currentTarget.style.boxShadow =
-            "0 18px 50px rgba(30,58,138,0.16), 0 0 45px rgba(29,78,216,0.08)";
-
-        } else {
-          e.currentTarget.style.borderColor =
-            "rgba(0, 229, 255, 0.55)";
-          e.currentTarget.style.background =
-            "linear-gradient(135deg, #010f27 0%, #010f27 48%, #010f27 100%)";
-          e.currentTarget.style.boxShadow =
-            "0 20px 65px rgba(0,229,255,0.12), 0 0 70px rgba(0,229,255,0.07)";
-
-        }
-      }}
-
-      onMouseLeave={(e) => {
-        if (!darkMode) {
-          e.currentTarget.style.borderColor =
-            "rgba(30,58,138,0.22)";
-          e.currentTarget.style.background =
-            "linear-gradient(135deg, #FFFFFF 0%, #F8FAFF 48%, #EEF4FF 100%)";
-          e.currentTarget.style.boxShadow =
-            "0 18px 50px rgba(30,58,138,0.10)";
-          e.currentTarget.style.transform = "none";
-        } else {
-          e.currentTarget.style.borderColor =
-            "rgba(0,229,255,0.30)";
-          e.currentTarget.style.background =
-            "linear-gradient(135deg, #010f27 0%, #010f27 48%, #010f27 100%)";
-          e.currentTarget.style.boxShadow =
-            "0 18px 60px rgba(0,229,255,0.08), 0 0 70px rgba(0,229,255,0.05)";
-          e.currentTarget.style.transform = "none";
-        }
-      }}
->
+      }}  
+      >
           <div 
             className="relative p-8 md:p-12 rounded-2xl text-center overflow-hidden" 
             style={{ 
               background: darkMode ? "rgba(255,255,255,0.03)" : "#FFFFFF", 
               border: darkMode 
                 ? "1px solid rgba(0,229,255,0.18)" 
-                : "1px solid rgba(29,78,216,0.20)", 
+                : "1px solid rgba(39, 83, 206, 0.72)", 
               boxShadow: darkMode 
-                ? "0 0 60px rgba(0,229,255,0.06), 0 0 120px rgba(0,229,255,0.03), inset 0 0 60px rgba(0,229,255,0.02)" 
+                ? "0 0 60px rgba(0,229,255,0.06), 0 0 100px rgba(0,229,255,0.03), inset 0 0 60px rgba(0,229,255,0.02)" 
                 : "0 4px 20px rgba(15,23,42,0.06)", 
             }} 
           > 
@@ -1124,10 +2026,10 @@ export default function App({
                 height: 60, 
                 borderTop: darkMode 
                   ? "2px solid rgba(0,229,255,0.3)" 
-                  : "2px solid rgba(29,78,216,0.35)", 
+                  : "2px solid #1565C0", 
                 borderRight: darkMode 
                   ? "2px solid rgba(0,229,255,0.3)" 
-                  : "2px solid rgba(29,78,216,0.35)", 
+                  : "2px solid #1565C0", 
                 borderRadius: "0 16px 0 0" 
               }} 
             /> 
@@ -1141,16 +2043,16 @@ export default function App({
                 height: 60, 
                 borderBottom: darkMode 
                   ? "2px solid rgba(0,229,255,0.3)" 
-                  : "2px solid rgba(29,78,216,0.35)", 
+                  : "2px solid #1565C0", 
                 borderLeft: darkMode 
                   ? "2px solid rgba(0,229,255,0.3)" 
-                  : "2px solid rgba(29,78,216,0.35)", 
+                  : "2px solid #1565C0", 
                 borderRadius: "0 0 0 16px" 
               }} 
             /> 
  
             <span 
-              style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.62rem", color: darkMode ? "rgba(0,229,255,0.45)" : "#1E3A8A", letterSpacing: "0.2em", textTransform: "uppercase" }} 
+              style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.62rem", color: darkMode ? "rgba(0,229,255,0.45)" : "#1565C0", letterSpacing: "0.2em", textTransform: "uppercase" }} 
               className="block mb-4" 
             > 
               FREE INITIAL ASSESSMENT 
@@ -1179,7 +2081,7 @@ export default function App({
               href="mailto:secure@parahoor.io" 
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold transition-all duration-300" 
               style={{ 
-                background: darkMode ? "#EF4444" : "#2563EB", 
+                background: darkMode ? "#EF4444" : "#1565C0", 
                 color: "#ffffff", 
                 border: darkMode 
                   ? "1px solid rgba(239, 68, 68, 0.6)" 
@@ -1194,8 +2096,8 @@ export default function App({
                   : "0 0 22px rgba(37,99,235,0.28)" 
  
                 if (!darkMode) { 
-                  e.currentTarget.style.background = "#3B82F6" 
-                  e.currentTarget.style.borderColor = "#3B82F6" 
+                  e.currentTarget.style.background = "#0D47A1" 
+                  e.currentTarget.style.borderColor = "#0D47A1" 
                 } 
               }} 
               onMouseLeave={(e) => { 
@@ -1204,7 +2106,7 @@ export default function App({
                   : "0 0 15px rgba(37,99,235,0.18)" 
  
                 if (!darkMode) { 
-                  e.currentTarget.style.background = "#2563EB" 
+                  e.currentTarget.style.background = "#1565C0" 
                   e.currentTarget.style.borderColor = "rgba(37,99,235,0.6)" 
                 } 
               }} 

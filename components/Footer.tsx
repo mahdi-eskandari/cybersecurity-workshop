@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useTheme } from "./ThemeProvider";
 import {Phone} from "lucide-react";
-import { EmergencyModal } from "./CrisisReportForm";
 import {
   Shield,
   Mail,
@@ -217,13 +216,13 @@ export default function Footer() {
                     <p className="text-xs text-white/50 mb-3">
                       در صورت حادثه فوری، ۲۴/۷ در دسترسیم
                     </p>
-                    <button
-                      onClick={() => setCrisisOpen(true)}
+                    <Link
+                      href="/contact"
                       className="flex items-center gap-2 px-3.5 py-2 bg-[#C62828] text-white text-xs font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors"
                     >
                       <Phone className="w-3.5 h-3.5" />
                       تماس اضطراری
-                    </button>
+                    </Link>
                   </div>
                 )}
               </div>
@@ -262,7 +261,7 @@ export default function Footer() {
                 color: darkMode ? "#818fa0" : "#CBD5E1",
               }}
             >
-              © ۱۴۰۳ پاراهور — تمامی حقوق محفوظ است
+              © ۱۴۰۵ پاراهور — تمامی حقوق محفوظ است
             </p>
 
             <p
@@ -271,12 +270,11 @@ export default function Footer() {
                 color: darkMode ? "#818fa0" : "#CBD5E1",
               }}
             >
-              کارشناس رسمی دادگستری · عضو انجمن حقوق دیجیتال ایران
+             پژوهشگران ارشد جرائم رایانه‎ای – وکلای پایه یک دادگستری
             </p>
           </div>
         </div>
       </footer>
-      {crisisOpen && <EmergencyModal onClose={() => setCrisisOpen(false)} />}
     </div>
   );
 }

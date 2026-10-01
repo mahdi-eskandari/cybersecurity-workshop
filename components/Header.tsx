@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTheme } from "./ThemeProvider";
 import { usePathname } from "next/navigation";
-import { EmergencyModal } from "./CrisisReportForm";
 import {
   AlertTriangle,
 } from "lucide-react";
@@ -44,6 +43,7 @@ const NAV_ITEMS = [
   { pageKey: "blogs", label: "وبلاگ" },
   { pageKey: "about", label: "درباره ما" },
   { pageKey: "contact", label: "تماس با ما" },
+  { pageKey: "home", label: "پاراهور", href: "/"  },
 ] as const;
 
 const DEFAULT_SLUGS: Record<string, string> = {
@@ -99,10 +99,13 @@ export default function Header() {
     ...(slugs || {}),
   };
 
-  const navItems = NAV_ITEMS.map((item) => ({
-    label: item.label,
-    href: `/${resolvedSlugs[item.pageKey] ?? DEFAULT_SLUGS[item.pageKey]}`,
-  }));
+const navItems = NAV_ITEMS.map((item) => ({
+  label: item.label,
+  href:
+    "href" in item
+      ? item.href
+      : `/${resolvedSlugs[item.pageKey] ?? DEFAULT_SLUGS[item.pageKey]}`,
+}));
 
   const currentPath = normalizePath(path || "/");
 
@@ -224,21 +227,20 @@ export default function Header() {
 
 {/* SOS + mobile toggle */}
 <div className="flex items-center gap-3 flex-shrink-0 mr-auto md:mr-0">
-  <button
-    type="button"
-    onClick={() => setCrisisOpen(true)}
+  <Link
+  href="/contact"
+    // onClick={() => setCrisisOpen(true)}
     className="hidden md:flex items-center gap-2 px-4 py-2 bg-[#C62828] text-white text-sm font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors cursor-pointer"
   >
     <AlertTriangle className="w-3.5 h-3.5" />
     SOS — پاسخ اضطراری
-  </button>
+  </Link>
 </div>
 
           
         </div>
       </nav>
 
-{crisisOpen && <EmergencyModal onClose={() => setCrisisOpen(false)} />}
 
       {/* پس‌زمینه تاریک هنگام باز شدن منو */}
       {menuOpen && (

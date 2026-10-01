@@ -5,6 +5,7 @@ import { ThemeProvider } from "../components/ThemeProvider";
 import type { Metadata } from "next";
 import "@fontsource/jetbrains-mono/400.css";
 import "@fontsource/jetbrains-mono/500.css";
+import { cookies } from "next/headers";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -47,20 +48,23 @@ export const metadata: Metadata = {
 
 };
 
-export default function SiteLayout({
+export default async function SiteLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = await cookies();
+  const isDark = cookieStore.get("theme")?.value !== "light";
+
   return (
-<html
-  lang="fa"
-  dir="rtl"
-  className={`dark ${vazirmatn.variable} ${poppins.variable}`}
-  suppressHydrationWarning
->
-  <body>
-        <ThemeProvider>
+    <html
+      lang="fa"
+      dir="rtl"
+      className={`${isDark ? "dark" : ""} ${vazirmatn.variable} ${poppins.variable}`}
+      suppressHydrationWarning
+    >
+      <body>
+        <ThemeProvider initialDark={isDark}>
           {children}
         </ThemeProvider>
       </body>

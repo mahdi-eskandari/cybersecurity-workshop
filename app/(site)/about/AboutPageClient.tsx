@@ -15,7 +15,7 @@ const PulseDot = ({ size = 7, darkMode = true }: { size?: number; darkMode?: boo
       width: size,
       height: size,
       borderRadius: "50%",
-      background: darkMode ? "#00E5FF" : "#1E3A8A",
+      background: darkMode ? "#00E5FF" : "#1565C0",
       boxShadow: darkMode ? "0 0 8px rgba(0,229,255,0.9)" : "0 0 8px rgba(30,64,175,0.32)",
       flexShrink: 0,
     }}
@@ -113,184 +113,167 @@ const HeroBg = ({ darkMode = true }: { darkMode?: boolean }) => (
   </svg>
 );
 
-const SynergyIllustration = ({ darkMode = true }: { darkMode?: boolean }) => (
-  <svg
-    width="100%"
-    height="100%"
-    viewBox="0 0 320 320"
-    style={{
-      maxWidth: 280,
-      margin: "0 auto",
-      display: "block",
-    }}
-  >
-    <defs>
-      <radialGradient id="sg1" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stopColor={darkMode ? "rgba(0,229,255,0.12)" : "rgba(30,58,138,0.42)"} />
-        <stop offset="100%" stopColor="transparent" />
-      </radialGradient>
+const CyberLegalSynergyArt = ({ darkMode = true }: { darkMode?: boolean }) => {
+  const c = (dark: string, light: string) => (darkMode ? dark : light);
+  const strong = c("rgba(0,229,255,0.95)", "rgba(37,99,235,0.95)");
+  const mid = c("rgba(0,229,255,0.65)", "rgba(37,99,235,0.65)");
+  const soft = c("rgba(0,229,255,0.35)", "rgba(37,99,235,0.35)");
+  const fillStrong = c("rgba(0,229,255,0.3)", "rgba(37,99,235,0.26)");
+  const fillSoft = c("rgba(0,229,255,0.12)", "rgba(37,99,235,0.1)");
+  const solid = c("#00E5FF", "#1565C0");
 
-      <filter id="sglow">
-        <feGaussianBlur stdDeviation="4" result="blur" />
-        <feMerge>
-          <feMergeNode in="blur" />
-          <feMergeNode in="SourceGraphic" />
-        </feMerge>
-      </filter>
-    </defs>
+  const traces = [
+    { d: "M52 100 H76 L92 116", begin: "0s" },
+    { d: "M268 100 H244 L228 116", begin: "0.8s" },
+    { d: "M52 220 H76 L104 198", begin: "1.6s" },
+    { d: "M268 220 H244 L216 198", begin: "2.4s" },
+  ];
 
-    <circle cx="160" cy="160" r="130" fill="url(#sg1)" />
+  const orbitNodes = [
+    { x: 160, y: 20 },
+    { x: 281, y: 230 },
+    { x: 39, y: 230 },
+  ];
 
-    <circle
-      cx="160"
-      cy="160"
-      r="128"
-      fill="none"
-      stroke={darkMode ? "rgba(0,229,255,0.08)" : "rgba(30,58,138,0.42)"}
-      strokeWidth="1"
-      strokeDasharray="6 6"
-    />
+  return (
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 320 320"
+      style={{ maxWidth: 280, margin: "0 auto", display: "block" }}
+    >
+      <defs>
+        <radialGradient id="lawGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor={c("rgba(0,229,255,0.22)", "rgba(37,99,235,0.3)")} />
+          <stop offset="100%" stopColor="transparent" />
+        </radialGradient>
+        <filter id="lawGlow">
+          <feGaussianBlur stdDeviation="3.5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
 
-    <circle
-      cx="160"
-      cy="160"
-      r="100"
-      fill="none"
-      stroke={darkMode ? "rgba(0,229,255,0.06)" : "rgba(30,58,138,0.34)"}
-      strokeWidth="1"
-    />
+      {/* Background glow */}
+      <circle cx="160" cy="160" r="140" fill="url(#lawGrad)" />
 
-    <path
-      d="M160 52L88 76v56c0 46 32 88 72 104 40-16 72-58 72-104V76L160 52z"
-      fill={darkMode ? "rgba(0,229,255,0.05)" : "rgba(30,58,138,0.24)"}
-      stroke={darkMode ? "rgba(0,229,255,0.35)" : "rgba(30,58,138,0.90)"}
-      strokeWidth="1.5"
-      filter="url(#sglow)"
-    />
+      {/* Inner static ring */}
+      <circle cx="160" cy="160" r="112" fill="none" stroke={soft} strokeWidth="1.5" />
 
-    <path
-      d="M160 64L96 86v48c0 40 28 76 64 92 36-16 64-52 64-92V86L160 64z"
-      fill={darkMode ? "rgba(0,229,255,0.04)" : "rgba(30,58,138,0.18)"}
-      stroke={darkMode ? "rgba(0,229,255,0.2)" : "rgba(29,78,216,0.52)"}
-      strokeWidth="1"
-    />
+      {/* Rotating dashed ring + orbiting nodes */}
+      <g>
+        <animateTransform
+          attributeName="transform"
+          type="rotate"
+          from="0 160 160"
+          to="360 160 160"
+          dur="26s"
+          repeatCount="indefinite"
+        />
+        <circle
+          cx="160"
+          cy="160"
+          r="140"
+          fill="none"
+          stroke={mid}
+          strokeWidth="1.5"
+          strokeDasharray="6 6"
+        />
+        {orbitNodes.map((n, i) => (
+          <g key={i}>
+            <circle cx={n.x} cy={n.y} r="9" fill={fillStrong} stroke={strong} strokeWidth="2" filter="url(#lawGlow)" />
+            <circle cx={n.x} cy={n.y} r="3" fill={solid}>
+              <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" begin={`${i * 0.6}s`} repeatCount="indefinite" />
+            </circle>
+          </g>
+        ))}
+      </g>
 
-    <polyline
-      points="138,148 152,162 186,130"
-      stroke={darkMode ? "#00E5FF" : "#1E3A8A"}
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      fill="none"
-      opacity="0.7"
-    />
+      {/* Pulse wave from shield */}
+      <circle cx="160" cy="150" r="70" fill="none" stroke={solid} strokeWidth="1.5">
+        <animate attributeName="r" values="70;125" dur="4s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.6;0" dur="4s" repeatCount="indefinite" />
+      </circle>
 
-    <line
-      x1="160"
-      y1="95"
-      x2="160"
-      y2="175"
-      stroke={darkMode ? "rgba(0,229,255,0.4)" : "rgba(37,99,235,0.5)"}
-      strokeWidth="1.5"
-    />
+      {/* Circuit traces (cyber side) */}
+      {traces.map((t, i) => (
+        <g key={i}>
+          <path d={t.d} fill="none" stroke={mid} strokeWidth="1.8" strokeDasharray="5 5">
+            <animate attributeName="stroke-dashoffset" from="0" to="-20" dur="1.6s" repeatCount="indefinite" />
+          </path>
+          <circle cx={t.d.match(/M(\d+) (\d+)/)![1]} cy={t.d.match(/M(\d+) (\d+)/)![2]} r="4.5" fill={fillStrong} stroke={strong} strokeWidth="1.8" />
+          <circle r="3.5" fill={solid} filter="url(#lawGlow)">
+            <animateMotion dur="2.8s" begin={t.begin} repeatCount="indefinite" path={t.d} />
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="2.8s" begin={t.begin} repeatCount="indefinite" />
+          </circle>
+        </g>
+      ))}
 
-    <line
-      x1="120"
-      y1="120"
-      x2="200"
-      y2="120"
-      stroke={darkMode ? "rgba(0,229,255,0.35)" : "rgba(30,58,138,0.90)"}
-      strokeWidth="1.5"
-    />
-
-    <path
-      d="M110 120 Q100 135 110 138 Q120 141 130 138 Q140 135 130 120Z"
-      fill={darkMode ? "rgba(0,229,255,0.08)" : "rgba(30,58,138,0.34)"}
-      stroke={darkMode ? "rgba(0,229,255,0.3)" : "rgba(29,78,216,0.62)"}
-      strokeWidth="1"
-    />
-
-    <line
-      x1="110"
-      y1="120"
-      x2="120"
-      y2="138"
-      stroke={darkMode ? "rgba(0,229,255,0.2)" : "rgba(29,78,216,0.52)"}
-      strokeWidth="1"
-    />
-
-    <line
-      x1="130"
-      y1="120"
-      x2="120"
-      y2="138"
-      stroke={darkMode ? "rgba(0,229,255,0.2)" : "rgba(29,78,216,0.52)"}
-      strokeWidth="1"
-    />
-
-    <path
-      d="M170 122 Q160 137 170 140 Q180 143 190 140 Q200 137 190 122Z"
-      fill={darkMode ? "rgba(0,229,255,0.06)" : "rgba(29,78,216,0.14)"}
-      stroke={darkMode ? "rgba(0,229,255,0.25)" : "rgba(37,99,235,0.4)"}
-      strokeWidth="1"
-    />
-
-    <line
-      x1="170"
-      y1="122"
-      x2="180"
-      y2="140"
-      stroke={darkMode ? "rgba(0,229,255,0.2)" : "rgba(29,78,216,0.52)"}
-      strokeWidth="1"
-    />
-
-    <line
-      x1="190"
-      y1="122"
-      x2="180"
-      y2="140"
-      stroke={darkMode ? "rgba(0,229,255,0.2)" : "rgba(29,78,216,0.52)"}
-      strokeWidth="1"
-    />
-
-    {[
-      [72, 100],
-      [248, 100],
-      [72, 220],
-      [248, 220],
-    ].map(([cx, cy], i) => (
-      <circle
-        key={i}
-        cx={cx}
-        cy={cy}
-        r="3"
-        fill={darkMode ? "rgba(0,229,255,0.2)" : "rgba(30,64,175,0.42)"}
-        stroke={darkMode ? "rgba(0,229,255,0.35)" : "rgba(30,58,138,0.90)"}
-        strokeWidth="1"
+      {/* Shield */}
+      <path
+        d="M160 52L88 76v56c0 46 32 88 72 104 40-16 72-58 72-104V76L160 52z"
+        fill={fillSoft}
+        stroke={strong}
+        strokeWidth="2.5"
+        filter="url(#lawGlow)"
       />
-    ))}
+      <path
+        d="M160 64L96 86v48c0 40 28 76 64 92 36-16 64-52 64-92V86L160 64z"
+        fill="none"
+        stroke={mid}
+        strokeWidth="1.5"
+      />
 
-    <line
-      x1="88"
-      y1="76"
-      x2="72"
-      y2="100"
-      stroke={darkMode ? "rgba(0,229,255,0.1)" : "rgba(30,64,175,0.28)"}
-      strokeWidth="1"
-      strokeDasharray="3 3"
-    />
+      {/* Scales of justice */}
+      <line x1="160" y1="112" x2="160" y2="186" stroke={strong} strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="140" y1="186" x2="180" y2="186" stroke={strong} strokeWidth="2.5" strokeLinecap="round" />
+      <g>
+        <animateTransform
+          attributeName="transform"
+          type="rotate"
+          values="-5 160 112; 5 160 112; -5 160 112"
+          keyTimes="0;0.5;1"
+          calcMode="spline"
+          keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"
+          dur="6s"
+          repeatCount="indefinite"
+        />
+        <line x1="118" y1="112" x2="202" y2="112" stroke={strong} strokeWidth="2.5" strokeLinecap="round" />
+        {/* left pan */}
+        <line x1="118" y1="112" x2="104" y2="146" stroke={mid} strokeWidth="1.5" />
+        <line x1="118" y1="112" x2="132" y2="146" stroke={mid} strokeWidth="1.5" />
+        <path d="M102 146 H134 Q118 166 102 146Z" fill={fillStrong} stroke={strong} strokeWidth="2" />
+        {/* right pan */}
+        <line x1="202" y1="112" x2="188" y2="146" stroke={mid} strokeWidth="1.5" />
+        <line x1="202" y1="112" x2="216" y2="146" stroke={mid} strokeWidth="1.5" />
+        <path d="M186 146 H218 Q202 166 186 146Z" fill={fillStrong} stroke={strong} strokeWidth="2" />
+      </g>
+      <circle cx="160" cy="112" r="5" fill={solid} filter="url(#lawGlow)" />
 
-    <line
-      x1="232"
-      y1="76"
-      x2="248"
-      y2="100"
-      stroke={darkMode ? "rgba(0,229,255,0.1)" : "rgba(30,64,175,0.28)"}
-      strokeWidth="1"
-      strokeDasharray="3 3"
-    />
-  </svg>
-);
+      {/* Approval check (draws itself) */}
+      <polyline
+        points="147,204 156,213 174,196"
+        fill="none"
+        stroke={solid}
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeDasharray="40"
+        filter="url(#lawGlow)"
+      >
+        <animate
+          attributeName="stroke-dashoffset"
+          values="40;0;0;40"
+          keyTimes="0;0.3;0.85;1"
+          dur="4s"
+          repeatCount="indefinite"
+        />
+      </polyline>
+    </svg>
+  );
+};
 
 /* ─── VALUE CARD ICONS ─── */
 
@@ -300,7 +283,7 @@ const IconLockedEye = ({ darkMode = true }: { darkMode?: boolean }) => (
     height="32"
     viewBox="0 0 48 48"
     fill="none"
-    stroke={darkMode ? "#00E5FF" : "#1E3A8A"}
+    stroke={darkMode ? "#00E5FF" : "#1565C0"}
     strokeWidth="1.5"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -325,7 +308,7 @@ const IconLightning = ({ darkMode = true }: { darkMode?: boolean }) => (
     height="32"
     viewBox="0 0 48 48"
     fill="none"
-    stroke={darkMode ? "#00E5FF" : "#1E3A8A"}
+    stroke={darkMode ? "#00E5FF" : "#1565C0"}
     strokeWidth="1.5"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -343,7 +326,7 @@ const IconTerminal = ({ darkMode = true }: { darkMode?: boolean }) => (
     height="32"
     viewBox="0 0 48 48"
     fill="none"
-    stroke={darkMode ? "#00E5FF" : "#1E3A8A"}
+    stroke={darkMode ? "#00E5FF" : "#1565C0"}
     strokeWidth="1.5"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -367,7 +350,7 @@ const IconInfo = ({ darkMode = true }: { darkMode?: boolean }) => (
     height="20"
     viewBox="0 0 24 24"
     fill="none"
-    stroke={darkMode ? "#00E5FF" : "#1E3A8A"}
+    stroke={darkMode ? "#00E5FF" : "#1565C0"}
     strokeWidth="1.8"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -437,7 +420,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
     },
   ];
 
-  const accent = darkMode ? "#00E5FF" : "#1E3A8A";
+  const accent = darkMode ? "#00E5FF" : "#1565C0";
   const textMain = darkMode ? "#E2E8F0" : "#0F172A";
   const textMuted = darkMode ? "#636f81" : "#475569";
   const cardBg = darkMode
@@ -448,7 +431,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
     <>
  <div
       dir="rtl"
-      className={`min-h-screen transition-colors duration-300 ${
+      className={`min-h-screen transition-colors duration-300 pt-[70px] ${
         darkMode
           ? "bg-[#0A1128] text-[#E6F7FF]"
           : "bg-white text-[#0F172A]"
@@ -496,10 +479,10 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                         style={{
               background: darkMode
                 ? "rgba(0,229,255,0.07)"
-                : "rgba(30,58,138,0.07)",
+                : "#EBF3FF",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.2)"
-                : "1px solid rgba(30,58,138,0.20)",
+                : "1px solid rgba(108, 153, 202, 0.22)",
               
             }}
           >
@@ -507,15 +490,14 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
             <span 
             className="data-label"
             style={{
-              color: darkMode ? "#00E5FF" : "#102254ce",
-                fontWeight: "500"
+              color: darkMode ? "#00E5FF" : "#1565C0",
             }}
-            >ABOUT PARAHOOR // SINCE 1405</span>
+            >PARAHOOR // SYSTEM ONLINE</span>
 
                         <span className="node-dot pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
                     background: darkMode
                 ? "#00E5FF"
-                : "rgba(13, 34, 93, 0.78)",
+                : "#1565C0",
 
              }}
             
@@ -614,7 +596,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                     height: 22,
                     background: darkMode
                       ? "linear-gradient(180deg,#00E5FF,rgba(0,229,255,0.15))"
-                      : "linear-gradient(180deg,#2563EB,rgba(30,64,175,0.22))",
+                      : "linear-gradient(180deg,#1565C0,rgba(30,64,175,0.22))",
                     borderRadius: 2,
                   }}
                 />
@@ -622,7 +604,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                 <span
             className="data-label"
               style={{
-              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce",
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#1565C0",
             }}
                 >
                   CYBER INTELLIGENCE + LEGAL EXPERTISE
@@ -692,52 +674,33 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
               <div className="flex flex-wrap gap-3 mt-8">
                 {[
                   {
-                    label: "تحلیل آن‌چین بلاک‌چین",
-                    col: "#1E3A8A",
+                    label: "کارگاه سایبری",
+                    col: "#1565C0",
                   },
                   {
-                    label: "گزارش‌های دادگاه‌پسند",
-                    col: "#1E3A8A",
+                    label: "وکیل سایبری",
+                    col: "#1565C0",
                   },
                   {
-                    label: "کارآگاهی دیجیتال",
-                    col: "#1E3A8A",
-                  },
-                  {
-                    label: "مشاوره حقوقی فنی",
-                    col: "#1E3A8A",
-                  },
+                    label: "پزشکی قانونی دیجیتال",
+                    col: "#1565C0",
+                  }
                 ].map(({ label, col }) => (
                   <div
                     key={label}
                     className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition-all duration-300"
                     style={{
+                      
                       background: darkMode
-                        ? `${col}09`
-                        : `${col}08`,
+                        ? "#55858b1b"
+                        : "#4a6e971a",
                       border: darkMode
-                        ? `1px solid ${col}70`
-                        : `1px solid ${col}25`,
+                        ? "1px solid #40929d30"
+                        : "1px solid #3281db4e",
                       color:
                           darkMode
                             ? "#00E5FF"
-                            : "#1E3A8A",
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!darkMode) {
-                        e.currentTarget.style.background = "#EFF6FF";
-                        e.currentTarget.style.borderColor = "rgba(29,78,216,0.42)";
-                        e.currentTarget.style.transform = "translateY(-2px)";
-                        e.currentTarget.style.boxShadow = "0 8px 22px rgba(30,58,138,0.12)";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!darkMode) {
-                        e.currentTarget.style.background = "rgba(30,58,138,0.10)";
-                        e.currentTarget.style.borderColor = "rgba(30,58,138,0.34)";
-                        e.currentTarget.style.transform = "none";
-                        e.currentTarget.style.boxShadow = "none";
-                      }
+                            : "#1565C0",
                     }}
                   >
                     <span
@@ -745,9 +708,10 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                         width: 5,
                         height: 5,
                         borderRadius: "50%",
-                        background: col,
+                        background: darkMode ?
+                        "#00E5FF" : "#1565C0",
                         display: "inline-block",
-                        opacity: 0.7,
+                        opacity: 0.7
                       }}
                     />
 
@@ -772,7 +736,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                   }}
                 />
 
-                <SynergyIllustration darkMode={darkMode} />
+                <CyberLegalSynergyArt darkMode={darkMode} />
               </div>
             </div>
           </div>
@@ -809,7 +773,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                   borderRadius: "50%",
                   background: darkMode
                     ? "#00E5FF"
-                    : "#1D4ED8",
+                    : "#1565C0",
                   display: "inline-block",
                   boxShadow: darkMode
                     ? "0 0 7px rgba(0,229,255,0.9)"
@@ -820,7 +784,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
               <span
             className="data-label"
               style={{
-              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce",
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#1565C0",
             }}
               >
                 CORE PRINCIPLES // PARAHOOR
@@ -842,7 +806,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
 
             <div
               style={{
-                height: 1,
+                height: 2,
                 width: 60,
                 background: darkMode
                   ? "linear-gradient(90deg,transparent,rgba(0,229,255,0.5),transparent)"
@@ -869,10 +833,10 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                     border: isHov
                       ? darkMode
                         ? "1px solid rgba(0,229,255,0.35)"
-                        : "1px solid rgba(29,78,216,0.52)"
+                        : "1px solid #1565C0"
                       : darkMode
                         ? "1px solid rgba(0,229,255,0.12)"
-                        : "1px solid rgba(29,78,216,0.20)",
+                        : "1px solid #719fd35d",
                     backdropFilter: "blur(10px)",
                     transform: isHov
                       ? "translateY(-4px)"
@@ -880,7 +844,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                     boxShadow: isHov
                       ? darkMode
                         ? "0 16px 48px rgba(0,0,0,0.4), 0 0 30px rgba(0,229,255,0.07)"
-                        : "0 16px 40px rgba(30,58,138,0.34)"
+                        : "0 16px 40px rgba(44, 98, 159, 0.34)"
                       : darkMode
                         ? "0 4px 20px rgba(0,0,0,0.2)"
                         : "0 4px 20px rgba(15,23,42,0.06)",
@@ -893,7 +857,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                       height: 1.5,
                       background: darkMode
                         ? "linear-gradient(90deg,transparent,rgba(0,229,255,0.6),transparent)"
-                        : "linear-gradient(90deg,transparent,rgba(30,64,175,0.82),transparent)",
+                        : "linear-gradient(90deg,transparent,#1565C0,transparent)",
                       opacity: isHov ? 1 : 0.3,
                       transition: "opacity 0.3s",
                     }}
@@ -906,7 +870,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                         fontSize: "0.58rem",
                         color: darkMode
                           ? "rgba(0,229,255,0.35)"
-                          : "rgba(30,58,138,0.90)",
+                          : "#1565C0",
                         letterSpacing: "0.14em",
                         marginBottom: 16,
                         display: "block",
@@ -928,10 +892,10 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                         border: isHov
                           ? darkMode
                             ? "1px solid rgba(0,229,255,0.3)"
-                            : "1px solid rgba(30,64,175,0.42)"
+                            : "1px solid #1565C0"
                           : darkMode
                             ? "1px solid rgba(0,229,255,0.15)"
-                            : "1px solid rgba(30,58,138,0.34)",
+                            : "1px solid rgba(21, 101, 192, 0.25)",
                       }}
                     >
                       {v.icon}
@@ -943,10 +907,10 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                         color: isHov
                           ? darkMode
                             ? "#fff"
-                            : "#0F172A"
+                            : "#1565C0"
                           : darkMode
                             ? "#E2E8F0"
-                            : "#1E293B",
+                            : "#1565C0",
                         fontSize: "1.05rem",
                       }}
                     >
@@ -985,7 +949,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                         fontSize: "0.65rem",
                         color: darkMode
                           ? "rgba(0,229,255,0.35)"
-                          : "rgba(30,58,138,0.90)",
+                          : "#1565C0",
                         letterSpacing: "0.06em",
                       }}
                     >
@@ -1018,7 +982,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                   borderRadius: "50%",
                   background: darkMode
                     ? "#00E5FF"
-                    : "#1D4ED8",
+                    : "#1565C0",
                   display: "inline-block",
                   boxShadow: darkMode
                     ? "0 0 7px rgba(0,229,255,0.9)"
@@ -1029,7 +993,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
               <span
             className="data-label"
               style={{
-              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce",
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#1565C0",
             }}
               >
                 OPERATIONAL HISTORY
@@ -1084,6 +1048,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                   desc: "ردیابی بیش از ۴.۵ میلیون دلار دارایی دیجیتال و ارائه ادله به مراجع قضایی بین‌المللی.",
                 },
               ].map(({ year, title, desc }, i) => (
+                
                 <div
                   key={year}
                   className={`relative flex items-start gap-4 md:gap-8 ${
@@ -1100,37 +1065,14 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                         background: darkMode
                           ? "rgba(255,255,255,0.025)"
                           : "#FFFFFF",
+                          
                         border: darkMode
-                          ? "1px solid rgba(0,229,255,0.1)"
-                          : "1px solid rgba(30,58,138,0.34)",
+                          ? "1px solid rgba(0, 229, 255, 0.12)"
+                          : "1px solid rgba(46, 92, 216, 0.68)",
                         boxShadow: darkMode
                           ? "none"
                           : "0 8px 24px rgba(15,23,42,0.04)",
                       }}
-onMouseEnter={(e) => {
-  if (!darkMode) {
-    e.currentTarget.style.background = "#eff6ffe8";
-    e.currentTarget.style.borderColor = "rgba(29,78,216,0.52)";
-    e.currentTarget.style.boxShadow = "0 8px 22px rgba(30,58,138,0.24)";
-  } else {
-    e.currentTarget.style.background = "rgba(0, 229, 255, 0.02)";
-    e.currentTarget.style.borderColor = "rgba(0,229,255,0.42)";
-    e.currentTarget.style.boxShadow =
-      "0 8px 22px rgba(0,229,255,0.14)";
-  }
-}}
-
-onMouseLeave={(e) => {
-  if (!darkMode) {
-    e.currentTarget.style.background = "#FFFFFF";
-    e.currentTarget.style.borderColor = "rgba(30,58,138,0.34)";
-    e.currentTarget.style.boxShadow = "none";
-  } else {
-    e.currentTarget.style.background = "transparent";
-    e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
-    e.currentTarget.style.boxShadow = "none";
-  }
-}}
                     >
                       <span
                         style={{
@@ -1138,7 +1080,7 @@ onMouseLeave={(e) => {
                           fontSize: "0.68rem",
                           color: darkMode
                             ? "rgba(0,229,255,0.5)"
-                            : "rgba(30,64,175,0.78)",
+                            : "#1565C0",
                           letterSpacing: "0.15em",
                         }}
                         className="block mb-2"
@@ -1151,7 +1093,7 @@ onMouseLeave={(e) => {
                         style={{
                           color: darkMode
                             ? "#fff"
-                            : "#0F172A",
+                            : "#1565C0",
                           fontSize: "0.92rem",
                         }}
                       >
@@ -1183,10 +1125,10 @@ onMouseLeave={(e) => {
                         background: accent,
                         boxShadow: darkMode
                           ? "0 0 12px rgba(0,229,255,0.8)"
-                          : "0 0 12px rgba(29,78,216,0.52)",
+                          : "0 0 12px 1565C0",
                         border: darkMode
                           ? "2px solid rgba(0,229,255,0.4)"
-                          : "2px solid rgba(29,78,216,0.40)",
+                          : "2px solid 1565C0",
                       }}
                     />
                   </div>
@@ -1259,72 +1201,27 @@ onMouseLeave={(e) => {
         className="px-6 py-20 md:px-12"
       >
         <div 
-          className={`max-w-2xl mx-auto text-center`}
+          className={`max-w-2xl mx-auto text-center rounded-3xl`}
   style={{
-        background: darkMode
-          ? "linear-gradient(135deg, #010f27 0%, #010f27 48%, #010f27 100%)"
-          : "linear-gradient(135deg, #FFFFFF 0%, #F8FAFF 48%, #EEF4FF 100%)",
-
-
-
         boxShadow: darkMode
           ? "0 18px 60px rgba(0, 229, 255, 0), 0 0 70px rgba(0,229,255,0.05)"
-          : "0 18px 50px rgba(30,58,138,0.10)",
+          : "0 18px 50px rgba(48, 94, 175, 0.32)",
 
         transition:
           "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
-      }}
-        onMouseEnter={(e) => {
-        if (!darkMode) {
-          e.currentTarget.style.borderColor = "#1D4ED8";
-          e.currentTarget.style.background =
-            "linear-gradient(135deg, #FFFFFF 0%, rgba(30,58,138,0.035) 50%, rgba(29,78,216,0.06) 100%)";
-          e.currentTarget.style.boxShadow =
-            "0 18px 50px rgba(30,58,138,0.16), 0 0 45px rgba(29,78,216,0.08)";
-
-        } else {
-          e.currentTarget.style.borderColor =
-            "rgba(0, 229, 255, 0.55)";
-          e.currentTarget.style.background =
-            "linear-gradient(135deg, #010f27 0%, #010f27 48%, #010f27 100%)";
-          e.currentTarget.style.boxShadow =
-            "0 20px 65px rgba(0,229,255,0.12), 0 0 70px rgba(0,229,255,0.07)";
-
-        }
-      }}
-
-      onMouseLeave={(e) => {
-        if (!darkMode) {
-          e.currentTarget.style.borderColor =
-            "rgba(30,58,138,0.22)";
-          e.currentTarget.style.background =
-            "linear-gradient(135deg, #FFFFFF 0%, #F8FAFF 48%, #EEF4FF 100%)";
-          e.currentTarget.style.boxShadow =
-            "0 18px 50px rgba(30,58,138,0.10)";
-          e.currentTarget.style.transform = "none";
-        } else {
-          e.currentTarget.style.borderColor =
-            "rgba(0,229,255,0.30)";
-          e.currentTarget.style.background =
-            "linear-gradient(135deg, #010f27 0%, #010f27 48%, #010f27 100%)";
-          e.currentTarget.style.boxShadow =
-            "0 18px 60px rgba(0,229,255,0.08), 0 0 70px rgba(0,229,255,0.05)";
-          e.currentTarget.style.transform = "none";
-        }
+          
       }}
         >
           <div
             className="relative overflow-hidden rounded-2xl px-8 py-14"
             style={{
-              background: darkMode
-                ? "rgba(255,255,255,0.02)"
-                : "#FFFFFF",
-              border: darkMode
-                ? "1px solid rgba(0,229,255,0.16)"
-                : "1px solid rgba(30,58,138,0.42)",
-              boxShadow: darkMode
-                ? "0 0 60px rgba(0,229,255,0.06), 0 0 120px rgba(0,229,255,0.03), inset 0 0 40px rgba(0,229,255,0.02)"
-                : "0 20px 60px rgba(30,58,138,0.16)",
+              background: darkMode ? "rgba(255,255,255,0.03)" : "#FFFFFF", 
+              border: darkMode 
+                ? "1px solid rgba(0,229,255,0.18)" 
+                : "1px solid rgba(39, 83, 206, 0.72)", 
+              boxShadow: darkMode 
+                ? "0 0 60px rgba(0,229,255,0.06), 0 0 100px rgba(0,229,255,0.03), inset 0 0 60px rgba(0,229,255,0.02)" 
+                : "0 4px 20px rgba(15,23,42,0.06)", 
             }}
           >
             <div
@@ -1336,10 +1233,10 @@ onMouseLeave={(e) => {
                 height: 48,
                 borderTop: darkMode
                   ? "1.5px solid rgba(0,229,255,0.3)"
-                  : "1.5px solid rgba(30,64,175,0.42)",
+                  : "2px solid #1565C0",
                 borderRight: darkMode
                   ? "1.5px solid rgba(0,229,255,0.3)"
-                  : "1.5px solid rgba(30,64,175,0.42)",
+                  : "2px solid #1565C0",
                 borderRadius: "0 16px 0 0",
                 pointerEvents: "none",
               }}
@@ -1354,10 +1251,10 @@ onMouseLeave={(e) => {
                 height: 48,
                 borderBottom: darkMode
                   ? "1.5px solid rgba(0,229,255,0.3)"
-                  : "1.5px solid rgba(30,64,175,0.42)",
+                  : "2px solid #1565C0",
                 borderLeft: darkMode
                   ? "1.5px solid rgba(0,229,255,0.3)"
-                  : "1.5px solid rgba(30,64,175,0.42)",
+                  : "2px solid #1565C0",
                 borderRadius: "0 0 0 16px",
                 pointerEvents: "none",
               }}
@@ -1367,7 +1264,7 @@ onMouseLeave={(e) => {
 
               className="data-label block mb-5"
               style={{
-              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce",
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#1565C0",
             }}
             >
               FREE INITIAL ASSESSMENT
@@ -1426,7 +1323,7 @@ onMouseLeave={(e) => {
             <p
               className="mt-4 text-xs"
               style={{
-                color: darkMode ? "#4c5c77b1" : "#94A3B8",
+                color: darkMode ? "#768094b1" : "#94A3B8",
               }}
             >
               بدون تعهد مالی • کاملاً محرمانه • پاسخ در کمتر

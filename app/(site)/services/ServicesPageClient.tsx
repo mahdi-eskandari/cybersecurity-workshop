@@ -333,8 +333,14 @@ const services = initialData.services;
 const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const [crisisOpen, setCrisisOpen] = useState(false);
 
-  const blue = darkMode ? "#00E5FF" : "#1E3A8A";
-  const blueBright = darkMode ? "#00E5FF" : "#1D4ED8";
+  const blue = darkMode ? "#00E5FF" : "#1565C0";
+  const blueBright = darkMode ? "#00E5FF" : "#1565C0";
+  const sanitizeSvg = (svg: string) => {
+  const clean = /* منطق فعلی sanitize خودت */ svg;
+  return clean
+    .replace(/fill="(?!none)[^"]*"/gi, 'fill="currentColor"')
+    .replace(/stroke="(?!none)[^"]*"/gi, 'stroke="currentColor"');
+};
     const seo = initialData.seo;
 
   const pathname = usePathname();
@@ -360,7 +366,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
    
 
    <div
-    className="min-h-full transition-colors duration-300"
+    className="min-h-full transition-colors duration-300 pt-20"
     style={{
       color: darkMode ? "#E2E8F0" : "#0F172A",
       fontFamily: "var(--font-vazirmatn), sans-serif",
@@ -393,17 +399,16 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
         <div className="relative z-10 max-w-3xl mx-auto">
 
-
-          <div
+             <div
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 text-xs"
 
                         style={{
               background: darkMode
                 ? "rgba(0,229,255,0.07)"
-                : "rgba(30,58,138,0.07)",
+                : "#EBF3FF",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.2)"
-                : "1px solid rgba(30,58,138,0.20)",
+                : "1px solid #d9e7f7",
               
             }}
           >
@@ -411,15 +416,14 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
             <span 
             className="data-label"
             style={{
-              color: darkMode ? "#00E5FF" : "#102254ce",
-                fontWeight: "500"
+              color: darkMode ? "#00E5FF" : "#1565C0",
             }}
             >PARAHOOR // SERVICE ARCHIVE</span>
 
                         <span className="node-dot pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
                     background: darkMode
                 ? "#00E5FF"
-                : "rgba(13, 34, 93, 0.78)",
+                : "#1565C0",
 
              }}
             
@@ -497,7 +501,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                 : "#F8FAFC",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.22)"
-                : "1px solid rgba(30,58,138,0.16)",
+                : "1px solid rgba(35, 113, 202, 0.79)",
               boxShadow: darkMode
                 ? "0 0 60px rgba(0,229,255,0.07), 0 0 120px rgba(0,229,255,0.03), inset 0 0 40px rgba(0,229,255,0.025)"
                 : "0 18px 50px rgba(15,23,42,0.07), 0 0 40px rgba(30,58,138,0.04), inset 0 0 30px rgba(30,58,138,0.025)",
@@ -515,13 +519,14 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                 height: 52,
                 borderTop: darkMode
                   ? "1.5px solid rgba(0,229,255,0.4)"
-                  : "1.5px solid rgba(30,58,138,0.45)",
+                  : "1.5px solid #1D4ED8",
                 borderRight: darkMode
                   ? "1.5px solid rgba(0,229,255,0.4)"
-                  : "1.5px solid rgba(30,58,138,0.45)",
+                  : "1.5px solid #1D4ED8",
                 borderRadius: "0 16px 0 0",
               }}
             />
+
 
             <div
               style={{
@@ -532,10 +537,10 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                 height: 52,
                 borderBottom: darkMode
                   ? "1.5px solid rgba(0,229,255,0.4)"
-                  : "1.5px solid rgba(30,58,138,0.45)",
+                  : "1.5px solid #1D4ED8",
                 borderLeft: darkMode
                   ? "1.5px solid rgba(0,229,255,0.4)"
-                  : "1.5px solid rgba(30,58,138,0.45)",
+                  : "1.5px solid #1D4ED8",
                 borderRadius: "0 0 0 16px",
               }}
             />
@@ -556,6 +561,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                 pointerEvents: "none",
               }}
             />
+            
 
             <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-6">
               {/* Icon */}
@@ -578,9 +584,9 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
               <div className="flex-1">
                 <span
-            className="data-label"
+            className="data-label block mb-2"
               style={{
-              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce",
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#1D4ED8",
             }}
                 >
                   TECHNICAL CONSULTATION // AVAILABLE
@@ -630,7 +636,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                     background: "transparent",
                     border: darkMode
                       ? "1px solid rgba(0,229,255,0.45)"
-                      : "1px solid rgba(30,58,138,0.45)",
+                      : "1px solid #1565C0",
                     color: blueBright,
                     boxShadow: darkMode
                       ? "0 0 16px rgba(0,229,255,0.07), inset 0 0 16px rgba(0,229,255,0.03)"
@@ -640,7 +646,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                     (e.currentTarget as HTMLElement).style.background =
                       darkMode
                         ? "rgba(0,229,255,0.1)"
-                        : "#142a65";
+                        : "#1D4ED8";
 
                     (e.currentTarget as HTMLElement).style.color =
                       darkMode ? "#00E5FF" : "#FFFFFF";
@@ -738,7 +744,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                   height: 22,
                   background: darkMode
                     ? "linear-gradient(180deg,#00E5FF,rgba(0,229,255,0.2))"
-                    : "linear-gradient(180deg,#1E3A8A,rgba(30,58,138,0.25))",
+                    : "linear-gradient(180deg,#1565C0,rgba(35, 89, 238, 0.25))",
                   borderRadius: 2,
                 }}
               />
@@ -746,7 +752,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
               <span
             className="data-label"
               style={{
-              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce",
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#1D4ED8",
             }}
               >
                 FORENSICS & INVESTIGATION
@@ -800,7 +806,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                         : "1px solid rgba(0,229,255,0.12)"
                       : isHovered
                         ? "1px solid rgba(29,78,216,0.52)"
-                        : "1px solid rgba(29,78,216,0.20)",
+                        : "1px solid #1565c044",
 
                     backdropFilter: "blur(10px)",
 
@@ -826,7 +832,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                       height: 1.5,
                       background: darkMode
                         ? "linear-gradient(90deg,transparent,rgba(0,229,255,0.7),transparent)"
-                        : "linear-gradient(90deg,transparent,rgba(30,64,175,0.82),transparent)",
+                        : "linear-gradient(90deg,transparent,#1D4ED8,transparent)",
                       opacity: isHovered ? 1 : 0,
                       transition: "opacity 0.3s",
                     }}
@@ -835,70 +841,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                   <div className="p-6 flex flex-col flex-1">
                     {/* Badge + complexity */}
 
-                    <div className="flex items-center justify-between mb-4">
-                      <span
-                      className="data-label"
-                        style={{
-
-                          fontSize: "0.58rem",
-                          color: darkMode
-                            ? "rgba(0,229,255,0.4)"
-                            : "rgba(30,58,138,0.7)",
-                          letterSpacing: "0.14em",
-                          background: darkMode
-                            ? "rgba(0,229,255,0.06)"
-                            : "rgba(30,58,138,0.06)",
-                          border: darkMode
-                            ? "1px solid rgba(0,229,255,0.1)"
-                            : "1px solid rgba(30,58,138,0.12)",
-                          padding: "2px 8px",
-                          borderRadius: 4,
-                        }}
-                      >
-                        {s.categoryLabel || "SERVICE"}
-                      </span>
-
-                      <span
-                        style={{
-                          fontSize: "0.65rem",
-                        color: darkMode
-                          ? {
-                              intermediate: "#10B981",
-                              specialized: "#00E5FF",
-                              advanced: "#A78BFA",
-                              complex: "#F59E0B",
-                            }[s.level]
-                          : "#1E3A8A",
-
-                        background: darkMode
-                          ? `${{
-                              intermediate: "#10B981",
-                              specialized: "#00E5FF",
-                              advanced: "#A78BFA",
-                              complex: "#F59E0B",
-                            }[s.level]}15`
-                          : "rgba(30,58,138,0.08)",
-
-                        border: darkMode
-                          ? `1px solid ${{
-                              intermediate: "#10B981",
-                              specialized: "#00E5FF",
-                              advanced: "#A78BFA",
-                              complex: "#F59E0B",
-                            }[s.level]}30`
-                          : "1px solid rgba(30,58,138,0.20)",
-                          padding: "1px 7px",
-                          borderRadius: 4,
-                        }}
-                      >
-                        {{
-  intermediate: "متوسط",
-  specialized: "تخصصی",
-  advanced: "پیشرفته",
-  complex: "پیچیده",
-}[s.level]}
-                      </span>
-                    </div>
+                    
 
                     {/* Icon */}
 
@@ -918,47 +861,29 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                             ? "1px solid rgba(0,229,255,0.3)"
                             : "1px solid rgba(0,229,255,0.15)"
                           : isHovered
-                            ? "1px solid rgba(30,58,138,0.3)"
-                            : "1px solid rgba(30,58,138,0.15)",
+                            ? "1px solid #1565C0"
+                            : "1px solid #a9c7e8",
 
                         boxShadow: !darkMode && isHovered
                           ? "0 8px 22px rgba(30,58,138,0.10)"
                           : "none",
                       }}
                     >
-                      {/* {(() => {
-                        switch (s.id) {
-                          case "crypto":
-                            return <IconCrypto color={blueBright} />;
-                          case "forensics":
-                            return <IconForensics color={blueBright} />;
-                          case "osint":
-                            return <IconOsint color={blueBright} />;
-                          case "malware":
-                            return <IconMalware color={blueBright} />;
-                          case "darkweb":
-                            return <IconDarkWeb color={blueBright} />;
-                          case "network":
-                            return <IconNetwork color={blueBright} />;
-                          default:
-                            return s.icon;
-                        }
-                      })()} */}
+
 
 
 {s.icon ? (
   <span
-    style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      width: 30,
-      height: 30,
-    }}
-    dangerouslySetInnerHTML={{
-      __html: sanitizeSvg(s.icon),
-    }}
-  />
+  style={{
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 30,
+    height: 30,
+    color: blueBright,
+  }}
+  dangerouslySetInnerHTML={{ __html: sanitizeSvg(s.icon) }}
+/>
 ) : (
   <IconNetwork color={blueBright} />
 )}
@@ -976,8 +901,8 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
         ? "#fff"
         : "#E2E8F0"
       : isHovered
-        ? "#1E3A8A"
-        : "#111827",
+        ? "#1565C0"
+        : "#1565C0",
     fontSize: darkMode ? "0.95rem" : "1rem",
     lineHeight: 1.5,
     transition: "color 0.3s",
@@ -1010,13 +935,13 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
     fontSize: darkMode ? "0.62rem" : "0.68rem",
     color: darkMode
       ? "rgba(0,229,255,0.4)"
-      : "rgba(30,58,138,0.72)",
+      : "#1565C0",
     background: darkMode
       ? "rgba(0,229,255,0.04)"
       : "rgba(30,58,138,0.045)",
     border: darkMode
       ? "1px solid rgba(0,229,255,0.1)"
-      : "1px solid rgba(30,58,138,0.12)",
+      : "1px solid #b5d0ed",
     padding: "3px 8px",
     borderRadius: 4,
   }}
@@ -1054,8 +979,8 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                             ? "#00E5FF"
                             : "#334155"
                           : isHovered
-                            ? "#1D4ED8"
-                            : "#475569",
+                            ? "#1565C0"
+                            : "#1565C0",
                         transition: "color 0.25s",
                         fontSize: "0.8rem",
                         fontWeight: 600,

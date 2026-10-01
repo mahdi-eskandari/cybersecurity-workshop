@@ -226,6 +226,7 @@ const HeroImageFallback = ({
 
       <filter id="hblur">
         <feGaussianBlur stdDeviation="3" />
+
       </filter>
     </defs>
 
@@ -848,11 +849,6 @@ useEffect(() => {
       }`}
       style={{
         fontFamily: "var(--font-vazirmatn), sans-serif",
-        backgroundImage: darkMode
-          ? "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"
-          : "linear-gradient(rgba(30,58,138,0.045) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,138,0.045) 1px,transparent 1px)",
-        backgroundSize: "52px 52px",
-      backgroundAttachment: "fixed"
       }}
     >
         {/* ─── HERO ─────────────────────────────────────────────────────────── */}
@@ -863,7 +859,7 @@ useEffect(() => {
          className={`border-b transition-colors duration-300 pt-24 ${
             darkMode
               ? "bg-transparent border-[#1E334A]"
-              : "bg-transparent border-[rgba(29,78,216,0.12)] shadow-[0_10px_35px_rgba(30,58,138,0.10)]"
+              : "bg-transparent border-[rgba(29,78,216,0.12)] shadow-[0_10px_35px_rgba(30,58,138,0.10)] bg-[#F7F9FC] border-b border-[#0B1C3E]/10"
           }`}
     initial={{ opacity: 0, y: 30 }}
   whileInView={{ opacity: 1, y: 0 }}
@@ -875,20 +871,20 @@ useEffect(() => {
           style={{
             background: darkMode
               ? "radial-gradient(ellipse 65% 60% at 50% 50%, rgba(0,229,255,0.065) 0%, transparent 70%)"
-              : "radial-gradient(ellipse 65% 60% at 50% 50%, rgba(84, 128, 215, 0.18) 0%, transparent 70%)",
+              : "",
           }}
           >
 
-           <div
+          <div
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 text-xs"
 
                         style={{
               background: darkMode
                 ? "rgba(0,229,255,0.07)"
-                : "rgba(30,58,138,0.07)",
+                : "#EBF3FF",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.2)"
-                : "1px solid rgba(30,58,138,0.20)",
+                : "none",
               
             }}
           >
@@ -896,15 +892,14 @@ useEffect(() => {
             <span 
             className="data-label"
             style={{
-              color: darkMode ? "#00E5FF" : "#102254ce",
-                fontWeight: "500"
+              color: darkMode ? "#00E5FF" : "#1565C0",
             }}
             >PARAHOOR // ANALYTICAL & LEGAL REPORTS</span>
 
                         <span className="node-dot pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
                     background: darkMode
                 ? "#00E5FF"
-                : "rgba(13, 34, 93, 0.78)",
+                : "#1565C0",
 
              }}
             
@@ -1241,11 +1236,14 @@ useEffect(() => {
               </div>
 
               <article
-                className={`group border rounded-2xl overflow-hidden transition-all duration-200 ${
-                  darkMode
-                    ? "bg-cyan-800/10 border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
-                    : "bg-white border-[rgba(29,78,216,0.20)] hover:border-[rgba(29,78,216,0.52)] hover:bg-[rgba(237,242,255,0.52)] hover:shadow-[0_16px_40px_rgba(30,58,138,0.34)]"
-                }`}
+                    className={`group flex flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
+            darkMode
+              ? "bg-[rgba(255,255,255,0.028)] border border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
+              : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"
+          }`}
+          style={{
+            backdropFilter: "blur(10px)",
+          }}
 
               >
                 <div className="grid md:grid-cols-5">
@@ -1329,7 +1327,7 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
                         className={`text-xl md:text-2xl font-bold leading-snug mb-4 transition-colors ${
                           darkMode
                             ? "text-[#E6F7FF] group-hover:text-[#E6F7FF]"
-                            : "text-[#1E3A8A] group-hover:text-[#1E3A8A]"
+                            : "group-hover:text-[#1565C0]"
                         }`}
                       >
                         {featuredArticle.title}
@@ -1383,7 +1381,7 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
                         className={`inline-flex items-center gap-1.5 text-sm font-semibold hover:gap-2.5 transition-all ${
                           darkMode
                             ? "text-[#00E5FF]"
-                            : "text-[#1E3A8A]"
+                            : "text-[#1565C0]"
                         }`}
                       >
                         مطالعه گزارش کامل
@@ -1773,11 +1771,14 @@ function ArticleCard({
 }) {
   return (
     <article
-      className={`group flex h-full min-w-0 flex-col border rounded-2xl overflow-hidden transition-all duration-200 ${
-        darkMode
-          ? "bg-cyan-800/10 border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
-          : "bg-white border-[rgba(29,78,216,0.20)] hover:border-[rgba(29,78,216,0.52)] hover:bg-[rgba(237,242,255,0.52)] hover:shadow-[0_16px_40px_rgba(30,58,138,0.34)]"
-      }`}
+     className={`group flex flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
+            darkMode
+              ? "bg-[rgba(255,255,255,0.028)] border border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
+              : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"
+          }`}
+          style={{
+            backdropFilter: "blur(10px)",
+          }}
     >
       {/* Thumbnail */}
 
@@ -1840,8 +1841,9 @@ function ArticleCard({
           className={`text-base font-bold leading-snug mb-3 break-words transition-colors line-clamp-2 ${
             darkMode
               ? "text-[#E6F7FF] group-hover:text-[#E6F7FF]"
-              : "text-[#1E3A8A] group-hover:text-[#1E3A8A]"
+              : "group-hover:text-[#1565C0]"
           }`}
+          
         >
           {article.title}
         </h3>
@@ -1905,7 +1907,7 @@ function ArticleCard({
           <Link
             href={`/blogs/${article.slug || article.id}`}
             className={`flex items-center gap-1 text-xs font-semibold whitespace-nowrap hover:gap-1.5 transition-all flex-shrink-0 ${
-              darkMode ? "text-[#00E5FF]" : "text-[#1E3A8A]"
+              darkMode ? "text-[#00E5FF]" : "text-[#1565C0]"
             }`}
           >
             ادامه مطلب

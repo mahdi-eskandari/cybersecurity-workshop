@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useLayoutEffect,
-  ReactNode,
-} from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 
 interface ThemeContextType {
   darkMode: boolean;
@@ -18,18 +12,21 @@ const ThemeContext = createContext<ThemeContextType>({
   toggleDarkMode: () => {},
 });
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [darkMode, setDarkMode] = useState(true);
+export function ThemeProvider({
+  children,
+  initialDark = true,
+}: {
+  children: ReactNode;
+  initialDark?: boolean;
+}) {
+  const [darkMode, setDarkMode] = useState(initialDark);
 
-  useLayoutEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [darkMode]);
-
-  const toggleDarkMode = () => setDarkMode((prev) => !prev);
+  const toggleDarkMode = () => {
+    const next = !darkMode;
+    setDarkMode(next);
+    document.documentElement.classList.toggle("dark", next);
+    document.cookie = `theme=${next ? "dark" : "light"}; path=/; max-age=31536000; samesite=lax`;
+  };
 
   return (
     <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>

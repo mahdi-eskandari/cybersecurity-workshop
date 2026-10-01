@@ -375,33 +375,31 @@ const isDark = darkMode;
       >
         <div className="relative z-10 mx-auto max-w-3xl">
 
-           <div
+                              <div
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 text-xs"
 
-               style={{
+                        style={{
               background: darkMode
                 ? "rgba(0,229,255,0.07)"
-                : "rgba(30,58,138,0.07)",
+                : "#EBF3FF",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.2)"
-                : "1px solid rgba(30,58,138,0.20)",
+                : "1px solid rgba(49, 117, 159, 0.14)",
               
             }}
           >
 
             <span 
-className="data-label"
+            className="data-label"
             style={{
-              color: darkMode ? "#00E5FF" : "#102254ce",
-                fontWeight: "500"
+              color: darkMode ? "#00E5FF" : "#1565C0",
             }}
-            >
-            SECURE COMMUNICATION // END-TO-END ENCRYPTED</span>
+            >SECURE COMMUNICATION // END-TO-END ENCRYPTED</span>
 
-             <span className="node-dot pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
-                background: darkMode
+                        <span className="node-dot pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
+                    background: darkMode
                 ? "#00E5FF"
-                : "rgba(13, 34, 93, 0.78)",
+                : "#1565C0",
 
              }}
             
@@ -459,6 +457,7 @@ className="data-label"
                 : ""
             }`}
             style={{
+              backdropFilter: "blur(10px)",
               borderColor: isDark
                 ? isHov
                   ? `${ac}45`

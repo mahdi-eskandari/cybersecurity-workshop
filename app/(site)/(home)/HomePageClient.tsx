@@ -600,301 +600,7 @@ const IconTelegram = () => (
   </svg>
 )
 
-const NetworkDecor = ({
-  darkMode = true,
-}: {
-  darkMode?: boolean
-}) => {
-  const blue = darkMode ? "#00E5FF" : "#1D4ED8"
 
-  return (
-    <svg
-      width="320"
-      height="280"
-      viewBox="0 0 320 280"
-      className="hero-float"
-      style={{ opacity: 0.35 }}
-    >
-      <defs>
-        <radialGradient id="nodeGrad" cx="50%" cy="50%" r="50%">
-          <stop
-            offset="0%"
-            stopColor={blue}
-            stopOpacity="1"
-          />
-          <stop
-            offset="100%"
-            stopColor={blue}
-            stopOpacity="0"
-          />
-        </radialGradient>
-      </defs>
-
-      <line
-        x1="160"
-        y1="140"
-        x2="60"
-        y2="60"
-        stroke={
-          darkMode
-            ? "rgba(0,229,255,0.3)"
-            : "rgba(29,78,216,0.48)"
-        }
-        strokeWidth="1"
-      />
-
-      <line
-        x1="160"
-        y1="140"
-        x2="260"
-        y2="60"
-        stroke={
-          darkMode
-            ? "rgba(0,229,255,0.2)"
-            : "rgba(29,78,216,0.38)"
-        }
-        strokeWidth="1"
-      />
-
-      <line
-        x1="160"
-        y1="140"
-        x2="40"
-        y2="200"
-        stroke={
-          darkMode
-            ? "rgba(0,229,255,0.25)"
-            : "rgba(29,78,216,0.42)"
-        }
-        strokeWidth="1"
-      />
-
-      <line
-        x1="160"
-        y1="140"
-        x2="280"
-        y2="200"
-        stroke={
-          darkMode
-            ? "rgba(0,229,255,0.2)"
-            : "rgba(29,78,216,0.38)"
-        }
-        strokeWidth="1"
-      />
-
-      <line
-        x1="160"
-        y1="140"
-        x2="160"
-        y2="20"
-        stroke={
-          darkMode
-            ? "rgba(0,229,255,0.35)"
-            : "rgba(29,78,216,0.55)"
-        }
-        strokeWidth="1"
-      />
-
-      <line
-        x1="60"
-        y1="60"
-        x2="160"
-        y2="20"
-        stroke={
-          darkMode
-            ? "rgba(0,229,255,0.15)"
-            : "rgba(29,78,216,0.28)"
-        }
-        strokeWidth="1"
-      />
-
-      <line
-        x1="260"
-        y1="60"
-        x2="160"
-        y2="20"
-        stroke={
-          darkMode
-            ? "rgba(0,229,255,0.15)"
-            : "rgba(29,78,216,0.28)"
-        }
-        strokeWidth="1"
-      />
-
-      <line
-        x1="40"
-        y1="200"
-        x2="100"
-        y2="250"
-        stroke={
-          darkMode
-            ? "rgba(0,229,255,0.12)"
-            : "rgba(29,78,216,0.24)"
-        }
-        strokeWidth="1"
-      />
-
-      <line
-        x1="280"
-        y1="200"
-        x2="220"
-        y2="250"
-        stroke={
-          darkMode
-            ? "rgba(0,229,255,0.12)"
-            : "rgba(29,78,216,0.24)"
-        }
-        strokeWidth="1"
-      />
-
-      <circle
-        cx="160"
-        cy="140"
-        r="8"
-        fill={
-          darkMode
-            ? "rgba(0,229,255,0.2)"
-            : "rgba(29,78,216,0.16)"
-        }
-        stroke={blue}
-        strokeWidth="1.5"
-      />
-
-      <circle
-        cx="160"
-        cy="140"
-        r="3"
-        fill={blue}
-      />
-
-      <circle
-        cx="60"
-        cy="60"
-        r="5"
-        fill={
-          darkMode
-            ? "rgba(0,229,255,0.15)"
-            : "rgba(29,78,216,0.13)"
-        }
-        stroke={blue}
-        strokeWidth="1"
-      />
-
-      <circle
-        cx="60"
-        cy="60"
-        r="2"
-        fill={blue}
-      />
-
-      <circle
-        cx="260"
-        cy="60"
-        r="5"
-        fill={
-          darkMode
-            ? "rgba(0,229,255,0.15)"
-            : "rgba(29,78,216,0.13)"
-        }
-        stroke={blue}
-        strokeWidth="1"
-      />
-
-      <circle
-        cx="260"
-        cy="60"
-        r="2"
-        fill={blue}
-      />
-
-      <circle
-        cx="40"
-        cy="200"
-        r="4"
-        fill={
-          darkMode
-            ? "rgba(0,229,255,0.1)"
-            : "rgba(29,78,216,0.10)"
-        }
-        stroke={blue}
-        strokeWidth="1"
-      />
-
-      <circle
-        cx="40"
-        cy="200"
-        r="1.5"
-        fill={blue}
-      />
-
-      <circle
-        cx="280"
-        cy="200"
-        r="4"
-        fill={
-          darkMode
-            ? "rgba(0,229,255,0.1)"
-            : "rgba(29,78,216,0.10)"
-        }
-        stroke={blue}
-        strokeWidth="1"
-      />
-
-      <circle
-        cx="280"
-        cy="200"
-        r="1.5"
-        fill={blue}
-      />
-
-      <circle
-        cx="160"
-        cy="20"
-        r="5"
-        fill={
-          darkMode
-            ? "rgba(0,229,255,0.15)"
-            : "rgba(29,78,216,0.13)"
-        }
-        stroke={blue}
-        strokeWidth="1"
-      />
-
-      <circle
-        cx="160"
-        cy="20"
-        r="2"
-        fill={blue}
-      />
-
-      <circle
-        cx="100"
-        cy="250"
-        r="3"
-        fill={
-          darkMode
-            ? "rgba(0,229,255,0.1)"
-            : "rgba(29,78,216,0.09)"
-        }
-        stroke={blue}
-        strokeWidth="1"
-      />
-
-      <circle
-        cx="220"
-        cy="250"
-        r="3"
-        fill={
-          darkMode
-            ? "rgba(0,229,255,0.1)"
-            : "rgba(29,78,216,0.09)"
-        }
-        stroke={blue}
-        strokeWidth="1"
-      />
-    </svg>
-  )
-}
 
 const IconArrowRight = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
@@ -1088,372 +794,6 @@ function SectionDivider({ title, action }: { title: string; action?: ReactNode }
   );
 }
 
-function CaseReviewPanel({ onClose }: { onClose: () => void }) {
-
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [noteText, setNoteText] = useState("");
-  const [notes, setNotes] = useState<Note[]>(initialNotes);
-  const [saved, setSaved] = useState(false);
-  const [smsSent, setSmsSent] = useState(false);
-  const [referred, setReferred] = useState(false);
-
-  const handleAddNote = () => {
-    const clean = noteText.trim();
-    if (!clean) return;
-
-    setNotes((prev) => [
-      {
-        id: Date.now(),
-        author: "شما",
-        role: "کارشناس پرونده",
-        text: clean,
-        time: "همین حالا",
-      },
-      ...prev,
-    ]);
-    setNoteText("");
-  };
-
-  const handleSave = () => {
-    setSaved(true);
-    window.setTimeout(() => setSaved(false), 1800);
-  };
-
-  return (
-    <div dir="rtl" className="fixed inset-0 z-[9999] min-h-screen overflow-y-auto overflow-x-hidden bg-[#070b14] text-slate-200" role="dialog" aria-modal="true">
-      <style jsx global>{`
-        @keyframes urg-pulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,.18); }
-          50% { box-shadow: 0 0 0 7px rgba(239,68,68,0); }
-        }
-        .urg-pulse { animation: urg-pulse 2s infinite; }
-      `}</style>
-
-      {/* Mobile backdrop */}
-      {sidebarOpen && (
-        <button
-          type="button"
-          aria-label="بستن منو"
-          onClick={() => setSidebarOpen(false)}
-          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside
-        className={[
-          "fixed z-50 top-0 right-0 h-screen w-[250px] sm:w-[270px] lg:w-[220px]",
-          "bg-[#0b1120] border-l border-white/[0.07] flex flex-col transition-transform duration-300",
-          sidebarOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0",
-        ].join(" ")}
-      >
-        <div className="h-16 px-5 flex items-center justify-between border-b border-white/[0.07]">
-          <div>
-            <div className="font-black text-white text-base">پاراهور</div>
-            <div className="text-[10px] text-slate-500 mt-0.5">مرکز مدیریت پرونده‌ها</div>
-          </div>
-          <button
-            type="button"
-            onClick={() => setSidebarOpen(false)}
-            className="lg:hidden p-2 rounded-lg hover:bg-white/[0.06]"
-            aria-label="بستن"
-          >
-            ×
-          </button>
-        </div>
-
-        <nav className="p-3 space-y-1">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.label}
-                type="button"
-                onClick={() => setSidebarOpen(false)}
-                className={[
-                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition",
-                  item.active
-                    ? "bg-cyan-400/10 text-cyan-300 border border-cyan-400/10"
-                    : "text-slate-400 hover:text-white hover:bg-white/[0.05]",
-                ].join(" ")}
-              >
-                <Icon />
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-        </nav>
-
-        <div className="mt-auto p-3 border-t border-white/[0.07]">
-          <div className="flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.03]">
-            <div className="w-9 h-9 rounded-full bg-cyan-400/10 text-cyan-300 flex items-center justify-center">
-              <IconAdmin />
-            </div>
-            <div className="min-w-0">
-              <div className="text-sm text-white font-semibold truncate">کارشناس پرونده</div>
-              <div className="text-[11px] text-slate-500">سطح دسترسی: تحلیلگر</div>
-            </div>
-          </div>
-          <button
-            type="button"
-            className="mt-2 w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-500 hover:text-red-300 hover:bg-red-500/5 transition"
-          >
-            <IconLogout />
-            خروج
-          </button>
-        </div>
-      </aside>
-
-      {/* Main shell */}
-      <div className="lg:mr-[220px] min-h-screen">
-        {/* Header */}
-        <header className="sticky top-0 z-30 h-auto min-h-16 bg-[#070b14]/90 backdrop-blur-xl border-b border-white/[0.07]">
-          <div className="px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.07] text-slate-300"
-              aria-label="باز کردن منو"
-            >
-              <IconMenu />
-            </button>
-
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2 text-xs text-slate-500">
-                <span>پرونده‌ها</span>
-                <span>/</span>
-                <span className="text-slate-300">PRH-902</span>
-              </div>
-              <div className="mt-1 text-sm sm:text-base font-bold text-white truncate">
-                بررسی پرونده PRH-902
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleSave}
-                className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-white/[0.08] bg-white/[0.04] text-xs sm:text-sm text-slate-200 hover:bg-white/[0.07] transition"
-              >
-                {saved ? <IconCheck /> : <IconSave />}
-                <span>{saved ? "ذخیره شد" : "ذخیره"}</span>
-              </button>
-              <button
-                type="button"
-                onClick={onClose}
-                className="hidden sm:inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-cyan-400/20 bg-cyan-400/10 text-cyan-300 text-xs sm:text-sm hover:bg-cyan-400/15 transition"
-              >
-                <IconArrowRight />
-                بازگشت
-              </button>
-            </div>
-          </div>
-        </header>
-
-        <main className="p-4 sm:p-6 lg:p-8 max-w-[1500px] mx-auto">
-          {/* Top status row */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xl sm:text-2xl font-black text-white">پرونده PRH-902</span>
-                <span className="text-[11px] px-2 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-300">
-                  نیازمند بررسی فوری
-                </span>
-              </div>
-              <p className="mt-2 text-xs sm:text-sm text-slate-500">
-                آخرین بروزرسانی: امروز، ۱۰:۳۸
-              </p>
-            </div>
-
-            <p className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border bg-red-500/15 text-red-300 border-red-500/30 text-sm font-bold whitespace-nowrap">
-                <span className="w-2 h-2 rounded-full bg-current" />
-                فوری
-              </p>
-            </div>
-
-          {/* Responsive content */}
-          <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1.65fr)_minmax(300px,.9fr)] gap-5 lg:gap-6">
-            <div className="space-y-5 min-w-0">
-              {/* Case information */}
-              <section className="rounded-2xl border border-white/[0.07] bg-[#0b1120] overflow-hidden">
-                <div className="p-4 sm:p-5 border-b border-white/[0.07] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <SectionDivider title="اطلاعات پرونده" />
-                  <span className="inline-flex items-center gap-1.5 text-[11px] text-slate-500">
-                    <IconLock /> اطلاعات محرمانه
-                  </span>
-                </div>
-
-                <div className="p-4 sm:p-5">
-                  <FieldRow label="شناسه پرونده" value={<span className="font-mono text-cyan-300">PRH-902</span>} copyable="PRH-902" />
-                  <FieldRow label="عنوان" value="گزارش تراکنش مشکوک و کلاهبرداری اینترنتی" />
-                  <FieldRow label="دسته‌بندی" value="کلاهبرداری مالی / انتقال وجه" />
-                  <FieldRow label="اولویت" value={<span className="text-red-300 font-semibold">فوری</span>} />
-                  <FieldRow label="تاریخ ثبت" value="۱۴۰۵/۰۶/۱۹ - ۰۹:۲۱" />
-                  <FieldRow label="مسئول پرونده" value="سامان رضایی" />
-                </div>
-              </section>
-
-              {/* Quick actions */}
-              <section className="rounded-2xl border border-white/[0.07] bg-[#0b1120] p-4 sm:p-5">
-                <SectionDivider title="اقدامات سریع" />
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setSmsSent(true)}
-                    className="min-h-20 p-4 rounded-xl border border-white/[0.07] bg-white/[0.025] hover:bg-white/[0.05] text-right transition"
-                  >
-                    <div className="flex items-center gap-2 text-cyan-300 text-sm font-bold">
-                      <IconSms /> {smsSent ? "پیام ارسال شد" : "ارسال پیامک"}
-                    </div>
-                    <div className="text-[11px] text-slate-500 mt-2">اطلاع‌رسانی به گزارش‌دهنده</div>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setReferred(true)}
-                    className="min-h-20 p-4 rounded-xl border border-white/[0.07] bg-white/[0.025] hover:bg-white/[0.05] text-right transition"
-                  >
-                    <div className="flex items-center gap-2 text-violet-300 text-sm font-bold">
-                      <IconForward /> {referred ? "ارجاع شد" : "ارجاع پرونده"}
-                    </div>
-                    <div className="text-[11px] text-slate-500 mt-2">ارسال به کارشناس دیگر</div>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => window.print()}
-                    className="min-h-20 p-4 rounded-xl border border-white/[0.07] bg-white/[0.025] hover:bg-white/[0.05] text-right transition sm:col-span-2 lg:col-span-1"
-                  >
-                    <div className="flex items-center gap-2 text-amber-300 text-sm font-bold">
-                      <IconSave /> چاپ / خروجی
-                    </div>
-                    <div className="text-[11px] text-slate-500 mt-2">تهیه نسخه قابل ارائه</div>
-                  </button>
-                </div>
-              </section>
-
-              {/* Notes */}
-              <section className="rounded-2xl border border-white/[0.07] bg-[#0b1120] p-4 sm:p-5">
-                <SectionDivider
-                  title="یادداشت‌های داخلی"
-                  action={<span className="text-[11px] text-slate-500">{notes.length} یادداشت</span>}
-                />
-
-                <div className="space-y-3">
-                  {notes.map((note) => (
-                    <div key={note.id} className="rounded-xl border border-white/[0.06] bg-white/[0.025] p-4">
-                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
-                        <div>
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-sm font-bold text-white">{note.author}</span>
-                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.05] text-slate-500">{note.role}</span>
-                          </div>
-                          <p className="mt-2 text-xs sm:text-sm leading-7 text-slate-300">{note.text}</p>
-                        </div>
-                        <span className="shrink-0 text-[10px] text-slate-600">{note.time}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-4 rounded-xl border border-white/[0.07] bg-[#080d18] p-3">
-                  <textarea
-                    value={noteText}
-                    onChange={(e) => setNoteText(e.target.value)}
-                    placeholder="یادداشت داخلی جدید..."
-                    rows={4}
-                    className="w-full resize-none bg-transparent outline-none text-sm leading-7 text-slate-200 placeholder:text-slate-600"
-                  />
-                  <div className="mt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
-                    <span className="text-[10px] text-slate-600">این یادداشت برای کاربران عمومی نمایش داده نمی‌شود.</span>
-                    <button
-                      type="button"
-                      onClick={handleAddNote}
-                      className="inline-flex justify-center items-center gap-2 px-4 py-2 rounded-xl bg-cyan-400 text-slate-950 text-xs font-black hover:bg-cyan-300 transition"
-                    >
-                      <IconPlus /> افزودن یادداشت
-                    </button>
-                  </div>
-                </div>
-              </section>
-            </div>
-
-            {/* Side column */}
-            <div className="space-y-5 min-w-0">
-              <section className="rounded-2xl border border-red-500/15 bg-[#0b1120] p-4 sm:p-5">
-                <SectionDivider title="خلاصه هوشمند پرونده" />
-                <div className="rounded-xl bg-red-500/[0.06] border border-red-500/10 p-4">
-                  <div className="flex items-center gap-2 text-red-300 text-sm font-bold">
-                    <IconBot /> تحلیل هوش مصنوعی
-                  </div>
-                  <p className="mt-3 text-xs sm:text-sm leading-7 text-slate-300">
-                    شواهد فعلی با الگوی چند پرونده مشابه هم‌خوانی دارد. چند تراکنش با فاصله زمانی کوتاه
-                    و مبالغ غیرمعمول شناسایی شده است و بررسی زنجیره انتقال وجه پیشنهاد می‌شود.
-                  </p>
-                </div>
-              </section>
-
-              <section className="rounded-2xl border border-white/[0.07] bg-[#0b1120] p-4 sm:p-5">
-                <SectionDivider title="تراکنش‌های مشکوک" action={<span className="text-red-300 text-xs font-bold">۳ مورد</span>} />
-                <div className="space-y-2">
-                  {[
-                    ["۱۸۵,۰۰۰,۰۰۰ تومان", "امروز، ۰۹:۴۴", "مشکوک"],
-                    ["۷۵,۰۰۰,۰۰۰ تومان", "امروز، ۰۹:۲۷", "مشکوک"],
-                    ["۱۱۰,۰۰۰,۰۰۰ تومان", "دیروز، ۱۸:۰۵", "نیازمند بررسی"],
-                  ].map(([amount, time, label]) => (
-                    <div key={`${amount}-${time}`} className="p-3 rounded-xl bg-white/[0.025] border border-white/[0.06]">
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="text-sm font-bold text-white">{amount}</span>
-                        <span className="text-[10px] text-red-300">{label}</span>
-                      </div>
-                      <div className="mt-1 text-[10px] text-slate-600">{time}</div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              <section className="rounded-2xl border border-white/[0.07] bg-[#0b1120] p-4 sm:p-5">
-                <SectionDivider title="مسیر پرونده" />
-                <div className="relative pr-5">
-                  <div className="absolute right-[7px] top-2 bottom-2 w-px bg-white/[0.08]" />
-                  {[
-                    ["ثبت گزارش", "امروز، ۰۹:۲۱", true],
-                    ["تأیید اولیه", "امروز، ۰۹:۴۶", true],
-                    ["ارجاع به تحلیلگر", "امروز، ۱۰:۰۲", true],
-                    ["بررسی تکمیلی", "در حال انجام", false],
-                  ].map(([title, time, done], index) => (
-                    <div key={index} className="relative flex items-start gap-3 pb-5 last:pb-0">
-                      <span
-                        className={`relative z-10 mt-1.5 w-3.5 h-3.5 rounded-full border-2 ${
-                          done ? "bg-cyan-400 border-cyan-400" : "bg-[#0b1120] border-amber-400"
-                        }`}
-                      />
-                      <div>
-                        <div className="text-xs font-bold text-white">{title}</div>
-                        <div className="mt-1 text-[10px] text-slate-600">{time}</div>
-                      </div>
-                      {index < 3 && <span className="absolute right-[2px] top-5 text-[10px] text-cyan-400">✓</span>}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            </div>
-          </div>
-        </main>
-      </div>
-
-      {/* Persistent return control: desktop bottom-left, mobile full-width-ish bottom-left */}
-      <button
-        type="button"
-        onClick={onClose}
-        className="fixed left-3 right-3 sm:left-6 sm:right-auto bottom-3 sm:bottom-6 z-[60] inline-flex justify-center items-center gap-2 px-4 py-3 rounded-2xl bg-cyan-400 text-slate-950 font-black text-xs sm:text-sm shadow-[0_12px_35px_rgba(0,0,0,.35)] hover:bg-cyan-300 hover:-translate-y-0.5 transition"
-      >
-        <IconArrowRight />
-        بازگشت به صفحه گزارش
-      </button>
-    </div>
-  );
-}
 
 
 
@@ -1548,10 +888,10 @@ function resolveImage(featuredImage: string | undefined, mediaItems: any[]) {
 }
 
 const REPORT_CARD_DARK =
-  "bg-cyan-800/10 border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]";
+  "bg-cyan-800/10 border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)] bg-cyan-900/10 hover:bg-cyan-800/15 bg-cyan-800/10" ;
 
 const REPORT_CARD_LIGHT =
-  "bg-white border-[rgba(29,78,216,0.20)] shadow-[0_4px_20px_rgba(15,23,42,0.06)] hover:border-[rgba(29,78,216,0.52)] hover:bg-[rgba(237,242,255,0.52)] hover:shadow-[0_16px_40px_rgba(30,58,138,0.22)] hover:-translate-y-1";
+  "bg-white border-[rgba(29,78,216,0.20)] shadow-[0_4px_20px_rgba(15,23,42,0.06)] hover:border-[#1565C0] hover:bg-[rgba(237,242,255,0.52)] hover:shadow-[0_10px_9px_rgba(30,58,138,0.22)]";
 
 
 export type HomePageInitialData = {
@@ -1606,8 +946,8 @@ export default function HomePageClient({
     }
   }, [darkMode])
 
-  const iconColor = darkMode ? "#00E5FF" : "#1D4ED8"
-  const accent = darkMode ? "#00E5FF" : "#1D4ED8" 
+  const iconColor = darkMode ? "#00E5FF" : "#1565C0"
+  const accent = darkMode ? "#00E5FF" : "#1565C0" 
 
 
 
@@ -1735,11 +1075,6 @@ export default function HomePageClient({
       }`}
       style={{
         fontFamily: "var(--font-vazirmatn), sans-serif",
-        backgroundImage: darkMode
-          ? "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"
-          : "linear-gradient(rgba(30,58,138,0.045) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,138,0.045) 1px,transparent 1px)",
-        backgroundSize: "52px 52px",
-      backgroundAttachment: "fixed"
       }}
     >
       {menuOpen && (
@@ -1791,23 +1126,6 @@ export default function HomePageClient({
           }}
         />
 
-        <div
-          className="absolute opacity-30 pointer-events-none hidden lg:block"
-          style={{ top: "5%", left: "5%" }}
-        >
-          <NetworkDecor darkMode={darkMode} />
-        </div>
-
-        <div
-          className="absolute opacity-20 pointer-events-none hidden lg:block"
-          style={{
-            top: "10%",
-            right: "5%",
-            transform: "scaleX(-1)",
-          }}
-        >
-          <NetworkDecor darkMode={darkMode} />
-        </div>
 
         <div className="relative z-10 w-[90%] max-w-4xl mx-auto">
 
@@ -1818,10 +1136,10 @@ export default function HomePageClient({
                         style={{
               background: darkMode
                 ? "rgba(0,229,255,0.07)"
-                : "rgba(30,58,138,0.07)",
+                : "#EBF3FF",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.2)"
-                : "1px solid rgba(30,58,138,0.20)",
+                : "none",
               
             }}
           >
@@ -1829,14 +1147,14 @@ export default function HomePageClient({
             <span 
             className="data-label"
             style={{
-              color: darkMode ? "#00E5FF" : "#102254ce",
+              color: darkMode ? "#00E5FF" : "#1565C0",
             }}
             >PARAHOOR // SYSTEM ONLINE</span>
 
                         <span className="node-dot pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
                     background: darkMode
                 ? "#00E5FF"
-                : "rgba(13, 34, 93, 0.78)",
+                : "#1565C0",
 
              }}
             
@@ -1879,12 +1197,11 @@ export default function HomePageClient({
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center w-[80%] mx-auto">
-            <Link
+            <button
               onClick={() => setCrisisOpen(true)}
-              href="mailto:secure@parahoor.io"
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold transition-all duration-300"
               style={{
-                background: darkMode ? "#EF4444" : "#1E3A8A",
+                background: darkMode ? "#EF4444" : "#1565C0",
                 color: "#ffffff",
                 border: darkMode
                   ? "1px solid rgba(239,68,68,0.6)"
@@ -1898,10 +1215,12 @@ export default function HomePageClient({
                   ? "0 0 22px rgba(239,68,68,0.55)"
                   : "0 12px 30px rgba(29,78,216,0.32)"
 
-                if (!darkMode) {
-                  e.currentTarget.style.background = "#153178"
-                  e.currentTarget.style.borderColor = "#153178"
+                    if (!darkMode) {
+                  e.currentTarget.style.background = "#0D47A1"
+                  e.currentTarget.style.borderColor =
+                    "#0D47A1"
                 }
+
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.boxShadow = darkMode
@@ -1909,14 +1228,14 @@ export default function HomePageClient({
                   : "0 8px 22px rgba(30,58,138,0.22)"
 
                 if (!darkMode) {
-                  e.currentTarget.style.background = "#1E3A8A"
+                  e.currentTarget.style.background = "#1565C0"
                   e.currentTarget.style.borderColor =
-                    "rgba(30,58,138,0.6)"
+                    "#1565C0"
                 }
               }}
             >
               گزارش فوری حادثه
-            </Link>
+            </button>
 
             <Link
               href="/services"
@@ -1925,7 +1244,7 @@ export default function HomePageClient({
                 background: darkMode
                   ? "rgba(0,229,255,0.07)"
                   : "transparent",
-                color: darkMode ? "#00E5FF" : "#1D4ED8",
+                color: darkMode ? "#00E5FF" : "#1565C0",
                 border: darkMode
                   ? "1px solid rgba(0,229,255,0.25)"
                   : "1px solid rgba(30,58,138,0.45)",
@@ -1935,8 +1254,8 @@ export default function HomePageClient({
               }}
               onMouseEnter={(e) => {
                 if (!darkMode) {
-                  e.currentTarget.style.borderColor = "#142a65"
-                  e.currentTarget.style.background = "#142a65"
+                  e.currentTarget.style.borderColor = "#0D47A1"
+                  e.currentTarget.style.background = "#0D47A1"
                   e.currentTarget.style.color = "#FFFFFF"
                   e.currentTarget.style.boxShadow =
                     "0 12px 30px rgba(30,58,138,0.20)"
@@ -1947,6 +1266,7 @@ export default function HomePageClient({
                     "rgba(0,229,255,0.4)"
                 }
               }}
+              // "#1565C0"#0D47A1
               onMouseLeave={(e) => {
                 if (!darkMode) {
                   e.currentTarget.style.borderColor =
@@ -2001,7 +1321,12 @@ export default function HomePageClient({
           <div className="text-center mb-16">
 
                 
-<span className="data-label block mb-3">INVESTIGATION PIPELINE</span>
+<span 
+className="data-label block mb-3"
+style={{
+  ...(!darkMode && { color: "#1D4ED8" }),
+}}
+>INVESTIGATION PIPELINE</span>
             <h2
               className="font-bold"
               style={{
@@ -2017,10 +1342,10 @@ export default function HomePageClient({
             <div
               className="hidden md:block w-20 mt-4 flex-shrink-0 mx-auto"
               style={{
-                height: "1px",
+                height: "1.3px",
                 background: darkMode
                   ? "linear-gradient(to right, rgba(0,229,255,0.1), rgba(0,229,255,1), rgba(31,74,79,0.1))"
-                  : "linear-gradient(to right, rgba(30,58,138,0.08), rgba(30,58,138,1), rgba(30,58,138,0.08))",
+                  : "linear-gradient(to right, rgba(30,58,138,0.08), #1D4ED8, rgba(30,58,138,0.08))",
               }}
             />
           </div>
@@ -2050,42 +1375,39 @@ export default function HomePageClient({
                 <div
                   className={`glass-card w-full max-w-[310px] md:max-w-none md:flex-1 h-[310px] max-w-[300px] flex flex-col  justify-center items-center p-6 md:p-8 text-center group transition-all duration-300 rounded-2xl ${
                     darkMode
-                      ? "border border-cyan-500/30 hover:border-cyan-500 bg-cyan-900/10 hover:bg-cyan-800/15"
+                      ? "border border-cyan-500/30 hover:border-cyan-500 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-800/15 "
                       : ""
                   }`}
-                  style={
-                    darkMode
-                      ? undefined
-                      : {
-                          border:
-                            "1px solid rgba(29,78,216,0.20)",
-                          background: "#FFFFFF",
-                          boxShadow:
-                            "0 4px 20px rgba(15,23,42,0.06)",
-                          transition:
-                            "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
-                        }
-                  }
+                 style={
+        darkMode 
+        ? { backdropFilter: "blur(10px)" } 
+        : {
+            border: "1px solid rgba(121, 154, 245, 0.82)",
+            background: "#FFFFFF",
+            boxShadow: "0 4px 20px rgba(15,23,42,0.06)",
+            transition: "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
+            backdropFilter: "blur(10px)",
+        }
+}
                   onMouseEnter={(e) => {
                     if (!darkMode) {
                       e.currentTarget.style.borderColor =
-                        "rgba(29,78,216,0.52)"
+                        "#2270ca"
                       e.currentTarget.style.background =
-                        "rgba(237,242,255,0.52)"
+                        "rgba(247, 249, 255, 0.17)"
                       e.currentTarget.style.boxShadow =
-                        "0 16px 40px rgba(30,58,138,0.20)"
-                      e.currentTarget.style.transform =
-                        "translateY(-4px)"
+                        "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
+
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!darkMode) {
                       e.currentTarget.style.borderColor =
-                        "rgba(29,78,216,0.20)"
+                        "rgba(91, 133, 248, 0.58)"
                       e.currentTarget.style.background = "#FFFFFF"
                       e.currentTarget.style.boxShadow =
-                        "0 4px 20px rgba(15,23,42,0.06)"
-                      e.currentTarget.style.transform = "none"
+                        "0 4px 15px rgba(15,23,42,0.06)"
+
                     }
                   }}
                 >
@@ -2095,14 +1417,16 @@ export default function HomePageClient({
                       style={{
                         background: darkMode
                           ? "rgba(0,229,255,0.08)"
-                          : "rgba(30,58,138,0.04)",
+                          : "rgba(11, 68, 225, 0.04)",
                         border: darkMode
                           ? "1px solid rgba(0,229,255,0.25)"
-                          : "1px solid rgba(30,58,138,0.18)",
+                          : "1px solid #1565c0ad",
                         boxShadow: darkMode
                           ? undefined
                           : "0 4px 18px rgba(30,58,138,0.06)",
                       }}
+
+
                     >
                       {step.icon}
                     </div>
@@ -2114,7 +1438,7 @@ export default function HomePageClient({
                       
                       darkMode
                         ? {color: "#13a0af"}
-                        : { color: "rgba(30,58,138,0.72)" }
+                        : { color: "#1565C0" }
                     }
                   >
                     {step.step}
@@ -2124,10 +1448,10 @@ export default function HomePageClient({
                     className={`font-bold text-base mb-2 transition-colors duration-300 ${
                       darkMode
                         ? ""
-                        : "text-[#111827] group-hover:text-[#1E3A8A]"
+                        : "text-[#111827] group-hover:text-[#1565C0]"
                     }`}
                     style={{
-                      color: darkMode ? "#ffffff" : undefined,
+                      color: darkMode ? "#ffffff" : "#1565C0",
                     }}
                   >
                     {step.title}
@@ -2189,7 +1513,12 @@ export default function HomePageClient({
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
 
-<span className="data-label block mb-3">SPECIALIZATION DOMAINS</span>
+<span 
+className="data-label block mb-3"
+style={{
+  ...(!darkMode && { color: "#1565C0" }),
+}}
+>SPECIALIZATION DOMAINS</span>
             
             <h2
               className="font-bold"
@@ -2209,7 +1538,7 @@ export default function HomePageClient({
                 height: "1px",
                 background: darkMode
                   ? "linear-gradient(to right, rgba(0,229,255,0.1), rgba(0,229,255,1), rgba(31,74,79,0.1))"
-                  : "linear-gradient(to right, rgba(30,58,138,0.08), rgba(30,58,138,1), rgba(30,58,138,0.08))",
+                  : "linear-gradient(to right, rgba(30,58,138,0.08), #1565C0, rgba(30,58,138,0.08))",
               }}
             />
           </div>
@@ -2249,43 +1578,43 @@ export default function HomePageClient({
                 key={index}
                 className={`glass-card p-7 group cursor-default rounded-2xl transition-all duration-300 ${
                   darkMode
-                    ? "border border-cyan-500/30 hover:border-cyan-500 bg-cyan-900/10 hover:bg-cyan-800/15"
+                    ? "border border-cyan-500/30 hover:border-cyan-500 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-800/15"
                     : ""
                 }`}
                 style={
                   darkMode
-                    ? undefined
+                    ? {backdropFilter: "blur(10px)"}
                     : {
                         border:
-                          "1px solid rgba(29,78,216,0.20)",
+                          "1px solid #76a7de",
                         background: "#FFFFFF",
                         boxShadow:
                           "0 4px 20px rgba(15,23,42,0.06)",
                         transition:
                           "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
+                          backdropFilter: "blur(10px)"
                       }
                 }
                 onMouseEnter={(e) => {
                   if (!darkMode) {
                     e.currentTarget.style.borderColor =
-                      "rgba(29,78,216,0.52)"
+                      "#1565C0"
                     e.currentTarget.style.background =
-                      "rgba(237,242,255,0.52)"
+                      "rgba(244, 247, 255, 0.39)"
                     e.currentTarget.style.boxShadow =
-                      "0 16px 40px rgba(30,58,138,0.20)"
-                    e.currentTarget.style.transform =
-                      "translateY(-4px)"
+                      "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
+
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!darkMode) {
                     e.currentTarget.style.borderColor =
-                      "rgba(29,78,216,0.20)"
+                      "#76a7de"
                     e.currentTarget.style.background =
                       "#FFFFFF"
                     e.currentTarget.style.boxShadow =
                       "0 4px 20px rgba(15,23,42,0.06)"
-                    e.currentTarget.style.transform = "none"
+
                   }
                 }}
               >
@@ -2310,7 +1639,7 @@ export default function HomePageClient({
                       style={
                         darkMode
                           ? undefined
-                          : { color: "rgba(30,58,138,0.72)" }
+                          : { color: "#1565C0" }
                       }
                     >
                       {service.label}
@@ -2320,10 +1649,10 @@ export default function HomePageClient({
                       className={`font-bold mb-2 transition-colors duration-300 ${
                         darkMode
                           ? ""
-                          : "text-[#111827] group-hover:text-[#1E3A8A]"
+                          : "text-[#111827] group-hover:text-[#1565C0]"
                       }`}
                       style={{
-                        color: darkMode ? "#ffffff" : undefined,
+                        color: darkMode ? "#ffffff" : "#1565C0",
                         fontSize: "1rem",
                       }}
                     >
@@ -2362,7 +1691,7 @@ export default function HomePageClient({
                       borderRadius: "50%",
                       background: darkMode
                         ? "#00E5FF"
-                        : "#1D4ED8",
+                        : "#1565C0",
                       display: "inline-block",
                     }}
                   />
@@ -2371,7 +1700,7 @@ export default function HomePageClient({
                     style={{
                       color: darkMode
                         ? "rgba(0,229,255,0.6)"
-                        : "#475569",
+                        : "#1565C0",
                       fontSize: "0.72rem",
                       fontFamily: "monospace",
                     }}
@@ -2390,17 +1719,18 @@ export default function HomePageClient({
         className="py-20 px-6 md:px-12"
         style={{
           backgroundColor: darkMode ? "#0A1128" : "#FFFFFF",
-          backgroundImage: darkMode
-            ? "radial-gradient(ellipse 65% 60% at 50% 30%, rgba(0,229,255,0.05) 0%, transparent 70%), linear-gradient(rgba(35, 174, 190, 0.03) 1px,transparent 1px), linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"
-            : "radial-gradient(ellipse 65% 60% at 50% 30%, rgba(84, 128, 215, 0.1) 0%, transparent 70%), linear-gradient(rgba(30, 59, 138, 0.02) 1px,transparent 1px), linear-gradient(90deg,rgba(30, 59, 138, 0.02) 1px,transparent 1px)",
-          backgroundSize: "100% 100%, 52px 52px, 52px 52px",
+
           ...(darkMode
             ? {}
             : {
-                borderTop: "1px solid rgba(15,23,42,0.07)",
-                borderBottom: "1px solid rgba(15,23,42,0.07)",
-                boxShadow: "0 10px 35px rgba(30,58,138,0.05)",
-              }),
+                background:
+                  "linear-gradient(180deg, rgba(248,250,252,0.92), rgba(248,250,252,0.5))",
+                borderTop:
+                  "1px solid rgba(15,23,42,0.07)",
+                borderBottom:
+                  "1px solid rgba(15,23,42,0.07)",
+              }
+          ),
         }}
         initial={{ opacity: 0, y: 60 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -2411,7 +1741,12 @@ export default function HomePageClient({
           <div className="text-center mb-12">
 
                 
-<span className="data-label block mb-3">FORENSIC RADAR</span>
+        <span 
+        className="data-label block mb-3"
+        style={{
+  ...(!darkMode && { color: "#1565C0" }),
+}}
+        >FORENSIC RADAR</span>
             <h2
               className="text-2xl md:text-3xl font-black"
               style={{
@@ -2426,10 +1761,10 @@ export default function HomePageClient({
             <div
               className="hidden md:block w-20 mt-4 flex-shrink-0 mx-auto"
               style={{
-                height: "1px",
+                height: "1.3px",
                 background: darkMode
                   ? "linear-gradient(to right, rgba(0,229,255,0.1), rgba(0,229,255,1), rgba(31,74,79,0.1))"
-                  : "linear-gradient(to right, rgba(30,58,138,0.08), rgba(30,58,138,1), rgba(30,58,138,0.08))",
+                  : "linear-gradient(to right, rgba(30,58,138,0.08), #1565C0, rgba(30,58,138,0.08))",
               }}
             />
           </div>
@@ -2454,12 +1789,17 @@ export default function HomePageClient({
                     : ""
 
                   return (
-                    <article
-                      key={post._id || i}
-                      className={`group flex h-full min-w-0 flex-col border rounded-2xl overflow-hidden transition-all duration-200 ${
-                        darkMode ? REPORT_CARD_DARK : REPORT_CARD_LIGHT
-                      }`}
-                    >
+                     <article
+                       key={post._id || i}
+                       className={`group flex flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
+                         darkMode
+                           ? "bg-[rgba(255,255,255,0.028)] border border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
+                           : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"
+                       }`}
+                       style={{
+                         backdropFilter: "blur(10px)",
+                       }}
+                     >
                       {/* Thumbnail */}
                       <div
                         className={`relative aspect-video overflow-hidden flex-shrink-0 ${
@@ -2514,7 +1854,7 @@ export default function HomePageClient({
                           className={`text-base font-bold leading-snug mb-3 break-words line-clamp-2 ${
                             darkMode
                               ? "text-[#E6F7FF]"
-                              : "text-[#111827] group-hover:text-[#1E3A8A] transition-colors duration-300"
+                              : "text-[#111827] group-hover:text-[#1565C0] transition-colors duration-300"
                           }`}
                         >
                           {post.title}
@@ -2571,9 +1911,9 @@ export default function HomePageClient({
                           </div>
 
                           <Link
-href={`/blogs/${post.slug}`}
+                         href={`/blogs/${post.slug}`}
                             className={`flex items-center gap-1 text-xs font-semibold whitespace-nowrap hover:gap-1.5 transition-all flex-shrink-0 ${
-                              darkMode ? "text-[#00E5FF]" : "text-[#1E3A8A]"
+                              darkMode ? "text-[#00E5FF]" : "text-[#1565C0]"
                             }`}
                           >
                             بررسی گزارش
