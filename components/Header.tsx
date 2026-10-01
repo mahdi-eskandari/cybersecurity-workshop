@@ -39,11 +39,11 @@ const IconSun = () => (
 );
 
 const NAV_ITEMS = [
+  { pageKey: "home", label: "پاراهور", href: "/"  },
   { pageKey: "services", label: "خدمات ما" },
   { pageKey: "blogs", label: "وبلاگ" },
   { pageKey: "about", label: "درباره ما" },
   { pageKey: "contact", label: "تماس با ما" },
-  { pageKey: "home", label: "پاراهور", href: "/"  },
 ] as const;
 
 const DEFAULT_SLUGS: Record<string, string> = {
@@ -111,16 +111,17 @@ const navItems = NAV_ITEMS.map((item) => ({
 
   return (
     <div className="min-h-full cyber-grid-bg text-gray-600 dark:text-[#]">
-      <nav
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-3 py-2.5 sm:px-6 md:px-12 md:py-4 backdrop-blur-md border-b border-cyan-500/10 dark:bg-[#050a19cc]"
-        style={{
-          backgroundColor: darkMode ? "#050a19cc" : "#ffffffbd",
-          backdropFilter: "blur(16px)",
-          borderBottom: darkMode
-            ? "1px solid rgba(0, 229, 255, 0.1)"
-            : "1px solid rgba(96, 165, 250, 0.28)",
-        }}
-      >
+  <nav
+    className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-cyan-500/10 dark:bg-[#050a19cc]"
+    style={{
+      backgroundColor: darkMode ? "#050a19cc" : "#ffffffbd",
+      backdropFilter: "blur(16px)",
+      borderBottom: darkMode
+        ? "1px solid rgba(0, 229, 255, 0.1)"
+        : "1px solid rgba(96, 165, 250, 0.28)",
+    }}
+  >
+    <div className="max-w-6xl mx-auto flex items-center justify-between px-3 py-2.5 sm:px-6 md:px-12 md:py-4">
         {/* سمت راست: همبرگر منو در موبایل + لوگو و برند */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <button
@@ -232,12 +233,13 @@ const navItems = NAV_ITEMS.map((item) => ({
     // onClick={() => setCrisisOpen(true)}
     className="hidden md:flex items-center gap-2 px-4 py-2 bg-[#C62828] text-white text-sm font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors cursor-pointer"
   >
-    <AlertTriangle className="w-3.5 h-3.5" />
-    SOS — پاسخ اضطراری
+
+    تماس اورژانسی
   </Link>
 </div>
 
           
+        </div>
         </div>
       </nav>
 
@@ -305,3 +307,9 @@ const navItems = NAV_ITEMS.map((item) => ({
     </div>
   );
 }
+
+
+
+
+
+

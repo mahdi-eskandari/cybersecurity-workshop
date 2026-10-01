@@ -387,7 +387,7 @@ const isDark = darkMode;
             style={{
               color: darkMode ? "#00E5FF" : "#1565C0",
             }}
-            >SECURE COMMUNICATION // END-TO-END ENCRYPTED</span>
+            >SECURE CHANNEL // ENCRYPTED</span>
 
                         <span className="node-dot pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
                     background: darkMode

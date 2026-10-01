@@ -2064,6 +2064,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTheme } from "@/components/ThemeProvider";
 import { useRouter } from "next/navigation";
+import {OtpModal} from "../components/otpModal";
 
 /* ────────────────────────────────
    ICONS
@@ -2223,13 +2224,13 @@ type Chip = {
 };
 
 const chips: Chip[] = [
-  { id: "darkweb-threat-intelligence", label: "پایش دارک‌وب و هوش تهدیدات", icon: <IconHack /> },
-  { id: "post-crisis-pentest", label: "تست نفوذِ پسا-بحران", icon: <IconHack /> },
-  { id: "ransomware-negotiation", label: "مقابله و مذاکره با باج‌افزارها", icon: <IconExtort /> },
-  { id: "digital-forensics", label: "فارنزیک و کالبدشکافی دیجیتال", icon: <IconHack /> },
-  { id: "crypto-blockchain-tracing", label: "ردیابی رمزارز و تحلیل بلاک‌چین", icon: <IconCrypto /> },
-  { id: "hidden-identity", label: "هویت‌سنجی پنهان", icon: <IconShieldCheck darkMode={false} /> },
   { id: "consulting", label: "مشاوره", icon: <IconShieldCheck darkMode={false} /> },
+  { id: "crypto-blockchain-tracing", label: "ردیابی رمزارز", icon: <IconCrypto /> },
+  { id: "hidden-identity", label: " کشف هویت", icon: <IconShieldCheck darkMode={false} /> },
+  { id: "post-crisis-pentest", label: "تست نفوذ", icon: <IconHack /> },
+  { id: "digital-forensics", label: "کالبدشکافی دیجیتال", icon: <IconHack /> },
+  { id: "ransomware-negotiation", label: "مقابله با باج‌افزار", icon: <IconExtort /> },
+  { id: "threat-intelligence", label: "هوش تهدیدات", icon: <IconHack /> },
 ];
 
 /* ────────────────────────────────
@@ -2395,6 +2396,7 @@ export const EmergencyModal = ({
   const [submitError, setSubmitError] = useState("");
   const [focusDesc, setFocusDesc] = useState(false);
   const [focusContact, setFocusContact] = useState(false);
+const [otpOpen, setOtpOpen] = useState(false);
 
   const {
     register,
@@ -2448,8 +2450,16 @@ export const EmergencyModal = ({
     });
   }, [setValue]);
 
-  const onSubmit = async (data: CrisisReportFormValues) => {
-    setSubmitError("");
+
+const PREVIEW_OTP: boolean = true;
+
+const onSubmit = async (data: CrisisReportFormValues) => {
+  if (PREVIEW_OTP) {
+    setOtpOpen(true);
+    return;
+  }
+
+  setSubmitError("");
 
     try {
       const response = await fetch("/api/crisis-reports", {
@@ -2486,7 +2496,20 @@ export const EmergencyModal = ({
      FORM STATE
   ───────────────────────────────── */
 
+  {if (otpOpen) {
+    return (
+      <OtpModal
+        preview
+        phone="09121234567"
+        onClose={onClose}
+        onBack={() => setOtpOpen(false)}
+        onVerified={async () => {}}
+      />
+    );
+  }}
   return (
+
+    
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       style={{
@@ -2502,9 +2525,9 @@ export const EmergencyModal = ({
         onClose()
       }
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg">
         <div
-          className="relative w-full max-w-lg overflow-hidden"
+          className="relative w-full overflow-hidden"
           style={{
             background: darkMode
               ? "linear-gradient(160deg, rgba(10,17,42,0.99) 0%, rgba(6,11,28,0.99) 100%)"
@@ -2659,33 +2682,7 @@ export const EmergencyModal = ({
             </button>
           </div>
 
-          {/* ── TRUST MICROCOPY ── */}
-          <div
-            className="mx-6 mt-4 mb-1 px-4 py-3 rounded-xl flex items-start gap-3"
-            style={{
-              background: darkMode
-                ? "rgba(0,229,255,0.04)"
-                : "rgba(37,99,235,0.045)",
-              border: darkMode
-                ? "1px solid rgba(0,229,255,0.1)"
-                : "1px solid rgba(37,99,235,0.10)",
-            }}
-          >
-            <div className="flex-shrink-0 mt-0.5">
-              <IconShieldCheck darkMode={darkMode} />
-            </div>
 
-            <p
-              style={{
-                color: darkMode ? "#475569" : "#475569",
-                fontSize: "0.78rem",
-                lineHeight: 1.75,
-              }}
-            >
-              اطلاعات شما با بالاترین سطح رمزنگاری مستقیماً برای
-              کارآگاهان ارشد پاراهور ارسال می‌شود.
-            </p>
-          </div>
 
           {/* ── FORM BODY ── */}
           <div className="px-6 py-5 space-y-6">
@@ -2707,7 +2704,7 @@ export const EmergencyModal = ({
                 >
                   ۱.
                 </span>
-                نوع حادثه را مشخص کنید:
+                نوع خدمت را مشخص کنید
               </label>
 
               <input
@@ -2736,7 +2733,9 @@ export const EmergencyModal = ({
                           }
                         )
                       }
-                      className="w-full min-h-[52px] flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl font-medium text-[11px] leading-5 text-center transition-all"
+className={`w-full min-h-[52px] flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl font-medium text-[11px] leading-5 text-center transition-all ${
+  id === "consulting" ? "sm:col-span-2" : ""
+}`}
                       style={{
                         background: isActive
                           ? darkMode
@@ -3046,68 +3045,15 @@ export const EmergencyModal = ({
                 message={errors.contact?.message}
               />
 
-              <p
-                style={{
-                  color: darkMode ? "#65696e" : "#64748B",
-                  fontSize: "0.72rem",
-                  marginTop: 7,
-                  lineHeight: 1.6,
-                }}
-              >
-                اطلاعات تماس شما هرگز با اشخاص ثالث به اشتراک
-                گذاشته نمی‌شود.
-              </p>
+             
             </div>
 
-            {/* ── SECURITY NOTICE ── */}
-            <div className="flex items-center justify-between pt-1">
-              {/* reCAPTCHA badge */}
-              <div className="flex items-center gap-1.5">
-                <IconRecaptcha darkMode={darkMode} />
 
-                <span
-                  style={{
-                    color: darkMode ? "#3a4454" : "#64748B",
-                    fontSize: "0.70rem",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  محافظت شده توسط کپچای نامرئی
-                  <br />
-                  <span
-                    style={{
-                      color: darkMode ? "#3a4454" : "#64748B",
-                    }}
-                  >
-                    (Invisible reCAPTCHA)
-                  </span>
-                </span>
-              </div>
-
-              {/* End-to-end indicator */}
-              <div className="flex items-center gap-1.5">
-                <IconLock />
-
-                <span
-                  style={{
-                    color: darkMode ? "#3a4454" : "#64748B",
-                    fontSize: "0.70rem",
-                  }}
-                >
-                  رمزگذاری سرتاسری
-                </span>
-              </div>
-            </div>
           </div>
 
           {/* ── FOOTER / SUBMIT ── */}
           <div
-            className="px-6 pb-6 pt-2"
-            style={{
-              borderTop: darkMode
-                ? "1px solid rgba(255,255,255,0.04)"
-                : "1px solid rgba(37,99,235,0.08)",
-            }}
+            className="px-6 pb-6 mt-1"
           >
             <button
               type="submit"
@@ -3203,17 +3149,7 @@ export const EmergencyModal = ({
               </p>
             )}
 
-            {!submitError && (
-              <p
-                className="text-center mt-3"
-                style={{
-                  color: darkMode ? "#3a4454" : "#64748B",
-                  fontSize: "0.82rem",
-                }}
-              >
-                نوع حادثه و اطلاعات تماس الزامی است
-              </p>
-            )}
+            
           </div>
         </div>
       </form>

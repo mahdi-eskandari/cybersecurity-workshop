@@ -86,74 +86,152 @@ const TelegramIcon = ({ size = 16 }: { size?: number }) => (
 
 
 
-/* ─── FEATURED IMAGE SVG ─── */
-const HeroImage = () => (
-  <svg width="100%" height="100%" viewBox="0 0 1000 380" preserveAspectRatio="xMidYMid slice" style={{ display: "block" }}>
-    <defs>
-      <radialGradient id="hg1" cx="25%" cy="50%" r="55%">
-        <stop offset="0%" stopColor="rgba(0,229,255,0.1)" />
-        <stop offset="100%" stopColor="transparent" />
-      </radialGradient>
-      <radialGradient id="hg2" cx="75%" cy="40%" r="45%">
-        <stop offset="0%" stopColor="rgba(239,68,68,0.07)" />
-        <stop offset="100%" stopColor="transparent" />
-      </radialGradient>
-      <filter id="hblur"><feGaussianBlur stdDeviation="3" /></filter>
-    </defs>
-    <rect width="1000" height="380" fill="#050C1E" />
-    <rect width="1000" height="380" fill="url(#hg1)" />
-    <rect width="1000" height="380" fill="url(#hg2)" />
-    {/* Grid */}
-    {Array.from({ length: 14 }).map((_, i) => (
-      <line key={`h${i}`} x1="0" y1={i * 28} x2="1000" y2={i * 28} stroke="rgba(0,229,255,0.035)" strokeWidth="1" />
-    ))}
-    {Array.from({ length: 34 }).map((_, i) => (
-      <line key={`v${i}`} x1={i * 30} y1="0" x2={i * 30} y2="380" stroke="rgba(0,229,255,0.035)" strokeWidth="1" />
-    ))}
-    {/* Main chain path */}
-    <path d="M80 190 L200 140 L340 190 L480 120 L600 170 L740 110 L880 160 L960 140"
-      stroke="rgba(0,229,255,0.4)" strokeWidth="1.5" fill="none" filter="url(#hblur)" />
-    <path d="M80 190 L200 140 L340 190 L480 120 L600 170 L740 110 L880 160 L960 140"
-      stroke="rgba(0,229,255,0.2)" strokeWidth="1" fill="none" />
-    {/* Block nodes */}
-    {[
-      { x: 200, y: 140 }, { x: 340, y: 190 }, { x: 480, y: 120 },
-      { x: 600, y: 170 }, { x: 740, y: 110 }, { x: 880, y: 160 }
-    ].map((p, i) => (
-      <g key={i}>
-        <rect x={p.x - 20} y={p.y - 22} width="40" height="44" rx="4" fill="rgba(0,229,255,0.05)" stroke="rgba(0,229,255,0.3)" strokeWidth="1" />
-        <rect x={p.x - 12} y={p.y - 14} width="24" height="3" rx="1" fill="rgba(0,229,255,0.3)" />
-        <rect x={p.x - 12} y={p.y - 7} width="17" height="2.5" rx="1" fill="rgba(0,229,255,0.18)" />
-        <rect x={p.x - 12} y={p.y - 1} width="20" height="2.5" rx="1" fill="rgba(0,229,255,0.15)" />
-        <rect x={p.x - 12} y={p.y + 6} width="12" height="2" rx="1" fill="rgba(0,229,255,0.1)" />
-        <circle cx={p.x} cy={p.y - 22} r="3.5" fill="#00E5FF" opacity="0.7" />
-      </g>
-    ))}
-    {/* Alert node – the "caught" point */}
-    <circle cx="480" cy="120" r="22" fill="transparent" stroke="rgba(239,68,68,0.2)" strokeWidth="1" />
-    <circle cx="480" cy="120" r="14" fill="transparent" stroke="rgba(239,68,68,0.3)" strokeWidth="1" />
-    <circle cx="480" cy="120" r="5" fill="rgba(239,68,68,0.5)" stroke="rgba(239,68,68,0.8)" strokeWidth="1.5" />
-    {/* USDT labels */}
-    {[{ x: 200, y: 110 }, { x: 600, y: 140 }].map((p, i) => (
-      <g key={i}>
-        <rect x={p.x - 20} y={p.y - 10} width="40" height="14" rx="3" fill="rgba(0,229,255,0.07)" stroke="rgba(0,229,255,0.2)" strokeWidth="1" />
-        <text x={p.x} y={p.y} textAnchor="middle" fontSize="7" fill="rgba(0,229,255,0.5)" fontFamily="monospace">USDT</text>
-      </g>
-    ))}
-    {/* Scatter nodes */}
-    {[[120, 60], [300, 300], [700, 280], [900, 60], [150, 310], [820, 300]].map(([x, y], i) => (
-      <circle key={i} cx={x} cy={y} r="3" fill="rgba(0,229,255,0.15)" stroke="rgba(0,229,255,0.3)" strokeWidth="1" />
-    ))}
-    {/* Dashed lines to scatter */}
-    <line x1="200" y1="140" x2="120" y2="60" stroke="rgba(0,229,255,0.1)" strokeWidth="1" strokeDasharray="4 4" />
-    <line x1="740" y1="110" x2="900" y2="60" stroke="rgba(0,229,255,0.1)" strokeWidth="1" strokeDasharray="4 4" />
-    {/* Bottom scan line */}
-    <line x1="0" y1="370" x2="1000" y2="370" stroke="rgba(0,229,255,0.08)" strokeWidth="1" />
-    <rect x="0" y="355" width="1000" height="25" fill="rgba(5,12,30,0.5)" />
-    <text x="20" y="368" fontSize="8" fill="rgba(0,229,255,0.25)" fontFamily="monospace">PARAHOOR FORENSICS // CASE ANALYSIS // ON-CHAIN TRACE // REF-48291</text>
-  </svg>
-);
+/* ─── FEATURED IMAGE SVG (dark + light) ─── */
+const HERO_DARK = {
+  bg: "#050C1E",
+  glow1: "rgba(0,229,255,0.1)",
+  glow2: "rgba(239,68,68,0.07)",
+  grid: "rgba(0,229,255,0.035)",
+  chainBlur: "rgba(0,229,255,0.4)",
+  chain: "rgba(0,229,255,0.2)",
+  nodeFill: "rgba(0,229,255,0.05)",
+  nodeStroke: "rgba(0,229,255,0.3)",
+  bar1: "rgba(0,229,255,0.3)",
+  bar2: "rgba(0,229,255,0.18)",
+  bar3: "rgba(0,229,255,0.15)",
+  bar4: "rgba(0,229,255,0.1)",
+  dot: "#00E5FF",
+  dotOpacity: 0.7,
+  alertRing1: "rgba(239,68,68,0.2)",
+  alertRing2: "rgba(239,68,68,0.3)",
+  alertCoreFill: "rgba(239,68,68,0.5)",
+  alertCoreStroke: "rgba(239,68,68,0.8)",
+  tagFill: "rgba(0,229,255,0.07)",
+  tagStroke: "rgba(0,229,255,0.2)",
+  tagText: "rgba(0,229,255,0.5)",
+  scatterFill: "rgba(0,229,255,0.15)",
+  scatterStroke: "rgba(0,229,255,0.3)",
+  dashed: "rgba(0,229,255,0.1)",
+  scanLine: "rgba(0,229,255,0.08)",
+  footerBar: "rgba(5,12,30,0.5)",
+  footerText: "rgba(0,229,255,0.25)",
+};
 
+const HERO_LIGHT = {
+  bg: "#F3F7FD",
+  glow1: "rgba(29,78,216,0.10)",
+  glow2: "rgba(239,68,68,0.06)",
+  grid: "rgba(30,58,138,0.055)",
+  chainBlur: "rgba(29,78,216,0.28)",
+  chain: "rgba(30,58,138,0.38)",
+  nodeFill: "#FFFFFF",
+  nodeStroke: "rgba(30,58,138,0.32)",
+  bar1: "rgba(30,58,138,0.40)",
+  bar2: "rgba(30,58,138,0.26)",
+  bar3: "rgba(30,58,138,0.20)",
+  bar4: "rgba(30,58,138,0.14)",
+  dot: "#1D4ED8",
+  dotOpacity: 0.9,
+  alertRing1: "rgba(239,68,68,0.22)",
+  alertRing2: "rgba(239,68,68,0.35)",
+  alertCoreFill: "rgba(239,68,68,0.6)",
+  alertCoreStroke: "rgba(220,38,38,0.95)",
+  tagFill: "#FFFFFF",
+  tagStroke: "rgba(30,58,138,0.28)",
+  tagText: "rgba(30,58,138,0.75)",
+  scatterFill: "rgba(29,78,216,0.14)",
+  scatterStroke: "rgba(30,58,138,0.38)",
+  dashed: "rgba(30,58,138,0.22)",
+  scanLine: "rgba(30,58,138,0.12)",
+  footerBar: "rgba(255,255,255,0.75)",
+  footerText: "rgba(30,58,138,0.5)",
+};
+
+const HeroImage = () => {
+  const { darkMode } = useTheme();
+  const c = darkMode ? HERO_DARK : HERO_LIGHT;
+  const chainD =
+    "M80 190 L200 140 L340 190 L480 120 L600 170 L740 110 L880 160 L960 140";
+
+  return (
+    <svg width="100%" height="100%" viewBox="0 0 1000 380" preserveAspectRatio="xMidYMid slice" style={{ display: "block" }}>
+      <defs>
+        <radialGradient id="hg1" cx="25%" cy="50%" r="55%">
+          <stop offset="0%" stopColor={c.glow1} />
+          <stop offset="100%" stopColor="transparent" />
+        </radialGradient>
+        <radialGradient id="hg2" cx="75%" cy="40%" r="45%">
+          <stop offset="0%" stopColor={c.glow2} />
+          <stop offset="100%" stopColor="transparent" />
+        </radialGradient>
+        <filter id="hblur"><feGaussianBlur stdDeviation="3" /></filter>
+        <filter id="hshadow" x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#1E3A8A" floodOpacity="0.14" />
+        </filter>
+      </defs>
+
+      <rect width="1000" height="380" fill={c.bg} />
+      <rect width="1000" height="380" fill="url(#hg1)" />
+      <rect width="1000" height="380" fill="url(#hg2)" />
+
+      {/* Grid */}
+      {Array.from({ length: 14 }).map((_, i) => (
+        <line key={`h${i}`} x1="0" y1={i * 28} x2="1000" y2={i * 28} stroke={c.grid} strokeWidth="1" />
+      ))}
+      {Array.from({ length: 34 }).map((_, i) => (
+        <line key={`v${i}`} x1={i * 30} y1="0" x2={i * 30} y2="380" stroke={c.grid} strokeWidth="1" />
+      ))}
+
+      {/* Main chain path */}
+      <path d={chainD} stroke={c.chainBlur} strokeWidth="1.5" fill="none" filter="url(#hblur)" />
+      <path d={chainD} stroke={c.chain} strokeWidth="1" fill="none" />
+
+      {/* Block nodes */}
+      {[
+        { x: 200, y: 140 }, { x: 340, y: 190 }, { x: 480, y: 120 },
+        { x: 600, y: 170 }, { x: 740, y: 110 }, { x: 880, y: 160 },
+      ].map((p, i) => (
+        <g key={i} filter={darkMode ? undefined : "url(#hshadow)"}>
+          <rect x={p.x - 20} y={p.y - 22} width="40" height="44" rx="4" fill={c.nodeFill} stroke={c.nodeStroke} strokeWidth="1" />
+          <rect x={p.x - 12} y={p.y - 14} width="24" height="3" rx="1" fill={c.bar1} />
+          <rect x={p.x - 12} y={p.y - 7} width="17" height="2.5" rx="1" fill={c.bar2} />
+          <rect x={p.x - 12} y={p.y - 1} width="20" height="2.5" rx="1" fill={c.bar3} />
+          <rect x={p.x - 12} y={p.y + 6} width="12" height="2" rx="1" fill={c.bar4} />
+          <circle cx={p.x} cy={p.y - 22} r="3.5" fill={c.dot} opacity={c.dotOpacity} />
+        </g>
+      ))}
+
+      {/* Alert node – the "caught" point */}
+      <circle cx="480" cy="120" r="22" fill="transparent" stroke={c.alertRing1} strokeWidth="1" />
+      <circle cx="480" cy="120" r="14" fill="transparent" stroke={c.alertRing2} strokeWidth="1" />
+      <circle cx="480" cy="120" r="5" fill={c.alertCoreFill} stroke={c.alertCoreStroke} strokeWidth="1.5" />
+
+      {/* USDT labels */}
+      {[{ x: 200, y: 110 }, { x: 600, y: 140 }].map((p, i) => (
+        <g key={i}>
+          <rect x={p.x - 20} y={p.y - 10} width="40" height="14" rx="3" fill={c.tagFill} stroke={c.tagStroke} strokeWidth="1" />
+          <text x={p.x} y={p.y} textAnchor="middle" fontSize="7" fill={c.tagText} fontFamily="monospace">USDT</text>
+        </g>
+      ))}
+
+      {/* Scatter nodes */}
+      {[[120, 60], [300, 300], [700, 280], [900, 60], [150, 310], [820, 300]].map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r="3" fill={c.scatterFill} stroke={c.scatterStroke} strokeWidth="1" />
+      ))}
+
+      {/* Dashed lines to scatter */}
+      <line x1="200" y1="140" x2="120" y2="60" stroke={c.dashed} strokeWidth="1" strokeDasharray="4 4" />
+      <line x1="740" y1="110" x2="900" y2="60" stroke={c.dashed} strokeWidth="1" strokeDasharray="4 4" />
+
+      {/* Bottom scan line */}
+      <line x1="0" y1="370" x2="1000" y2="370" stroke={c.scanLine} strokeWidth="1" />
+      <rect x="0" y="355" width="1000" height="25" fill={c.footerBar} />
+      <text x="20" y="368" fontSize="8" fill={c.footerText} fontFamily="monospace">
+        PARAHOOR FORENSICS // CASE ANALYSIS // ON-CHAIN TRACE // REF-48291
+      </text>
+    </svg>
+  );
+};
 
 
 
@@ -1155,11 +1233,7 @@ export default function App({
       }`}
       style={{
         fontFamily: "var(--font-vazirmatn), sans-serif",
-        backgroundImage: darkMode
-          ? "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"
-          : "linear-gradient(rgba(30,58,138,0.045) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,138,0.045) 1px,transparent 1px)",
-        backgroundSize: "52px 52px",
-      backgroundAttachment: "fixed"
+
       }}
     >
       {/* ───────────────── ARTICLE HEADER ───────────────── */}
@@ -1218,7 +1292,7 @@ export default function App({
               style={{
                 color: darkMode
                   ? "#00E5FF"
-                  : "#1E3A8A",
+                  : "#1565C0",
               }}
             >
               {category}
@@ -1247,7 +1321,7 @@ export default function App({
                 "clamp(1.55rem,4vw,2.4rem)",
               color: darkMode
                 ? "#fff"
-                : "#1E3A8A",
+                : "black",
               lineHeight: 1.4,
               textShadow: darkMode
                 ? "0 0 60px rgba(0,229,255,0.08)"
@@ -1377,11 +1451,11 @@ export default function App({
       <div className="px-6 pb-12 md:px-12">
         <div className="max-w-6xl mx-auto">
           <div className="relative overflow-hidden rounded-2xl"
-            style={{ height: "clamp(200px,40vw,380px)", border: "1px solid rgba(0,229,255,0.12)" }}>
+            style={{ height: "clamp(200px,40vw,380px)", border: darkMode ? "1px solid rgba(0,229,255,0.12)" : "1px solid rgba(42, 108, 188, 0.33)" }}>
             <HeroImage />
             {/* Overlay vignette */}
             <div className="absolute inset-0 pointer-events-none"
-              style={{ background: "linear-gradient(to bottom, transparent 60%, rgba(10,17,40,0.7) 100%)" }} />
+              style={{ background: "linear-gradient(to bottom, transparent 60%, rgba(10, 17, 40, 0.47) 100%)" }} />
           </div>
           <p className="mt-2.5 text-xs text-center" style={{ color: "#1E293B", fontFamily: "monospace", letterSpacing: "0.1em" }}>
             نمودار ردیابی جریان تراکنش‌ها — پرونده MySol // REF-48291
@@ -1464,122 +1538,68 @@ export default function App({
       {/* ───────────────── CTA ───────────────── */}
 
 <div className="px-6 py-10 md:px-12">
-  <div className="max-w-4xl mx-auto">
-    <div
-      className="group relative overflow-hidden rounded-2xl px-8 py-14 text-center transition-all duration-300"
+  <div
+  className={`max-w-3xl mx-auto rounded-2xl`}
       style={{
-        background: darkMode
-          ? "linear-gradient(135deg, #08152F 0%, #091838 48%, #0A122A 100%)"
-          : "linear-gradient(135deg, #FFFFFF 0%, #F8FAFF 48%, #EEF4FF 100%)",
-
-        border: darkMode
-          ? "1px solid rgba(0,229,255,0.30)"
-          : "1px solid rgba(30,58,138,0.22)",
-
         boxShadow: darkMode
-          ? "0 18px 60px rgba(0,229,255,0.08), 0 0 70px rgba(0,229,255,0.05)"
-          : "0 18px 50px rgba(30,58,138,0.10)",
+          ? "0 18px 60px rgba(0, 229, 255, 0), 0 0 70px rgba(0,229,255,0.05)"
+          : "0 18px 50px rgba(48, 94, 175, 0.32)",
 
         transition:
           "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
-      }}
+      }}  
+  >
+    <div
+      className="relative p-8 md:p-12 rounded-2xl text-center overflow-hidden" 
+            style={{ 
+              background: darkMode ? "rgba(255,255,255,0.03)" : "#FFFFFF", 
+              border: darkMode 
+                ? "1px solid rgba(0,229,255,0.18)" 
+                : "1px solid rgba(39, 83, 206, 0.72)", 
+              boxShadow: darkMode 
+                ? "0 0 60px rgba(0,229,255,0.06), 0 0 100px rgba(0,229,255,0.03), inset 0 0 60px rgba(0,229,255,0.02)" 
+                : "0 4px 20px rgba(15,23,42,0.06)", 
+            }} 
 
-      onMouseEnter={(e) => {
-        if (!darkMode) {
-          e.currentTarget.style.borderColor = "#1D4ED8";
-          e.currentTarget.style.background =
-            "linear-gradient(135deg, #FFFFFF 0%, rgba(30,58,138,0.035) 50%, rgba(29,78,216,0.06) 100%)";
-          e.currentTarget.style.boxShadow =
-            "0 18px 50px rgba(30,58,138,0.16), 0 0 45px rgba(29,78,216,0.08)";
-
-        } else {
-          e.currentTarget.style.borderColor =
-            "rgba(0,229,255,0.55)";
-          e.currentTarget.style.background =
-            "linear-gradient(135deg, #08152F 0%, #0A1D3D 48%, #0A122A 100%)";
-          e.currentTarget.style.boxShadow =
-            "0 20px 65px rgba(0,229,255,0.12), 0 0 70px rgba(0,229,255,0.07)";
-
-        }
-      }}
-
-      onMouseLeave={(e) => {
-        if (!darkMode) {
-          e.currentTarget.style.borderColor =
-            "rgba(30,58,138,0.22)";
-          e.currentTarget.style.background =
-            "linear-gradient(135deg, #FFFFFF 0%, #F8FAFF 48%, #EEF4FF 100%)";
-          e.currentTarget.style.boxShadow =
-            "0 18px 50px rgba(30,58,138,0.10)";
-          e.currentTarget.style.transform = "none";
-        } else {
-          e.currentTarget.style.borderColor =
-            "rgba(0,229,255,0.30)";
-          e.currentTarget.style.background =
-            "linear-gradient(135deg, #08152F 0%, #091838 48%, #0A122A 100%)";
-          e.currentTarget.style.boxShadow =
-            "0 18px 60px rgba(0,229,255,0.08), 0 0 70px rgba(0,229,255,0.05)";
-          e.currentTarget.style.transform = "none";
-        }
-      }}
+     
     >
 
-      {/* Top Right Accent */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          right: 0,
-          width: 54,
-          height: 54,
-          borderTop: darkMode
-            ? "1.5px solid rgba(0,229,255,0.42)"
-            : "1.5px solid rgba(30,78,216,0.32)",
-          borderRight: darkMode
-            ? "1.5px solid rgba(0,229,255,0.42)"
-            : "1.5px solid rgba(30,78,216,0.32)",
-          borderRadius: "0 14px 0 0",
-          pointerEvents: "none",
-          transition: "all 300ms ease",
-        }}
-      />
+      {/* Corner accents */} 
+            <div 
+              style={{ 
+                position: "absolute", 
+                top: 0, 
+                right: 0, 
+                width: 60, 
+                height: 60, 
+                borderTop: darkMode 
+                  ? "2px solid rgba(0,229,255,0.3)" 
+                  : "2px solid #1565C0", 
+                borderRight: darkMode 
+                  ? "2px solid rgba(0,229,255,0.3)" 
+                  : "2px solid #1565C0", 
+                borderRadius: "0 16px 0 0" 
+              }} 
+            /> 
 
-      {/* Bottom Left Accent */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          width: 54,
-          height: 54,
-          borderBottom: darkMode
-            ? "1.5px solid rgba(0,229,255,0.42)"
-            : "1.5px solid rgba(30,78,216,0.32)",
-          borderLeft: darkMode
-            ? "1.5px solid rgba(0,229,255,0.42)"
-            : "1.5px solid rgba(30,78,216,0.32)",
-          borderRadius: "0 0 0 14px",
-          pointerEvents: "none",
-          transition: "all 300ms ease",
-        }}
-      />
+            <div 
+              style={{ 
+                position: "absolute", 
+                bottom: 0, 
+                left: 0, 
+                width: 60, 
+                height: 60, 
+                borderBottom: darkMode 
+                  ? "2px solid rgba(0,229,255,0.3)" 
+                  : "2px solid #1565C0", 
+                borderLeft: darkMode 
+                  ? "2px solid rgba(0,229,255,0.3)" 
+                  : "2px solid #1565C0", 
+                borderRadius: "0 0 0 16px" 
+              }} 
+            /> 
 
-      {/* Subtle Light Mode Glow */}
-      {!darkMode && (
-        <div
-          style={{
-            position: "absolute",
-            width: 220,
-            height: 220,
-            top: -130,
-            left: -100,
-            borderRadius: "50%",
-            background:
-              "radial-gradient(circle, rgba(29,78,216,0.10) 0%, transparent 70%)",
-            pointerEvents: "none",
-          }}
-        />
-      )}
+
 
       {/* Subtle Dark Mode Glow */}
       {darkMode && (
@@ -1599,16 +1619,13 @@ export default function App({
       )}
 
       <div className="relative z-10">
-
-       
-
-        {/* Title */}
+     {/* Title */}
         <h3
           className="font-bold mb-3"
           style={{
             color: darkMode
               ? "#FFFFFF"
-              : "#1E3A8A",
+              : "black",
 
             fontSize:
               "clamp(1.05rem,2.5vw,1.4rem)",
@@ -1639,89 +1656,48 @@ export default function App({
         </p>
 
         {/* CTA Button */}
-        <button
-          type="button"
-          onClick={() => setCrisisOpen(true)}
-          className="inline-flex items-center gap-2.5 px-8 py-4 rounded-xl font-bold text-sm transition-all duration-300"
-          style={{
-            background: darkMode
-              ? "#1E3A8A"
-              : "#1E3A8A",
-
-            color: "#FFFFFF",
-
-            border: darkMode
-              ? "1px solid rgba(0,229,255,0.22)"
-              : "1px solid rgba(255,255,255,0.35)",
-
-            boxShadow: darkMode
-              ? "0 10px 30px rgba(30,58,138,0.35), 0 0 45px rgba(0,229,255,0.10)"
-              : "0 10px 30px rgba(30,58,138,0.24), 0 0 30px rgba(29,78,216,0.08)",
-
-            fontFamily:
-              "var(--font-vazirmatn), sans-serif",
-
-            fontSize: "0.98rem",
-          }}
-
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background =
-              darkMode
-                ? "#1D4ED8"
-                : "#1D4ED8";
-
-            e.currentTarget.style.boxShadow =
-              darkMode
-                ? "0 14px 36px rgba(30,58,138,0.42), 0 0 55px rgba(0,229,255,0.16)"
-                : "0 14px 36px rgba(30,58,138,0.30), 0 0 40px rgba(29,78,216,0.12)";
-
-            e.currentTarget.style.transform =
-              "translateY(-2px)";
-          }}
-
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background =
-              "#1E3A8A";
-
-            e.currentTarget.style.boxShadow =
-              darkMode
-                ? "0 10px 30px rgba(30,58,138,0.35), 0 0 45px rgba(0,229,255,0.10)"
-                : "0 10px 30px rgba(30,58,138,0.24), 0 0 30px rgba(29,78,216,0.08)";
-
-            e.currentTarget.style.transform =
-              "none";
-          }}
-        >
-          <IconWarning />
-          درخواست بررسی و ردیابی پرونده
-        </button>
+<button
+  type="button"
+  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold transition-all duration-300" 
+              style={{ 
+                background: darkMode ? "#EF4444" : "#1565C0", 
+                color: "#ffffff", 
+                border: darkMode 
+                  ? "1px solid rgba(239, 68, 68, 0.6)" 
+                  : "1px solid rgba(37,99,235,0.6)", 
+                boxShadow: darkMode 
+                  ? "0 0 15px rgba(239,68,68,0.35)" 
+                  : "0 0 15px rgba(37,99,235,0.18)", 
+              }} 
+                                onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = darkMode
+                      ? "0 0 22px rgba(239,68,68,0.55)"
+                      : "0 0 22px rgba(37,99,235,0.28)";
+                    e.currentTarget.style.transform = "translateY(-1px)";
+                  
+                    if (!darkMode) {
+                      e.currentTarget.style.background = "#0D47A1";
+                      e.currentTarget.style.borderColor = "#0D47A1";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = darkMode
+                      ? "0 0 15px rgba(239,68,68,0.35)"
+                      : "0 0 15px rgba(37,99,235,0.18)";
+                    e.currentTarget.style.transform = "none";
+                  
+                    if (!darkMode) {
+                      e.currentTarget.style.background = "#1565C0";
+                      e.currentTarget.style.borderColor = "rgba(37,99,235,0.6)";
+                    }
+                  }} 
+>
+  <IconWarning />
+  درخواست بررسی و ردیابی پرونده
+</button>
 
 
-                    {/* <button
-               onClick={() => setCrisisOpen(true)}
-              className="inline-flex items-center gap-2.5 px-9 py-4 rounded-xl font-bold transition-all"
-              style={{
-                background: "#EF4444",
-                color: "#fff",
-                border: "1px solid rgba(239,68,68,0.55)",
-                boxShadow:
-                  "0 0 24px rgba(239,68,68,0.3)",
-                fontSize: "1rem",
-                fontFamily: "var(--font-vazirmatn), sans-serif",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow =
-                  "0 0 30px rgba(239,68,68,0.5)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow =
-                  "0 0 24px rgba(239,68,68,0.3)";
-              }}
-            >
-              <IconWarning />
-              درخواست بررسی و ردیابی پرونده
-            </button> */}
-
+                  
       </div>
     </div>
   </div>
@@ -1771,19 +1747,6 @@ export default function App({
                 <TelegramIcon size={16}/>
               </button>
 
-              {/* <button
-                type="button"
-                onClick={handleTwitterShare}
-                title="توییتر"
- className={`flex items-center justify-center w-[38px] h-[38px] rounded-[10px] transition-all duration-[180ms] ${
-        darkMode
-          ? "bg-white/[0.04] border border-white/[0.08] text-[#475569] hover:bg-[rgba(0,229,255,0.1)] hover:border-[rgba(0,229,255,0.4)] hover:text-[#00E5FF] hover:shadow-[0_0_14px_rgba(0,229,255,0.18)]"
-          : "bg-[rgba(30,58,138,0.03)] border border-[rgba(30,58,138,0.12)] text-[#64748B] hover:bg-[rgba(29,78,216,0.08)] hover:border-[rgba(29,78,216,0.35)] hover:text-[#1D4ED8] hover:shadow-[0_0_14px_rgba(29,78,216,0.12)]"
-      }`}
-              >
-                <IconShare />
-              </button> */}
-
               <button
                 type="button"
                 onClick={handleCopy}
@@ -1823,7 +1786,7 @@ export default function App({
               style={{
                 color: darkMode
                   ? "#00E5FF"
-                  : "#1E3A8A",
+                  : "#1565C0",
               }}
             >
               بازگشت به رادار پاراهور
@@ -2011,7 +1974,9 @@ export default function App({
 
             </div>
           )}
+
 <CommentSection postId={post._id} darkMode={darkMode} initialComments={initialComments} />
+
         </div>
       </div>
 

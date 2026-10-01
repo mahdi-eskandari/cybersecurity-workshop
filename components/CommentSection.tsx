@@ -130,7 +130,7 @@ export default function CommentSection({ postId, darkMode, initialComments }: Co
   };
 
   return (
-    <div className="mt-12 w-full max-w-4xl mx-auto px-4 sm:px-0">
+    <div className={`mt-12 w-full max-w-4xl mx-auto px-4 sm:px-0 `}>
 
       {/* هدر بخش نظرات */}
       <div className="flex items-center gap-2 mb-6 px-1">
@@ -139,10 +139,10 @@ export default function CommentSection({ postId, darkMode, initialComments }: Co
             width: 4,
             height: 18,
             borderRadius: 99,
-            background: darkMode ? "#00E5FF" : "#1E3A8A",
+            background: darkMode ? "rgb(0,229,255)" : "rgb(21,101,192)",
           }}
         />
-        <h3 className="font-bold text-base" style={{ color: darkMode ? "#E2E8F0" : "#0F172A" }}>
+        <h3 className="font-bold text-base" style={{ color: darkMode ? "#E2E8F0" : "black" }}>
           نظرات و دیدگاه‌های کاربران
         </h3>
       </div>
@@ -151,16 +151,16 @@ export default function CommentSection({ postId, darkMode, initialComments }: Co
       <div
         className={`relative overflow-hidden rounded-2xl border transition-all duration-300 w-full p-6 md:p-8 mb-10 ${
           darkMode
-            ? "border-[#00E5FF]/25 bg-white/[0.025] backdrop-blur-[10px] hover:border-[#00E5FF]/40 shadow-[0_18px_42px_rgba(0,0,0,0.38),0_12px_40px_rgba(0,229,255,0.20)] hover:shadow-[0_18px_42px_rgba(0,0,0,0.38),0_12px_40px_rgba(0,229,255,0.31)]"
-            : "border-[#1E3A8A]/30 bg-white shadow-[0_16px_42px_rgba(15,23,42,0.09)] hover:border-[#1E3A8A]/60 hover:shadow-[0_18px_42px_rgba(15,23,42,0.07),0_12px_28px_rgba(30,58,138,0.13)]"
+            ? "border-[#00E5FF]/25 bg-white/[0.025] backdrop-blur-[10px]  shadow-[0_18px_42px_rgba(0,0,0,0.38),0_12px_40px_rgba(0,229,255,0.20)] "
+            : "border-[#1565C0]/40 bg-white shadow-[0_16px_42px_rgb(21,101,192/)] shadow-[0_18px_42px_rgba(0,0,0,0.38),0_12px_40px_rgba(0,229,255,0.20)]"
         }`}
       >
         {/* خط نوری بالای کارت */}
-        <div className={`absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent ${
-          darkMode ? "via-[#00E5FF]/50" : "via-[#1E3A8A]/42"
-        } to-transparent`} />
+<div className={`absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent ${
+  darkMode ? "via-[#00E5FF]/50" : "via-[#1565C0]/40"
+} to-transparent`} />
 
-        <h4 className="font-bold text-sm mb-2 relative z-10" style={{ color: darkMode ? "#FFFFFF" : "#1E3A8A" }}>
+        <h4 className="font-bold text-sm mb-2 relative z-10" style={{ color: darkMode ? "#FFFFFF" : "black" }}>
           دیدگاه خود را با ما به اشتراک بگذارید
         </h4>
         <p className="text-xs mb-6 relative z-10" style={{ color: darkMode ? "#94A3B8" : "#64748B" }}>
@@ -171,7 +171,7 @@ export default function CommentSection({ postId, darkMode, initialComments }: Co
         <div className={`mb-6 flex items-center gap-2.5 rounded-xl border px-4 py-3 text-xs ${
           darkMode
             ? "border-[#00E5FF]/[0.08] bg-[#00E5FF]/[0.03] text-cyan-300/80"
-            : "border-[#1E3A8A]/10 bg-[#1E3A8A]/[0.035] text-[#1E3A8A]"
+            : "border-[#1565C0]/40 bg-[#1565C0]/[0.055] text-[#1565C0]"
         }`}>
           <IconWarning />
           <span>دیدگاه شما پس از بررسی و تایید ادمین در سایت نمایش داده خواهد شد.</span>
@@ -200,6 +200,18 @@ export default function CommentSection({ postId, darkMode, initialComments }: Co
                 نام و نام خانوادگی <span className="text-red-500">*</span>
               </label>
               <input
+              onMouseEnter={(e) => {
+  if (document.activeElement === e.currentTarget) return;
+  e.currentTarget.style.borderColor = darkMode
+    ? "rgba(0, 229, 255, 0.52)"
+    : "#1565c0cf";
+}}
+onMouseLeave={(e) => {
+  if (document.activeElement === e.currentTarget) return;
+  e.currentTarget.style.borderColor = darkMode
+    ? "rgba(0,229,255,0.15)"
+    : "rgba(30, 59, 138, 0.12)";
+}}
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -207,7 +219,7 @@ export default function CommentSection({ postId, darkMode, initialComments }: Co
                 className={`w-full px-4 py-3 rounded-xl text-xs outline-none transition-all duration-200 ${
                   darkMode
                     ? "bg-white/5 border border-[#00E5FF]/20 text-white focus:border-[#00E5FF]"
-                    : "bg-slate-50 border border-[#1E3A8A]/20 text-slate-900 focus:border-[#1E3A8A]"
+                    : "bg-slate-50 border border-[#1E3A8A]/20 text-slate-900 focus:border-[#1565C0]"
                 }`}
               />
               {errors.name && <span className="text-[10px] text-red-400 mt-1 block">{errors.name}</span>}
@@ -218,6 +230,18 @@ export default function CommentSection({ postId, darkMode, initialComments }: Co
                 ایمیل یا شماره تماس <span className="opacity-60">(اختیاری)</span>
               </label>
               <input
+              onMouseEnter={(e) => {
+  if (document.activeElement === e.currentTarget) return;
+  e.currentTarget.style.borderColor = darkMode
+    ? "rgba(0, 229, 255, 0.52)"
+    : "#1565c0cf";
+}}
+onMouseLeave={(e) => {
+  if (document.activeElement === e.currentTarget) return;
+  e.currentTarget.style.borderColor = darkMode
+    ? "rgba(0,229,255,0.15)"
+    : "rgba(30, 59, 138, 0.12)";
+}}
                 type="text"
                 value={contact}
                 onChange={(e) => setContact(e.target.value)}
@@ -225,7 +249,7 @@ export default function CommentSection({ postId, darkMode, initialComments }: Co
                 className={`w-full px-4 py-3 rounded-xl text-xs outline-none transition-all duration-200 ${
                   darkMode
                     ? "bg-white/5 border border-[#00E5FF]/20 text-white focus:border-[#00E5FF]"
-                    : "bg-slate-50 border border-[#1E3A8A]/20 text-slate-900 focus:border-[#1E3A8A]"
+                    : "bg-slate-50 border border-[#1E3A8A]/20 text-slate-900 focus:border-[#1565C0]"
                 }`}
               />
               {errors.contact && <span className="text-[10px] text-red-400 mt-1 block">{errors.contact}</span>}
@@ -237,33 +261,42 @@ export default function CommentSection({ postId, darkMode, initialComments }: Co
               متن دیدگاه <span className="text-red-500">*</span>
             </label>
             <textarea
+                          onMouseEnter={(e) => {
+  if (document.activeElement === e.currentTarget) return;
+  e.currentTarget.style.borderColor = darkMode
+    ? "rgba(0, 229, 255, 0.52)"
+    : "#1565c0cf";
+}}
+onMouseLeave={(e) => {
+  if (document.activeElement === e.currentTarget) return;
+  e.currentTarget.style.borderColor = darkMode
+    ? "rgba(0,229,255,0.15)"
+    : "rgba(30, 59, 138, 0.12)";
+}}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               rows={5}
               placeholder="دیدگاه یا تجربه خود را بنویسید..."
-              className={`w-full px-4 py-3 rounded-xl text-xs outline-none transition-all duration-200 resize-y ${
+              className={`w-full px-4 py-3 rounded-xl text-xs outline-none transition-all duration-200  resize-none ${
                 darkMode
                   ? "bg-white/5 border border-[#00E5FF]/20 text-white focus:border-[#00E5FF]"
-                  : "bg-slate-50 border border-[#1E3A8A]/20 text-slate-900 focus:border-[#1E3A8A]"
+                  : "bg-slate-50 border border-[#1E3A8A]/20 text-slate-900 focus:border-[#1565C0]"
               }`}
             />
             {errors.comment && <span className="text-[10px] text-red-400 mt-1 block">{errors.comment}</span>}
           </div>
 
           <button
-            type="submit"
-            disabled={submitting}
-            className={`px-7 py-3 rounded-xl text-xs font-bold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 shadow-md hover:opacity-90 ${darkMode
-              ? "hover:shadow-[0_18px_42px_rgba(0,0,0,0.38),0_8px_40px_rgba(0,229,255,0.51)]"
-              : ""
-            }`}
-            style={{
-              background: darkMode ? "#00E5FF" : "#1E3A8A",
-              color: darkMode ? "#060B19" : "#FFFFFF",
-            }}
-          >
-            {submitting ? "در حال ارسال..." : "ارسال دیدگاه"}
-          </button>
+  type="submit"
+  disabled={submitting}
+  className={`px-7 py-3 rounded-xl text-xs font-bold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 shadow-md hover:opacity-90 ${
+    darkMode
+      ? "bg-[#00E5FF] text-[#060B19] hover:shadow-[0_18px_42px_rgba(0,0,0,0.38),0_8px_40px_rgba(0,229,255,0.51)]"
+      : "bg-[#1565C0] text-white hover:bg-[#0D47A1]"
+  }`}
+>
+  {submitting ? "در حال ارسال..." : "ارسال دیدگاه"}
+</button>
         </form>
       </div>
 
@@ -303,55 +336,59 @@ export default function CommentSection({ postId, darkMode, initialComments }: Co
       )}
 
       {/* لیست دیدگاه‌ها */}
-      {comments.length > 0 && (
-        <div className="space-y-3">
-          <AnimatePresence initial={false}>
-            {comments.map((c, index) => (
-              <motion.div
-                key={c._id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.25, delay: Math.min(index, 6) * 0.04 }}
-                className={`relative overflow-hidden rounded-2xl border p-5 transition-all duration-300 ${
-                  darkMode
-                    ? "border-white/[0.07] bg-white/[0.02] hover:border-[#00E5FF]/30"
-                    : "border-slate-300 bg-white hover:border-[#0d339c]/50 hover:shadow-[0_10px_40px_rgba(15,23,42,0.1)]"
-                }`}
+      <div className="w-full bg-[rgba(235, 245, 251, 0.2)]">
+
+{comments.length > 0 && (
+  <div className="space-y-3 max-w-4xl mx-auto">
+    <AnimatePresence initial={false}>
+      {comments.map((c, index) => (
+        <motion.div
+          key={c._id}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25, delay: Math.min(index, 6) * 0.04 }}
+          className={`relative overflow-hidden rounded-2xl border p-5 transition-all duration-300 ${
+            darkMode
+              ? "border-white/[0.07] bg-white/[0.03] shadow-[0_4px_18px_rgba(0,0,0,0.35)] "
+              : "border-[#1565C0]/40 bg-white shadow-[0_2px_10px_rgba(15,23,42,0.07)] "
+          }`}
+        >
+          <div className="flex items-start gap-3">
+            <div
+              className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-xs font-black mt-1"
+              style={{
+                background: darkMode ? "rgba(0,229,255,0.12)" : "rgba(148, 193, 229, 0.26)",
+                color: darkMode ? "#00e5ffb2" : "#1565C0",
+                border: darkMode ? "1px solid #00e5ffb2" : "1px solid #8ab4e4",
+              }}
+            >
+              {c.name?.charAt(0) || "؟"}
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 mb-1.5">
+                <span className="text-[12px] font-bold" style={{ color: darkMode ? "#E2E8F0" : "#0F172A" }}>
+                  {c.name || "کاربر مهمان"}
+                </span>
+                <span className="text-[10px] font-medium" style={{ color: darkMode ? "#64748B" : "#94A3B8" }}>
+                  {formatRelativeTime(c.createdAt)}
+                </span>
+              </div>
+
+              <p
+                className="text-[12.5px] leading-relaxed whitespace-pre-line"
+                style={{ color: darkMode ? "#CBD5E1" : "#334155" }}
               >
-                <div className="flex items-start gap-3">
-                  <div
-                    className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-xs font-black"
-                    style={{
-                      background: darkMode ? "rgba(0,229,255,0.12)" : "rgba(30,58,138,0.08)",
-                      color: darkMode ? "#00E5FF" : "#1E3A8A",
-                    }}
-                  >
-                    {c.name?.charAt(0) || "؟"}
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 mb-1.5">
-                      <span className="text-[12px] font-bold" style={{ color: darkMode ? "#E2E8F0" : "#0F172A" }}>
-                        {c.name || "کاربر مهمان"}
-                      </span>
-                      <span className="text-[10px] font-medium" style={{ color: darkMode ? "#64748B" : "#94A3B8" }}>
-                        {formatRelativeTime(c.createdAt)}
-                      </span>
-                    </div>
-
-                    <p
-                      className="text-[12.5px] leading-relaxed whitespace-pre-line"
-                      style={{ color: darkMode ? "#CBD5E1" : "#334155" }}
-                    >
-                      {c.comment}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
-      )}
+                {c.comment}
+              </p>
+            </div>
+          </div>
+        </motion.div>
+      ))}
+    </AnimatePresence>
+  </div>
+)}
+      </div>
     </div>
   );
 }

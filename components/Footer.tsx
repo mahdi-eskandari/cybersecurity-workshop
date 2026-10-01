@@ -9,6 +9,7 @@ import {
   Mail,
   MapPin,
 } from "lucide-react"
+import Image from "next/image";
 
 
 const F_SERVICES = [
@@ -116,14 +117,20 @@ export default function Footer() {
             : "1px solid rgba(59,130,246,0.45)",
         }}
       >
-        <div className="max-w-6xl mx-auto px-6 pt-14 pb-8">
+        <div className="max-w-5xl mx-auto px-6 pt-14 pb-8">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-8 lg:gap-12 mb-12">
             <div className="md:col-span-2 space-y-4">
 
                 <div className="flex items-center gap-2.5 mb-5">
-                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                  <Shield className="w-4 h-4 text-white" />
-                </div>
+                  {/* <Shield className="w-4 h-4 text-white" /> */}
+                  <Image
+  src="/mainlogo.png"
+  alt="لوگوی پاراهور"
+  width={60}
+  height={90}
+  className="rounded-lg"
+/>
+  
                 <Link
                   href="/"
                   className="font-black text-lg"
@@ -150,15 +157,28 @@ export default function Footer() {
                             <div className="space-y-3">
                 <div className="flex items-center gap-2.5 text-sm text-[#818fa0]">
                   <Phone className="w-4 h-4 flex-shrink-0" />
-                  <span dir="ltr" className="text-[#818fa0]">
+                  <span dir="ltr" 
+                    style={{
+                  color: darkMode ? "#818fa0" : "#CBD5E1",
+                }}
+                  >
                     021-44097162
                   </span>
                 </div>
-                <div className="flex items-center gap-2.5 text-sm text-[#818fa0]">
-                  <Mail className="w-4 h-4 flex-shrink-0" />
+                <div className="flex items-center gap-2.5 text-sm text-[#818fa0]"
+                  style={{
+                  color: darkMode ? "#818fa0" : "#CBD5E1",
+                }}
+                >
+                  <Mail className="w-4 h-4 flex-shrink-0"
+                  />
                   <span>info@parahoor.com</span>
                 </div>
-                <div className="flex items-center gap-2.5 text-sm text-[#818fa0]">
+                <div className="flex items-center gap-2.5 text-sm text-[#818fa0]"
+                style={{
+                  color: darkMode ? "#818fa0" : "#CBD5E1",
+                }}
+                >
                   <MapPin className="w-4 h-4 flex-shrink-0" />
                   <span>آیت الله کاشانی، بلوار اباذر، نبش خیابان شالی، پلاک9، طبقه چهارم، واحد6</span>
                 </div>
@@ -209,7 +229,7 @@ export default function Footer() {
                 </ul>
 
                 {index === footerMenus.length - 1 && (
-                 <div className="ml-60 mt-8 bg-[#C62828]/20 border border-[#C62828]/35 rounded-xl p-4 w-[300px]">
+                 <div className="ml-60 mt-8 bg-[#C62828]/20 border border-[#C62828]/35 rounded-xl p-4 w-[250px]">
                     <p className="text-xs font-semibold text-red-300 mb-1.5">
                       اورژانس سایبری
                     </p>
@@ -218,7 +238,7 @@ export default function Footer() {
                     </p>
                     <Link
                       href="/contact"
-                      className="flex items-center gap-2 px-3.5 py-2 bg-[#C62828] text-white text-xs font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors"
+                      className="flex w-[65%] items-center gap-2 px-3.5 py-2 bg-[#C62828] text-white text-xs font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors"
                     >
                       <Phone className="w-3.5 h-3.5" />
                       تماس اضطراری

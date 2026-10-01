@@ -1345,7 +1345,18 @@ const AnimatedStatNumber = ({
 const StepIcon = ({ icon, index, darkMode }: { icon?: string; index: number; darkMode: boolean }) => {
   const customIcon = typeof icon === "string" ? icon.trim() : "";
   if (customIcon && /<svg[\s\S]*<\/svg>/i.test(customIcon)) {
-    return <span aria-hidden="true" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }} dangerouslySetInnerHTML={{ __html: sanitizeSvg(customIcon) }} />;
+    return (
+      <span
+        aria-hidden="true"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: darkMode ? "#00E5FF" : "#1565C0",
+        }}
+        dangerouslySetInnerHTML={{ __html: sanitizeSvg(customIcon) }}
+      />
+    );
   }
   const DefaultIcon = index === 0 ? IconBlockchain : index === 1 ? IconTarget : IconShieldDoc;
   return <DefaultIcon darkMode={darkMode} />;
@@ -2062,7 +2073,7 @@ const department =
               className="font-bold mb-4" 
               style={{ fontSize: "clamp(1.15rem, 2.5vw, 1.6rem)", color: darkMode ? "#fff" : "#0F172A", lineHeight: 1.5 }} 
             > 
-              همین الان پرونده خود را<br />برای بررسی اولیه ارسال کنید. 
+              همین الان موضوع خود را<br />برای بررسی اولیه ارسال کنید. 
             </h2> 
  
             <p 
@@ -2073,12 +2084,11 @@ const department =
                 lineHeight: 1.8 
               }} 
             > 
-              تیم فنی پاراهور پرونده شما را بدون هزینه ارزیابی اولیه می‌کند و امکان‌سنجی ردیابی را به شما اعلام می‌نماید. 
+              تیم فنی پاراهور موضوع شما را بدون هزینه ارزیابی اولیه می‌کند و امکان‌سنجی ردیابی را به شما اعلام می‌نماید. 
             </p> 
  
-            <Link 
+            <button 
               onClick={() => setCrisisOpen(true)} 
-              href="mailto:secure@parahoor.io" 
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold transition-all duration-300" 
               style={{ 
                 background: darkMode ? "#EF4444" : "#1565C0", 
@@ -2113,7 +2123,7 @@ const department =
             > 
               تکمیل فرم گزارش بحران 
               <IconLink /> 
-            </Link> 
+            </button> 
  
             {/* Modal */} 
             {crisisOpen && ( 
@@ -2126,7 +2136,7 @@ const department =
               className="mt-4 text-xs" 
               style={{ color: darkMode ? "#606d7f" : "#475569" }} 
             > 
-              بدون تعهد مالی • کاملاً محرمانه • پاسخ در کمتر از ۲ ساعت 
+                 کاملاً محرمانه • پاسخ در کمتر از ۲ ساعت 
             </p> 
           </div> 
         </div> 
