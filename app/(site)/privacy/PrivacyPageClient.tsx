@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useTheme } from "../../../components/ThemeProvider";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 
 
@@ -12,13 +13,27 @@ type PrivacyPageClientProps = {
 /* ─────────────────────────────────────────
    LIGHT MODE BRAND
    ───────────────────────────────────────── */
-const BRAND = "#1E3A8A";
+const BRAND = "#1565C0";
+
+/* Light-mode stroke overrides for icons that are defined outside the page
+   component (they apply only when an ancestor has data-theme="light") */
+const BRAND_STROKE = "[[data-theme=light]_&]:!stroke-[#1565C0]";
+const GREEN_STROKE = "[[data-theme=light]_&]:!stroke-[#16A34A]";
+const RED_STROKE = "[[data-theme=light]_&]:!stroke-[#DC2626]";
 
 
 /* ─── SHARED ─── */
-const PulseDot = ({ size = 7, color = "#00E5FF" }: { size?: number; color?: string }) => (
+const PulseDot = ({
+  size = 7,
+  color = "#00E5FF",
+  className = "",
+}: {
+  size?: number;
+  color?: string;
+  className?: string;
+}) => (
   <span
-    className="privacy-pulse-dot"
+    className={`privacy-pulse-dot ${className}`}
     style={{
       display: "inline-block",
       width: size,
@@ -41,14 +56,14 @@ const IconClose = () => (
 );
 
 const IconMail = () => (
-  <svg className="privacy-brand-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg className={`privacy-brand-icon ${BRAND_STROKE}`} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
     <polyline points="22,6 12,13 2,6" />
   </svg>
 );
 
 const IconTelegram = () => (
-  <svg className="privacy-brand-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg className={`privacy-brand-icon ${BRAND_STROKE}`} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M21.5 4.5L2.5 12l7 2.5" />
     <path d="M9.5 14.5l2.5 5 3-8" />
     <path d="M9.5 14.5l8-8" />
@@ -56,7 +71,7 @@ const IconTelegram = () => (
 );
 
 const IconShieldLock = () => (
-  <svg className="privacy-brand-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+  <svg className={`privacy-brand-icon ${BRAND_STROKE}`} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
     <rect x="9" y="11" width="6" height="5" rx="1" />
     <path d="M10 11V9a2 2 0 014 0v2" />
@@ -64,15 +79,16 @@ const IconShieldLock = () => (
 );
 
 const IconInfo = () => (
-  <svg className="privacy-brand-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+  <svg className={`privacy-brand-icon ${BRAND_STROKE}`} width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="10" />
     <line x1="12" y1="16" x2="12" y2="12" />
     <line x1="12" y1="8" x2="12.01" y2="8" strokeWidth="2.5" />
   </svg>
 );
 
+const VIOLET_STROKE = "[[data-theme=light]_&]:!stroke-[#7C3AED]";
 const IconScale = () => (
-  <svg className="privacy-brand-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+  <svg className={`privacy-brand-icon ${VIOLET_STROKE}`} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
     <line x1="12" y1="3" x2="12" y2="21" />
     <path d="M5 21h14" />
     <path d="M3 6l3 6c0 1.657-1.343 3-3 3s-3-1.343-3-3l3-6z" transform="translate(6,0)" />
@@ -81,7 +97,7 @@ const IconScale = () => (
 );
 
 const IconNoShare = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+  <svg className={GREEN_STROKE} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="18" cy="5" r="3" />
     <circle cx="6" cy="12" r="3" />
     <circle cx="18" cy="19" r="3" />
@@ -92,7 +108,7 @@ const IconNoShare = () => (
 );
 
 const IconServer = () => (
-  <svg className="privacy-brand-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+  <svg className={`privacy-brand-icon ${BRAND_STROKE}`} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="2" width="20" height="8" rx="2" />
     <rect x="2" y="14" width="20" height="8" rx="2" />
     <line x1="6" y1="6" x2="6.01" y2="6" strokeWidth="3" />
@@ -117,7 +133,13 @@ const sections = [
 
 /* ─── EMERGENCY MODAL ─── */
 
-const EmergencyModal = ({ onClose }: { onClose: () => void }) => {
+const EmergencyModal = ({
+  onClose,
+  isDark,
+}: {
+  onClose: () => void;
+  isDark: boolean;
+}) => {
   const [contact, setContact] = useState("");
   const [sent, setSent] = useState(false);
 
@@ -131,32 +153,51 @@ const EmergencyModal = ({ onClose }: { onClose: () => void }) => {
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
-        className="w-full max-w-md relative overflow-hidden privacy-modal"
-        style={{
-          background: "linear-gradient(160deg,rgba(10,17,42,0.99),rgba(6,11,28,0.99))",
-          border: "1px solid rgba(0,229,255,0.2)",
-          borderRadius: 18,
-          boxShadow: "0 0 80px rgba(0,229,255,0.06),0 40px 100px rgba(0,0,0,0.7)"
-        }}
+        className={`w-full max-w-md relative overflow-hidden privacy-modal ${
+          isDark
+            ? ""
+            : "bg-white border border-[rgba(21,101,192,0.25)] shadow-[0_30px_90px_rgba(21,101,192,0.25)]"
+        }`}
+        style={
+          isDark
+            ? {
+                background: "linear-gradient(160deg,rgba(10,17,42,0.99),rgba(6,11,28,0.99))",
+                border: "1px solid rgba(0,229,255,0.2)",
+                borderRadius: 18,
+                boxShadow: "0 0 80px rgba(0,229,255,0.06),0 40px 100px rgba(0,0,0,0.7)"
+              }
+            : { borderRadius: 18 }
+        }
       >
         <div
-          className="privacy-modal-topbar"
-          style={{
-            height: 2,
-            background: "linear-gradient(90deg,transparent,rgba(0,229,255,0.7),transparent)"
-          }}
+          className={`privacy-modal-topbar ${
+            isDark
+              ? ""
+              : "bg-[linear-gradient(90deg,transparent,#1565C0,transparent)]"
+          }`}
+          style={
+            isDark
+              ? {
+                  height: 2,
+                  background: "linear-gradient(90deg,transparent,rgba(0,229,255,0.7),transparent)"
+                }
+              : { height: 2 }
+          }
         />
 
         <div className="px-6 pt-5 pb-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-black text-base" style={{ color: "#fff" }}>
+            <h3
+              className={`font-black text-base ${isDark ? "" : "text-[#1565C0]"}`}
+              style={isDark ? { color: "#fff" } : undefined}
+            >
               فرم اورژانسی گزارش بحران
             </h3>
 
             <button
-              className="privacy-modal-close"
+              className={`privacy-modal-close ${isDark ? "" : "text-[#475569]"}`}
               onClick={onClose}
-              style={{ color: "#475569" }}
+              style={isDark ? { color: "#475569" } : undefined}
             >
               <IconClose />
             </button>
@@ -165,30 +206,49 @@ const EmergencyModal = ({ onClose }: { onClose: () => void }) => {
           {sent ? (
             <div className="py-6 text-center">
               <div
-                className="mx-auto mb-4 flex items-center justify-center w-14 h-14 rounded-full privacy-modal-success"
-                style={{
-                  background: "rgba(0,229,255,0.08)",
-                  border: "1px solid rgba(0,229,255,0.2)"
-                }}
+                className={`mx-auto mb-4 flex items-center justify-center w-14 h-14 rounded-full privacy-modal-success ${
+                  isDark
+                    ? ""
+                    : "bg-[rgba(21,101,192,0.06)] border border-[rgba(21,101,192,0.25)]"
+                }`}
+                style={
+                  isDark
+                    ? {
+                        background: "rgba(0,229,255,0.08)",
+                        border: "1px solid rgba(0,229,255,0.2)"
+                      }
+                    : undefined
+                }
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={isDark ? "#00E5FF" : "#1565C0"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   <polyline points="9 12 11 14 15 10" />
                 </svg>
               </div>
 
-              <p className="font-bold text-sm mb-2" style={{ color: "#fff" }}>
+              <p
+                className={`font-bold text-sm mb-2 ${isDark ? "" : "text-[#475569]"}`}
+                style={isDark ? { color: "#fff" } : undefined}
+              >
                 گزارش ثبت شد
               </p>
 
               <button
                 onClick={onClose}
-                className="mt-4 px-6 py-2 rounded-lg text-sm privacy-modal-secondary"
-                style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  color: "#475569"
-                }}
+                className={`mt-4 px-6 py-2 rounded-lg text-sm privacy-modal-secondary ${
+                  isDark
+                    ? ""
+                    : "text-[#475569] border border-[rgba(21,101,192,0.16)]"
+                }`}
+                style={
+                  isDark
+                    ? {
+                        background: "rgba(255,255,255,0.04)",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        color: "#475569"
+                      }
+                    : undefined
+                }
               >
                 بستن
               </button>
@@ -196,8 +256,11 @@ const EmergencyModal = ({ onClose }: { onClose: () => void }) => {
           ) : (
             <>
               <p
-                className="mb-4 text-xs"
-                style={{ color: "#475569", lineHeight: 1.75 }}
+                className={`mb-4 text-xs ${isDark ? "" : "text-[#475569]"}`}
+                style={{
+                  lineHeight: 1.75,
+                  ...(isDark ? { color: "#475569" } : {})
+                }}
               >
                 اطلاعات شما با بالاترین سطح رمزنگاری برای کارآگاهان ارشد پاراهور ارسال می‌شود.
               </p>
@@ -206,15 +269,31 @@ const EmergencyModal = ({ onClose }: { onClose: () => void }) => {
                 <textarea
                   rows={3}
                   placeholder="شرح مختصر حادثه..."
-                  className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
+                  className={`w-full px-4 py-3 rounded-xl text-sm outline-none resize-none ${
+                    isDark
+                      ? ""
+                      : "bg-white text-[#1565C0] border border-[rgba(21,101,192,0.25)] shadow-[inset_0_1px_2px_rgba(21,101,192,0.025)] placeholder:text-[#64748B] placeholder:opacity-100 focus:border-[#1565C0] focus:shadow-[0_0_0_3px_rgba(21,101,192,0.10)]"
+                  }`}
                   style={{
-                    background: "#060B19",
-                    border: "1px solid rgba(0,229,255,0.1)",
-                    color: "#E2E8F0",
-                    fontFamily: "var(--font-vazirmatn), sans-serif"
+                    fontFamily: "var(--font-vazirmatn), sans-serif",
+                    ...(isDark
+                      ? {
+                          background: "#060B19",
+                          border: "1px solid rgba(0,229,255,0.1)",
+                          color: "#E2E8F0"
+                        }
+                      : {})
                   }}
-                  onFocus={(e) => (e.target.style.borderColor = "rgba(0,229,255,0.35)")}
-                  onBlur={(e) => (e.target.style.borderColor = "rgba(0,229,255,0.1)")}
+                  onFocus={
+                    isDark
+                      ? (e) => (e.target.style.borderColor = "rgba(0,229,255,0.35)")
+                      : undefined
+                  }
+                  onBlur={
+                    isDark
+                      ? (e) => (e.target.style.borderColor = "rgba(0,229,255,0.1)")
+                      : undefined
+                  }
                 />
 
                 <input
@@ -222,15 +301,31 @@ const EmergencyModal = ({ onClose }: { onClose: () => void }) => {
                   value={contact}
                   onChange={(e) => setContact(e.target.value)}
                   placeholder="شماره موبایل یا @ID تلگرام"
-                  className="w-full px-4 py-3 rounded-xl text-sm outline-none"
+                  className={`w-full px-4 py-3 rounded-xl text-sm outline-none ${
+                    isDark
+                      ? ""
+                      : "bg-white text-[#1565C0] border border-[rgba(21,101,192,0.25)] shadow-[inset_0_1px_2px_rgba(21,101,192,0.025)] placeholder:text-[#64748B] placeholder:opacity-100 focus:border-[#1565C0] focus:shadow-[0_0_0_3px_rgba(21,101,192,0.10)]"
+                  }`}
                   style={{
-                    background: "#060B19",
-                    border: "1px solid rgba(0,229,255,0.1)",
-                    color: "#E2E8F0",
-                    fontFamily: "var(--font-vazirmatn), sans-serif"
+                    fontFamily: "var(--font-vazirmatn), sans-serif",
+                    ...(isDark
+                      ? {
+                          background: "#060B19",
+                          border: "1px solid rgba(0,229,255,0.1)",
+                          color: "#E2E8F0"
+                        }
+                      : {})
                   }}
-                  onFocus={(e) => (e.target.style.borderColor = "rgba(0,229,255,0.35)")}
-                  onBlur={(e) => (e.target.style.borderColor = "rgba(0,229,255,0.1)")}
+                  onFocus={
+                    isDark
+                      ? (e) => (e.target.style.borderColor = "rgba(0,229,255,0.35)")
+                      : undefined
+                  }
+                  onBlur={
+                    isDark
+                      ? (e) => (e.target.style.borderColor = "rgba(0,229,255,0.1)")
+                      : undefined
+                  }
                 />
               </div>
 
@@ -272,6 +367,11 @@ export default function PrivacyPageClient({
   const isDark = !mounted || darkMode;
 
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+
+  /* repeated light-mode class strings */
+  const accentLight =
+    "bg-[linear-gradient(180deg,#1565C0,rgba(21,101,192,0.25))] shadow-[0_0_14px_rgba(21,101,192,0.18)]";
+const calloutStrongLight = "text-black";
 
 
 
@@ -328,12 +428,12 @@ export default function PrivacyPageClient({
 
   const Paragraph = ({ children }: { children: React.ReactNode }) => (
     <p
-      className="privacy-paragraph"
+      className={`privacy-paragraph ${isDark ? "" : "text-[#334155]"}`}
       style={{
-        color: "#94A3B8",
         fontSize: "clamp(0.88rem,1.7vw,0.97rem)",
         lineHeight: 2,
-        marginBottom: 18
+        marginBottom: 18,
+        ...(isDark ? { color: "#94A3B8" } : {})
       }}
     >
       {children}
@@ -349,13 +449,13 @@ export default function PrivacyPageClient({
   }) => (
     <h2
       id={id}
-      className="font-bold privacy-h2"
+      className={`font-bold privacy-h2 ${isDark ? "" : "text-black"}`}
       style={{
-        color: "#fff",
         fontSize: "clamp(1.05rem,2.2vw,1.3rem)",
         lineHeight: 1.4,
         marginBottom: 14,
-        marginTop: 8
+        marginTop: 8,
+        ...(isDark ? { color: "#fff" } : {})
       }}
     >
       {children}
@@ -364,13 +464,13 @@ export default function PrivacyPageClient({
 
   const H3 = ({ children }: { children: React.ReactNode }) => (
     <h3
-      className="font-semibold privacy-h3"
+      className={`font-semibold privacy-h3 ${isDark ? "" : "text-black"}`}
       style={{
-        color: "#E2E8F0",
         fontSize: "clamp(0.95rem,1.9vw,1.05rem)",
         lineHeight: 1.5,
         marginBottom: 10,
-        marginTop: 24
+        marginTop: 24,
+        ...(isDark ? { color: "#E2E8F0" } : {})
       }}
     >
       {children}
@@ -379,10 +479,10 @@ export default function PrivacyPageClient({
 
   const Highlight = ({ children }: { children: React.ReactNode }) => (
     <span
-      className="privacy-highlight"
+      className={`privacy-highlight ${isDark ? "" : "text-black"}`}
       style={{
-        color: "#E2E8F0",
-        fontWeight: 600
+        fontWeight: 600,
+        ...(isDark ? { color: "#E2E8F0" } : {})
       }}
     >
       {children}
@@ -391,10 +491,10 @@ export default function PrivacyPageClient({
 
   const CyanText = ({ children }: { children: React.ReactNode }) => (
     <span
-      className="privacy-brand-text"
+      className={`privacy-brand-text ${isDark ? "" : "text-black"}`}
       style={{
-        color: "#00E5FF",
-        fontWeight: 600
+        fontWeight: 600,
+        ...(isDark ? { color: "#00E5FF" } : {})
       }}
     >
       {children}
@@ -403,12 +503,20 @@ export default function PrivacyPageClient({
 
   const Divider = () => (
     <div
-      className="privacy-divider"
+      className={`privacy-divider ${
+        isDark
+          ? ""
+          : "bg-[linear-gradient(90deg,transparent,rgba(21,101,192,0.20),rgba(21,101,192,0.08),transparent)]"
+      }`}
       style={{
         height: 1,
-        background:
-          "linear-gradient(90deg,rgba(0,229,255,0.15),rgba(0,229,255,0.04),transparent)",
-        margin: "32px 0"
+        margin: "32px 0",
+        ...(isDark
+          ? {
+              background:
+                "linear-gradient(90deg,rgba(0,229,255,0.15),rgba(0,229,255,0.04),transparent)"
+            }
+          : {})
       }}
     />
   );
@@ -424,67 +532,82 @@ export default function PrivacyPageClient({
     icon: React.ReactNode;
     children: React.ReactNode;
   }) => {
-    const colors = {
-      cyan: {
-        bg: "rgba(0,229,255,0.05)",
-        border: "rgba(0,229,255,0.2)",
-        bar: "#00E5FF"
-      },
+   const colors = {
+  cyan:   { bg: "rgba(0,229,255,0.05)",  border: "rgba(0,229,255,0.2)",  bar: "#00E5FF" },
+  amber:  { bg: "rgba(245,158,11,0.05)", border: "rgba(245,158,11,0.2)", bar: "#F59E0B" },
+  violet: { bg: "rgba(167,139,250,0.06)", border: "rgba(167,139,250,0.2)", bar: "#A78BFA" },
+  green:  { bg: "rgba(34,197,94,0.05)",  border: "rgba(34,197,94,0.18)", bar: "#22C55E" }
+};
 
-      amber: {
-        bg: "rgba(245,158,11,0.05)",
-        border: "rgba(245,158,11,0.2)",
-        bar: "#F59E0B"
-      },
-
-      violet: {
-        bg: "rgba(167,139,250,0.06)",
-        border: "rgba(167,139,250,0.2)",
-        bar: "#A78BFA"
-      },
-
-      green: {
-        bg: "rgba(34,197,94,0.05)",
-        border: "rgba(34,197,94,0.18)",
-        bar: "#22C55E"
-      }
-    };
+const lightColors = {
+  cyan: {
+    box: "border-[rgba(21,101,192,0.25)] bg-[linear-gradient(135deg,rgba(21,101,192,0.045),rgba(21,101,192,0.018))] shadow-[0_8px_26px_rgba(21,101,192,0.075)]",
+    bar: "bg-[#1565C0] shadow-[0_0_12px_rgba(21,101,192,0.28)]",
+    icon: "text-[#1565C0]"
+  },
+  violet: {
+    box: "border-[rgba(124,58,237,0.28)] bg-[linear-gradient(135deg,rgba(124,58,237,0.06),rgba(124,58,237,0.02))] shadow-[0_8px_26px_rgba(124,58,237,0.08)]",
+    bar: "bg-[#7C3AED] shadow-[0_0_12px_rgba(124,58,237,0.28)]",
+    icon: "text-[#7C3AED]"
+  },
+  green: {
+    box: "border-[rgba(22,163,74,0.28)] bg-[linear-gradient(135deg,rgba(22,163,74,0.06),rgba(22,163,74,0.02))] shadow-[0_8px_26px_rgba(22,163,74,0.08)]",
+    bar: "bg-[#16A34A] shadow-[0_0_12px_rgba(22,163,74,0.28)]",
+    icon: "text-[#16A34A]"
+  },
+  amber: {
+    box: "border-[rgba(217,119,6,0.28)] bg-[linear-gradient(135deg,rgba(217,119,6,0.06),rgba(217,119,6,0.02))] shadow-[0_8px_26px_rgba(217,119,6,0.08)]",
+    bar: "bg-[#D97706] shadow-[0_0_12px_rgba(217,119,6,0.28)]",
+    icon: "text-[#D97706]"
+  }
+};
 
     const c = colors[color];
 
     return (
       <div
-        className={`relative overflow-hidden rounded-xl mb-6 privacy-callout privacy-callout-${color}`}
-        style={{
-          background: c.bg,
-          border: `1px solid ${c.border}`,
-          padding: "18px 20px"
-        }}
+        className={`relative overflow-hidden rounded-xl mb-6 privacy-callout privacy-callout-${color} ${
+          isDark ? "" : "border " + lightColors[color].box
+        }`}
+        style={
+          isDark
+            ? {
+                background: c.bg,
+                border: `1px solid ${c.border}`,
+                padding: "18px 20px"
+              }
+            : { padding: "18px 20px" }
+        }
       >
         <div
-          className="privacy-callout-bar"
+          className={`privacy-callout-bar ${isDark ? "" : lightColors[color].bar}`}
           style={{
             position: "absolute",
             top: 0,
             right: 0,
             bottom: 0,
             width: 3,
-            background: c.bar,
-            borderRadius: "0 6px 6px 0"
+            borderRadius: "0 6px 6px 0",
+            ...(isDark ? { background: c.bar } : {})
           }}
         />
 
         <div className="flex items-start gap-3">
-          <div className="flex-shrink-0 mt-0.5 privacy-callout-icon">
-            {icon}
-          </div>
+<div
+  className={`flex-shrink-0 mt-0.5 privacy-callout-icon ${
+    isDark ? "" : lightColors[color].icon
+  }`}
+  style={isDark ? { color: c.bar } : undefined}
+>
+  {icon}
+</div>
 
           <div
-            className="privacy-callout-content"
+            className={`privacy-callout-content ${isDark ? "" : "text-[#334155]"}`}
             style={{
-              color: "#94A3B8",
               fontSize: "0.85rem",
-              lineHeight: 1.85
+              lineHeight: 1.85,
+              ...(isDark ? { color: "#94A3B8" } : {})
             }}
           >
             {children}
@@ -498,19 +621,26 @@ export default function PrivacyPageClient({
     <>
 
       <div
-        className="min-h-full privacy-page"
+        className={`min-h-full privacy-page pt-[65px] ${
+          isDark
+            ? ""
+            : "bg-white text-[#1565C0] selection:bg-[rgba(21,101,192,0.18)] selection:text-[#0D47A1]"
+        }`}
         data-theme={isDark ? "dark" : "light"}
         style={{
-          background: "#0A1128",
-          color: "#E2E8F0",
           fontFamily: "var(--font-vazirmatn), sans-serif",
-          backgroundImage:
-            "linear-gradient(rgba(0,229,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.025) 1px,transparent 1px)",
-          backgroundSize: "52px 52px"
+          ...(isDark
+            ? {
+                background: "#0A1128",
+                color: "#E2E8F0",
+
+              }
+            : {})
         }}
       >
         {modalOpen && (
           <EmergencyModal
+            isDark={isDark}
             onClose={() => setModalOpen(false)}
           />
         )}
@@ -523,41 +653,42 @@ export default function PrivacyPageClient({
   transition={{ duration: 0.5 }}
   viewport={{ once: true, amount: 0.2 }}
 >
-        <header className="relative px-6 pt-16 pb-14 md:px-12 md:pt-24 overflow-hidden privacy-header">
+        <header
+          className={`relative px-6 pt-16 pb-14 md:px-12 md:pt-24 overflow-hidden privacy-header ${
+            isDark
+              ? ""
+              : "bg-[linear-gradient(180deg,#ffffff_0%,#ffffff_75%,rgba(21,101,192,0.025)_100%)] after:content-[''] after:absolute after:left-1/2 after:bottom-0 after:w-[min(760px,90%)] after:h-px after:-translate-x-1/2 after:bg-[linear-gradient(90deg,transparent,rgba(21,101,192,0.25),transparent)]"
+          }`}
+        >
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background:
-                "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(0,229,255,0.05) 0%, transparent 70%)"
+                 background: darkMode
+              ? "radial-gradient(ellipse 60% 70% at 60% 40%, rgba(0, 229, 255, 0.07) 0%, transparent 70%)"
+              : "radial-gradient(ellipse 60% 70% at 60% 50%, rgba(22, 79, 194, 0.1) 0%, transparent 70%)",
             }}
           />
 
           <div className="relative z-10 max-w-5xl mx-auto">
             <div className="flex items-center gap-2 mb-6">
-              <a
-                href="#"
-                className="privacy-breadcrumb"
+              <Link
+                href="/"
+                className={`privacy-breadcrumb ${isDark ? "" : "text-[#475569]"}`}
                 style={{
-                  color: "#334155",
-                  fontSize: "0.75rem"
+                  fontSize: "0.75rem",
+                  ...(isDark ? { color: "#334155" } : {})
                 }}
-                onMouseEnter={(e) =>
-                  ((e.target as HTMLElement).style.color = "#00E5FF")
-                }
-                onMouseLeave={(e) =>
-                  ((e.target as HTMLElement).style.color = "#334155")
-                }
               >
                 خانه
-              </a>
+              </Link>
 
               <IconChevronLeft />
 
               <span
-                className="privacy-breadcrumb-current"
+                className={`privacy-breadcrumb-current ${isDark ? "" : "text-[#1565C0]"}`}
                 style={{
-                  color: "#00E5FF",
-                  fontSize: "0.75rem"
+                  fontSize: "0.75rem",
+                  ...(isDark ? { color: "#00E5FF" } : {})
                 }}
               >
                 حریم خصوصی
@@ -566,11 +697,19 @@ export default function PrivacyPageClient({
 
 <div className="flex items-start gap-4 mb-5">
   <div
-    className="flex-shrink-0 translate-y-4 flex items-center justify-center w-12 h-12  rounded-xl privacy-header-icon"
-    style={{
-      background: "rgba(0,229,255,0.08)",
-      border: "1px solid rgba(0,229,255,0.2)",
-    }}
+    className={`flex-shrink-0 translate-y-4 flex items-center justify-center w-12 h-12  rounded-xl privacy-header-icon ${
+      isDark
+        ? ""
+        : "bg-[rgba(21,101,192,0.055)] border border-[rgba(21,101,192,0.25)] shadow-[0_8px_25px_rgba(21,101,192,0.08)]"
+    }`}
+    style={
+      isDark
+        ? {
+            background: "rgba(0,229,255,0.08)",
+            border: "1px solid rgba(0,229,255,0.2)",
+          }
+        : undefined
+    }
   >
     <IconShieldLock />
   </div>
@@ -580,12 +719,12 @@ export default function PrivacyPageClient({
       className="glow-text font-black leading-tight mb-0"
       style={{
         fontSize: "clamp(2rem, 5vw, 3.5rem)",
-        color: darkMode ? "#e8f4f8" : "#0c1a43",
+        color: darkMode ? "#e8f4f8" : "black",
         lineHeight: "1.3",
         fontWeight: 900,
         textShadow: darkMode
           ? undefined
-          : "0 0 18px rgba(30,58,138,0.10)",
+          : "0 0 18px rgba(21,101,192,0.10)",
       }}
     >
       {h1Title}
@@ -594,11 +733,11 @@ export default function PrivacyPageClient({
 </div>
 
             <p
-              className="mb-5 max-w-2xl privacy-header-description"
+              className={`mb-5 max-w-2xl privacy-header-description ${isDark ? "" : "text-[#475569]"}`}
               style={{
-                color: "#64748B",
                 fontSize: "clamp(0.9rem,1.8vw,1rem)",
-                lineHeight: 1.85
+                lineHeight: 1.85,
+                ...(isDark ? { color: "#64748B" } : {})
               }}
             >
               حفاظت از هویت و داده‌های حساس شما، خط قرمز تیم عملیاتی پاراهور است.
@@ -606,28 +745,38 @@ export default function PrivacyPageClient({
 
             <div className="flex flex-wrap items-center gap-4">
               <div
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg privacy-date-badge"
-                style={{
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.07)"
-                }}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg privacy-date-badge ${
+                  isDark
+                    ? ""
+                    : "bg-[rgba(21,101,192,0.035)] border border-[rgba(21,101,192,0.15)] shadow-[0_5px_18px_rgba(21,101,192,0.05)]"
+                }`}
+                style={
+                  isDark
+                    ? {
+                        background: "rgba(255,255,255,0.03)",
+                        border: "1px solid rgba(255,255,255,0.07)"
+                      }
+                    : undefined
+                }
               >
                 <span
+                  className={isDark ? "" : "text-[#475569]"}
                   style={{
                     fontFamily: "monospace",
                     fontSize: "0.68rem",
-                    color: "#334155"
+                    ...(isDark ? { color: "#334155" } : {})
                   }}
                 >
                   آخرین به‌روزرسانی:
                 </span>
 
                 <span
+                  className={isDark ? "" : "text-[#475569]"}
                   style={{
                     fontFamily: "monospace",
                     fontSize: "0.68rem",
-                    color: "#475569",
-                    fontWeight: 600
+                    fontWeight: 600,
+                    ...(isDark ? { color: "#475569" } : {})
                   }}
                 >
                   شهریور ۱۴۰۵
@@ -682,12 +831,20 @@ export default function PrivacyPageClient({
   viewport={{ once: true, amount: 0.2 }}
 >
                 <button
-                className="lg:hidden w-full flex items-center justify-between px-4 py-3 rounded-xl mb-2 text-sm font-semibold privacy-toc-mobile"
-                style={{
-                  background: "rgba(0,229,255,0.07)",
-                  border: "1px solid rgba(0,229,255,0.18)",
-                  color: "#00E5FF"
-                }}
+                className={`lg:hidden w-full flex items-center justify-between px-4 py-3 rounded-xl mb-2 text-sm font-semibold privacy-toc-mobile ${
+                  isDark
+                    ? ""
+                    : "bg-white text-[#1565C0] border border-[rgba(21,101,192,0.25)] shadow-[0_8px_24px_rgba(21,101,192,0.09)] transition-all duration-200 hover:bg-[#1565C0] hover:text-white hover:shadow-[0_13px_30px_rgba(21,101,192,0.25)]"
+                }`}
+                style={
+                  isDark
+                    ? {
+                        background: "rgba(0,229,255,0.07)",
+                        border: "1px solid rgba(0,229,255,0.18)",
+                        color: "#00E5FF"
+                      }
+                    : undefined
+                }
                 onClick={() => setTocOpen(!tocOpen)}
               >
                 فهرست مطالب
@@ -710,25 +867,41 @@ export default function PrivacyPageClient({
                 </svg>
               </button>
 
-              <div className={`lg:block ${tocOpen ? "block" : "hidden"}`}>
+              <div className={`lg:block ${tocOpen ? "block" : "hidden"} mt-2`}>
                 <div
-                  className="lg:sticky rounded-2xl overflow-hidden privacy-toc-card"
+                  className={`lg:sticky rounded-2xl overflow-hidden privacy-toc-card ${
+                    isDark
+                      ? ""
+                      : "bg-white border border-[rgba(21,101,192,0.25)] shadow-[0_12px_34px_rgba(21,101,192,0.10)]"
+                  }`}
                   style={{
                     top: 88,
-                    background: "rgba(6,11,28,0.9)",
-                    border: "1px solid rgba(0,229,255,0.12)",
-                    backdropFilter: "blur(14px)"
+                    ...(isDark
+                      ? {
+                          background: "rgba(6,11,28,0.9)",
+                          border: "1px solid rgba(0,229,255,0.12)",
+                          backdropFilter: "blur(14px)"
+                        }
+                      : {})
                   }}
                 >
                   <div
-                    className="px-5 py-4 flex items-center gap-2.5 privacy-toc-header"
-                    style={{
-                      borderBottom: "1px solid rgba(0,229,255,0.08)",
-                      background: "rgba(0,229,255,0.04)"
-                    }}
+                    className={`px-5 py-4 flex items-center gap-2.5 privacy-toc-header ${
+                      isDark
+                        ? ""
+                        : "bg-[rgba(21,101,192,0.045)] border-b border-[rgba(21,101,192,0.25)]"
+                    }`}
+                    style={
+                      isDark
+                        ? {
+                            borderBottom: "1px solid rgba(0,229,255,0.08)",
+                            background: "rgba(0,229,255,0.04)"
+                          }
+                        : undefined
+                    }
                   >
                     <svg
-                      className="privacy-brand-icon"
+                      className={`privacy-brand-icon ${BRAND_STROKE}`}
                       width="13"
                       height="13"
                       viewBox="0 0 24 24"
@@ -746,7 +919,7 @@ export default function PrivacyPageClient({
                     <span
             className="data-label"
               style={{
-              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce",
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#1565C0CE",
             }}
                     >
                       TABLE OF CONTENTS
@@ -762,49 +935,77 @@ export default function PrivacyPageClient({
                         <button
                           key={sec.id}
                           onClick={() => scrollTo(sec.id)}
-                          className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm text-right transition-all duration-200 mb-1 privacy-toc-item ${isActive ? "is-active" : ""}`}
+                          className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm text-right transition-all duration-200 mb-1 privacy-toc-item ${isActive ? "is-active" : ""} ${
+                            isDark
+                              ? ""
+                              : isActive
+                              ? "border border-[#1565C0] bg-[linear-gradient(135deg,#1565C0,#0D47A1)] text-white shadow-[0_10px_27px_rgba(21,101,192,0.25)] hover:-translate-y-0.5 hover:shadow-[0_15px_34px_rgba(21,101,192,0.32)]"
+                              : "border border-transparent text-[#475569] hover:-translate-y-0.5 hover:border-[rgba(21,101,192,0.18)] hover:bg-[rgba(21,101,192,0.055)] hover:text-[#1565C0] hover:shadow-[0_8px_22px_rgba(21,101,192,0.12)]"
+                          }`}
                           style={{
-                            background: isActive
-                              ? "rgba(0,229,255,0.1)"
-                              : "transparent",
-                            border: isActive
-                              ? "1px solid rgba(0,229,255,0.25)"
-                              : "1px solid transparent",
-                            color: isActive
-                              ? "#00E5FF"
-                              : "#475569",
                             fontFamily:
-                              "var(--font-vazirmatn), sans-serif"
+                              "var(--font-vazirmatn), sans-serif",
+                            ...(isDark
+                              ? {
+                                  background: isActive
+                                    ? "rgba(0,229,255,0.1)"
+                                    : "transparent",
+                                  border: isActive
+                                    ? "1px solid rgba(0,229,255,0.25)"
+                                    : "1px solid transparent",
+                                  color: isActive
+                                    ? "#00E5FF"
+                                    : "#475569"
+                                }
+                              : {})
                           }}
-                          onMouseEnter={(e) => {
-                            if (!isActive) {
-                              (e.currentTarget as HTMLElement).style.color =
-                                "#94A3B8";
+                          onMouseEnter={
+                            isDark
+                              ? (e) => {
+                                  if (!isActive) {
+                                    (e.currentTarget as HTMLElement).style.color =
+                                      "#94A3B8";
 
-                              (e.currentTarget as HTMLElement).style.background =
-                                "rgba(255,255,255,0.03)";
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (!isActive) {
-                              (e.currentTarget as HTMLElement).style.color =
-                                "#475569";
+                                    (e.currentTarget as HTMLElement).style.background =
+                                      "rgba(255,255,255,0.03)";
+                                  }
+                                }
+                              : undefined
+                          }
+                          onMouseLeave={
+                            isDark
+                              ? (e) => {
+                                  if (!isActive) {
+                                    (e.currentTarget as HTMLElement).style.color =
+                                      "#475569";
 
-                              (e.currentTarget as HTMLElement).style.background =
-                                "transparent";
-                            }
-                          }}
+                                    (e.currentTarget as HTMLElement).style.background =
+                                      "transparent";
+                                  }
+                                }
+                              : undefined
+                          }
                         >
                           <span
-                            className="privacy-toc-number"
+                            className={`privacy-toc-number ${
+                              isDark
+                                ? ""
+                                : isActive
+                                ? "text-white"
+                                : "text-[rgba(255,255,255,0.68)]"
+                            }`}
                             style={{
                               fontFamily: "monospace",
                               fontSize: "0.6rem",
-                              color: isActive
-                                ? "rgba(0,229,255,0.6)"
-                                : "#1E293B",
                               flexShrink: 0,
-                              width: 18
+                              width: 18,
+                              ...(isDark
+                                ? {
+                                    color: isActive
+                                      ? "rgba(0,229,255,0.6)"
+                                      : "#1E293B"
+                                  }
+                                : {})
                             }}
                           >
                             {sec.num}.
@@ -826,7 +1027,14 @@ export default function PrivacyPageClient({
                                 flexShrink: 0
                               }}
                             >
-                              <PulseDot size={5} />
+                              <PulseDot
+                                size={5}
+                                className={
+                                  isDark
+                                    ? ""
+                                    : "!bg-white !shadow-[0_0_0_2px_rgba(255,255,255,0.12),0_0_10px_rgba(255,255,255,0.65)]"
+                                }
+                              />
                             </span>
                           )}
                           
@@ -838,30 +1046,33 @@ export default function PrivacyPageClient({
                   {/* Progress */}
 
                   <div
-                    className="px-5 pb-4 pt-2 privacy-progress"
-                    style={{
-                      borderTop:
-                        "1px solid rgba(0,229,255,0.06)"
-                    }}
+                    className={`px-5 pb-4 pt-2 privacy-progress ${
+                      isDark ? "" : "border-t border-[rgba(21,101,192,0.12)]"
+                    }`}
+                    style={
+                      isDark
+                        ? { borderTop: "1px solid rgba(0,229,255,0.06)" }
+                        : undefined
+                    }
                   >
                     <div className="flex items-center justify-between mb-1.5">
                       <span
-                        className="privacy-progress-label"
+                        className={`privacy-progress-label ${isDark ? "" : "text-[#475569]"}`}
                         style={{
                           fontFamily: "monospace",
                           fontSize: "0.64rem",
-                          color: "#46556d"
+                          ...(isDark ? { color: "#46556d" } : {})
                         }}
                       >
                         پیشرفت مطالعه
                       </span>
 
                       <span
-                        className="privacy-progress-percent"
+                        className={`privacy-progress-percent ${isDark ? "" : "text-[#1565C0] font-bold"}`}
                         style={{
                           fontFamily: "monospace",
                           fontSize: "0.64rem",
-                          color: "rgba(0,229,255,0.35)"
+                          ...(isDark ? { color: "rgba(0,229,255,0.35)" } : {})
                         }}
                       >
                         {Math.round(
@@ -877,15 +1088,22 @@ export default function PrivacyPageClient({
                     </div>
 
                     <div
-                      className="w-full rounded-full overflow-hidden privacy-progress-track"
+                      className={`w-full rounded-full overflow-hidden privacy-progress-track ${
+                        isDark ? "" : "bg-[rgba(21,101,192,0.10)]"
+                      }`}
                       style={{
                         height: 3,
-                        background:
-                          "rgba(255,255,255,0.05)"
+                        ...(isDark
+                          ? { background: "rgba(255,255,255,0.05)" }
+                          : {})
                       }}
                     >
                       <div
-                        className="h-full rounded-full transition-all duration-300 privacy-progress-fill"
+                        className={`h-full rounded-full transition-all duration-300 privacy-progress-fill ${
+                          isDark
+                            ? ""
+                            : "bg-[#1565C0] shadow-[0_0_9px_rgba(21,101,192,0.38)]"
+                        }`}
                         style={{
                           width: `${((sections.findIndex(
                             (s) =>
@@ -893,8 +1111,12 @@ export default function PrivacyPageClient({
                           ) + 1) /
                             sections.length) *
                             100}%`,
-                          background:
-                            "linear-gradient(90deg,#00E5FF,rgba(0,229,255,0.4))"
+                          ...(isDark
+                            ? {
+                                background:
+                                  "linear-gradient(90deg,#00E5FF,rgba(0,229,255,0.4))"
+                              }
+                            : {})
                         }}
                       />
                     </div>
@@ -918,15 +1140,19 @@ export default function PrivacyPageClient({
               viewport={{ once: true, amount: 0.2 }}
                >
 
-                <div className="flex items-center gap-3 mb-6">
+                <div className="flex items-center gap-3 mb-6 mt-4">
                   <div
-                    className="privacy-section-accent"
+                    className={`privacy-section-accent ${isDark ? "" : accentLight}`}
                     style={{
                       width: 3,
                       height: 28,
-                      background:
-                        "linear-gradient(180deg,#00E5FF,rgba(0,229,255,0.1))",
-                      borderRadius: 2
+                      borderRadius: 2,
+                      ...(isDark
+                        ? {
+                            background:
+                              "linear-gradient(180deg,#00E5FF,rgba(0,229,255,0.1))"
+                          }
+                        : {})
                     }}
                   />
 
@@ -934,7 +1160,7 @@ export default function PrivacyPageClient({
                     <span
             className="data-label"
               style={{
-              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce",
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#1565C0CE",
             }}
                     >
                       SECTION 01
@@ -950,7 +1176,10 @@ export default function PrivacyPageClient({
                   color="cyan"
                   icon={<IconShieldLock />}
                 >
-                  <strong style={{ color: "#E2E8F0" }}>
+                  <strong
+                    className={isDark ? "" : calloutStrongLight}
+                    style={isDark ? { color: "#E2E8F0" } : {color: "black"}}
+                  >
                     خلاصه اجرایی:{" "}
                   </strong>
                   تمامی داده‌های ارسال‌شده رمزنگاری سرتاسری می‌شوند و پس از اتمام تحقیقات از سرورهای آنلاین پاک می‌گردند.
@@ -975,11 +1204,11 @@ export default function PrivacyPageClient({
                 <H3>داده‌هایی که جمع‌آوری می‌شوند:</H3>
 
                 <ul
-                  className="space-y-2 mb-5 privacy-list"
+                  className={`space-y-2 mb-5 privacy-list ${isDark ? "" : "text-[#334155]"}`}
                   style={{
-                    color: "#64748B",
                     fontSize: "0.88rem",
-                    lineHeight: 1.9
+                    lineHeight: 1.9,
+                    ...(isDark ? { color: "#64748B" } : {})
                   }}
                 >
                   {[
@@ -993,7 +1222,7 @@ export default function PrivacyPageClient({
                       className="flex items-start gap-2.5"
                     >
                       <svg
-                        className="privacy-brand-icon"
+                        className={`privacy-brand-icon ${BRAND_STROKE}`}
                         width="14"
                         height="14"
                         viewBox="0 0 24 24"
@@ -1018,11 +1247,11 @@ export default function PrivacyPageClient({
                 <H3>داده‌هایی که جمع‌آوری نمی‌شوند:</H3>
 
                 <ul
-                  className="space-y-2 mb-5 privacy-list"
+                  className={`space-y-2 mb-5 privacy-list ${isDark ? "" : "text-[#334155]"}`}
                   style={{
-                    color: "#64748B",
                     fontSize: "0.88rem",
-                    lineHeight: 1.9
+                    lineHeight: 1.9,
+                    ...(isDark ? { color: "#64748B" } : {})
                   }}
                 >
                   {[
@@ -1035,6 +1264,7 @@ export default function PrivacyPageClient({
                       className="flex items-start gap-2.5"
                     >
                       <svg
+                        className={RED_STROKE}
                         width="14"
                         height="14"
                         viewBox="0 0 24 24"
@@ -1083,13 +1313,19 @@ export default function PrivacyPageClient({
                >
                 <div className="flex items-center gap-3 mb-6">
                   <div
-                    className="privacy-section-accent"
+                    className={`privacy-section-accent ${isDark ? "" : accentLight}`}
                     style={{
                       width: 3,
                       height: 28,
-                      background:
-                        "linear-gradient(180deg,#A78BFA,rgba(167,139,250,0.1))",
-                      borderRadius: 2
+                      borderRadius: 2,
+                      ...(isDark
+                        ? {
+                            background:
+                              "linear-gradient(180deg,#A78BFA,rgba(167,139,250,0.1))"
+                          }
+                        : {
+                          background: "linear-gradient(180deg,rgba(140,106,241,0.87),rgba(167,139,250,0.1))"
+                        })
                     }}
                   />
 
@@ -1097,7 +1333,7 @@ export default function PrivacyPageClient({
                     <span
               className="data-label"
               style={{
-              color: darkMode ? "rgba(167,139,250,0.5)" : "#102254ce",
+              color: darkMode ? "rgba(167,139,250,0.5)" : "rgba(140, 106, 241, 0.87)",
             }}
                     >
                       SECTION 02
@@ -1113,7 +1349,10 @@ export default function PrivacyPageClient({
                   color="violet"
                   icon={<IconScale />}
                 >
-                  <strong style={{ color: "#E2E8F0" }}>
+                  <strong
+  className={isDark ? "" : calloutStrongLight}
+  style={isDark ? { color: "#E2E8F0" } : undefined}
+>
                     نکته مهم:{" "}
                   </strong>
                   پاراهور آژانس تحقیقات فنی است، نه دفتر وکالت. گزارش‌های ما ابزار شماست، نه جایگزین وکیل.
@@ -1148,17 +1387,25 @@ export default function PrivacyPageClient({
                 </Paragraph>
 
                 <div
-                  className="p-5 rounded-xl mt-2 mb-4 privacy-warning"
-                  style={{
-                    background:
-                      "rgba(245,158,11,0.04)",
-                    border:
-                      "1px solid rgba(245,158,11,0.15)"
-                  }}
+                  className={`p-5 rounded-xl mt-2 mb-4 privacy-warning ${
+                    isDark
+                      ? ""
+                      : "bg-[rgba(239,68,68,0.045)] border border-[rgba(239,68,68,0.27)] shadow-[0_8px_24px_rgba(239,68,68,0.07)]"
+                  }`}
+                  style={
+                    isDark
+                      ? {
+                          background:
+                            "rgba(245,158,11,0.04)",
+                          border:
+                            "1px solid rgba(245,158,11,0.15)"
+                        }
+                      : undefined
+                  }
                 >
                   <div className="flex items-start gap-3">
                     <svg
-                      className="privacy-warning-icon"
+                      className={`privacy-warning-icon ${RED_STROKE}`}
                       width="16"
                       height="16"
                       viewBox="0 0 24 24"
@@ -1188,15 +1435,16 @@ export default function PrivacyPageClient({
                     </svg>
 
                     <p
+                      className={isDark ? "" : "text-[#475569]"}
                       style={{
-                        color: "#64748B",
                         fontSize: "0.83rem",
-                        lineHeight: 1.85
+                        lineHeight: 1.85,
+                        ...(isDark ? { color: "#64748B" } : {})
                       }}
                     >
                       <strong
-                        className="privacy-warning-title"
-                        style={{ color: "#F59E0B" }}
+                        className={`privacy-warning-title ${isDark ? "" : "text-[#DC2626]"}`}
+                        style={isDark ? { color: "#F59E0B" } : undefined}
                       >
                         سلب مسئولیت:{" "}
                       </strong>
@@ -1222,13 +1470,17 @@ export default function PrivacyPageClient({
                >
                 <div className="flex items-center gap-3 mb-6">
                   <div
-                    className="privacy-section-accent"
+                    className={`privacy-section-accent ${isDark ? "" : accentLight}`}
                     style={{
                       width: 3,
                       height: 28,
-                      background:
-                        "linear-gradient(180deg,#22C55E,rgba(34,197,94,0.1))",
-                      borderRadius: 2
+                      borderRadius: 2,
+                      ...(isDark
+                        ? {
+                            background:
+                              "linear-gradient(180deg,#22C55E,rgba(34,197,94,0.1))"
+                          }
+                        : {background: "linear-gradient(180deg,#22C55E,rgba(34,197,94,0.1))"})
                     }}
                   />
 
@@ -1236,7 +1488,7 @@ export default function PrivacyPageClient({
                     <span
                      className="data-label"
                      style={{
-                     color: darkMode ? "rgba(34,197,94,0.5)" : "#102254ce",
+                     color: darkMode ? "rgba(34,197,94,0.5)" : "#22C55E",
                        }}
                     >
                       SECTION 03
@@ -1252,7 +1504,10 @@ export default function PrivacyPageClient({
                   color="green"
                   icon={<IconNoShare />}
                 >
-                  <strong style={{ color: "#E2E8F0" }}>
+                  <strong
+                    className={isDark ? "" : calloutStrongLight}
+                    style={isDark ? { color: "#E2E8F0" } : {color: "black"}}
+                  >
                     تعهد پاراهور:{" "}
                   </strong>
                   اطلاعات شما هرگز فروخته، اجاره داده یا با اشخاص ثالث به اشتراک گذاشته نمی‌شود.
@@ -1275,27 +1530,41 @@ export default function PrivacyPageClient({
                 </Paragraph>
 
                 <div
-                  className="rounded-xl overflow-hidden mt-4 mb-2 privacy-sharing-table"
-                  style={{
-                    border:
-                      "1px solid rgba(0,229,255,0.1)"
-                  }}
+                  className={`rounded-xl overflow-hidden mt-4 mb-2 privacy-sharing-table ${
+                    isDark
+                      ? ""
+                      : "bg-white border border-[rgba(21,101,192,0.25)] shadow-[0_12px_30px_rgba(21,101,192,0.08)]"
+                  }`}
+                  style={
+                    isDark
+                      ? { border: "1px solid rgba(0,229,255,0.1)" }
+                      : undefined
+                  }
                 >
                   <div
-                    className="px-5 py-3 privacy-table-header"
-                    style={{
-                      background:
-                        "rgba(0,229,255,0.04)",
-                      borderBottom:
-                        "1px solid rgba(0,229,255,0.08)"
-                    }}
+                    className={`px-5 py-3 privacy-table-header ${
+                      isDark
+                        ? ""
+                        : "bg-[rgba(21,101,192,0.055)] border-b border-[rgba(21,101,192,0.25)]"
+                    }`}
+                    style={
+                      isDark
+                        ? {
+                            background:
+                              "rgba(0,229,255,0.04)",
+                            borderBottom:
+                              "1px solid rgba(0,229,255,0.08)"
+                          }
+                        : undefined
+                    }
                   >
                     <span
+                      className={isDark ? "" : "text-[#1565C0]"}
                       style={{
                         fontFamily: "monospace",
                         fontSize: "0.7rem",
-                        color: "rgba(0,229,255,0.4)",
-                        letterSpacing: "0.12em"
+                        letterSpacing: "0.12em",
+                        ...(isDark ? { color: "rgba(0,229,255,0.4)" } : {})
                       }}
                     >
                       خلاصه سیاست اشتراک‌ گذاری
@@ -1332,17 +1601,25 @@ export default function PrivacyPageClient({
                     ({ entity, status, color }) => (
                       <div
                         key={entity}
-                        className="flex items-center justify-between px-5 py-3 privacy-table-row"
-                        style={{
-                          borderBottom:
-                            "1px solid rgba(255,255,255,0.04)"
-                        }}
+                        className={`flex items-center justify-between px-5 py-3 privacy-table-row ${
+                          isDark
+                            ? ""
+                            : "border-b border-[rgba(21,101,192,0.09)]"
+                        }`}
+                        style={
+                          isDark
+                            ? {
+                                borderBottom:
+                                  "1px solid rgba(255,255,255,0.04)"
+                              }
+                            : undefined
+                        }
                       >
                         <span
-                          className="privacy-table-entity"
+                          className={`privacy-table-entity ${isDark ? "" : "text-[#334155]"}`}
                           style={{
-                            color: "#475569",
-                            fontSize: "0.82rem"
+                            fontSize: "0.82rem",
+                            ...(isDark ? { color: "#475569" } : {})
                           }}
                         >
                           {entity}
@@ -1379,13 +1656,17 @@ export default function PrivacyPageClient({
                >
                 <div className="flex items-center gap-3 mb-6">
                   <div
-                    className="privacy-section-accent"
+                    className={`privacy-section-accent ${isDark ? "" : accentLight}`}
                     style={{
                       width: 3,
                       height: 28,
-                      background:
-                        "linear-gradient(180deg,#00E5FF,rgba(0,229,255,0.1))",
-                      borderRadius: 2
+                      borderRadius: 2,
+                      ...(isDark
+                        ? {
+                            background:
+                              "linear-gradient(180deg,#00E5FF,rgba(0,229,255,0.1))"
+                          }
+                        : {})
                     }}
                   />
 
@@ -1393,7 +1674,7 @@ export default function PrivacyPageClient({
                     <span
             className="data-label"
               style={{
-              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce",
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#1565C0CE",
             }}
                     >
                       SECTION 04
@@ -1407,12 +1688,16 @@ export default function PrivacyPageClient({
 
                 <Paragraph>
                   وبسایت پاراهور از پروتکل{" "}
-                  <CyanText>
+                  <span
+                 style={darkMode
+                   ? { color: "#00E5FF" }
+                   : { color: "#1873dc" }}
+               >
                     HTTPS/TLS 1.3
-                  </CyanText>{" "}
+                  </span>{" "}
                   برای تمامی ارتباطات استفاده می‌کند. تمامی فرم‌های ارتباطی از طریق کانال‌های رمزنگاری‌شده به سرورهای امن ارسال می‌شوند.
                 </Paragraph>
-
+{/* 00E5FF */}
                 <Paragraph>
                   این وبسایت از{" "}
                   <Highlight>
@@ -1421,22 +1706,6 @@ export default function PrivacyPageClient({
                   برای عملکرد صحیح استفاده می‌کند. هیچ‌گونه کوکی ردیابی رفتار یا تبلیغاتی در این وبسایت فعال نیست. استفاده از سرویس‌های تحلیل آمار وبسایت تنها به صورت ناشناس و بدون ذخیره اطلاعات شخصی انجام می‌شود.
                 </Paragraph>
 
-                <Callout
-                  color="cyan"
-                  icon={<IconInfo />}
-                >
-                  در صورت مشاهده هرگونه رفتار مشکوک یا آسیب‌پذیری امنیتی در این وبسایت، لطفاً از طریق ایمیل{" "}
-                  <span
-                 className=" font-medium"
-              style={{
-              color: darkMode ? "rgba(34, 211, 231, 0.93)" : "#102254ce",
-                letterSpacing: "0.09rem"
-            }}
-                  >
-                    security@parahoor.io
-                  </span>{" "}
-                  گزارش دهید.
-                </Callout>
               </motion.div>
 
               <Divider />
@@ -1445,111 +1714,154 @@ export default function PrivacyPageClient({
 
 
                 <motion.div
-                className="relative overflow-hidden rounded-2xl p-8 privacy-contact-card"
-                style={{
-                  background: "rgba(6,11,28,0.8)",
-                  border:
-                    "1px solid rgba(0,229,255,0.18)",
-                  boxShadow:
-                    "0 0 50px rgba(0,229,255,0.05), inset 0 0 30px rgba(0,229,255,0.02)",
-                  backdropFilter: "blur(10px)"
-                }}
+                className={`relative overflow-hidden rounded-2xl p-8 privacy-contact-card ${
+                  isDark
+                    ? ""
+                    : "bg-white border border-[rgba(21,101,192,0.25)] shadow-[0_15px_42px_rgba(21,101,192,0.11)]"
+                }`}
+                style={
+                  isDark
+                    ? {
+                        background: "rgba(255,255,255,0.03)",
+                        border:
+                          "1px solid rgba(0,229,255,0.18)",
+                        boxShadow:
+                          "0 0 50px rgba(0,229,255,0.05), inset 0 0 30px rgba(0,229,255,0.02)",
+                        backdropFilter: "blur(10px)"
+                      }
+                    : undefined
+                }
                 initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               viewport={{ once: true, amount: 0.32 }}
                >
                 <div
-                  className="privacy-contact-corner privacy-contact-corner-top"
+                  className={`privacy-contact-corner privacy-contact-corner-top ${
+                    isDark
+                      ? ""
+                      : "border-solid border-t-[1.5px] border-r-[1.5px] border-[rgba(21,101,192,0.25)]"
+                  }`}
                   style={{
                     position: "absolute",
                     top: 0,
                     right: 0,
                     width: 40,
                     height: 40,
-                    borderTop:
-                      "1.5px solid rgba(0,229,255,0.3)",
-                    borderRight:
-                      "1.5px solid rgba(0,229,255,0.3)",
                     borderRadius: "0 14px 0 0",
-                    pointerEvents: "none"
+                    pointerEvents: "none",
+                    ...(isDark
+                      ? {
+                          borderTop:
+                            "1.5px solid rgba(0,229,255,0.3)",
+                          borderRight:
+                            "1.5px solid rgba(0,229,255,0.3)"
+                        }
+                      : {})
                   }}
                 />
 
                 <div
-                  className="privacy-contact-corner privacy-contact-corner-bottom"
+                  className={`privacy-contact-corner privacy-contact-corner-bottom ${
+                    isDark
+                      ? ""
+                      : "border-solid border-b-[1.5px] border-l-[1.5px] border-[rgba(21,101,192,0.25)]"
+                  }`}
                   style={{
                     position: "absolute",
                     bottom: 0,
                     left: 0,
                     width: 40,
                     height: 40,
-                    borderBottom:
-                      "1.5px solid rgba(0,229,255,0.3)",
-                    borderLeft:
-                      "1.5px solid rgba(0,229,255,0.3)",
                     borderRadius: "0 0 0 14px",
-                    pointerEvents: "none"
+                    pointerEvents: "none",
+                    ...(isDark
+                      ? {
+                          borderBottom:
+                            "1.5px solid rgba(0,229,255,0.3)",
+                          borderLeft:
+                            "1.5px solid rgba(0,229,255,0.3)"
+                        }
+                      : {})
                   }}
                 />
 
                 <span
                 className="data-label block mb-4"
               style={{
-              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#102254ce"
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#1565C0CE"
                 }}
                 >
                   LEGAL DEPARTMENT // PRIVACY CONTACT
                 </span>
 
                 <h3
-                  className="font-bold mb-3 privacy-contact-title"
+                  className={`font-bold mb-3 privacy-contact-title ${isDark ? "" : "text-[#1565C0]"}`}
                   style={{
-                    color: "#fff",
                     fontSize:
                       "clamp(0.98rem,2.2vw,1.2rem)",
-                    lineHeight: 1.45
+                    lineHeight: 1.45,
+                    ...(isDark ? { color: "#fff" } : {color: "black"})
                   }}
                 >
                   سوال درباره امنیت داده‌های خود دارید؟
                 </h3>
 
                 <p
-                  className="mb-6 privacy-contact-description"
+                  className={`mb-6 privacy-contact-description ${isDark ? "" : "text-[#475569]"}`}
                   style={{
-                    color: "#475569",
                     fontSize: "0.85rem",
-                    lineHeight: 1.85
+                    lineHeight: 1.85,
+                    ...(isDark ? { color: "#475569" } : {})
                   }}
                 >
                   در صورت داشتن هرگونه سوال در خصوص امنیت داده‌های خود، با دپارتمان حقوقی پاراهور در تماس باشید.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-3">
-<button
-  className="inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl font-semibold text-sm transition-all privacy-contact-button"
+<Link
+  href="https://vakiltabatabaee.ir/"
+  target="_blank"
+  rel="noopener noreferrer"
+  className={`inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 privacy-contact-button ${
+    isDark
+      ? ""
+      : "bg-[#1565C0] border border-[#1565C0] text-white shadow-[0_8px_20px_rgba(21,101,192,0.18)] hover:bg-[#0D47A1] hover:border-[#0D47A1] hover:shadow-[0_14px_30px_rgba(21,101,192,0.32),0_4px_10px_rgba(21,101,192,0.16)] active:bg-[#0B3D91] active:border-[#0B3D91] active:translate-y-0 active:shadow-[0_6px_14px_rgba(21,101,192,0.24)]"
+  }`}
   style={{
-    background: "transparent",
-    border: "1px solid rgba(0,229,255,0.4)",
-    color: "#00E5FF",
-    boxShadow:
-      "0 0 16px rgba(0,229,255,0.06), inset 0 0 16px rgba(0,229,255,0.03)",
-    fontFamily: "var(--font-vazirmatn), sans-serif"
+    fontFamily: "var(--font-vazirmatn), sans-serif",
+    ...(isDark
+      ? {
+          background: "transparent",
+          border: "1px solid rgba(0,229,255,0.4)",
+          color: "#00E5FF",
+          boxShadow:
+            "0 0 16px rgba(0,229,255,0.06), inset 0 0 16px rgba(0,229,255,0.03)"
+        }
+      : {})
   }}
-  onMouseEnter={(e) => {
-    (e.currentTarget as HTMLElement).style.background =
-      "rgba(0,229,255,0.09)";
+  onMouseEnter={
+    isDark
+      ? (e) => {
+          (e.currentTarget as HTMLElement).style.background =
+            "rgba(0,229,255,0.09)";
 
-    (e.currentTarget as HTMLElement).style.boxShadow =
-      "0 0 28px rgba(0,229,255,0.18)";
-  }}
-  onMouseLeave={(e) => {
-    (e.currentTarget as HTMLElement).style.background =
-      "transparent";
+          (e.currentTarget as HTMLElement).style.boxShadow =
+            "0 0 28px rgba(0,229,255,0.18)";
+        }
+      : undefined
+  }
+  onMouseLeave={
+    isDark
+      ? (e) => {
+          (e.currentTarget as HTMLElement).style.background =
+            "transparent";
 
-    (e.currentTarget as HTMLElement).style.boxShadow =
-      "0 0 16px rgba(0,229,255,0.06)";
-  }}
+          (e.currentTarget as HTMLElement).style.boxShadow =
+            "0 0 16px rgba(0,229,255,0.06)";
+        }
+      : undefined
+  }
 >
   <svg
     className="privacy-brand-icon"
@@ -1567,910 +1879,15 @@ export default function PrivacyPageClient({
   </svg>
 
   تماس با دپارتمان حقوقی
-</button>
+</Link>
 
-                  <div
-                    className="flex items-center gap-2.5 text-xs privacy-contact-email"
-                    style={{ color: "#445367",letterSpacing: "0.01rem" }}
-                  >
-                    <svg
-                      className="privacy-brand-icon"
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="rgba(0,229,255,0.4)"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    </svg>
-
-                    <span>
-                      legal@parahoor.io
-                    </span>
-                  </div>
+                  
                 </div>
               </motion.div>
             </main>
           </div>
         </div>
       </div>
-
-      {/* ============================================================
-          LIGHT MODE — COMPLETE OVERRIDE
-          ============================================================ */}
-
-      <style jsx global>{`
-
-        /* ============================================================
-           CORE
-           ============================================================ */
-
-        [data-theme="light"].privacy-page {
-          --p-primary: #1E3A8A;
-          --p-primary-dark: #172F70;
-          --p-primary-deep: #12265A;
-
-          --p-text: #1E3A8A;
-          --p-text-strong: #12265A;
-          --p-text-body: #334155;
-          --p-text-muted: #475569;
-
-          --p-border: rgba(30,58,138,.18);
-          --p-border-strong: rgba(30,58,138,.30);
-
-          --p-surface: #ffffff;
-          --p-surface-soft: rgba(30,58,138,.035);
-          --p-surface-hover: rgba(30,58,138,.065);
-
-          background-color: #ffffff !important;
-          color: var(--p-text) !important;
-
-          background-image:
-            linear-gradient(
-              rgba(30,58,138,.028) 1px,
-              transparent 1px
-            ),
-            linear-gradient(
-              90deg,
-              rgba(30,58,138,.028) 1px,
-              transparent 1px
-            ) !important;
-
-          background-size: 52px 52px !important;
-        }
-
-
-        /* ============================================================
-           HEADER
-           White Light Mode — NO cyan.
-           ============================================================ */
-
-        [data-theme="light"].privacy-page .privacy-header {
-          background:
-            linear-gradient(
-              180deg,
-              #ffffff 0%,
-              #ffffff 75%,
-              rgba(30,58,138,.025) 100%
-            ) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-header::after {
-          content: "";
-          position: absolute;
-          left: 50%;
-          bottom: 0;
-          width: min(760px,90%);
-          height: 1px;
-          transform: translateX(-50%);
-          background:
-            linear-gradient(
-              90deg,
-              transparent,
-              rgba(30,58,138,.25),
-              transparent
-            );
-        }
-
-        [data-theme="light"].privacy-page .privacy-main-title {
-          color: var(--p-primary) !important;
-          text-shadow:
-            0 8px 30px rgba(30,58,138,.10) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-header-description {
-          color: #475569 !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-header-icon {
-          background:
-            rgba(30,58,138,.055) !important;
-
-          border:
-            1px solid rgba(30,58,138,.24) !important;
-
-          box-shadow:
-            0 8px 25px rgba(30,58,138,.08) !important;
-        }
-
-
-        /* ============================================================
-           TEXT
-           ============================================================ */
-
-        [data-theme="light"].privacy-page .privacy-paragraph,
-        [data-theme="light"].privacy-page .privacy-list,
-        [data-theme="light"].privacy-page .privacy-list span {
-          color: #334155 !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-h2,
-        [data-theme="light"].privacy-page .privacy-h3 {
-          color: var(--p-primary) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-highlight {
-          color: #172F70 !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-brand-text {
-          color: var(--p-primary) !important;
-        }
-
-        [data-theme="light"].privacy-page strong,
-        [data-theme="light"].privacy-page b {
-          color: #172F70 !important;
-        }
-
-
-        /* ============================================================
-           SECTION ACCENTS
-           ============================================================ */
-
-        [data-theme="light"].privacy-page .privacy-section-accent {
-          background:
-            linear-gradient(
-              180deg,
-              #1E3A8A,
-              rgba(30,58,138,.25)
-            ) !important;
-
-          box-shadow:
-            0 0 14px rgba(30,58,138,.18);
-        }
-
-        [data-theme="light"].privacy-page .privacy-section-label {
-          color:
-            rgba(30,58,138,.60) !important;
-        }
-
-
-        /* ============================================================
-           DIVIDER
-           ============================================================ */
-
-        [data-theme="light"].privacy-page .privacy-divider {
-          background:
-            linear-gradient(
-              90deg,
-              transparent,
-              rgba(30,58,138,.20),
-              rgba(30,58,138,.08),
-              transparent
-            ) !important;
-        }
-
-
-        /* ============================================================
-           CALLOUTS
-           ALL CYAN/VIOLET CALLOUTS = BRAND BLUE
-           ============================================================ */
-
-        [data-theme="light"].privacy-page .privacy-callout {
-          background:
-            linear-gradient(
-              135deg,
-              rgba(30,58,138,.045),
-              rgba(30,58,138,.018)
-            ) !important;
-
-          border:
-            1px solid rgba(30,58,138,.25) !important;
-
-          box-shadow:
-            0 8px 26px rgba(30,58,138,.075) !important;
-
-          transition:
-            transform .22s ease,
-            box-shadow .22s ease,
-            border-color .22s ease !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-callout:hover {
-          transform: translateY(-3px) !important;
-
-          border-color:
-            rgba(30,58,138,.42) !important;
-
-          box-shadow:
-            0 17px 38px rgba(30,58,138,.16) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-callout-bar {
-          background:
-            #1E3A8A !important;
-
-          box-shadow:
-            0 0 12px rgba(30,58,138,.28);
-        }
-
-        [data-theme="light"].privacy-page .privacy-callout-content {
-          color: #334155 !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-callout strong {
-          color: #12265A !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-brand-icon {
-          stroke: #1E3A8A !important;
-        }
-
-
-        /* ============================================================
-           ICONS
-           ============================================================ */
-
-        [data-theme="light"].privacy-page .privacy-callout-icon svg {
-          stroke: #1E3A8A !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-pulse-dot {
-          background: #1E3A8A !important;
-
-          box-shadow:
-            0 0 0 4px rgba(30,58,138,.07),
-            0 0 16px rgba(30,58,138,.30) !important;
-        }
-
-
-        /* ============================================================
-           WARNING
-           ORANGE -> RED
-           ============================================================ */
-
-        [data-theme="light"].privacy-page .privacy-warning {
-          background:
-            rgba(239,68,68,.045) !important;
-
-          border:
-            1px solid rgba(239,68,68,.27) !important;
-
-          box-shadow:
-            0 8px 24px rgba(239,68,68,.07) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-warning p {
-          color: #475569 !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-warning-title {
-          color: #DC2626 !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-warning-icon {
-          stroke: #DC2626 !important;
-        }
-
-
-        /* ============================================================
-           TOC
-           ============================================================ */
-
-        [data-theme="light"].privacy-page .privacy-toc-card {
-          background: #ffffff !important;
-
-          border:
-            1px solid rgba(30,58,138,.20) !important;
-
-          box-shadow:
-            0 12px 34px rgba(30,58,138,.10) !important;
-
-          backdrop-filter: none !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-toc-header {
-          background:
-            rgba(30,58,138,.045) !important;
-
-          border-bottom:
-            1px solid rgba(30,58,138,.14) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-toc-label {
-          color:
-            rgba(30,58,138,.62) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-toc-item {
-          color: #475569 !important;
-
-          transition:
-            transform .2s ease,
-            background .2s ease,
-            color .2s ease,
-            box-shadow .2s ease !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-toc-item:not(.is-active):hover {
-          background:
-            rgba(30,58,138,.055) !important;
-
-          color:
-            #1E3A8A !important;
-
-          transform:
-            translateY(-2px) !important;
-
-          box-shadow:
-            0 8px 22px rgba(30,58,138,.12) !important;
-
-          border-color:
-            rgba(30,58,138,.18) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-toc-item.is-active {
-          background:
-            linear-gradient(
-              135deg,
-              #1E3A8A,
-              #172F70
-            ) !important;
-
-          color: #ffffff !important;
-
-          border:
-            1px solid #1E3A8A !important;
-
-          box-shadow:
-            0 10px 27px rgba(30,58,138,.25) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-toc-item.is-active:hover {
-          transform:
-            translateY(-2px) !important;
-
-          box-shadow:
-            0 15px 34px rgba(30,58,138,.32) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-toc-item.is-active span {
-          color: #ffffff !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-toc-number {
-          color:
-            rgba(255,255,255,.68) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-toc-mobile {
-          background:
-            #ffffff !important;
-
-          color:
-            #1E3A8A !important;
-
-          border:
-            1px solid rgba(30,58,138,.25) !important;
-
-          box-shadow:
-            0 8px 24px rgba(30,58,138,.09) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-toc-mobile:hover {
-          background:
-            #1E3A8A !important;
-
-          color:
-            #ffffff !important;
-
-          box-shadow:
-            0 13px 30px rgba(30,58,138,.25) !important;
-        }
-
-
-        /* ============================================================
-           READING PROGRESS
-           ============================================================ */
-
-        [data-theme="light"].privacy-page .privacy-progress {
-          border-top:
-            1px solid rgba(30,58,138,.12) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-progress-label {
-          color:
-            #475569 !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-progress-percent {
-          color:
-            #1E3A8A !important;
-          font-weight: 700 !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-progress-track {
-          background:
-            rgba(30,58,138,.10) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-progress-fill {
-          background:
-            linear-gradient(
-              90deg,
-              #1E3A8A,
-              #1E3A8A
-            ) !important;
-
-          box-shadow:
-            0 0 9px rgba(30,58,138,.38) !important;
-        }
-
-
-        /* ============================================================
-           TABLE
-           ============================================================ */
-
-        [data-theme="light"].privacy-page .privacy-sharing-table {
-          background: #ffffff !important;
-
-          border:
-            1px solid rgba(30,58,138,.20) !important;
-
-          box-shadow:
-            0 12px 30px rgba(30,58,138,.08) !important;
-
-          transition:
-            box-shadow .22s ease,
-            transform .22s ease !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-sharing-table:hover {
-          transform:
-            translateY(-2px) !important;
-
-          box-shadow:
-            0 18px 38px rgba(30,58,138,.14) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-table-header {
-          background:
-            rgba(30,58,138,.055) !important;
-
-          border-bottom:
-            1px solid rgba(30,58,138,.14) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-table-header span {
-          color:
-            #1E3A8A !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-table-row {
-          border-bottom:
-            1px solid rgba(30,58,138,.09) !important;
-
-          transition:
-            background .18s ease !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-table-row:hover {
-          background:
-            rgba(30,58,138,.035) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-table-entity {
-          color:
-            #334155 !important;
-        }
-
-
-        /* ============================================================
-           CONTACT CARD
-           ============================================================ */
-
-        [data-theme="light"].privacy-page .privacy-contact-card {
-          background:
-            #ffffff !important;
-
-          border:
-            1px solid rgba(30,58,138,.24) !important;
-
-          box-shadow:
-            0 15px 42px rgba(30,58,138,.11) !important;
-
-          backdrop-filter: none !important;
-
-          transition:
-            transform .24s ease,
-            box-shadow .24s ease,
-            border-color .24s ease !important;
-        }
-            
-            [data-theme="dark"].privacy-page .privacy-contact-card {
-
-          transition:
-            transform .24s ease,
-            box-shadow .24s ease,
-            border-color .24s ease !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-contact-card:hover {
-          transform:
-            translateY(-5px) !important;
-
-          border-color:
-            rgba(30,58,138,.42) !important;
-
-          box-shadow:
-            0 24px 55px rgba(30,58,138,.20) !important;
-        }
-
-        
-            
-        [data-theme="dark"].privacy-page .privacy-contact-card:hover {
-          transform:
-            translateY(-5px) !important;
-
-          border-color:
-            rgba(38, 177, 177, 0.33) !important;
-
-          box-shadow:
-           0 0 50px rgba(0, 229, 255, 0.08), inset 0 0 30px rgba(0,229,255,0.02) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-contact-corner {
-          border-color:
-            rgba(30,58,138,.34) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-contact-label {
-          color:
-            rgba(30,58,138,.65) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-contact-title {
-          color:
-            #1E3A8A !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-contact-description {
-          color:
-            #475569 !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-contact-email {
-          color:
-            #475569 !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-contact-button {
-  background: #1E3A8A !important;
-  color: #FFFFFF !important;
-  border: 1px solid #1E3A8A !important;
-  box-shadow: 0 8px 20px rgba(30, 58, 138, 0.20) !important;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease !important;
-}
-
-[data-theme="light"].privacy-page .privacy-contact-button:hover {
-  background: #172F73 !important;
-  color: #FFFFFF !important;
-  border-color: #172F73 !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 14px 30px rgba(30, 58, 138, 0.34) !important;
-}
-
-[data-theme="light"].privacy-page .privacy-contact-button:active {
-  background: #142A66 !important;
-  color: #FFFFFF !important;
-  transform: translateY(0) !important;
-  box-shadow: 0 6px 14px rgba(30, 58, 138, 0.25) !important;
-}
-
-
-        /* ============================================================
-           GENERAL HOVERS
-           ============================================================ */
-
-        [data-theme="light"].privacy-page button {
-          transition:
-            transform .2s ease,
-            box-shadow .2s ease,
-            background .2s ease,
-            border-color .2s ease,
-            color .2s ease !important;
-        }
-
-        [data-theme="light"].privacy-page button:hover {
-          box-shadow:
-            0 12px 28px rgba(30,58,138,.16);
-        }
-
-
-        /* ============================================================
-           BREADCRUMB
-           ============================================================ */
-
-        [data-theme="light"].privacy-page .privacy-breadcrumb {
-          color:
-            #475569 !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-breadcrumb:hover {
-          color:
-            #1E3A8A !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-breadcrumb-current {
-          color:
-            #1E3A8A !important;
-        }
-
-
-        /* ============================================================
-           DATE BADGE
-           ============================================================ */
-
-        [data-theme="light"].privacy-page .privacy-date-badge {
-          background:
-            rgba(30,58,138,.035) !important;
-
-          border:
-            1px solid rgba(30,58,138,.15) !important;
-
-          box-shadow:
-            0 5px 18px rgba(30,58,138,.05) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-date-badge span {
-          color:
-            #475569 !important;
-        }
-
-
-        /* ============================================================
-           MODAL
-           ============================================================ */
-
-        [data-theme="light"].privacy-page .privacy-modal {
-          background:
-            #ffffff !important;
-
-          border:
-            1px solid rgba(30,58,138,.25) !important;
-
-          box-shadow:
-            0 30px 90px rgba(30,58,138,.25) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-modal-topbar {
-          background:
-            linear-gradient(
-              90deg,
-              transparent,
-              #1E3A8A,
-              transparent
-            ) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-modal h3 {
-          color:
-            #1E3A8A !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-modal p {
-          color:
-            #475569 !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-modal input,
-        [data-theme="light"].privacy-page .privacy-modal textarea {
-          background:
-            #ffffff !important;
-
-          color:
-            #172F70 !important;
-
-          border:
-            1px solid rgba(30,58,138,.22) !important;
-
-          box-shadow:
-            inset 0 1px 2px rgba(30,58,138,.025) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-modal input:focus,
-        [data-theme="light"].privacy-page .privacy-modal textarea:focus {
-          border-color:
-            #1E3A8A !important;
-
-          box-shadow:
-            0 0 0 3px rgba(30,58,138,.10) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-modal-success {
-          background:
-            rgba(30,58,138,.06) !important;
-
-          border:
-            1px solid rgba(30,58,138,.22) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-modal-success svg {
-          stroke:
-            #1E3A8A !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-modal-close {
-          color:
-            #475569 !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-modal-close:hover {
-          color:
-            #1E3A8A !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-modal-secondary {
-          color:
-            #475569 !important;
-          border-color:
-            rgba(30,58,138,.16) !important;
-        }
-
-        [data-theme="light"].privacy-page .privacy-modal-secondary:hover {
-          background:
-            rgba(30,58,138,.06) !important;
-
-          color:
-            #1E3A8A !important;
-
-          box-shadow:
-            0 8px 20px rgba(30,58,138,.10) !important;
-        }
-
-
-        /* ============================================================
-           REMOVE OLD PALE BLUE / CYAN EFFECTS
-           ============================================================ */
-
-        [data-theme="light"].privacy-page [style*="#00E5FF"],
-        [data-theme="light"].privacy-page [style*="0,229,255"],
-        [data-theme="light"].privacy-page [style*="0, 229, 255"],
-        [data-theme="light"].privacy-page [style*="#A78BFA"],
-        [data-theme="light"].privacy-page [style*="167,139,250"],
-        [data-theme="light"].privacy-page [style*="167, 139, 250"] {
-          color:
-            #1E3A8A !important;
-
-          border-color:
-            rgba(30,58,138,.25) !important;
-        }
-
-        /* IMPORTANT:
-           Don't let the generic rule above recolor semantic SVGs. */
-
-        [data-theme="light"].privacy-page .privacy-warning-icon {
-          stroke:
-            #DC2626 !important;
-        }
-
-        [data-theme="light"].privacy-page svg[stroke="#EF4444"] {
-          stroke:
-            #DC2626 !important;
-        }
-
-        [data-theme="light"].privacy-page svg[stroke="#22C55E"] {
-          stroke:
-            #16A34A !important;
-        }
-
-
-        /* ============================================================
-           ACCESSIBILITY / CONTRAST
-           ============================================================ */
-
-        [data-theme="light"].privacy-page input::placeholder,
-        [data-theme="light"].privacy-page textarea::placeholder {
-          color:
-            #64748B !important;
-
-          opacity: 1 !important;
-        }
-
-        [data-theme="light"].privacy-page ::selection {
-          background:
-            rgba(30,58,138,.18);
-
-          color:
-            #12265A;
-        }
-
-        [data-theme="light"].privacy-page .privacy-toc-item.is-active .privacy-pulse-dot {
-  background: #FFFFFF !important;
-  box-shadow:
-    0 0 0 2px rgba(255, 255, 255, 0.12),
-    0 0 10px rgba(255, 255, 255, 0.65) !important;
-}
-
-/* =========================================
-   CONTACT BUTTON — LIGHT MODE
-   ========================================= */
-
-[data-theme="light"].privacy-page .privacy-contact-button {
-  background: #1E3A8A !important;
-  border: 1px solid #1E3A8A !important;
-  color: #FFFFFF !important;
-
-  box-shadow:
-    0 8px 20px rgba(30, 58, 138, 0.18) !important;
-
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease !important;
-}
-
-/* مهم: حتی وقتی موس روی Button می‌رود */
-[data-theme="light"].privacy-page .privacy-contact-button:hover {
-  background: #172F73 !important;
-  border-color: #172F73 !important;
-  color: #FFFFFF !important;
-
-
-
-  box-shadow:
-    0 14px 30px rgba(30, 58, 138, 0.32),
-    0 4px 10px rgba(30, 58, 138, 0.16) !important;
-}
-
-/* متن و آیکون داخل Button */
-[data-theme="light"].privacy-page .privacy-contact-button,
-[data-theme="light"].privacy-page .privacy-contact-button span,
-[data-theme="light"].privacy-page .privacy-contact-button svg {
-  color: #FFFFFF !important;
-}
-
-/* آیکون ایمیل */
-[data-theme="light"].privacy-page
-  .privacy-contact-button
-  .privacy-brand-icon {
-  color: #FFFFFF !important;
-  stroke: #FFFFFF !important;
-}
-
-/* وقتی کلیک می‌شود */
-[data-theme="light"].privacy-page .privacy-contact-button:active {
-  background: #142A66 !important;
-  border-color: #142A66 !important;
-  color: #FFFFFF !important;
-
-
-
-  box-shadow:
-    0 6px 14px rgba(30, 58, 138, 0.24) !important;
-}
-
-      `}</style>
     </>
   );
 }
-
-
