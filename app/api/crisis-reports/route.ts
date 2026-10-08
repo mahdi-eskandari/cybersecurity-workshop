@@ -2,18 +2,19 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import crypto from "crypto";
 import { Types } from "mongoose";
-
+import { cookies } from "next/headers";
+import { checkVerified, normalizePhone, rateLimit } from "@/lib/otp";
 import CrisisReport from "../../model/crisisReport";
 import ConfidentialNote from "../../model/ConfidentialNote";
 
 const VALID_INCIDENT_TYPES = [
-  "پایش دارک‌وب و هوش تهدیدات",
-  "تست نفوذِ پسا-بحران",
-  "مقابله و مذاکره با باج‌افزارها",
-  "فارنزیک و کالبدشکافی دیجیتال",
-  "ردیابی رمزارز و تحلیل بلاک‌چین",
-  "هویت‌سنجی پنهان",
   "مشاوره",
+  "ردیابی رمزارز",
+  "کشف هویت",
+  "تست نفوذ",
+  "کالبدشکافی دیجیتال",
+  "مقابله با باج‌افزار",
+  "هوش تهدیدات",
 ] as const;
 
 const VALID_STATUSES = [
@@ -68,6 +69,26 @@ export async function POST(req: Request) {
       );
     }
 
+        // شماره باید قبلاً با OTP تأیید شده باشد
+    const phone = normalizePhone(contact);
+    const otpToken = (await cookies()).get("otp_verified")?.value;
+
+    if (!phone || !checkVerified(otpToken, phone)) {
+      return NextResponse.json(
+        { message: "شماره موبایل تأیید نشده است. دوباره تلاش کنید." },
+        { status: 401 }
+      );
+    }
+
+
+        // کوکی otp_verified تا ۱۵ دقیقه معتبره؛ جلوی ارسال پشت‌سرهم با همون کوکی رو می‌گیریم
+    if (!rateLimit(`report:${phone}`, 3, 60 * 60 * 1000)) {
+      return NextResponse.json(
+        { message: "تعداد گزارش‌های این شماره زیاد است. بعداً تلاش کنید" },
+        { status: 429 }
+      );
+    }
+
     if (description.length > 2000) {
       return NextResponse.json(
         { message: "شرح مشکل نمی‌تواند بیشتر از ۲۰۰۰ کاراکتر باشد" },
@@ -106,6 +127,8 @@ export async function POST(req: Request) {
       maxAge: 60 * 15, // 15 دقیقه
       // maxAge: 10, // ۱۰ ثانیه (فقط برای تست)
     });
+
+        res.cookies.set("otp_verified", "", { path: "/", maxAge: 0 });
 
     return res;
   } catch (error) {

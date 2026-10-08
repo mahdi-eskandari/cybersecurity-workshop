@@ -4,7 +4,7 @@
 
 "use client";
 
-import { type ReactNode, type MouseEvent, useEffect } from "react";
+import { type ReactNode, type MouseEvent, useEffect, useState } from "react";
 import { useTheme } from "../../../components/ThemeProvider";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import Link from "next/link";
@@ -14,6 +14,8 @@ import {
   authors,
   POSTS_PER_PAGE,
 } from "./authorsData";
+import { EmergencyModal } from "../../../components/CrisisReportForm"
+
 
 export type { Post };
 
@@ -488,35 +490,7 @@ const SkillBar = ({
   );
 };
 
-/* =========================================================
-   SOCIAL BUTTON
-========================================================= */
 
-const SocialBtn = ({
-  icon,
-  href = "#",
-  title,
-}: {
-  icon: ReactNode;
-  href?: string;
-  title: string;
-}) => {
-  const { darkMode } = useTheme();
-
-  return (
-    <a
-      href={href}
-      title={title}
-      className={`flex items-center justify-center w-[38px] h-[38px] rounded-[10px] transition-all duration-[180ms] ${
-        darkMode
-          ? "bg-white/[0.04] border border-white/[0.08] text-[#475569] hover:bg-[rgba(0,229,255,0.1)] hover:border-[rgba(0,229,255,0.4)] hover:text-[#00E5FF] hover:shadow-[0_0_14px_rgba(0,229,255,0.18)]"
-          : "bg-[rgba(30,58,138,0.03)] border border-[rgba(30,58,138,0.12)] text-[#64748B] hover:bg-[rgba(29,78,216,0.08)] hover:border-[rgba(29,78,216,0.35)] hover:text-[#1D4ED8] hover:shadow-[0_0_14px_rgba(29,78,216,0.12)]"
-      }`}
-    >
-      {icon}
-    </a>
-  );
-};
 
 /* =========================================================
    ARTICLE CARD
@@ -553,9 +527,16 @@ const ArticleCard = ({
   return (
     <div
       
-      className={`group flex h-full min-w-0 flex-col border rounded-2xl overflow-hidden transition-all duration-200 no-underline ${
-        darkMode ? REPORT_CARD_DARK : REPORT_CARD_LIGHT
-      }`}
+
+
+       className={`group flex flex-col h-full min-w-0 rounded-2xl overflow-hidden transition-all duration-200 ${
+            darkMode
+              ? "bg-[rgba(255,255,255,0.028)] border border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
+              : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"
+          }`}
+          style={{
+            backdropFilter: "blur(10px)",
+          }}
       // style={{
       //   background: darkMode
       //     ? "linear-gradient(145deg, rgba(255,255,255,0.035), rgba(255,255,255,0.018))"
@@ -601,17 +582,17 @@ const ArticleCard = ({
       </div>
 
       {/* Content */}
-      <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-5">
+      <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-5 pt-10">
         <h3
-          className={`text-base font-bold leading-snug mb-3 break-words line-clamp-2 ${
-            darkMode ? "text-[#E6F7FF]" : "text-[#1E3A8A]"
+          className={`text-base font-bold leading-snug mb-3 break-words transition-colors line-clamp-1 ${
+            darkMode ? "text-[#E6F7FF]" : "group-hover:text-[#1565C0]"
           }`}
         >
           {post.title}
         </h3>
 
         <p
-          className={`text-sm leading-relaxed line-clamp-3 break-words mb-5 flex-1 ${
+          className={`text-sm leading-relaxed line-clamp-1 break-words mb-5 flex-1 min-h-6 ${
             darkMode ? "text-[#9DB0C0]" : "text-[#475569]"
           }`}
         >
@@ -648,7 +629,7 @@ const ArticleCard = ({
           <Link
           href={`/blogs/${post.slug}`}
             className={`flex items-center gap-1 text-xs font-semibold whitespace-nowrap group-hover:gap-1.5 transition-all flex-shrink-0 ${
-              darkMode ? "text-[#00E5FF]" : "text-[#1E3A8A]"
+              darkMode ? "text-[#00E5FF]" : "text-[#1565C0]"
             }`}
           >
             بررسی گزارش
@@ -737,6 +718,8 @@ export default function AuthorsClient({
   currentPage,
   postsError = "",
   seoH1,
+  h1Map,
+  slugMap,
   basePath: basePathProp,
 }: {
   posts: Post[];
@@ -745,18 +728,28 @@ export default function AuthorsClient({
   currentPage: number;
   postsError?: string;
   seoH1?: string;
+  h1Map?: Record<string, string>;
+  slugMap?: Record<string, string>;
   basePath?: string;
 }) {
   const { darkMode } = useTheme();
     const blueBright = darkMode ? "#00E5FF" : "#1D4ED8";
 
 
-  const activeAuthorIndex = Math.max(
-    0,
-    authors.findIndex((item) => item.id === authorSlug)
-  );
-  const author = authors[activeAuthorIndex];
+  const [activeId, setActiveId] = useState(authorSlug);
+    const [crisisOpen, setCrisisOpen] = useState(false)
+      const [switched, setSwitched] = useState(false);
+  
+  
+
+const activeAuthorIndex = Math.max(
+  0,
+  authors.findIndex((item) => item.id === activeId)
+);
+const author = authors[activeAuthorIndex];
+
   const accent = darkMode ? author.accent : author.accentLight;
+    const currentH1 = switched ? h1Map?.[author.id] || seoH1 : seoH1;
 
   const authorPosts = posts
     .filter((post) => post.status === "published")
@@ -771,8 +764,36 @@ export default function AuthorsClient({
   const totalPages = Math.max(1, Math.ceil(authorPosts.length / postsPerPage));
   const safePage = Math.min(Math.max(currentPage, 1), totalPages);
 
-  const basePath = basePathProp || `/authors/${author.id}`;
-  const allPostsPath = `${basePath}?view=all&page=1`;
+  const basePath = `/authors/${slugMap?.[author.id] || author.id}`;
+    const allPostsPath = `${basePath}?view=all&page=1`;
+
+    const handleSelectAuthor = (id: string) => {
+    if (id === activeId) return;
+    setActiveId(id);
+    setSwitched(true);
+    window.history.pushState(null, "", `/authors/${slugMap?.[id] || id}`);
+  };
+
+  useEffect(() => {
+    const onPopState = () => {
+      const m = window.location.pathname.match(/^\/authors\/([^/?#]+)/);
+      const found = m
+        ? authors.find(
+            (a) => (slugMap?.[a.id] || a.id) === decodeURIComponent(m[1])
+          )
+        : undefined;
+
+      if (found) {
+        setActiveId(found.id);
+        setSwitched(true);
+      } else {
+        setActiveId(authorSlug);
+        setSwitched(false);
+      }
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [authorSlug, slugMap]);
 
     // Sync canonical with the current author/page without a full page reload.
   // Pagination uses client-side navigation with ?view=all&page=N,
@@ -812,25 +833,54 @@ export default function AuthorsClient({
   );
 
 
+
+/* =========================================================
+   SOCIAL BUTTON
+========================================================= */
+
+const SocialBtn = ({
+  icon,
+  href = "#",
+  title,
+}: {
+  icon: ReactNode;
+  href?: string;
+  title: string;
+}) => {
+  const { darkMode } = useTheme();
+// color: accent
   return (
+<Link
+  href={href}
+  title={title}
+  style={{
+    "--accent": accent,
+  } as React.CSSProperties}
+  className={`flex items-center justify-center w-[38px] h-[38px] rounded-[10px] transition-all duration-[180ms] ${
+    darkMode
+      ? "bg-white/[0.04] border border-white/[0.08] text-[#475569] hover:bg-[rgba(0,229,255,0.1)] hover:border-[rgba(0,229,255,0.4)] hover:text-[#00E5FF] hover:shadow-[0_0_14px_rgba(0,229,255,0.18)]"
+      : "bg-[rgba(30,58,138,0.03)] border border-[rgba(30,58,138,0.12)] text-[#64748B] hover:border-[var(--accent)] hover:text-[var(--accent)] hover:shadow-[0_0_8px_var(--accent)]"
+  }`}
+>
+      {icon}
+    </Link>
+  );
+};
+
+
+  return (
+    
     <div
        dir="rtl"
-      className={`min-h-screen transition-colors duration-300 pt-10 ${
+      className={`min-h-screen transition-colors duration-300 pt-[130px] ${
         darkMode
           ? "bg-[#0A1128] text-[#E6F7FF]"
           : "bg-white text-[#0F172A]"
       }`}
       style={{
         fontFamily: "var(--font-vazirmatn), sans-serif",
-        backgroundImage: darkMode
-          ? "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"
-          : "linear-gradient(rgba(30,58,138,0.045) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,138,0.045) 1px,transparent 1px)",
-        backgroundSize: "52px 52px",
-      backgroundAttachment: "fixed"
       }}
     >
-
-
 
       {/* =====================================================
           MAIN
@@ -863,16 +913,15 @@ export default function AuthorsClient({
             <span className="data-label">PARAHOOR / EXPERTS</span>
           </div> */}
 
-                        <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 text-xs"
+           <div
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 text-xs color: accent/10"
 
                         style={{
-              background: darkMode
-                ? "rgba(0,229,255,0.07)"
-                : "rgba(30,58,138,0.07)",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.2)"
-                : "1px solid rgba(30,58,138,0.20)",
+                : "none",
+              backgroundColor: `${accent}20`,
+
               
             }}
           >
@@ -880,21 +929,20 @@ export default function AuthorsClient({
             <span 
             className="data-label"
             style={{
-              color: darkMode ? "#00E5FF" : "#102254ce",
-                fontWeight: "500"
+              // color: darkMode ? "#00E5FF" : "#1565C0",
+              color: accent
             }}
-            >
-              PARAHOOR / EXPERTS</span>
+            >PARAHOOR / EXPERTS</span>
 
-                          <span className="node-dot pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
-                    background: darkMode
-                ? "#00E5FF"
-                : "rgba(13, 34, 93, 0.78)",
+                        <span className="node-dot pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
+                   backgroundColor: accent,
 
              }}
             
             />
           </div>
+              
+
 
 
             <h1
@@ -909,7 +957,7 @@ export default function AuthorsClient({
       : "0 0 18px rgba(30,58,138,0.10)",
   }}
 >
-  {seoH1}
+    {currentH1}
 </h1>
 
             <p
@@ -926,79 +974,50 @@ export default function AuthorsClient({
           =================================================== */}
 
           
-            <motion.div
-        className="flex justify-center items-center gap-[10px] mb-[38px] flex-wrap"
-    initial={{ opacity: 0, y: 30 }}
+<motion.div
+  className="flex justify-center mb-[38px]"
+  initial={{ opacity: 0, y: 30 }}
   whileInView={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.5 }}
   viewport={{ once: true, amount: 0.25 }}
 >
-            {authors.map((item, index) => {
-              const active = author.id === item.id;
-              const itemAccent = darkMode ? item.accent : item.accentLight;
+  <div
+    className="inline-flex gap-2 p-[5px] rounded-[14px]"
+    style={{
+      background: darkMode ? "rgba(5,8,20,0.7)" : "rgba(30,58,138,0.04)",
+      border: `1px solid ${
+        darkMode ? "rgba(255,255,255,0.06)" : "rgba(30,58,138,0.08)"
+      }`,
+    }}
+  >
+    {authors.map((item) => {
+      const active = author.id === item.id;
+      const itemAccent = darkMode ? item.accent : item.accentLight;
 
-              const inactiveBorder = darkMode
-                ? "rgba(255,255,255,0.07)"
-                : "rgba(30,58,138,0.1)";
-              const inactiveBackground = darkMode
-                ? "rgba(255,255,255,0.025)"
-                : "rgba(30,58,138,0.02)";
-
-              return (
-                <Link
-                  key={item.id}
-                  href={`/authors/${item.id}`}
-                  className="flex items-center gap-[9px] px-[13px] py-2 rounded-[11px] font-inherit transition-all duration-[180ms] cursor-pointer"
-                  style={{
-                    border: active
-                      ? `1px solid ${itemAccent}55`
-                      : `1px solid ${inactiveBorder}`,
-                    background: active
-                      ? `${itemAccent}0D`
-                      : inactiveBackground,
-                    color: active
-                      ? darkMode
-                        ? "#fff"
-                        : "#0F172A"
-                      : darkMode
-                        ? "#475569"
-                        : "#64748B",
-                  }}
-                  {...(!active
-                    ? makeSectionHover(
-                        { border: inactiveBorder, background: inactiveBackground },
-                        {
-                          border: `${itemAccent}55`,
-                          background: `${itemAccent}0D`,
-                        }
-                      )
-                    : {})}
-                >
-                  <img
-                    src={item.photo}
-                    alt={item.name}
-                    className="w-[30px] h-[30px] rounded-full object-cover"
-                    style={{
-                      border: `1px solid ${
-                        active
-                          ? itemAccent
-                          : darkMode
-                            ? "rgba(255,255,255,.08)"
-                            : "rgba(30,58,138,.12)"
-                      }`,
-                    }}
-                  />
-
-                  <span
-                    className="text-[0.75rem]"
-                    style={{ fontWeight: active ? 700 : 500 }}
-                  >
-                    {item.name}
-                  </span>
-                </Link>
-              );
-            })}
-          </motion.div>
+      return (
+        <button
+          key={item.id}
+          type="button"
+          onClick={() => handleSelectAuthor(item.id)}
+          className="px-5 py-[7px] rounded-[10px] text-[0.82rem] font-semibold cursor-pointer transition-all duration-[180ms]"
+          style={{
+            background: active ? `${itemAccent}18` : "transparent",
+            border: active
+              ? `1px solid ${itemAccent}44`
+              : "1px solid transparent",
+            color: active
+              ? itemAccent
+              : darkMode
+                ? "#475569"
+                : "#64748B",
+          }}
+        >
+          {item.name}
+        </button>
+      );
+    })}
+  </div>
+</motion.div>
 
           {/* ===================================================
               PROFILE CARD
@@ -1011,25 +1030,12 @@ export default function AuthorsClient({
               background: darkMode
                 ? "linear-gradient(145deg, rgba(255,255,255,0.035), rgba(255,255,255,0.018))"
                 : "linear-gradient(145deg, #FFFFFF, #FBFCFE)",
-              border: `1px solid ${accent}22`,
+              border: `1px solid ${accent}32`,
               boxShadow: darkMode
                 ? "0 20px 70px rgba(0,0,0,0.22)"
                 : "0 20px 50px rgba(30,58,138,0.08)",
             }}
-            {...makeSectionHover(
-              {
-                border: `${accent}22`,
-                boxShadow: darkMode
-                  ? "0 20px 70px rgba(0,0,0,0.22)"
-                  : "0 20px 50px rgba(30,58,138,0.08)",
-              },
-              {
-                border: `${accent}55`,
-                boxShadow: darkMode
-                  ? `0 20px 70px rgba(0,0,0,0.3), 0 0 0 1px ${accent}22`
-                  : `0 20px 55px rgba(30,58,138,0.14), 0 0 0 1px ${accent}22`,
-              }
-            )}
+
     initial={{ opacity: 0, y: 30 }}
   whileInView={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.5 }}
@@ -1054,7 +1060,8 @@ export default function AuthorsClient({
                className="data-label mb-1"
                style={{
                   letterSpacing: "0.1em",
-                  fontSize: "0.63rem"
+                  fontSize: "0.63rem",
+                  color: accent
                }}
                 >
                   VERIFIED RESEARCHER
@@ -1096,20 +1103,51 @@ export default function AuthorsClient({
               }}
             />
 
-            <div
-              className="w-full h-[43px] rounded-[10px] font-inherit text-[0.78rem] font-bold flex items-center justify-center transition-all duration-200"
-              style={{
-                border: `1px solid ${accent}44`,
-                background: `${accent}09`,
-                color: accent,
-              }}
-              {...makeSectionHover(
-                { border: `${accent}44`, background: `${accent}09` },
-                { border: `${accent}88`, background: `${accent}16` }
-              )}
-            >
-              {author.ctaLabel}
-            </div>
+            {(() => {
+  const ctaBase = darkMode
+    ? {
+        border: accent,
+        background: "transparent",
+        boxShadow: `0 0 16px ${accent}18`,
+      }
+    : {
+        border: `${accent}44`,
+        background: `${accent}10`,
+        boxShadow: undefined,
+      };
+
+  const ctaHover = darkMode
+    ? {
+        border: accent,
+        background: `${accent}10`,
+        boxShadow: `0 0 28px ${accent}30`,
+      }
+    : {
+        border: `${accent}88`,
+        background: `${accent}18`,
+        boxShadow: `0 0 28px ${accent}15`,
+      };
+
+  return (
+    <button
+    onClick={() => setCrisisOpen(true)}
+      className={`w-full h-[43px] rounded-xl font-inherit text-[0.84rem] font-bold flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 ${
+        darkMode ? "border-[1.5px]" : "border"
+      }`}
+      style={{
+        borderStyle: "solid",
+        borderColor: ctaBase.border,
+        background: ctaBase.background,
+        boxShadow: ctaBase.boxShadow,
+        color: accent,
+      }}
+      {...makeSectionHover(ctaBase, ctaHover)}
+    >
+      <IconShield />
+      {author.ctaLabel}
+    </button>
+  );
+})()}
           </motion.div>
 
           {/* ===================================================
@@ -1123,19 +1161,9 @@ export default function AuthorsClient({
               background: darkMode
                 ? "linear-gradient(145deg, rgba(255,255,255,0.035), rgba(255,255,255,0.018))"
                 : "linear-gradient(145deg, #FFFFFF, #FBFCFE)",
-              border: darkMode
-                ? "1px solid rgba(255,255,255,0.06)"
-                : "1px solid rgba(30,58,138,0.1)",
+              border: `1px solid ${accent}42`
             }}
-            {...makeSectionHover(
-              { border: darkMode ? "rgba(255,255,255,0.06)" : "rgba(30,58,138,0.1)" },
-              {
-                border: darkMode ? "rgba(255,255,255,0.16)" : "rgba(29,78,216,0.32)",
-                boxShadow: darkMode
-                  ? "0 16px 40px rgba(0,0,0,0.25)"
-                  : "0 16px 40px rgba(30,58,138,0.13)",
-              }
-            )}
+           
     initial={{ opacity: 0, y: 30 }}
   whileInView={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.5 }}
@@ -1175,29 +1203,20 @@ export default function AuthorsClient({
                 background: darkMode
                   ? "linear-gradient(145deg, rgba(255,255,255,0.035), rgba(255,255,255,0.018))"
                   : "linear-gradient(145deg, #FFFFFF, #FBFCFE)",
-                border: darkMode
-                  ? "1px solid rgba(255,255,255,0.06)"
-                  : "1px solid rgba(30,58,138,0.1)",
+                border: `1px solid ${accent}42`
               }}
-              {...makeSectionHover(
-                { border: darkMode ? "rgba(255,255,255,0.06)" : "rgba(30,58,138,0.1)" },
-                {
-                  border: darkMode ? "rgba(255,255,255,0.16)" : "rgba(29,78,216,0.32)",
-                  boxShadow: darkMode
-                    ? "0 16px 40px rgba(0,0,0,0.25)"
-                    : "0 16px 40px rgba(30,58,138,0.13)",
-                }
-              )}
+
             >
               <div
-               className="data-label mb-1"
-               style={{
-                  letterSpacing: "0.1em",
-                  fontSize: "0.63rem"
-               }}
-              >
-                ACTIVITY STATS
-              </div>
+  className=" mb-1"
+  style={{
+    letterSpacing: "0.1em",
+    fontSize: "0.63rem",
+color: accent
+  }}
+>
+  ACTIVITY STATS
+</div>
 
               <h3 className="m-0 text-base font-extrabold">فعالیت پژوهشی</h3>
 
@@ -1211,19 +1230,10 @@ export default function AuthorsClient({
                         ? "rgba(255,255,255,0.025)"
                         : "rgba(30,58,138,0.02)",
                       border: darkMode
-                        ? "1px solid rgba(255,255,255,0.05)"
-                        : "1px solid rgba(30,58,138,0.08)",
+                        ? "1px solid rgba(36, 182, 198, 0.12)"
+                        : "1px solid rgba(30, 70, 138, 0.19)",
                     }}
-                    {...makeSectionHover(
-                      {
-                        border: darkMode ? "rgba(255,255,255,0.05)" : "rgba(30,58,138,0.08)",
-                        background: darkMode ? "rgba(255,255,255,0.025)" : "rgba(30,58,138,0.02)",
-                      },
-                      {
-                        border: `${accent}44`,
-                        background: darkMode ? `${accent}10` : `${accent}0C`,
-                      }
-                    )}
+                    
                   >
                     <div
                       className="text-[1.05rem] font-extrabold mb-[7px]"
@@ -1275,18 +1285,9 @@ export default function AuthorsClient({
                   ? "linear-gradient(145deg, rgba(255,255,255,0.035), rgba(255,255,255,0.018))"
                   : "linear-gradient(145deg, #FFFFFF, #FBFCFE)",
                 border: darkMode
-                  ? "1px solid rgba(255,255,255,0.06)"
-                  : "1px solid rgba(30,58,138,0.1)",
+                  ? "1px solid rgba(195, 84, 220, 0.22)"
+                  : "1px solid rgba(139, 29, 164, 0.24)",
               }}
-              {...makeSectionHover(
-                { border: darkMode ? "rgba(255,255,255,0.06)" : "rgba(30,58,138,0.1)" },
-                {
-                  border: darkMode ? "rgba(167,139,250,0.35)" : "rgba(29,78,216,0.32)",
-                  boxShadow: darkMode
-                    ? "0 16px 40px rgba(0,0,0,0.25)"
-                    : "0 16px 40px rgba(30,58,138,0.17)",
-                }
-              )}
             >
 
 
@@ -1317,18 +1318,9 @@ export default function AuthorsClient({
                         : "rgba(124,58,237,0.03)",
                       border: darkMode
                         ? "1px solid rgba(167,139,250,0.1)"
-                        : "1px solid rgba(124,58,237,0.12)",
+                        : "1px solid rgba(139, 29, 164, 0.19)",
                     }}
-                    {...makeSectionHover(
-                      {
-                        border: darkMode ? "rgba(167,139,250,0.1)" : "rgba(124,58,237,0.12)",
-                        background: darkMode ? "rgba(167,139,250,0.035)" : "rgba(124,58,237,0.03)",
-                      },
-                      {
-                        border: darkMode ? "rgba(167,139,250,0.4)" : "rgba(124,58,237,0.35)",
-                        background: darkMode ? "rgba(167,139,250,0.08)" : "rgba(124,58,237,0.07)",
-                      }
-                    )}
+
                   >
                     <span
                       className="w-[27px] h-[27px] flex-shrink-0 rounded-[7px] flex items-center justify-center"
@@ -1363,7 +1355,8 @@ export default function AuthorsClient({
 
               <div
                 className="data-label mb-2"
-                style={{ color: darkMode ? "#57677d" : "#94A3B8",
+                style={{ 
+                  color: darkMode ? "#A78BFA" : "#7C3AED",
                   fontSize: "0.62rem"
                  }}
               >
@@ -1379,33 +1372,11 @@ export default function AuthorsClient({
                     style={{
                       color: "#64748B",
                       background: darkMode
-                        ? "rgba(255,255,255,0.022)"
-                        : "rgba(30,58,138,0.025)",
+                        ? "rgba(167,139,250,0.035)"
+                        : "rgba(124,58,237,0.03)",
                       border: darkMode
-                        ? "1px solid rgba(255,255,255,0.055)"
-                        : "1px solid rgba(30,58,138,0.08)",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = darkMode
-                        ? "#E2E8F0"
-                        : "#1D4ED8";
-                      e.currentTarget.style.background = darkMode
-                        ? "rgba(0,229,255,0.075)"
-                        : "rgba(29,78,216,0.06)";
-                      e.currentTarget.style.borderColor = darkMode
-                        ? "rgba(0,229,255,0.28)"
-                        : "rgba(29,78,216,0.25)";
-                      e.currentTarget.style.transform = "translateY(-2px)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = "#64748B";
-                      e.currentTarget.style.background = darkMode
-                        ? "rgba(255,255,255,0.022)"
-                        : "rgba(30,58,138,0.025)";
-                      e.currentTarget.style.borderColor = darkMode
-                        ? "rgba(255,255,255,0.055)"
-                        : "rgba(30,58,138,0.08)";
-                      e.currentTarget.style.transform = "translateY(0)";
+                        ? "1px solid rgba(255, 255, 255, 0.06)"
+                        : "1px solid rgba(139, 29, 164, 0.17)",
                     }}
                   >
                     {tag}
@@ -1430,6 +1401,9 @@ export default function AuthorsClient({
               <div>
                 <div
                   className="data-label mb-1"
+                  style={{
+                    color: accent
+                  }}
                 >
                   AUTHOR ARTICLES
                 </div>
@@ -1467,12 +1441,6 @@ export default function AuthorsClient({
                               ? "#475569"
                               : "#64748B",
                         }}
-                        {...(showAllPosts
-                          ? makeSectionHover(
-                              { border: toggleInactiveBorder, background: toggleInactiveBackground },
-                              { border: `${accent}44`, background: `${accent}0B` }
-                            )
-                          : {})}
                       >
                         <IconNews />
                        جدیدترین ها
@@ -1495,12 +1463,6 @@ export default function AuthorsClient({
                               ? "#475569"
                               : "#64748B",
                         }}
-                        {...(!showAllPosts
-                          ? makeSectionHover(
-                              { border: toggleInactiveBorder, background: toggleInactiveBackground },
-                              { border: `${accent}44`, background: `${accent}0B` }
-                            )
-                          : {})}
                       >
                         مشاهده همه مقالات
                       </Link>
@@ -1672,7 +1634,13 @@ export default function AuthorsClient({
             )}
           </motion.div>
         </div>
+
       </main>
+         {crisisOpen && (
+                  <EmergencyModal
+                    onClose={() => setCrisisOpen(false)}
+                  />
+                )}
 
     </div>
   );

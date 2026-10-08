@@ -36,6 +36,29 @@ body *:not(code):not(pre):not(kbd) {
   text-transform: uppercase;
 }
 
+.site-logo {
+  display: block;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  /* حالت لایت: خاکستری لوگو روی سفید کم‌رنگه، این سایه ظریف خوانایی رو بالا می‌بره */
+  filter: drop-shadow(0 0 1px rgba(15, 23, 42, 0.45));
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+.site-logo:hover { transform: scale(1.05); }
+
+/* حالت دارک: سیستمی */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not(.light) .site-logo {
+    filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.25));
+  }
+}
+/* حالت دارک: دستی (با کلاس dark یا data-theme) */
+.dark .site-logo,
+[data-theme="dark"] .site-logo {
+  filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.25));
+}
+
 @media (max-width: 760px) {
   .preview-info-grid {
     grid-template-columns: 1fr !important;

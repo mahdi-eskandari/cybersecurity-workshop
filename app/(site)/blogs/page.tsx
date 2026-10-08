@@ -8,7 +8,14 @@ import {
   buildBlogsCategoryLinks,
   getAdjacentPageLinks,
   getPageMetadata,
+  getPageSeo,
+  SITE_URL,
 } from "@/lib/seo";
+
+import {
+  buildOrganizationSchema,
+  buildBreadcrumbSchema,
+} from "@/lib/schema";
 
 const PER_PAGE = 6;
 
@@ -217,12 +224,56 @@ export async function generateMetadata({
   }
 }
 
+
+
+function BlogsJsonLd({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
+  const url = `${SITE_URL}/blogs`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": `${url}#webpage`,
+        url,
+        name: title,
+        description,
+        inLanguage: "fa-IR",
+        isPartOf: {
+          "@type": "WebSite",
+          "@id": `${SITE_URL}/#website`,
+        },
+      },
+      buildOrganizationSchema(),
+      buildBreadcrumbSchema([
+        { name: "صفحه اصلی", url: `${SITE_URL}/` },
+        { name: "وبلاگ", url },
+      ]),
+    ],
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  );
+}
+
 export default async function Page({
   searchParams,
 }: {
   searchParams: Promise<BlogsSearchParams>;
 }) {
   const { page: pageParam, category: categoryParam } = await searchParams;
+  const pageSeo = await getPageSeo("blogs");
+const h1Title = pageSeo.h1Title;
   const baseUrl = await getBaseUrl();
 
   const hasQuery = pageParam !== undefined || categoryParam !== undefined;
@@ -231,7 +282,7 @@ export default async function Page({
   const emptyData: BlogPageInitialData = {
     blogs: [],
     mediaItems: [],
-    seo: { h1Title: "بلاگ پاراهور" },
+    seo: { h1Title },
     initialPage: 1,
     initialCategory: category,
     isBare: !hasQuery,
@@ -314,19 +365,23 @@ export default async function Page({
     const initialData: BlogPageInitialData = {
       blogs: publishedPosts,
       mediaItems,
-      seo: { h1Title: "بلاگ پاراهور" },
+      seo: { h1Title },
       initialPage,
       initialCategory: category,
       isBare: !hasQuery,
     };
 
-    return (
-      <div className="min-h-screen">
-        {prevUrl && <link rel="prev" href={prevUrl} />}
-        {nextUrl && <link rel="next" href={nextUrl} />}
-        <BlogPageClient initialData={initialData} />
-      </div>
-    );
+return (
+  <div className="min-h-screen">
+    <BlogsJsonLd
+      title={pageSeo.metaTitle}
+      description={pageSeo.metaDescription}
+    />
+    {prevUrl && <link rel="prev" href={prevUrl} />}
+    {nextUrl && <link rel="next" href={nextUrl} />}
+    <BlogPageClient initialData={initialData} />
+  </div>
+);
   } catch (error) {
     console.error("GET blogs list error:", error);
 
@@ -335,6 +390,7 @@ export default async function Page({
         <BlogPageClient initialData={emptyData} />
       </div>
     );
+    
   }
 }
 

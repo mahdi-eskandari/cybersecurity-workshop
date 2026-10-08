@@ -152,7 +152,7 @@ export default function CommentSection({ postId, darkMode, initialComments }: Co
         className={`relative overflow-hidden rounded-2xl border transition-all duration-300 w-full p-6 md:p-8 mb-10 ${
           darkMode
             ? "border-[#00E5FF]/25 bg-white/[0.025] backdrop-blur-[10px]  shadow-[0_18px_42px_rgba(0,0,0,0.38),0_12px_40px_rgba(0,229,255,0.20)] "
-            : "border-[#1565C0]/40 bg-white shadow-[0_16px_42px_rgb(21,101,192/)] shadow-[0_18px_42px_rgba(0,0,0,0.38),0_12px_40px_rgba(0,229,255,0.20)]"
+            : "border-[#1565C0]/40 bg-white  shadow-[0_0_0_1px_rgba(21,101,192,0.1),0_6px_16px_rgba(21,101,192,0.08)]"
         }`}
       >
         {/* خط نوری بالای کارت */}

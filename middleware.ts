@@ -586,6 +586,55 @@ return redirectResponse;
   }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function isAdminOnlyRequest(pathname: string, method: string): boolean {
+  const is = (base: string) =>
+    pathname === base || pathname.startsWith(`${base}/`);
+
+  if (is("/api/feedback")) return method !== "POST";
+  if (is("/api/comments")) return method !== "GET" && method !== "POST";
+  if (is("/api/posts") || is("/api/services") || is("/api/media"))
+    return method !== "GET";
+
+  return false;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export async function middleware(
   request: NextRequest
 ) {
@@ -604,14 +653,31 @@ export async function middleware(
     );
   }
 
+
+  /*
+ * ثبت گزارش توسط بازدیدکننده عمومی است (فقط POST)؛
+ * امنیتش با کوکی otp_verified داخل خود route چک می‌شود.
+ * GET / PATCH / DELETE همچنان فقط برای ادمین است.
+ */
+if (
+  pathname === "/api/crisis-reports" &&
+  request.method === "POST"
+) {
+  return addSecurityHeaders(
+    NextResponse.next(),
+    true
+  );
+}
+
   const isAdmin =
     isAdminPage(pathname);
 
   const isAdminAPI =
     isAdminApi(pathname);
 
-  const isProtectedAPI =
-    isProtectedApi(pathname);
+const isProtectedAPI =
+    isProtectedApi(pathname) ||
+    isAdminOnlyRequest(pathname, request.method);
 
   /*
    * ---------------------------------------------------------

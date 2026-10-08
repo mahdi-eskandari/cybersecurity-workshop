@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useState } from "react";
 import Link from "next/link";
 import { useTheme } from "./ThemeProvider";
 import {Phone} from "lucide-react";
@@ -10,6 +9,73 @@ import {
   MapPin,
 } from "lucide-react"
 import Image from "next/image";
+import { useState, type CSSProperties, type ReactNode } from "react";
+
+
+/* =========================================================
+   SOCIAL BUTTON
+========================================================= */
+
+const SocialBtn = ({
+  icon,
+  href = "#",
+  title,
+  accent,
+}: {
+  icon: ReactNode;
+  href?: string;
+  title: string;
+  accent?: string; // اختیاری، فقط hex شش‌رقمی
+}) => {
+  const { darkMode } = useTheme();
+
+  // دارک: فیروزه‌ای نئونی | لایت: آبی روشن
+  const color = accent ?? (darkMode ? "#00E5FF" : "#0EA5E9");
+
+  return (
+    <Link
+      href={href}
+      title={title}
+      aria-label={title}
+      target={href.startsWith("http") ? "_blank" : undefined}
+      rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+      style={
+        {
+          "--accent": color,
+          "--accent-bg": `${color}1A`,
+          "--accent-border": `${color}66`,
+          "--accent-glow": darkMode ? `${color}40` : `${color}59`,
+        } as CSSProperties
+      }
+      className={`flex items-center justify-center w-[38px] h-[38px] rounded-[10px] transition-all duration-[180ms] hover:bg-[var(--accent-bg)] hover:border-[var(--accent-border)] hover:text-[var(--accent)] hover:shadow-[0_0_14px_var(--accent-glow)] ${
+        darkMode
+          ? "bg-white/[0.04] border border-white/[0.08] text-[#64748B]"
+          : "bg-white/[0.02] border border-white/[0.06] text-[#64748B]"
+      }`}
+    >
+      {icon}
+    </Link>
+  );
+};
+
+const IconX = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M18.9 2H22l-6.77 7.74L23.2 22h-6.24l-4.88-6.39L6.5 22H3.4l7.24-8.28L2.8 2h6.4l4.4 5.82L18.9 2Zm-1.1 17.73h1.73L8.27 4.14H6.41L17.8 19.73Z" />
+  </svg>
+);
+
+
+const IconTelegram = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+    <path d="m21.7 3.4-3.2 16.9c-.24 1.2-.88 1.5-1.78.94l-4.9-3.61-2.36 2.27c-.26.26-.48.48-.98.48l.35-4.99 9.08-8.2c.4-.35-.09-.55-.62-.2L6.06 13.85l-4.82-1.51c-1.05-.33-1.07-1.05.22-1.55L20.3 3.02c.86-.32 1.61.2 1.4.38Z" />
+  </svg>
+);
+
+const IconInstagram = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069Zm0-2.163C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0Zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324ZM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881Z" />
+  </svg>
+);
 
 
 const F_SERVICES = [
@@ -121,27 +187,34 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-5 gap-8 lg:gap-12 mb-12">
             <div className="md:col-span-2 space-y-4">
 
-                <div className="flex items-center gap-2.5 mb-5">
-                  {/* <Shield className="w-4 h-4 text-white" /> */}
-                  <Image
-  src="/mainlogo.png"
-  alt="لوگوی پاراهور"
-  width={60}
-  height={90}
-  className="rounded-lg"
-/>
-  
-                <Link
-                  href="/"
+                <div className="mb-5">
+
+                <Link href="/" aria-label="پراهور - صفحه اصلی" className="flex items-center gap-2 block shrink-0 cursor-pointer">
+                <Image
+                  src={ "/logo/parahoor-logo-v2-transparent-1024.png"}
+                  alt="پراهور"
+                  width={48}
+                  height={48}
+                  priority
+                  className="block h-10 w-10 sm:h-12 sm:w-12 object-contain"
+                  style={{
+                    filter: darkMode
+                      ? "drop-shadow(0 0 6px rgba(34, 211, 238, 0.25))"
+                      : "none",
+                    transition: "filter 0.2s ease",
+                  }}
+                />
+                <span
                   className="font-black text-lg"
                   style={{
                     color: darkMode
-                      ? "rgba(255,255,255,0.7)"
-                      : "#FFFFFF",
+                    ? "rgba(255,255,255,0.7)"
+                    : "#FFFFFF",
                   }}
-                >
+                  >
                   پاراهور
-                </Link>
+                </span>
+                  </Link>
               </div>
 
               <p
@@ -182,6 +255,25 @@ export default function Footer() {
                   <MapPin className="w-4 h-4 flex-shrink-0" />
                   <span>آیت الله کاشانی، بلوار اباذر، نبش خیابان شالی، پلاک9، طبقه چهارم، واحد6</span>
                 </div>
+                <div>
+<div className="flex items-center gap-2">
+  <SocialBtn
+    title="اینستاگرام"
+    href="https://instagram.com/parahoor"
+    icon={<IconInstagram />}
+  />
+  <SocialBtn
+    title="تلگرام"
+    href="https://t.me/Parahoor_com"
+    icon={<IconTelegram />}
+  />
+  <SocialBtn
+    title="ایکس"
+    href="https://x.com/parahoor"
+    icon={<IconX />}
+  />
+</div>
+                </div>
               </div>
             </div>
 
@@ -211,7 +303,7 @@ export default function Footer() {
                         onMouseEnter={(e) => {
                           e.currentTarget.style.color = darkMode
                             ? "#00E5FF"
-                            : "#60A5FA";
+                            : "#0EA5E9";
 
                         }}
                         onMouseLeave={(e) => {

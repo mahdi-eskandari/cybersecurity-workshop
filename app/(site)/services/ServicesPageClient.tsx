@@ -371,11 +371,6 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
       color: darkMode ? "#E2E8F0" : "#0F172A",
       fontFamily: "var(--font-vazirmatn), sans-serif",
       backgroundColor: darkMode ? "#0A1128" : "#FFFFFF",
-      backgroundImage: darkMode
-        ? "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"
-        : "linear-gradient(rgba(30,58,138,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,138,0.035) 1px,transparent 1px)",
-      backgroundSize: "52px 52px",
-      backgroundAttachment: "fixed",
     }}
   >
       {/* ── HERO ── */}

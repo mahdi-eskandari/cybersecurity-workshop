@@ -2060,11 +2060,12 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTheme } from "@/components/ThemeProvider";
 import { useRouter } from "next/navigation";
 import {OtpModal} from "../components/otpModal";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 
 /* ────────────────────────────────
    ICONS
@@ -2394,9 +2395,13 @@ export const EmergencyModal = ({
   const router = useRouter();
 
   const [submitError, setSubmitError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRef = useRef<TurnstileInstance>(null);
   const [focusDesc, setFocusDesc] = useState(false);
   const [focusContact, setFocusContact] = useState(false);
 const [otpOpen, setOtpOpen] = useState(false);
+const [otpPhone, setOtpPhone] = useState("");
+const [pendingData, setPendingData] = useState<CrisisReportFormValues | null>(null);
 
   const {
     register,
@@ -2418,6 +2423,7 @@ const [otpOpen, setOtpOpen] = useState(false);
   const contact = watch("contact");
 
   const primary = darkMode ? "#00E5FF" : "#2563EB";
+  
 
   /* ────────────────────────────────
      LOAD LAST INCIDENT TYPE
@@ -2451,62 +2457,85 @@ const [otpOpen, setOtpOpen] = useState(false);
   }, [setValue]);
 
 
-const PREVIEW_OTP: boolean = true;
+const toPhone = (v: string) => {
+  const en = v
+    .replace(/[۰-۹]/g, (c) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(c)))
+    .replace(/[\s-]/g, "");
+  const m = en.match(/^(?:\+98|0098|98|0)?(9\d{9})$/);
+  return m ? "0" + m[1] : null;
+};
+
+const submitReport = async (data: CrisisReportFormValues) => {
+  const response = await fetch("/api/crisis-reports", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  const result = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(result?.message || "ارسال گزارش ناموفق بود");
+  }
+
+  saveLastIncidentType(data.incidentType);
+  router.push("/report-submitted");
+};
 
 const onSubmit = async (data: CrisisReportFormValues) => {
-  if (PREVIEW_OTP) {
-    setOtpOpen(true);
+  setSubmitError("");
+
+  const phone = toPhone(data.contact);
+  if (!phone) {
+    setSubmitError("برای تایید هویت، شماره موبایل معتبر وارد کنید");
     return;
   }
 
-  setSubmitError("");
+    /* Cloudflare Turnstile */
+  if (!turnstileToken) {
+    setSubmitError("لطفاً تیک «من ربات نیستم» را کامل کنید");
+    return;
+  }
 
-    try {
-      const response = await fetch("/api/crisis-reports", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+  try {
+    // توکن همراه شماره به همین روت می‌رود و همان‌جا verify می‌شود
+    const res = await fetch("/api/otp/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone, turnstileToken }),
+    });
+    const result = await res.json().catch(() => null);
 
-      const result = await response.json().catch(() => null);
+    // هر توکن فقط یک‌بار قابل استفاده است
+    setTurnstileToken("");
+    turnstileRef.current?.reset();
 
-      if (!response.ok) {
-        throw new Error(
-          result?.message || "ارسال گزارش ناموفق بود"
-        );
-      }
+    if (!res.ok) throw new Error(result?.message || "ارسال کد ناموفق بود");
 
-      /*
-       * فقط بعد از ثبت موفق گزارش،
-       * نوع حادثه انتخاب‌شده ذخیره می‌شود.
-       */
-      saveLastIncidentType(data.incidentType);
-
-      router.push("/report-submitted");
-    } catch (error) {
-      setSubmitError(
-        error instanceof Error
-          ? error.message
-          : "خطایی هنگام ثبت گزارش رخ داد. لطفاً دوباره تلاش کنید."
-      );
-    }
-  };
+    setOtpPhone(phone);
+    setPendingData({ ...data, contact: phone });
+    setOtpOpen(true);
+  } catch (error) {
+    setSubmitError(
+      error instanceof Error ? error.message : "خطایی رخ داد. دوباره تلاش کنید."
+    );
+  }
+};
 
   /* ────────────────────────────────
      FORM STATE
   ───────────────────────────────── */
 
-  {if (otpOpen) {
+  if (otpOpen && pendingData) {
     return (
       <OtpModal
-        preview
-        phone="09121234567"
+        phone={otpPhone}
         onClose={onClose}
         onBack={() => setOtpOpen(false)}
-        onVerified={async () => {}}
+        onVerified={() => submitReport(pendingData)}
       />
     );
-  }}
+  }
   return (
 
     
@@ -3055,6 +3084,25 @@ className={`w-full min-h-[52px] flex items-center justify-center gap-2 px-3 py-2
           <div
             className="px-6 pb-6 mt-1"
           >
+            {/* Cloudflare Turnstile captcha */}
+            <div className="mb-4" style={{ minHeight: 65 }}>
+              <Turnstile
+                ref={turnstileRef}
+                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                options={{
+                  theme: darkMode ? "dark" : "light",
+                  size: "flexible",
+                  language: "fa",
+                }}
+                onSuccess={(token: string) => {
+                  setTurnstileToken(token);
+                  setSubmitError("");
+                }}
+                onExpire={() => setTurnstileToken("")}
+                onError={() => setTurnstileToken("")}
+              />
+            </div>
+
             <button
               type="submit"
               disabled={isSubmitting}

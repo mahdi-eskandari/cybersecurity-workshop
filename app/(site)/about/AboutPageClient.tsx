@@ -438,11 +438,6 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
       }`}
       style={{
         fontFamily: "var(--font-vazirmatn), sans-serif",
-        backgroundImage: darkMode
-          ? "linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px)"
-          : "linear-gradient(rgba(30,58,138,0.045) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,138,0.045) 1px,transparent 1px)",
-        backgroundSize: "52px 52px",
-      backgroundAttachment: "fixed"
       }}
     >
      {crisisOpen && (
@@ -1310,10 +1305,12 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
               onMouseEnter={(e) => {
                 e.currentTarget.style.boxShadow =
                   "0 0 30px rgba(239,68,68,0.5)";
+                e.currentTarget.style.transform = "translateY(-1px)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.boxShadow =
                   "0 0 24px rgba(239,68,68,0.3)";
+                 e.currentTarget.style.transform = "none";
               }}
             >
               <IconWarning />

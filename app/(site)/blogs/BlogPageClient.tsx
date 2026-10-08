@@ -84,9 +84,7 @@ const PER_PAGE = 6;
 
 const BLOGS_PATH = "/blogs";
 
-// وقتی هنوز هیچ فیلتر/صفحه‌ای انتخاب نشده (روت خامِ /blogs)، لینک
-// ساخته نمی‌شه؛ همین که کاربر تعامل کرد (فیلتر یا صفحه عوض کرد)،
-// همیشه صریح category+page تو URL میاد (حتی category=all&page=1).
+
 function buildBlogsUrl(category: string, page: number, basePath: string) {
 
   if (category === "all") {
@@ -98,8 +96,7 @@ function buildBlogsUrl(category: string, page: number, basePath: string) {
   return `${basePath}?${params.toString()}`;
 }
 
-// وقتی صفحات زیاد بشن، به‌جای نمایش همه‌ی شماره‌ها، صفحه‌ی اول/آخر و
-// همسایه‌های صفحه‌ی فعلی نشون داده می‌شن و بقیه با "..." جمع می‌شن.
+
 function getPaginationRange(currentPage: number, totalPages: number): (number | "...")[] {
   const range: (number | "...")[] = [];
   const siblingCount = 1;
@@ -128,7 +125,6 @@ function getPaginationRange(currentPage: number, totalPages: number): (number | 
   return range;
 }
 
-// ── helpers ───────────────────────────────────────────────────────────────────
 
 type MediaItem = {
   id: string;
@@ -763,7 +759,6 @@ useEffect(() => {
     return list;
   }, [smallArticles, activeCategory, searchQuery]);
 
-  // کارت ویژه همیشه مستقل از سرچ، دسته‌بندی و صفحه است.
   const showFeatured = featuredArticle !== null;
 
   const totalPages = Math.max(
@@ -773,35 +768,15 @@ useEffect(() => {
 
   const page = Math.min(currentPage, totalPages);
 
-  // فقط state رو عوض می‌کنه، به URL دست نمی‌زنه (برای افکت دیبانس‌سرچ
-  // و دکمه‌ی «پاک‌کردن جستجو» که ربطی به navigation واقعی ندارن).
   const updatePage = (nextPage: number) => {
     const normalizedPage = Math.max(1, Math.min(nextPage, totalPages));
     setCurrentPage(normalizedPage);
   };
 
-  // این یعنی یه navigation واقعیه: کاربر فیلتر یا صفحه رو عوض کرده.
-  // همیشه از این به بعد URL صریح (category+page) می‌شه.
-  //
-  // نکته‌ی مهم: قبلاً اینجا با window.history.replaceState دستی URL
-  // عوض می‌شد و یه useEffect جدا با document.head.appendChild/remove
-  // خودِ <link rel="canonical"/prev/next> رو دستی می‌ساخت/پاک می‌کرد.
-  // این باگ اصلیِ "Cannot read properties of null (reading
-  // 'removeChild')" بود: اون تگ‌ها همزمان توسط خودِ React/Next هم
-  // (چه از generateMetadata چه از <link> هایی که خودِ page.tsx تو
-  // JSX برمی‌گردونه) مدیریت می‌شدن؛ دست‌کاری مستقیمِ DOM روی گره‌هایی
-  // که React ردشون رو نگه داشته، باعث ناهماهنگی و کرش تو reconcile
-  // بعدی می‌شد (مخصوصاً موقع رفتن به یه روت دیگه).
-  //
-  // فیکس: به‌جای دستکاری دستیِ DOM، از router.replace واقعیِ Next.js
-  // استفاده می‌کنیم؛ این باعث می‌شه Server Component خودِ page.tsx
-  // دوباره با searchParams جدید اجرا بشه و generateMetadata/<link>
-  // های prev-next رو خودِ Next.js (امن، از طریق React) بازسازی کنه.
   const navigate = (nextCategory: string, nextPage: number) => {
     const normalizedPage = Math.max(1, Math.min(nextPage, totalPages));
 
-    // آپدیت خوش‌بینانه‌ی state برای واکنش فوری UI (بدون معطلی برای
-    // رفت‌وبرگشتِ navigation).
+
     setActiveCategory(nextCategory);
     setCurrentPage(normalizedPage);
     setIsBareRoute(false);
@@ -810,10 +785,7 @@ useEffect(() => {
     router.replace(nextUrl, { scroll: false });
   };
 
-  // چون BlogPageClient بین navigationهای هم‌روت remount نمی‌شه،
-  // useState(initialData...) فقط بار اول اعمال می‌شه. این افکت،
-  // state رو هر بار که سرور (بعد از navigate بالا، یا با دکمه‌ی
-  // back/forward مرورگر) initialData جدید می‌فرسته، sync می‌کنه.
+
   useEffect(() => {
     setActiveCategory(initialData.initialCategory);
     setCurrentPage(initialData.initialPage);
@@ -842,7 +814,7 @@ useEffect(() => {
     
     <div
       dir="rtl"
-      className={`min-h-screen transition-colors duration-300 ${
+      className={`min-h-screen transition-colors duration-300 pt-[35px] ${
         darkMode
           ? "bg-[#0A1128] text-[#E6F7FF]"
           : "bg-white text-[#0F172A]"
@@ -1756,18 +1728,19 @@ function ArticleSkeleton({ darkMode }: { darkMode: boolean }) {
   );
 }
 
+
 function ArticleCard({
   article,
   darkMode,
   mediaItems,
-  accent,   // 👈 اضافه شد
+  accent,   
   i,
 }: {
   article: Article;
   darkMode: boolean;
   mediaItems: MediaItem[];
-  accent: string;   // 👈 اضافه شد
-  i: number;        // 👈 Number → number
+  accent: string;   
+  i: number;       
 }) {
   return (
     <article
@@ -1831,14 +1804,12 @@ function ArticleCard({
       <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-5 lg:p-6 transition-all duration-300 dark:hover:bg-cyan-800/5">
         {/* Category */}
 
-        <div className="flex flex-wrap items-center gap-2.5 mb-3 sm:mb-4">
-          {/* دسته‌بندی از اینجا حذف شد */}
-        </div>
+
 
         {/* Title */}
 
         <h3
-          className={`text-base font-bold leading-snug mb-3 break-words transition-colors line-clamp-2 ${
+          className={`text-base font-bold leading-snug mb-3 break-words transition-colors line-clamp-1 ${
             darkMode
               ? "text-[#E6F7FF] group-hover:text-[#E6F7FF]"
               : "group-hover:text-[#1565C0]"
@@ -1851,13 +1822,11 @@ function ArticleCard({
         {/* Excerpt */}
 
         <p
-          className={`text-sm leading-relaxed line-clamp-3 break-words mb-5 flex-1 ${
+          className={`text-sm leading-relaxed line-clamp-1 break-words mb-5 flex-1 min-h-6 ${
             darkMode ? "text-[#9DB0C0]" : "text-[#475569]"
           }`}
         >
-          {article.excerpt.length > 50
-            ? article.excerpt.slice(0.5).trim() + "..."
-            : article.excerpt}
+          {article.excerpt}
         </p>
 
         {/* Footer */}

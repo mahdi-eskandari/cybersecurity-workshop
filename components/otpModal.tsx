@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "@/components/ThemeProvider";
-import { toLatinDigits } from "@/lib/phone";
+import { toLatinDigits } from "../lib/phone";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 
 const OTP_LENGTH = 6;
 const RESEND_SECONDS = 60;
@@ -65,6 +66,14 @@ export const OtpModal = ({ phone, onVerified, onClose, onBack, preview = false }
   const [busy, setBusy] = useState(false);
   const [resending, setResending] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
+    const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRef = useRef<TurnstileInstance>(null);
+    const errorRetries = useRef(0);
+    const [resendCount, setResendCount] = useState(0);
+const [wrongCount, setWrongCount] = useState(0);
+const [serverCaptcha, setServerCaptcha] = useState(false);
+const [verifiedOk, setVerifiedOk] = useState(false);
+const needCaptcha = resendCount >= 2 || wrongCount >= 2 || serverCaptcha;
 
   const inputs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -144,12 +153,29 @@ export const OtpModal = ({ phone, onVerified, onClose, onBack, preview = false }
   const handleSubmit = async () => {
     if (busy) return;
 
+    if (verifiedOk) {
+  setBusy(true);
+  setError("");
+  try {
+    await onVerified();
+  } catch (e) {
+    setError(e instanceof Error ? e.message : "خطایی رخ داد. دوباره تلاش کنید.");
+    setBusy(false);
+  }
+  return;
+}
+
     const code = digits.join("");
 
     if (code.length < OTP_LENGTH) {
       setError("کد ۶ رقمی را کامل وارد کنید");
       return;
     }
+
+    if (needCaptcha && !turnstileToken) {
+  setError("ابتدا تایید امنیتی را کامل کنید");
+  return;
+}
 
     setBusy(true);
     setError("");
@@ -165,20 +191,36 @@ export const OtpModal = ({ phone, onVerified, onClose, onBack, preview = false }
       const res = await fetch("/api/otp/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, code }),
+        body: JSON.stringify({
+  phone,
+  code,
+  ...(needCaptcha ? { turnstileToken } : {}),
+}),
       });
+
+      if (needCaptcha) {
+  setTurnstileToken("");
+  turnstileRef.current?.reset();
+}
 
       const result = await res.json().catch(() => null);
 
       if (!res.ok) {
+        if (result?.captchaRequired) setServerCaptcha(true);
         setDigits(Array(OTP_LENGTH).fill(""));
         inputs.current[0]?.focus();
+        setWrongCount((n) => n + 1);
+      if (needCaptcha) {
+        setTurnstileToken("");
+        turnstileRef.current?.reset();
+      }
         setError(result?.message || "کد واردشده صحیح نیست");
         setBusy(false);
         return;
       }
 
       // کد درست بود → ثبت گزارش (والد بعد از موفقیت redirect می‌کند)
+      setVerifiedOk(true);
       await onVerified();
     } catch (e) {
       setError(e instanceof Error ? e.message : "خطایی رخ داد. دوباره تلاش کنید.");
@@ -188,6 +230,11 @@ export const OtpModal = ({ phone, onVerified, onClose, onBack, preview = false }
 
   const handleResend = async () => {
     if (secondsLeft > 0 || resending || busy) return;
+
+if (needCaptcha && !turnstileToken) {
+  setError("ابتدا تایید امنیتی را کامل کنید");
+  return;
+}
 
     setResending(true);
     setError("");
@@ -203,24 +250,39 @@ export const OtpModal = ({ phone, onVerified, onClose, onBack, preview = false }
       const res = await fetch("/api/otp/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone }),
+        body: JSON.stringify({
+  phone,
+  ...(needCaptcha ? { turnstileToken } : {}),
+}),
       });
 
       const result = await res.json().catch(() => null);
 
-      if (!res.ok) throw new Error(result?.message || "ارسال مجدد کد ناموفق بود");
+if (!res.ok) {
+  if (result?.captchaRequired) setServerCaptcha(true);
+  if (result?.retryAfter) setSecondsLeft(Number(result.retryAfter));
+  throw new Error(result?.message || "ارسال مجدد کد ناموفق بود");
+}
 
       setDigits(Array(OTP_LENGTH).fill(""));
-      setSecondsLeft(RESEND_SECONDS);
+      setSecondsLeft(Number(result?.nextResendIn) || RESEND_SECONDS);
+      setResendCount((n) => n + 1);
       inputs.current[0]?.focus();
     } catch (e) {
       setError(e instanceof Error ? e.message : "ارسال مجدد کد ناموفق بود");
     } finally {
-      setResending(false);
-    }
+  if (needCaptcha) {
+    setTurnstileToken("");
+    turnstileRef.current?.reset();
+  }
+  setResending(false);
+}
   };
 
-  const canResend = secondsLeft <= 0 && !resending && !busy;
+const canResend = secondsLeft <= 0 && !resending && !busy && (!needCaptcha || !!turnstileToken);
+
+const fmt = (s: number) =>
+  s >= 60 ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}` : String(s);
 
   const divider = darkMode ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(37,99,235,0.08)";
 
@@ -396,8 +458,10 @@ export const OtpModal = ({ phone, onVerified, onClose, onBack, preview = false }
                 {secondsLeft > 0 ? (
                   <span>
                     ارسال مجدد (
-                    <span style={{ fontVariantNumeric: "tabular-nums" }}>{secondsLeft}</span>)
+                    <span style={{ fontVariantNumeric: "tabular-nums" }}>{fmt(secondsLeft)}</span>)
                   </span>
+                ) : needCaptcha && !turnstileToken ? (
+                  <span>ابتدا تایید امنیتی را کامل کنید</span>
                 ) : (
                   <span>ارسال کد</span>
                 )}
@@ -485,12 +549,39 @@ export const OtpModal = ({ phone, onVerified, onClose, onBack, preview = false }
             </p>
           </div>
 
+
+              {needCaptcha && (
+                <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
+                  <Turnstile
+                    ref={turnstileRef}
+                    siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                    options={{
+                      theme: darkMode ? "dark" : "light",
+                      language: "fa",
+                    }}
+                    onSuccess={(t: string) => {
+                      errorRetries.current = 0;
+                      setTurnstileToken(t);
+                      setError("");
+                    }}
+                    onExpire={() => setTurnstileToken("")}
+                    onError={() => {
+                      setTurnstileToken("");
+                      if (errorRetries.current < 2) {
+                        errorRetries.current += 1;
+                        setTimeout(() => turnstileRef.current?.reset(), 1500);
+                      }
+                    }}
+                  />
+                </div>
+              )}
+
           {/* دکمه */}
           <button
             type="button"
             onClick={handleSubmit}
             disabled={busy}
-            className="w-full flex items-center justify-center gap-2 font-bold transition-all"
+            className="w-full flex items-center justify-center gap-2 font-bold transition-all "
             style={{
               marginTop: 16,
               height: 46,
@@ -500,10 +591,10 @@ export const OtpModal = ({ phone, onVerified, onClose, onBack, preview = false }
               background: busy
                 ? darkMode
                   ? "rgba(0,229,255,0.25)"
-                  : "#475569"
+                  : "#0D47A1"
                 : darkMode
                   ? "#00E5FF"
-                  : "#0F1F42",
+                  : "#1565C0",
               color: darkMode ? "#0A1128" : "#FFFFFF",
               boxShadow: darkMode
                 ? "0 0 20px rgba(0,229,255,0.2)"

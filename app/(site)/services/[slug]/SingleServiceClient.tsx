@@ -1578,34 +1578,26 @@ const department =
             onClick={() => setCrisisOpen(true)} 
             className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold transition-all duration-300 mb-4" 
            style={{ 
-                background: darkMode ? "#EF4444" : "#1565C0", 
+                background: "#EF4444", 
                 color: "#ffffff", 
-                border: darkMode 
-                  ? "1px solid rgba(239, 68, 68, 0.6)" 
-                  : "1px solid rgba(37,99,235,0.6)", 
-                boxShadow: darkMode 
-                  ? "0 0 15px rgba(239,68,68,0.35)" 
-                  : "0 0 15px rgba(37,99,235,0.18)", 
+                border:
+                   "1px solid rgba(239, 68, 68, 0.6)",
+                boxShadow:
+                   "0 0 15px rgba(239,68,68,0.35)"
               }} 
               onMouseEnter={(e) => { 
-                e.currentTarget.style.boxShadow = darkMode 
-                  ? "0 0 22px rgba(239,68,68,0.55)" 
-                  : "0 0 22px rgba(37,99,235,0.28)" 
+                e.currentTarget.style.boxShadow =
+                   "0 0 22px rgba(239,68,68,0.55)"
+                    e.currentTarget.style.transform = "translateY(-1px)";
  
-                if (!darkMode) { 
-                  e.currentTarget.style.background = "#0D47A1" 
-                  e.currentTarget.style.borderColor = "#0D47A1" 
-                } 
+
               }} 
               onMouseLeave={(e) => { 
-                e.currentTarget.style.boxShadow = darkMode 
-                  ? "0 0 15px rgba(239,68,68,0.35)" 
-                  : "0 0 15px rgba(37,99,235,0.18)" 
+                e.currentTarget.style.boxShadow =
+                   "0 0 15px rgba(239,68,68,0.35)" 
+                   e.currentTarget.style.transform = "none";
  
-                if (!darkMode) { 
-                  e.currentTarget.style.background = "#1565C0" 
-                  e.currentTarget.style.borderColor = "rgba(37,99,235,0.6)" 
-                } 
+
               }} 
           > 
             <IconWarning /> 
@@ -2091,34 +2083,19 @@ const department =
               onClick={() => setCrisisOpen(true)} 
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold transition-all duration-300" 
               style={{ 
-                background: darkMode ? "#EF4444" : "#1565C0", 
+                background: "#EF4444" , 
                 color: "#ffffff", 
-                border: darkMode 
-                  ? "1px solid rgba(239, 68, 68, 0.6)" 
-                  : "1px solid rgba(37,99,235,0.6)", 
-                boxShadow: darkMode 
-                  ? "0 0 15px rgba(239,68,68,0.35)" 
-                  : "0 0 15px rgba(37,99,235,0.18)", 
+                border:  "1px solid rgba(239, 68, 68, 0.6)",
+                boxShadow: "0 0 15px rgba(239,68,68,0.35)"
               }} 
               onMouseEnter={(e) => { 
-                e.currentTarget.style.boxShadow = darkMode 
-                  ? "0 0 22px rgba(239,68,68,0.55)" 
-                  : "0 0 22px rgba(37,99,235,0.28)" 
- 
-                if (!darkMode) { 
-                  e.currentTarget.style.background = "#0D47A1" 
-                  e.currentTarget.style.borderColor = "#0D47A1" 
-                } 
+                e.currentTarget.style.boxShadow = "0 0 22px rgba(239,68,68,0.55)" 
+                e.currentTarget.style.transform = "translateY(-1px)";
+
               }} 
               onMouseLeave={(e) => { 
-                e.currentTarget.style.boxShadow = darkMode 
-                  ? "0 0 15px rgba(239,68,68,0.35)" 
-                  : "0 0 15px rgba(37,99,235,0.18)" 
- 
-                if (!darkMode) { 
-                  e.currentTarget.style.background = "#1565C0" 
-                  e.currentTarget.style.borderColor = "rgba(37,99,235,0.6)" 
-                } 
+                e.currentTarget.style.boxShadow = "0 0 15px rgba(239,68,68,0.35)"
+               e.currentTarget.style.transform = "none";
               }} 
             > 
               تکمیل فرم گزارش بحران 

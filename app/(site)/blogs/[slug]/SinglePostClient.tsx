@@ -1517,13 +1517,13 @@ export default function App({
                   style={{
                     background: darkMode
                       ? "rgba(0,229,255,0.05)"
-                      : "rgba(30,58,138,0.06)",
+                      : "rgba(32, 113, 205, 0.08)",
                     border: darkMode
                       ? "1px solid rgba(0,229,255,0.15)"
-                      : "1px solid rgba(30,58,138,0.18)",
+                      : "1px solid rgba(26, 103, 212, 0.43)",
                     color: darkMode
                       ? "#00E5FF"
-                      : "#1E3A8A",
+                      : "#1565C0",
                     fontFamily: "monospace",
                   }}
                 >
@@ -1660,36 +1660,26 @@ export default function App({
   type="button"
   className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold transition-all duration-300" 
               style={{ 
-                background: darkMode ? "#EF4444" : "#1565C0", 
+                background:  "#EF4444" , 
                 color: "#ffffff", 
-                border: darkMode 
-                  ? "1px solid rgba(239, 68, 68, 0.6)" 
-                  : "1px solid rgba(37,99,235,0.6)", 
-                boxShadow: darkMode 
-                  ? "0 0 15px rgba(239,68,68,0.35)" 
-                  : "0 0 15px rgba(37,99,235,0.18)", 
+                border: 
+                   "1px solid rgba(239, 68, 68, 0.6)",
+                boxShadow: 
+                   "0 0 15px rgba(239,68,68,0.35)" 
               }} 
                                 onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = darkMode
-                      ? "0 0 22px rgba(239,68,68,0.55)"
-                      : "0 0 22px rgba(37,99,235,0.28)";
+                    e.currentTarget.style.boxShadow =
+                       "0 0 22px rgba(239,68,68,0.55)"
                     e.currentTarget.style.transform = "translateY(-1px)";
                   
-                    if (!darkMode) {
-                      e.currentTarget.style.background = "#0D47A1";
-                      e.currentTarget.style.borderColor = "#0D47A1";
-                    }
+                    
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = darkMode
-                      ? "0 0 15px rgba(239,68,68,0.35)"
-                      : "0 0 15px rgba(37,99,235,0.18)";
+                    e.currentTarget.style.boxShadow =
+                       "0 0 15px rgba(239,68,68,0.35)"
                     e.currentTarget.style.transform = "none";
                   
-                    if (!darkMode) {
-                      e.currentTarget.style.background = "#1565C0";
-                      e.currentTarget.style.borderColor = "rgba(37,99,235,0.6)";
-                    }
+
                   }} 
 >
   <IconWarning />

@@ -2,6 +2,12 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import SinglePostClient from "./SinglePostClient";
 import type { ApprovedComment } from "@/components/CommentSection";
+import { SITE_URL } from "@/lib/seo";
+import {
+  buildOrganizationSchema,
+  buildBreadcrumbSchema,
+  buildArticleSchema,
+} from "@/lib/schema";
 
 type RawBlogPost = {
   _id?: string;
@@ -120,6 +126,54 @@ async function fetchApprovedComments(
   }
 }
 
+
+function toAbsoluteUrl(url: string | null | undefined) {
+  if (!url) return undefined;
+  if (/^https?:\/\//i.test(url)) return url;
+  return `${SITE_URL}${url.startsWith("/") ? "" : "/"}${url}`;
+}
+
+function stripHtml(html: string) {
+  return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function PostJsonLd({ post }: { post: BlogPost }) {
+  const url = `${SITE_URL}/blogs/${post.slug || post._id}`;
+
+  const description =
+    post.metaDescription || stripHtml(post.content).slice(0, 160);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      buildArticleSchema({
+        title: post.metaTitle || post.title,
+        description,
+        url,
+        imageUrl: toAbsoluteUrl(post.featuredImage),
+        authorName: post.author || undefined,
+        publishedAt: post.createdAt,
+        updatedAt: post.updatedAt,
+      }),
+      buildOrganizationSchema(),
+      buildBreadcrumbSchema([
+        { name: "صفحه اصلی", url: `${SITE_URL}/` },
+        { name: "وبلاگ", url: `${SITE_URL}/blogs` },
+        { name: post.title, url },
+      ]),
+    ],
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+      }}
+    />
+  );
+}
+
 export default async function Page({
   params,
 }: {
@@ -235,14 +289,15 @@ export default async function Page({
     notFound();
   }
 
-  return (
-    <div className="min-h-screen">
-      <SinglePostClient
-        initialPost={currentPost}
-        initialAllPosts={publishedPosts}
-        initialMediaItems={mediaItems}
-        initialComments={initialComments}
-      />
-    </div>
-  );
+return (
+  <div className="min-h-screen">
+    <PostJsonLd post={currentPost} />
+    <SinglePostClient
+      initialPost={currentPost}
+      initialAllPosts={publishedPosts}
+      initialMediaItems={mediaItems}
+      initialComments={initialComments}
+    />
+  </div>
+);
 }

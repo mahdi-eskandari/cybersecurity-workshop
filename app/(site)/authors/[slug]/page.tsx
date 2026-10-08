@@ -9,8 +9,7 @@ import {
   type PageKey,
 } from "@/lib/seo";
 import AuthorsClient from "../AuthorsClient";
-import { type Post, getAuthorPosts, POSTS_PER_PAGE } from "../authorsData";
-
+import { type Post, getAuthorPosts, POSTS_PER_PAGE, authors } from "../authorsData";
 async function getPosts(): Promise<Post[]> {
   try {
     const h = await headers();
@@ -121,6 +120,15 @@ export default async function AuthorPage({
 
   if (!match) notFound();
 
+    const authorSeos = await Promise.all(
+    authors.map(async (a) => ({
+      id: a.id,
+      seo: await getPageSeo(`author-${a.id}` as PageKey),
+    }))
+  );
+  const h1Map = Object.fromEntries(authorSeos.map((x) => [x.id, x.seo.h1Title]));
+  const slugMap = Object.fromEntries(authorSeos.map((x) => [x.id, x.seo.slug]));
+
   const [posts, adjacent] = await Promise.all([
     getPosts(),
     getAdjacentPageLinks(toPageKey(match.identity)),
@@ -155,13 +163,15 @@ export default async function AuthorPage({
       {nextUrl && <link rel="next" href={nextUrl} />}
 
       <AuthorsClient
-        posts={posts}
-        authorSlug={match.identity}
-        showAllPosts={showAllPosts}
-        currentPage={currentPage}
-        seoH1={match.seo.h1Title}
-        basePath={basePath}
-      />
+  posts={posts}
+  authorSlug={match.identity}
+  showAllPosts={showAllPosts}
+  currentPage={currentPage}
+  seoH1={match.seo.h1Title}
+  h1Map={h1Map}
+  slugMap={slugMap}
+  basePath={basePath}
+/>
     </>
   );
 }

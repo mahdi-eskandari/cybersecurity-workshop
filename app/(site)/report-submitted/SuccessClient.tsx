@@ -26,7 +26,7 @@ const IconShieldCheck = ({ darkMode }: { darkMode: boolean }) => (
     height="14"
     viewBox="0 0 24 24"
     fill="none"
-    stroke={darkMode ? "#00E5FF" : "#172554"}
+    stroke={darkMode ? "#00E5FF" : "#1565C0"}
     strokeWidth="1.8"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -156,7 +156,13 @@ const IconTimelineShield = () => (
    SUCCESS PAGE — ANIMATED SHIELD
 ──────────────────────────────── */
 
-const SuccessShield = ({ primary }: { primary: string }) => {
+const SuccessShield = ({
+  primary,
+  darkMode,
+}: {
+  primary: string;
+  darkMode: boolean;
+}) => {
   const [ringScale, setRingScale] = useState(1);
   const [checkVisible, setCheckVisible] = useState(false);
   const [particles, setParticles] = useState<
@@ -200,7 +206,7 @@ const SuccessShield = ({ primary }: { primary: string }) => {
           style={{
             width: 140,
             height: 140,
-            border: `1px solid ${primary}${Math.round(op * 0.18 * 255)
+            border: `1px solid ${primary}${Math.round(op * (darkMode ? 0.18 : 0.4) * 255)
               .toString(16)
               .padStart(2, "0")}`,
             borderRadius: "50%",
@@ -216,9 +222,13 @@ const SuccessShield = ({ primary }: { primary: string }) => {
         style={{
           width: 100,
           height: 100,
-          background: `radial-gradient(circle at 35% 30%, ${primary}24, ${primary}0d)`,
-          border: `1.5px solid ${primary}61`,
-          boxShadow: `0 0 40px ${primary}33, 0 0 80px ${primary}14, inset 0 0 30px ${primary}0f`,
+          background: darkMode
+            ? `radial-gradient(circle at 35% 30%, ${primary}24, ${primary}0d)`
+            : `radial-gradient(circle at 35% 30%, ${primary}40, ${primary}1a)`,
+          border: `1.5px solid ${primary}${darkMode ? "61" : "99"}`,
+          boxShadow: darkMode
+            ? `0 0 40px ${primary}33, 0 0 80px ${primary}14, inset 0 0 30px ${primary}0f`
+            : `0 0 40px ${primary}59, 0 0 80px ${primary}26, inset 0 0 30px ${primary}1f`,
           transform: `scale(${ringScale})`,
           transition: "transform 0.6s ease",
           backdropFilter: "blur(10px)",
@@ -248,7 +258,7 @@ const SuccessShield = ({ primary }: { primary: string }) => {
           cy="70"
           r="64"
           fill="none"
-          stroke={`${primary}1f`}
+          stroke={`${primary}${darkMode ? "1f" : "4d"}`}
           strokeWidth="1"
           strokeDasharray="6 10"
         />
@@ -264,7 +274,9 @@ const SuccessShield = ({ primary }: { primary: string }) => {
                 width: p.size,
                 height: p.size,
                 background:
-                  i % 3 === 0 ? "rgba(16,185,129,0.7)" : `${primary}99`,
+                  i % 3 === 0
+                    ? "rgba(16,185,129,0.7)"
+                    : `${primary}${darkMode ? "99" : "cc"}`,
                 "--tx": `${p.x}px`,
                 "--ty": `${p.y}px`,
                 animation: `particle-fade-success 2.4s ease-out ${p.delay}s both`,
@@ -283,7 +295,7 @@ export default function SuccessClient({
   trackingCode: string;
 }) {
   const { darkMode } = useTheme();
-  const primary = darkMode ? "#00E5FF" : "#172554";
+  const primary = darkMode ? "#00E5FF" : "#1565C0";
 
   const [copied, setCopied] = useState(false);
 
@@ -336,19 +348,14 @@ className="relative min-h-screen overflow-x-hidden pt-10"
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div
           className="absolute inset-0"
-          style={{
-            backgroundImage: darkMode
-              ? "linear-gradient(rgba(0,229,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.025) 1px,transparent 1px)"
-              : "linear-gradient(rgba(23,37,84,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(23,37,84,0.04) 1px,transparent 1px)",
-            backgroundSize: "56px 56px",
-          }}
+
         />
         <div
           className="absolute inset-0"
           style={{
             background: darkMode
               ? "radial-gradient(ellipse 80% 60% at 50% 20%, rgba(0,229,255,0.06) 0%, transparent 60%)"
-              : "radial-gradient(ellipse 80% 60% at 50% 20%, rgba(23,37,84,0.04) 0%, transparent 60%)",
+              : "radial-gradient(ellipse 80% 60% at 50% 20%, rgba(21,101,192,0.04) 0%, transparent 60%)",
           }}
         />
       </div>
@@ -361,39 +368,42 @@ className="relative min-h-screen overflow-x-hidden pt-10"
           className="relative mb-8"
           style={{ animation: "fade-in-success 0.6s ease both" }}
         >
-          <SuccessShield primary={primary} />
+          <SuccessShield primary={primary} darkMode={darkMode} />
         </div>
 
-        <div
-          className="mb-5"
-          style={{ animation: "fade-in-success 0.5s ease 0.2s both" }}
-        >
-          <span
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs"
-            style={{
-              background: darkMode ? "rgba(26, 203, 144, 0.09)" : "rgba(4,120,87,0.08)",
-              border: darkMode ? "1px solid rgba(16,185,129,0.28)" : "1px solid rgba(4,120,87,0.35)",
-              color: darkMode ? "#10B981" : "#047857",
+        
+              
+           <div
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 text-xs"
+
+                        style={{
+              background: darkMode
+                ? "rgba(0,229,255,0.07)"
+                : "#EBF3FF",
+              border: darkMode
+                ? "1px solid rgba(0,229,255,0.2)"
+                : "1px solid rgba(37, 106, 175, 0.1)",
+              
             }}
           >
-            <span
-              style={{
-                width: 5,
-                height: 5,
-                borderRadius: "50%",
-                background: darkMode ? "#15cf91" : "#054696",
-                  boxShadow: darkMode ? "0 0 6px rgba(16,185,129,0.9)" : "none",
-                display: "inline-block",
-              }}
+
+            <span 
+            className="data-label"
+            style={{
+              color: darkMode ? "#00E5FF" : "#1565C0",
+            }}
+            >REPORT SECURED // STATUS: RECEIVED</span>
+
+                        <span className="node-dot pulse-dot" 
+                  style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
+                    background: darkMode
+                ? "#00E5FF"
+                : "#1565C0",
+
+             }}
+            
             />
-            <span
-              
-              className="data-label"
-            >
-              REPORT SECURED // STATUS: RECEIVED
-            </span>
-          </span>
-        </div>
+          </div>
 
         <h1
           className="text-center font-black mb-4"
@@ -438,7 +448,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
               background: darkMode ? "rgba(6,11,28,0.85)" : "#FFFFFF",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.14)"
-                : "1px solid rgba(23,37,84,0.18)",
+                : "1px solid rgba(21,101,192,0.18)",
               backdropFilter: "blur(12px)",
               boxShadow: darkMode
                 ? "none"
@@ -479,7 +489,21 @@ className="relative min-h-screen overflow-x-hidden pt-10"
                   setCopied(true);
                   setTimeout(() => setCopied(false), 2000);
                 } catch {
-                  setCopied(false);
+                  try {
+                    const ta = document.createElement("textarea");
+                    ta.value = trackingCode;
+                    ta.setAttribute("readonly", "");
+                    ta.style.position = "fixed";
+                    ta.style.opacity = "0";
+                    document.body.appendChild(ta);
+                    ta.select();
+                    const ok = document.execCommand("copy");
+                    document.body.removeChild(ta);
+                    setCopied(ok);
+                    if (ok) setTimeout(() => setCopied(false), 2000);
+                  } catch {
+                    setCopied(false);
+                  }
                 }
               }}
               disabled={!trackingCode}
@@ -489,12 +513,12 @@ className="relative min-h-screen overflow-x-hidden pt-10"
                   ? "rgba(16,185,129,0.12)"
                   : darkMode
                     ? "rgba(0,229,255,0.06)"
-                    : "rgba(23,37,84,0.07)",
+                    : "rgba(21,101,192,0.07)",
                 border: copied
                   ? "1px solid rgba(16,185,129,0.3)"
                   : darkMode
                     ? "1px solid rgba(0,229,255,0.15)"
-                    : "1px solid rgba(23,37,84,0.20)",
+                    : "1px solid rgba(21,101,192,0.20)",
                 color: copied ? (darkMode ? "#10B981" : "#047857") : primary,
                 fontFamily: "monospace",
                 cursor: trackingCode ? "pointer" : "default",
@@ -526,7 +550,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
                         : step.active
                           ? darkMode
                             ? "rgba(0,229,255,0.1)"
-                            : "rgba(23,37,84,0.12)"
+                            : "rgba(21,101,192,0.12)"
                           : darkMode
                             ? "rgba(255,255,255,0.03)"
                             : "#F1F5F9",
@@ -536,7 +560,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
                           ? `1.5px solid ${primary}73`
                           : darkMode
                             ? "1px solid rgba(255,255,255,0.07)"
-                            : "1px solid rgba(23,37,84,0.12)",
+                            : "1px solid rgba(21,101,192,0.12)",
                       color: step.done
                         ? (darkMode ? "#10B981" : "#047857")
                         : step.active
@@ -577,10 +601,10 @@ className="relative min-h-screen overflow-x-hidden pt-10"
                         i < 2
                           ? (darkMode
                             ? "linear-gradient(90deg,rgba(16,185,129,0.4),rgba(0,229,255,0.2))"
-                            : "linear-gradient(90deg,rgba(4,120,87,0.55),rgba(23,37,84,0.30))")
+                            : "linear-gradient(90deg,rgba(4,120,87,0.55),rgba(21,101,192,0.30))")
                           : darkMode
                             ? "rgba(255,255,255,0.05)"
-                            : "rgba(23,37,84,0.10)",
+                            : "rgba(21,101,192,0.10)",
                     }}
                   />
                 )}
@@ -603,7 +627,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
               background: darkMode ? "rgba(6,11,28,0.88)" : "#FFFFFF",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.13)"
-                : "1px solid rgba(23,37,84,0.16)",
+                : "1px solid rgba(21,101,192,0.16)",
               boxShadow: darkMode
                 ? "0 24px 64px rgba(0,0,0,0.4)"
                 : "0 20px 50px rgba(15,23,42,0.10)",
@@ -615,7 +639,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
                 background:
                   darkMode
                     ? "linear-gradient(90deg, rgba(16,185,129,0.6), rgba(0,229,255,0.4), transparent)"
-                    : "linear-gradient(90deg, rgba(4,120,87,0.75), rgba(23,37,84,0.45), transparent)",
+                    : "linear-gradient(90deg, rgba(4,120,87,0.75), rgba(21,101,192,0.45), transparent)",
               }}
             />
 
@@ -666,7 +690,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
                         : "#F8FAFC",
                       border: darkMode
                         ? "1px solid rgba(255,255,255,0.04)"
-                        : "1px solid rgba(23,37,84,0.07)",
+                        : "1px solid rgba(21,101,192,0.07)",
                     }}
                   >
                     <div>
@@ -711,7 +735,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
                 style={{
                   borderTop: darkMode
                     ? "1px solid rgba(0,229,255,0.07)"
-                    : "1px solid rgba(23,37,84,0.10)",
+                    : "1px solid rgba(21,101,192,0.10)",
                 }}
               >
                 <div
@@ -719,10 +743,10 @@ className="relative min-h-screen overflow-x-hidden pt-10"
                   style={{
                     background: darkMode
                       ? "rgba(0,229,255,0.07)"
-                      : "rgba(23,37,84,0.08)",
+                      : "rgba(21,101,192,0.08)",
                     border: darkMode
                       ? "1px solid rgba(0,229,255,0.18)"
-                      : "1px solid rgba(23,37,84,0.20)",
+                      : "1px solid rgba(21,101,192,0.20)",
                     color: primary,
                   }}
                 >
@@ -777,14 +801,14 @@ className="relative min-h-screen overflow-x-hidden pt-10"
                   background: darkMode ? "rgba(6,11,28,0.7)" : "#FFFFFF",
                   border: darkMode
                     ? "1px solid rgba(0,229,255,0.08)"
-                    : "1px solid rgba(23,37,84,0.12)",
+                    : "1px solid rgba(21,101,192,0.12)",
                 }}
               >
                 <span
                   style={{
                     color: darkMode
                       ? "rgba(0,229,255,0.5)"
-                      : "rgba(23,37,84,0.75)",
+                      : "rgba(21,101,192,0.75)",
                     flexShrink: 0,
                     display: "flex",
                   }}
@@ -849,23 +873,25 @@ className="relative min-h-screen overflow-x-hidden pt-10"
             className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl font-bold text-sm transition-all duration-300"
             style={{
               background: "transparent",
-              color: primary,
+              color: "#1565C0",
               border: `1px solid ${primary}61`,
               boxShadow: "none",
               fontSize: "0.95rem",
               transform: "none",
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.background = `${primary}1f`;
-              (e.currentTarget as HTMLElement).style.borderColor = primary;
+              (e.currentTarget as HTMLElement).style.background = `#0D47A1`;
+              (e.currentTarget as HTMLElement).style.borderColor = "#0D47A1";
               (e.currentTarget as HTMLElement).style.boxShadow = darkMode ? `0 0 30px ${primary}4d, inset 0 0 24px ${primary}1a` : "0 10px 24px rgba(15,23,42,0.12)";
               (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
+              (e.currentTarget as HTMLElement).style.color = "white";
             }}
             onMouseLeave={(e) => {
               (e.currentTarget as HTMLElement).style.background = "transparent";
-              (e.currentTarget as HTMLElement).style.borderColor = `${primary}61`;
+              (e.currentTarget as HTMLElement).style.borderColor = `#0D47A1`;
               (e.currentTarget as HTMLElement).style.boxShadow = "none";
               (e.currentTarget as HTMLElement).style.transform = "none";
+              (e.currentTarget as HTMLElement).style.color = "#1565C0";
             }}
           >
             <IconTimelineBook />
@@ -880,7 +906,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
             background: darkMode ? "rgba(6,11,28,0.7)" : "#FFFFFF",
             border: darkMode
               ? "1px solid rgba(0,229,255,0.07)"
-              : "1px solid rgba(23,37,84,0.10)",
+              : "1px solid rgba(21,101,192,0.10)",
             fontFamily: "monospace",
             fontSize: "0.65rem",
             color: darkMode ? "#334155" : "#64748B",
@@ -891,7 +917,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
             style={{
               color: darkMode
                 ? "rgba(0,229,255,0.4)"
-                : "rgba(23,37,84,0.70)",
+                : "rgba(21,101,192,0.70)",
             }}
           >
             parahoor.io
@@ -903,7 +929,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
             style={{
               color: darkMode
                 ? "rgba(0,229,255,0.35)"
-                : "rgba(23,37,84,0.60)",
+                : "rgba(21,101,192,0.60)",
             }}
           >
             {trackingCode || "PENDING"}
@@ -913,7 +939,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
             style={{
               color: darkMode
                 ? "rgba(0,229,255,0.35)"
-                : "rgba(23,37,84,0.60)",
+                : "rgba(21,101,192,0.60)",
             }}
           >
             standby

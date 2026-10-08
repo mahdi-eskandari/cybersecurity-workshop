@@ -6,14 +6,14 @@ import {
   getAdjacentPageLinks,
   buildPaginationLinks,
   SITE_URL,
+  type PageKey,
 } from "@/lib/seo";
 import {
   buildOrganizationSchema,
   buildBreadcrumbSchema,
 } from "@/lib/schema";
 import AuthorsClient from "./AuthorsClient";
-import { type Post, getAuthorPosts, POSTS_PER_PAGE } from "./authorsData";
-
+import { type Post, getAuthorPosts, POSTS_PER_PAGE, authors } from "./authorsData";
 const AUTHOR_ID = "mohammadreza-yousefi";
 const BASE_PATH = "/authors";
 
@@ -149,6 +149,15 @@ export default async function AuthorsPage({
 }) {
   const params = await searchParams;
 
+    const authorSeos = await Promise.all(
+    authors.map(async (a) => ({
+      id: a.id,
+      seo: await getPageSeo(`author-${a.id}` as PageKey),
+    }))
+  );
+  const h1Map = Object.fromEntries(authorSeos.map((x) => [x.id, x.seo.h1Title]));
+  const slugMap = Object.fromEntries(authorSeos.map((x) => [x.id, x.seo.slug]));
+
   const [posts, seo, adjacent] = await Promise.all([
     getPosts(),
     getPageSeo("authors"),
@@ -192,6 +201,8 @@ export default async function AuthorsPage({
         showAllPosts={showAllPosts}
         currentPage={currentPage}
         seoH1={seo.h1Title}
+        h1Map={h1Map}
+        slugMap={slugMap}
         basePath={BASE_PATH}
       />
     </>

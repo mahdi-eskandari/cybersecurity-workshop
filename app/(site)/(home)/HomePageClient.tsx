@@ -1068,7 +1068,7 @@ export default function HomePageClient({
       <>
 <div
             dir="rtl"
-      className={`min-h-screen transition-colors duration-300 pt-20 cyber-grid-bg ${
+      className={`min-h-screen transition-colors duration-300 pt-[65px] cyber-grid-bg ${
         darkMode
           ? "bg-[#0A1128] text-[#E6F7FF]"
           : "bg-white text-[#0F172A]"

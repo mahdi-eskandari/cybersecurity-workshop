@@ -3,6 +3,11 @@
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import SingleServiceClient from "./SingleServiceClient";
+import { SITE_URL } from "@/lib/seo";
+import {
+  buildOrganizationSchema,
+  buildBreadcrumbSchema,
+} from "@/lib/schema";
 
 export const dynamic = "force-dynamic";
 
@@ -49,6 +54,47 @@ async function fetchService(baseUrl: string, slug: string) {
   }
 }
 
+function ServiceJsonLd({ service }: { service: any }) {
+  const name = service.title || service.name || "";
+  const url = `${SITE_URL}/services/${service.slug}`;
+  const description =
+    service.metaDescription ||
+    service.shortDescription ||
+    service.description ||
+    "";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Service",
+        "@id": `${url}#service`,
+        name,
+        description,
+        url,
+        inLanguage: "fa-IR",
+        areaServed: { "@type": "Country", name: "ایران" },
+        provider: { "@id": `${SITE_URL}/#organization` },
+      },
+      buildOrganizationSchema(),
+      buildBreadcrumbSchema([
+        { name: "صفحه اصلی", url: `${SITE_URL}/` },
+        { name: "خدمات", url: `${SITE_URL}/services` },
+        { name, url },
+      ]),
+    ],
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+      }}
+    />
+  );
+}
+
 export default async function Page({
   params,
 }: {
@@ -88,9 +134,12 @@ export default async function Page({
   }
 
   return (
+  <>
+    {service && <ServiceJsonLd service={service} />}
     <SingleServiceClient
       initialService={service}
       initialServiceError={error}
     />
-  );
+  </>
+);
 }

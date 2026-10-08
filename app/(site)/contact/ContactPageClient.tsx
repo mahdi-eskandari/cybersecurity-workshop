@@ -357,7 +357,7 @@ const isDark = darkMode;
 
   return (
     <>
-    <div dir="rtl" className={`contact-page min-h-screen bg-[length:52px_52px] bg-fixed font-[var(--font-vazirmatn),sans-serif] transition-colors duration-300 pt-[70px] ${isDark ? "bg-[#0A1128] text-[#E6F7FF] [background-image:linear-gradient(rgba(0,229,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.03)_1px,transparent_1px)]" : "bg-white text-[#0F172A] [background-image:linear-gradient(rgba(30,58,138,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(30,58,138,0.045)_1px,transparent_1px)]"}`}>
+    <div dir="rtl" className={`contact-page min-h-screen bg-[length:52px_52px] bg-fixed font-[var(--font-vazirmatn),sans-serif] transition-colors duration-300 pt-[70px] ${isDark ? "bg-[#0A1128] text-[#E6F7FF] " : "bg-white text-[#0F172A]"}`}>
       {/* HERO */}
       <motion.section className="contact-hero relative overflow-hidden px-6 pb-16 pt-20 text-center md:px-12 md:pb-20 md:pt-28" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.65, ease: "easeOut" }}
        style={{
