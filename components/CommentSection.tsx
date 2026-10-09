@@ -64,7 +64,11 @@ export default function CommentSection({ postId, darkMode, initialComments }: Co
   const [comment, setComment] = useState("");
 
   const [errors, setErrors] = useState<{ name?: string; contact?: string; comment?: string }>({});
-  const [submitting, setSubmitting] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+  const [isHov, setIsHov] = useState(false);
+
+  const isDark = darkMode;
+  const ac = darkMode ? "#00E5FF" : "#1565C0";
   const [serverMessage, setServerMessage] = useState<{ success: boolean; text: string } | null>(null);
 
   // نظرات تایید و منتشرشده، مستقیم از سرور (page.tsx) به‌عنوان prop
@@ -130,7 +134,12 @@ export default function CommentSection({ postId, darkMode, initialComments }: Co
   };
 
   return (
-    <div className={`mt-12 w-full max-w-4xl mx-auto px-4 sm:px-0 `}>
+        <div
+      className="mt-12 w-full max-w-4xl mx-auto px-4 sm:px-0"
+      onMouseEnter={() => setIsHov(true)}
+      onMouseLeave={() => setIsHov(false)}
+    >
+
 
       {/* هدر بخش نظرات */}
       <div className="flex items-center gap-2 mb-6 px-1">
@@ -156,8 +165,8 @@ export default function CommentSection({ postId, darkMode, initialComments }: Co
         }`}
       >
         {/* خط نوری بالای کارت */}
-<div className={`absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent ${
-  darkMode ? "via-[#00E5FF]/50" : "via-[#1565C0]/40"
+<div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent ${
+  darkMode ? "via-[#00E5FF]/75" : "via-[#1565C0]/65"
 } to-transparent`} />
 
         <h4 className="font-bold text-sm mb-2 relative z-10" style={{ color: darkMode ? "#FFFFFF" : "black" }}>

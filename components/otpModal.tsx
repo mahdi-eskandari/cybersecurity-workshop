@@ -55,9 +55,11 @@ type OtpModalProps = {
   onBack?: () => void;
   /** حالت پیش‌نمایش: هیچ درخواستی به سرور نمی‌رود (فقط برای دیدن ظاهر) */
   preview?: boolean;
+  /** ثانیه‌های انتظار تا ارسال مجدد، از سرور */
+  initialSeconds?: number;
 };
 
-export const OtpModal = ({ phone, onVerified, onClose, onBack, preview = false }: OtpModalProps) => {
+export const OtpModal = ({ phone, onVerified, onClose, onBack, preview = false, initialSeconds = RESEND_SECONDS }: OtpModalProps) => {
   const { darkMode } = useTheme();
 
   const [digits, setDigits] = useState<string[]>(Array(OTP_LENGTH).fill(""));
@@ -65,7 +67,7 @@ export const OtpModal = ({ phone, onVerified, onClose, onBack, preview = false }
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [resending, setResending] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
+    const [secondsLeft, setSecondsLeft] = useState(initialSeconds);
     const [turnstileToken, setTurnstileToken] = useState("");
   const turnstileRef = useRef<TurnstileInstance>(null);
     const errorRetries = useRef(0);
@@ -551,12 +553,13 @@ const fmt = (s: number) =>
 
 
               {needCaptcha && (
-                <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
+                <div style={{ width: "100%", marginTop: 12, minHeight: 65 }}>
                   <Turnstile
                     ref={turnstileRef}
                     siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
                     options={{
                       theme: darkMode ? "dark" : "light",
+                      size: "flexible",
                       language: "fa",
                     }}
                     onSuccess={(t: string) => {

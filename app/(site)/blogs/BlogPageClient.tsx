@@ -98,29 +98,29 @@ function buildBlogsUrl(category: string, page: number, basePath: string) {
 
 
 function getPaginationRange(currentPage: number, totalPages: number): (number | "...")[] {
+  const pages = new Set<number>([1]);
+
+  // صفحه فعلی و یکی قبل و بعدش
+  for (let p = currentPage - 1; p <= currentPage + 1; p++) {
+    if (p >= 1 && p <= totalPages) pages.add(p);
+  }
+
+  // سه صفحه آخر
+  for (let p = Math.max(1, totalPages - 2); p <= totalPages; p++) {
+    pages.add(p);
+  }
+
+  const sorted = Array.from(pages).sort((a, b) => a - b);
   const range: (number | "...")[] = [];
-  const siblingCount = 1;
 
-  const start = Math.max(2, currentPage - siblingCount);
-  const end = Math.min(totalPages - 1, currentPage + siblingCount);
-
-  range.push(1);
-
-  if (start > 2) {
-    range.push("...");
-  }
-
-  for (let pageNumber = start; pageNumber <= end; pageNumber++) {
-    range.push(pageNumber);
-  }
-
-  if (end < totalPages - 1) {
-    range.push("...");
-  }
-
-  if (totalPages > 1) {
-    range.push(totalPages);
-  }
+  sorted.forEach((p, i) => {
+    if (i > 0) {
+      const gap = p - sorted[i - 1];
+      if (gap === 2) range.push(p - 1); // فقط یک صفحه جا افتاده: خودش رو نشون بده
+      else if (gap > 2) range.push("...");
+    }
+    range.push(p);
+  });
 
   return range;
 }
@@ -896,7 +896,7 @@ useEffect(() => {
 
             <p
               className={`text-base mb-10 ${
-                darkMode ? "text-[#A7BACB]" : "text-[#475569]"
+                darkMode ? "text-[#737c88]" : "text-[#475569]"
               }`}
             >
               گزارش‌های جرم‌شناسی، هشدارهای امنیتی و اخبار حقوقی توسط تیم متخصصان پاراهور
@@ -1328,15 +1328,14 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
                       href={featuredArticle.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"} 
                       >
                         <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${featuredArticle.avatarColor}`}
+                          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden border ${
+                            darkMode ? "border-transparent" : "border-[#1565C0]/25"
+                          }`}
                         >
-
-
-                     <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center flex-shrink-0">
-                       <IconUser />
-                     </div>
-
-                       </div>
+                          <div className="w-full h-full rounded-full bg-white flex items-center justify-center flex-shrink-0">
+                            <IconUser />
+                          </div>
+                        </div>
                      
                      <div 
                        className={`inline-flex items-center gap-1.5 text-xs font-semibold truncate pb-1 transition-all duration-300 ${
@@ -1553,7 +1552,7 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
                       page === pageNumber
                         ? darkMode
                           ? "bg-[#00B8D4] text-[#031018] border border-cyan-400 shadow-[0_0_16px_rgba(0,229,255,0.45)]"
-                          : "bg-[#1E3A8A] text-white shadow-[0_4px_15px_rgba(30,58,138,0.20)]"
+                          : "bg-[#1565C0] text-white shadow-[0_4px_15px_rgba(30,58,138,0.20)]"
                         : darkMode
                         ? "border-[#263B4E] text-[#8FA5B8] hover:border-[#496276] hover:text-[#E6F7FF]"
                         : "border-[rgba(29,78,216,0.20)] text-[#475569] hover:border-[rgba(29,78,216,0.52)] hover:text-[#1E3A8A]"
@@ -1837,13 +1836,16 @@ function ArticleCard({
           }`}
         >
           <div className="flex items-center gap-2.5 min-w-0">
-            <Link href={article.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"} 
-              className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 ${article.avatarColor}`}
-            >
-              <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center flex-shrink-0">
-               <IconUser />
-            </div>
-            </Link>
+<Link
+  href={article.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"}
+  className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden border ${
+    darkMode ? "border-transparent" : "border-[#1565C0]/25"
+  }`}
+>
+  <div className="w-full h-full rounded-full bg-white flex items-center justify-center flex-shrink-0">
+    <IconUser />
+  </div>
+</Link>
 
             <div className="min-w-0">
               <div>
@@ -1854,7 +1856,6 @@ function ArticleCard({
                   }`}
                 >
                   {article.author}
-                  {/* تیم تخصصی پاراهور */}
                 </Link>
               </div>
 

@@ -183,7 +183,7 @@ export default function Footer() {
             : "1px solid rgba(59,130,246,0.45)",
         }}
       >
-        <div className="max-w-5xl mx-auto px-6 pt-14 pb-8">
+        <div className="max-w-6xl mx-auto px-6 pt-14 pb-8">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-8 lg:gap-12 mb-12">
             <div className="md:col-span-2 space-y-4">
 

@@ -10,6 +10,7 @@ import Head from "next/head"
 import { useTheme } from "../../../components/ThemeProvider"
 import { motion } from "framer-motion"
 import { EmergencyModal } from "../../../components/CrisisReportForm"
+import { createPortal } from "react-dom"
 
 
 
@@ -912,6 +913,24 @@ export default function HomePageClient({
   const [crisisOpen, setCrisisOpen] = useState(false)
       // const blueBright = darkMode ? "#00E5FF" : "#1D4ED8";
 
+      useEffect(() => {
+  const params = new URLSearchParams(window.location.search)
+  if (params.get("report") === "1") {
+    setCrisisOpen(true)
+  }
+}, [])
+
+const closeCrisis = () => {
+  setCrisisOpen(false)
+
+  // پارامتر رو از URL پاک کن که با رفرش دوباره باز نشه
+  const url = new URL(window.location.href)
+  if (url.searchParams.has("report")) {
+    url.searchParams.delete("report")
+    window.history.replaceState(null, "", url.pathname + url.search + url.hash)
+  }
+}
+
       
 
 
@@ -1187,8 +1206,8 @@ export default function HomePageClient({
           <p
             className="max-w-2xl mx-auto mb-10 leading-relaxed"
             style={{
-              color: darkMode ? "#94A3B8" : "#475569",
-              fontSize: "clamp(0.95rem, 2vw, 1.15rem)",
+              color: darkMode ? "#737c88" : "#475569",
+              fontSize: "clamp(0.95rem, 2vw, 1.0rem)",
               fontWeight: 400,
             }}
           >
@@ -1290,11 +1309,11 @@ export default function HomePageClient({
           <div className="scan-line mt-16 w-48 mx-auto opacity-60" />
         </div>
 
-        {crisisOpen && (
-          <EmergencyModal
-            onClose={() => setCrisisOpen(false)}
-          />
-        )}
+{crisisOpen &&
+  createPortal(
+    <EmergencyModal onClose={closeCrisis} />,
+    document.body
+  )}
       </motion.div>
 
       <motion.div
@@ -1342,7 +1361,7 @@ style={{
             <div
               className="hidden md:block w-20 mt-4 flex-shrink-0 mx-auto"
               style={{
-                height: "1.3px",
+                height: "1px",
                 background: darkMode
                   ? "linear-gradient(to right, rgba(0,229,255,0.1), rgba(0,229,255,1), rgba(31,74,79,0.1))"
                   : "linear-gradient(to right, rgba(30,58,138,0.08), #1D4ED8, rgba(30,58,138,0.08))",
@@ -1451,7 +1470,7 @@ style={{
                         : "text-[#111827] group-hover:text-[#1565C0]"
                     }`}
                     style={{
-                      color: darkMode ? "#ffffff" : "#1565C0",
+                      color: darkMode ? "#ffffff" : "black",
                     }}
                   >
                     {step.title}
@@ -1462,8 +1481,8 @@ style={{
                       color: darkMode
                         ? "#64748B"
                         : "#334155",
-                      fontSize: darkMode ? "0.82rem" : "0.86rem",
-                      lineHeight: darkMode ? 1.7 : 1.9,
+                      fontSize:"0.82rem",
+                      lineHeight: 1.7,
                     }}
                   >
                     {step.text}
@@ -1516,7 +1535,7 @@ style={{
 <span 
 className="data-label block mb-3"
 style={{
-  ...(!darkMode && { color: "#1565C0" }),
+  ...(!darkMode && { color: "rgb(21, 101, 192)" }),
 }}
 >SPECIALIZATION DOMAINS</span>
             
@@ -1652,7 +1671,7 @@ style={{
                           : "text-[#111827] group-hover:text-[#1565C0]"
                       }`}
                       style={{
-                        color: darkMode ? "#ffffff" : "#1565C0",
+                        color: darkMode ? "#ffffff" : "black",
                         fontSize: "1rem",
                       }}
                     >
@@ -1664,8 +1683,8 @@ style={{
                         color: darkMode
                           ? "#64748B"
                           : "#334155",
-                        fontSize: darkMode ? "0.82rem" : "0.86rem",
-                        lineHeight: darkMode ? 1.75 : 1.9,
+                        fontSize:"0.82rem" ,
+                        lineHeight: 1.75,
                       }}
                     >
                       {service.text}
@@ -1879,12 +1898,15 @@ style={{
                           }`}
                         >
                           <div className="flex items-center gap-2.5 min-w-0">
-                            <Link 
-                            href={post.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"} 
+                            <Link
+                              href={post.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"}
+                              className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden border ${
+                                darkMode ? "border-transparent" : "border-[#1565C0]/25"
+                              }`}
                             >
-                      <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center flex-shrink-0">
-                        <IconUser />
-                      </div>
+                              <div className="w-full h-full rounded-full bg-white flex items-center justify-center flex-shrink-0">
+                                <IconUser />
+                              </div>
                             </Link>
                       
                          <div className="min-w-0">

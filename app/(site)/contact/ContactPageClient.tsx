@@ -32,16 +32,27 @@ const IconPhone = ({ color = "#EF4444" }: { color?: string }) => (
     <path d="M7.2 3.4 5.6 3.9A2.2 2.2 0 0 0 4.1 6.5c1.15 6.1 6.05 11 12.15 12.15a2.2 2.2 0 0 0 2.6-1.5l.5-1.6-4.1-2.1-1.65 1.65a13.2 13.2 0 0 1-5.65-5.65L9.6 7.8 7.5 3.7a.28.28 0 0 0-.3-.3Z" />
   </svg>
 );
-const IconTelegramBig = ({ color = "#00E5FF" }: { color?: string }) => (
+
+
+const TelegramIcon = ({
+  size = 28,
+  color = "#1E3A8A",
+}: {
+  size?: number;
+  color?: string;
+}) => (
   <svg
-    width="28"
-    height="28"
+    width={size}
+    height={size}
     viewBox="0 0 24 24"
-    fill="currentColor"
+    fill="none"
+    stroke={color}
+    strokeWidth="1.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     aria-hidden="true"
-    style={{ color }}
   >
-    <path d={siTelegram.path} />
+    <path d="M20.665 3.717 2.935 10.708c-1.21.503-1.203 1.201-.222 1.502l4.552 1.419 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15 4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.427Z" />
   </svg>
 );
 
@@ -352,7 +363,7 @@ const isDark = darkMode;
 
   const channels: ContactChannel[] = [
 { icon: <IconPhone color={themeRed} />, iconColor: themeRed, badge: "CRISIS HOTLINE", title: "خط ویژه بحران", desc: "پاسخگویی فوری به بحران های سایبری", value: "021-44097162", valueLabel: "شماره تماس", urgent: true, accentColor: themeRed, href: "tel:+982144097162", actionLabel: "تماس اورژانسی" },
-{ icon: <IconTelegramBig color={themeBlue} />, iconColor: themeBlue, badge: "SECURE CHAT", title: "پشتیبانی امن تلگرام", desc: "ارسال سریع مستندات", value: "Parahoor_Support", valueLabel: "آیدی تلگرام", urgent: false, accentColor: themeBlue, hoverColor: themeBlue, href: "https://t.me/Parahoor_Support", actionLabel: "باز کردن تلگرام" },
+{ icon: <TelegramIcon color={themeBlue} />, iconColor: themeBlue, badge: "SECURE CHAT", title: "پشتیبانی امن تلگرام", desc: "ارسال سریع مستندات", value: "Parahoor_Support", valueLabel: "آیدی تلگرام", urgent: false, accentColor: themeBlue, hoverColor: themeBlue, href: "https://t.me/Parahoor_Support", actionLabel: "باز کردن تلگرام" },
 { icon: <IconLockMail color={themeBlue} />, iconColor: themeBlue, badge: "OFFICIAL EMAIL", title: "ایمیل سازمانی", desc: "برای مکاتبات رسمی و حقوقی", value: "info@parahoor.com", valueLabel: "آدرس ایمیل", urgent: false, accentColor: themeBlue, hoverColor: themeBlue, href: "https://mail.google.com/mail/?view=cm&fs=1&to=info@parahoor.com.com&su=" + encodeURIComponent("تماس از سایت پاراهور"), actionLabel: "ارسال ایمیل" },  ];
 
   return (
@@ -444,8 +455,8 @@ const isDark = darkMode;
         isDark
           ? "bg-white/[0.028] shadow-[0_4px_20px_rgba(0,0,0,0.2)]"
           : crisis
-          ? "border-[#991B1B]/30 bg-white shadow-[0_8px_26px_rgba(15,23,42,0.055)] hover:-translate-y-[3px] hover:border-[#991B1B]/55 hover:shadow-[0_16px_38px_rgba(153,27,27,0.28)]"
-          : "border-[#1565C0]/30 bg-white shadow-[0_8px_26px_rgba(15,23,42,0.055)] hover:-translate-y-[3px] hover:border-[#1565C0]/55 hover:shadow-[0_16px_38px_rgba(21,101,192,0.28)]"
+          ? "border-[#991B1B]/30 bg-white shadow-[0_8px_26px_rgba(15,23,42,0.055)]  hover:border-[#991B1B]/55 hover:shadow-[0_16px_38px_rgba(153,27,27,0.28)]"
+          : "border-[#1565C0]/30 bg-white shadow-[0_8px_26px_rgba(15,23,42,0.055)]  hover:border-[#1565C0]/55 hover:shadow-[0_16px_38px_rgba(21,101,192,0.28)]"
       }`}
       style={{
         backdropFilter: "blur(10px)",
@@ -462,12 +473,20 @@ const isDark = darkMode;
       }}
     >
       <div
-        className="h-0.5 transition-opacity duration-300"
+        className=" transition-opacity duration-300"
         style={{
-          background: `linear-gradient(90deg,transparent,${ac}90,transparent)`,
+        height: isHov ? 2.5 : 2,
+          background: `linear-gradient(50deg,transparent,${ac}90,transparent)`,
           opacity: isHov ? 1 : isDark ? 0.4 : 0.75,
         }}
       />
+
+
+
+
+
+
+
 
       {crisis && (
         <div
@@ -514,8 +533,7 @@ const isDark = darkMode;
             isDark
               ? "text-[#E2E8F0] group-hover:text-white"
               : crisis
-              ? "text-[#991B1B] group-hover:text-[#991B1B]"
-              : "text-[#1565C0] group-hover:text-[#1565C0]"
+
           }`}
         >
           {ch.title}
@@ -651,23 +669,37 @@ const isDark = darkMode;
   transition={{ duration: 0.7, ease: "easeOut" }}
 >
   <div className="mx-auto max-w-5xl">
-    <div className="mb-8 flex items-center gap-3">
-      <div
-        className={`h-[22px] w-[3px] rounded-sm bg-gradient-to-b ${
-          isDark
-            ? "from-[#00E5FF] to-[#00E5FF]/10"
-            : "from-[#1565C0] to-[#1565C0]/10"
-        }`}
-      />
+    <div className="mb-8">
+      <div className="mb-3 flex items-center gap-3">
+        <div
+          className={`h-[22px] w-[3px] rounded-sm bg-gradient-to-b ${
+            isDark
+              ? "from-[#00E5FF] to-[#00E5FF]/10"
+              : "from-[#1565C0] to-[#1565C0]/10"
+          }`}
+        />
 
-      <span
-            className="data-label"
-              style={{
-              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#1565C0",
-            }}
+        <span
+          className="data-label"
+          style={{
+            color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#1565C0",
+          }}
+        >
+          LOCATION // BY APPOINTMENT ONLY
+        </span>
+      </div>
+
+      <h2
+        className="font-bold"
+        style={{
+          color: darkMode ? "#fff" : "#0F172A",
+          fontSize: "clamp(1.2rem, 2.5vw, 1.7rem)",
+          lineHeight: 1.4,
+        }}
       >
-        LOCATION // BY APPOINTMENT ONLY
-      </span>
+       ارتباط حضوری با پاراهور
+      </h2>
+      
     </div>
 
     <div

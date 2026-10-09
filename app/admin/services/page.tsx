@@ -1,5 +1,10 @@
 
 
+
+
+
+
+
 // "use client";
 
 // import {
@@ -287,23 +292,23 @@
 // > = {
 //   active: {
 //     label: "فعال",
-//     color: "#10B981",
-//     bg: "rgba(16,185,129,0.1)",
-//     border: "rgba(16,185,129,0.28)",
+//     color: "#059669",
+//     bg: "rgba(5,150,105,0.1)",
+//     border: "rgba(5,150,105,0.28)",
 //   },
 
 //   draft: {
 //     label: "پیش نویس",
-//     color: "#94A3B8",
-//     bg: "rgba(148,163,184,0.08)",
-//     border: "rgba(148,163,184,0.2)",
+//     color: "#475569",
+//     bg: "rgba(100,116,139,0.104)",
+//     border: "rgba(100,116,139,0.26)",
 //   },
 
 //   hidden: {
 //     label: "پنهان",
-//     color: "#F59E0B",
-//     bg: "rgba(245,158,11,0.08)",
-//     border: "rgba(245,158,11,0.22)",
+//     color: "#B45309",
+//     bg: "rgba(217,119,6,0.08)",
+//     border: "rgba(217,119,6,0.22)",
 //   },
 // };
 
@@ -316,22 +321,22 @@
 // > = {
 //   intermediate: {
 //     label: "متوسط",
-//     color: "#10B981",
+//     color: "#059669",
 //   },
 
 //   specialized: {
 //     label: "تخصصی",
-//     color: "#00E5FF",
+//     color: "#1565C0",
 //   },
 
 //   advanced: {
 //     label: "پیشرفته",
-//     color: "#A78BFA",
+//     color: "#7C3AED",
 //   },
 
 //   complex: {
 //     label: "پیچیده",
-//     color: "#F59E0B",
+//     color: "#B45309",
 //   },
 // };
 
@@ -340,17 +345,17 @@
 // const inputStyle = (
 //   hasError = false
 // ): CSSProperties => ({
-//   background: "#060B19",
+//   background: "#F3F7FC",
 
 //   border: hasError
-//     ? "1px solid rgba(239,68,68,0.55)"
-//     : "1px solid rgba(255,255,255,0.07)",
+//     ? "1px solid rgba(220,38,38,0.55)"
+//     : "1px solid rgba(30,58,138,0.128)",
 
 //   borderRadius: 9,
 
 //   padding: "9px 12px",
 
-//   color: "#E2E8F0",
+//   color: "#0F172A",
 
 //   fontSize: "0.82rem",
 
@@ -359,7 +364,7 @@
 
 //   outline: "none",
 
-//   caretColor: "#00E5FF",
+//   caretColor: "#1565C0",
 
 //   width: "100%",
 
@@ -372,7 +377,7 @@
 // });
 
 // const errorStyle: CSSProperties = {
-//   color: "#EF4444",
+//   color: "#DC2626",
 //   fontSize: "0.64rem",
 //   marginTop: 1,
 // };
@@ -407,7 +412,7 @@
 //       >
 //         <label
 //           style={{
-//             color: error ? "#EF4444" : "#94A3B8",
+//             color: error ? "#DC2626" : "#475569",
 //             fontSize: "0.7rem",
 //             fontFamily: "monospace",
 //             letterSpacing: "0.04em",
@@ -419,7 +424,7 @@
 //         {hint && (
 //           <span
 //             style={{
-//               color: "#334155",
+//               color: "#74839B",
 //               fontSize: "0.6rem",
 //               fontFamily: "monospace",
 //             }}
@@ -1025,12 +1030,12 @@
 //   const buttonStyle = (active = false, extra = "") =>
 //     `flex h-8 w-[34px] shrink-0 items-center justify-center rounded-[7px] border text-xs font-bold transition-colors ${
 //       active
-//         ? "border-[rgba(0,229,255,0.28)] bg-[rgba(0,229,255,0.10)] text-[#00E5FF]"
-//         : "border-transparent bg-transparent text-[#94A3B8] hover:bg-[rgba(0,229,255,0.07)] hover:text-[#00E5FF]"
+//         ? "border-[rgba(21,101,192,0.44)] bg-[rgba(21,101,192,0.17)] text-[#1565C0]"
+//         : "border-transparent bg-transparent text-[#475569] hover:bg-[rgba(21,101,192,0.125)] hover:text-[#1565C0]"
 //     } cursor-pointer ${extra}`;
 
 //   const menuStyle =
-//     "absolute right-0 top-[calc(100%+6px)] z-[50] min-w-[160px] rounded-[9px] border border-[rgba(255,255,255,0.08)] bg-[#0B1224] p-[6px] shadow-[0_16px_40px_rgba(0,0,0,0.45)]";
+//     "absolute right-0 top-[calc(100%+6px)] z-[50] min-w-[160px] rounded-[9px] border border-[rgba(30,58,138,0.142)] bg-[#F6F9FD] p-[6px] shadow-[0_16px_40px_rgba(15,23,42,0.18)]";
 
 //   const parent = editor.state.selection.$from.parent;
 //   const headingLevel = editor.getAttributes("heading").level;
@@ -1106,13 +1111,13 @@
 //           <div className="relative">
 //             <button type="button" title="تیتر" onMouseDown={(e) => e.preventDefault()} onClick={() => setShowHeading((v) => !v)} className={buttonStyle(!!headingLevel, "w-[48px]")}><EditorIcon name="heading" /><span className="mr-0.5 text-[9px]">⌄</span></button>
 //             {showHeading && <div className={menuStyle}>
-//               <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => setHeading()} className="flex w-full cursor-pointer justify-between rounded-md border-0 bg-transparent px-[9px] py-2 text-xs text-slate-300 hover:bg-white/[0.05]">متن <span className="text-slate-600">Aa</span></button>
-//               {[1,2,3,4,5,6].map((n) => <button key={n} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => setHeading(n)} className={`flex w-full cursor-pointer justify-between rounded-md border-0 px-[9px] py-2 text-xs ${headingLevel === n ? "bg-cyan-400/[0.08] text-cyan-300" : "bg-transparent text-slate-300 hover:bg-white/[0.05]"}`}>تیتر {n}<span className="text-slate-600">H{n}</span></button>)}
+//               <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => setHeading()} className="flex w-full cursor-pointer justify-between rounded-md border-0 bg-transparent px-[9px] py-2 text-xs text-slate-700 hover:bg-[#1565C0]/[0.07]">متن <span className="text-slate-500">Aa</span></button>
+//               {[1,2,3,4,5,6].map((n) => <button key={n} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => setHeading(n)} className={`flex w-full cursor-pointer justify-between rounded-md border-0 px-[9px] py-2 text-xs ${headingLevel === n ? "bg-[#1565C0]/[0.1] text-[#1565C0]" : "bg-transparent text-slate-700 hover:bg-[#1565C0]/[0.07]"}`}>تیتر {n}<span className="text-slate-500">H{n}</span></button>)}
 //             </div>}
 //           </div>
 //           <div className="relative">
-//             <button type="button" title="اندازه فونت" onMouseDown={(e) => { e.preventDefault(); rememberSelection(); }} onClick={() => setShowFontSize((v) => !v)} className="flex h-8 w-[72px] shrink-0 cursor-pointer items-center justify-between rounded-[7px] border border-cyan-400/[0.10] bg-[#0B1224] px-2 text-[11px] font-bold text-slate-300 hover:border-cyan-400/25"><span>{currentFontSize.replace("px", "")}px</span><span>⌄</span></button>
-//             {showFontSize && <div className={menuStyle + " w-[96px] min-w-[96px]"}>{FONT_SIZES.map((size) => <button key={size.value} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => { setStyle({ fontSize: size.value }); setShowFontSize(false); }} className={`flex w-full items-center justify-between rounded-md border-0 px-[9px] py-2 text-xs ${currentFontSize === size.value ? "bg-cyan-400/[0.08] text-cyan-300" : "bg-transparent text-slate-300 hover:bg-white/[0.05]"}`}><span>{size.label}px</span><span className="text-slate-600">A</span></button>)}</div>}
+//             <button type="button" title="اندازه فونت" onMouseDown={(e) => { e.preventDefault(); rememberSelection(); }} onClick={() => setShowFontSize((v) => !v)} className="flex h-8 w-[72px] shrink-0 cursor-pointer items-center justify-between rounded-[7px] border border-[#1565C0]/[0.16] bg-[#F6F9FD] px-2 text-[11px] font-bold text-slate-700 hover:border-[#1565C0]/40"><span>{currentFontSize.replace("px", "")}px</span><span>⌄</span></button>
+//             {showFontSize && <div className={menuStyle + " w-[96px] min-w-[96px]"}>{FONT_SIZES.map((size) => <button key={size.value} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => { setStyle({ fontSize: size.value }); setShowFontSize(false); }} className={`flex w-full items-center justify-between rounded-md border-0 px-[9px] py-2 text-xs ${currentFontSize === size.value ? "bg-[#1565C0]/[0.1] text-[#1565C0]" : "bg-transparent text-slate-700 hover:bg-[#1565C0]/[0.07]"}`}><span>{size.label}px</span><span className="text-slate-500">A</span></button>)}</div>}
 //           </div>
 //           <span className="service-rich-editor-divider">|</span>
 //           <button type="button" title="درشت" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().toggleBold().run())} className={buttonStyle(editor.isActive("bold"))}><EditorIcon name="bold" /></button>
@@ -1166,7 +1171,7 @@
 //         </div></div>
 //         <div className="service-rich-editor-extra-group"><span className="service-rich-editor-extra-label">نمادها</span><div className="service-rich-editor-extra-buttons"><div className="relative">
 //           <button type="button" title="نمادهای ویژه" onMouseDown={(e) => e.preventDefault()} onClick={() => setShowSymbols((v) => !v)} className={buttonStyle(showSymbols)}><EditorIcon name="symbols" /></button>
-//           {showSymbols && <div className={`${menuStyle} right-0 grid min-w-[288px] grid-cols-8 gap-[3px]`}>{symbols.map((symbol) => <button key={symbol} type="button" title={`درج ${symbol}`} onMouseDown={(e) => e.preventDefault()} onClick={() => { editor.chain().focus().insertContent(symbol).run(); setShowSymbols(false); }} className="h-[30px] cursor-pointer rounded-[5px] border-0 bg-transparent text-[13px] text-[#CBD5E1] hover:bg-white/[0.05] hover:text-cyan-300">{symbol}</button>)}</div>}
+//           {showSymbols && <div className={`${menuStyle} right-0 grid min-w-[288px] grid-cols-8 gap-[3px]`}>{symbols.map((symbol) => <button key={symbol} type="button" title={`درج ${symbol}`} onMouseDown={(e) => e.preventDefault()} onClick={() => { editor.chain().focus().insertContent(symbol).run(); setShowSymbols(false); }} className="h-[30px] cursor-pointer rounded-[5px] border-0 bg-transparent text-[13px] text-[#334155] hover:bg-[#1565C0]/[0.07] hover:text-[#1565C0]">{symbol}</button>)}</div>}
 //         </div></div></div>
 //       </div>}
 
@@ -1209,27 +1214,27 @@
 //   };
 
 //   return (
-//     <div className="border-b border-cyan-400/[0.08] bg-[#070D1D] px-4 py-5 sm:px-8">
+//     <div className="border-b border-[#1565C0]/[0.14] bg-[#F1F5FB] px-4 py-5 sm:px-8">
 //       <div className="mx-auto max-w-5xl">
 //         <div className="mb-4 flex items-start justify-between gap-4">
 //           <div>
 //             <div className="flex items-center gap-2">
-//               <span className="text-cyan-400"><EditorIcon name="code" /></span>
-//               <h3 className="text-sm font-bold text-slate-200">Code / HTML</h3>
+//               <span className="text-[#1565C0]"><EditorIcon name="code" /></span>
+//               <h3 className="text-sm font-bold text-slate-800">Code / HTML</h3>
 //             </div>
-//             <p className="mt-1 text-[12px] leading-5 text-slate-600">
+//             <p className="mt-1 text-[12px] leading-5 text-slate-500">
 //               این بخش فقط برای کنترل ساختار HTML است؛ متن عادی را با ادیتور بنویس. تگ‌ها اینجا وارد می‌شوند و تا وقتی «اعمال HTML» نزنی وارد محتوای خدمت نمی‌شوند.
 //             </p>
 //           </div>
-//           <button type="button" onClick={onClose} title="بستن پنل" className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-white/[0.07] bg-white/[0.035] text-slate-300 hover:border-cyan-400/20 hover:bg-cyan-400/[0.06] hover:text-cyan-300">
+//           <button type="button" onClick={onClose} title="بستن پنل" className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-[#1E3A8A]/[0.14] bg-[#1E3A8A]/[0.05] text-slate-700 hover:border-[#1565C0]/35 hover:bg-[#1565C0]/[0.08] hover:text-[#1565C0]">
 //             ×
 //           </button>
 //         </div>
 
-//         <div className="mb-3 flex flex-wrap gap-2 rounded-xl border border-white/[0.09] bg-[#050814] p-3">
-//           <span className="ml-1 self-center text-[9px] font-bold text-slate-700">تگ‌های سریع</span>
+//         <div className="mb-3 flex flex-wrap gap-2 rounded-xl border border-[#1E3A8A]/[0.17] bg-[#EEF3FA] p-3">
+//           <span className="ml-1 self-center text-[9px] font-bold text-slate-400">تگ‌های سریع</span>
 //           {HTML_TAGS.map(([label, open, close]) => (
-//             <button key={label} type="button" onClick={() => insertTag(open, close)} className="cursor-pointer rounded-md border border-white/[0.07] bg-white/[0.035] px-2.5 py-1.5 font-mono text-[12px] text-slate-300 transition-all hover:border-cyan-400/25 hover:bg-cyan-400/[0.06] hover:text-cyan-300">
+//             <button key={label} type="button" onClick={() => insertTag(open, close)} className="cursor-pointer rounded-md border border-[#1E3A8A]/[0.14] bg-[#1E3A8A]/[0.05] px-2.5 py-1.5 font-mono text-[12px] text-slate-700 transition-all hover:border-[#1565C0]/40 hover:bg-[#1565C0]/[0.08] hover:text-[#1565C0]">
 //               {label}
 //             </button>
 //           ))}
@@ -1237,18 +1242,18 @@
 
 //         <div className="mb-3 flex flex-wrap gap-2">
 //           {COMMON_SNIPPETS.map((item) => (
-//             <button key={item.name} type="button" onClick={() => insertIntoSource(item.code)} className="cursor-pointer rounded-md border border-cyan-400/[0.12] bg-cyan-400/[0.04] px-3 py-1.5 font-mono text-[12px] text-cyan-300/80 hover:bg-cyan-400/[0.08] hover:text-cyan-200">
+//             <button key={item.name} type="button" onClick={() => insertIntoSource(item.code)} className="cursor-pointer rounded-md border border-[#1565C0]/[0.18] bg-[#1565C0]/[0.06] px-3 py-1.5 font-mono text-[12px] text-[#1565C0]/80 hover:bg-[#1565C0]/[0.1] hover:text-[#0D47A1]">
 //               + {item.name}
 //             </button>
 //           ))}
 //         </div>
 
-//         <textarea value={sourceCode} onChange={(e) => setSourceCode(e.target.value)} spellCheck={false} placeholder="HTML محتوای خدمت..." rows={10} className="mb-3 min-h-[220px] w-full resize-y rounded-xl border border-white/[0.08] bg-[#020617] px-4 py-3 font-mono text-[12px] leading-6 text-left text-cyan-100 outline-none focus:border-cyan-400/30 focus:ring-2 focus:ring-cyan-400/[0.05]" dir="ltr" />
+//         <textarea value={sourceCode} onChange={(e) => setSourceCode(e.target.value)} spellCheck={false} placeholder="HTML محتوای خدمت..." rows={10} className="mb-3 min-h-[220px] w-full resize-y rounded-xl border border-[#1E3A8A]/[0.16] bg-[#F8FAFD] px-4 py-3 font-mono text-[12px] leading-6 text-left text-[#0F172A] outline-none focus:border-[#1565C0]/60 focus:ring-2 focus:ring-[#1565C0]/[0.1]" dir="ltr" />
 
 //         <div className="flex flex-wrap items-center justify-between gap-2">
 //           <div className="flex gap-2">
-//             <button type="button" onClick={onClose} className="cursor-pointer rounded-lg border border-white/[0.08] bg-white/[0.035] px-4 py-2 text-[12px] font-bold text-slate-300 hover:bg-white/[0.05]">انصراف</button>
-//             <button type="button" onClick={applyHtml} className="cursor-pointer rounded-lg border border-cyan-300/30 bg-cyan-400 px-5 py-2 text-[12px] font-black text-[#04111C] shadow-[0_8px_24px_rgba(0,229,255,0.12)] hover:bg-cyan-300">اعمال HTML</button>
+//             <button type="button" onClick={onClose} className="cursor-pointer rounded-lg border border-[#1E3A8A]/[0.16] bg-[#1E3A8A]/[0.05] px-4 py-2 text-[12px] font-bold text-slate-700 hover:bg-[#1565C0]/[0.07]">انصراف</button>
+//             <button type="button" onClick={applyHtml} className="cursor-pointer rounded-lg border border-[#1565C0]/50 bg-[#1565C0] px-5 py-2 text-[12px] font-black text-[#FFFFFF] shadow-[0_8px_24px_rgba(21,101,192,0.2)] hover:bg-[#0D47A1]">اعمال HTML</button>
 //           </div>
 //         </div>
 //       </div>
@@ -1405,19 +1410,19 @@
 //       <button
 //         type="button"
 //         onClick={() => setOpen((prev) => !prev)}
-//         className={`flex h-10 w-full items-center justify-between rounded-[8px] border bg-[#0B1224] px-3 text-right text-[11px] font-bold outline-none transition-all ${
+//         className={`flex h-10 w-full items-center justify-between rounded-[8px] border bg-[#F6F9FD] px-3 text-right text-[11px] font-bold outline-none transition-all ${
 //           open
-//             ? "border-cyan-400/35 shadow-[0_0_16px_rgba(0,229,255,0.04)]"
-//             : "border-white/[0.07] hover:border-cyan-400/15"
+//             ? "border-[#1565C0]/50 shadow-[0_0_16px_rgba(21,101,192,0.08)]"
+//             : "border-[#1E3A8A]/[0.14] hover:border-[#1565C0]/30"
 //         }`}
 //       >
-//         <span className="truncate text-slate-300">
+//         <span className="truncate text-slate-700">
 //           {selectedOption.label}
 //         </span>
 //         <span
-//           className={`mr-2 flex h-5 w-5 shrink-0 items-center justify-center rounded-[5px] border border-white/[0.05] bg-white/[0.025] text-slate-500 transition-all duration-200 ${
+//           className={`mr-2 flex h-5 w-5 shrink-0 items-center justify-center rounded-[5px] border border-[#1E3A8A]/[0.1] bg-[#1E3A8A]/[0.04] text-slate-500 transition-all duration-200 ${
 //             open
-//               ? "border-cyan-400/15 bg-cyan-400/[0.05] text-cyan-300"
+//               ? "border-[#1565C0]/30 bg-[#1565C0]/[0.07] text-[#1565C0]"
 //               : ""
 //           }`}
 //         >
@@ -1445,7 +1450,7 @@
 //             onClick={() => setOpen(false)}
 //             className="fixed inset-0 z-40 cursor-default"
 //           />
-//           <div className="absolute right-0 top-[calc(100%+6px)] z-50 max-h-[280px] w-full overflow-y-auto rounded-[9px] border border-white/[0.08] bg-[#0B1224] p-[6px] shadow-[0_16px_40px_rgba(0,0,0,0.45)]">
+//           <div className="absolute right-0 top-[calc(100%+6px)] z-50 max-h-[280px] w-full overflow-y-auto rounded-[9px] border border-[#1E3A8A]/[0.16] bg-[#F6F9FD] p-[6px] shadow-[0_16px_40px_rgba(15,23,42,0.18)]">
 //             {options.map((option) => {
 //               const selected = option.value === value;
 
@@ -1459,13 +1464,13 @@
 //                   }}
 //                   className={`flex w-full items-center justify-between rounded-[7px] px-3 py-2.5 text-right text-[11px] font-bold transition-all ${
 //                     selected
-//                       ? "bg-cyan-400/[0.08] text-cyan-300"
-//                       : "text-slate-300 hover:bg-white/[0.05] hover:text-white"
+//                       ? "bg-[#1565C0]/[0.1] text-[#1565C0]"
+//                       : "text-slate-700 hover:bg-[#1565C0]/[0.07] hover:text-slate-900"
 //                   }`}
 //                 >
 //                   <span className="truncate">{option.label}</span>
 //                   {selected && (
-//                     <span className="mr-2 shrink-0 text-cyan-300">
+//                     <span className="mr-2 shrink-0 text-[#1565C0]">
 //                       ✓
 //                     </span>
 //                   )}
@@ -2008,7 +2013,7 @@
 //       position: "fixed",
 //       inset: 0,
 //       zIndex: 1000,
-//       background: "rgba(2, 6, 23, 0.75)",
+//       background: "rgba(15,23,42,0.413)",
 //       backdropFilter: "blur(6px)",
 //       display: "flex",
 //       alignItems: "center",
@@ -2023,10 +2028,10 @@
 //         maxWidth: 720,
 //         maxHeight: "90vh",
 //         overflowY: "auto",
-//         background: "#0F172A",
-//         border: "1px solid #334155",
+//         background: "#FFFFFF",
+//         border: "1px solid #CBD5E1",
 //         borderRadius: 20,
-//         boxShadow: "0 25px 80px rgba(0,0,0,0.45)",
+//         boxShadow: "0 25px 80px rgba(15,23,42,0.18)",
 //         direction: "rtl",
 //       }}
 //     >
@@ -2034,7 +2039,7 @@
 //       <div
 //         style={{
 //           padding: "20px 22px",
-//           borderBottom: "1px solid #1E293B",
+//           borderBottom: "1px solid #DDE5F0",
 //           display: "flex",
 //           alignItems: "center",
 //           justifyContent: "space-between",
@@ -2046,7 +2051,7 @@
 //             style={{
 //               fontSize: 18,
 //               fontWeight: 800,
-//               color: "#F8FAFC",
+//               color: "#0F172A",
 //               marginBottom: 5,
 //             }}
 //           >
@@ -2056,7 +2061,7 @@
 //           <div
 //             style={{
 //               fontSize: 13,
-//               color: "#64748B",
+//               color: "#52627A",
 //             }}
 //           >
 //             پیش‌نمایش اطلاعات ثبت‌شده خدمت
@@ -2070,9 +2075,9 @@
 //             width: 36,
 //             height: 36,
 //             borderRadius: 10,
-//             border: "1px solid #334155",
-//             background: "#111827",
-//             color: "#94A3B8",
+//             border: "1px solid #CBD5E1",
+//             background: "#F1F5FB",
+//             color: "#475569",
 //             fontSize: 20,
 //             cursor: "pointer",
 //             display: "flex",
@@ -2100,8 +2105,8 @@
 //               width: 54,
 //               height: 54,
 //               borderRadius: 14,
-//               background: "#111827",
-//               border: "1px solid #334155",
+//               background: "#F1F5FB",
+//               border: "1px solid #CBD5E1",
 //               display: "flex",
 //               alignItems: "center",
 //               justifyContent: "center",
@@ -2117,7 +2122,7 @@
 //               style={{
 //                 fontSize: 20,
 //                 fontWeight: 800,
-//                 color: "#F8FAFC",
+//                 color: "#0F172A",
 //                 marginBottom: 5,
 //               }}
 //             >
@@ -2127,7 +2132,7 @@
 //             <div
 //               style={{
 //                 fontSize: 13,
-//                 color: "#64748B",
+//                 color: "#52627A",
 //                 direction: "ltr",
 //                 textAlign: "right",
 //               }}
@@ -2151,14 +2156,14 @@
 //             style={{
 //               padding: 14,
 //               borderRadius: 12,
-//               background: "#111827",
-//               border: "1px solid #1E293B",
+//               background: "#F1F5FB",
+//               border: "1px solid #DDE5F0",
 //             }}
 //           >
 //             <div
 //               style={{
 //                 fontSize: 11,
-//                 color: "#64748B",
+//                 color: "#52627A",
 //                 marginBottom: 7,
 //               }}
 //             >
@@ -2171,10 +2176,10 @@
 //                 fontWeight: 700,
 //                 color:
 //                   previewTarget.status === "active"
-//                     ? "#10B981"
+//                     ? "#059669"
 //                     : previewTarget.status === "hidden"
-//                     ? "#F59E0B"
-//                     : "#94A3B8",
+//                     ? "#B45309"
+//                     : "#475569",
 //               }}
 //             >
 //               {previewTarget.status === "active"
@@ -2189,14 +2194,14 @@
 //             style={{
 //               padding: 14,
 //               borderRadius: 12,
-//               background: "#111827",
-//               border: "1px solid #1E293B",
+//               background: "#F1F5FB",
+//               border: "1px solid #DDE5F0",
 //             }}
 //           >
 //             <div
 //               style={{
 //                 fontSize: 11,
-//                 color: "#64748B",
+//                 color: "#52627A",
 //                 marginBottom: 7,
 //               }}
 //             >
@@ -2207,7 +2212,7 @@
 //               style={{
 //                 fontSize: 13,
 //                 fontWeight: 700,
-//                 color: "#E2E8F0",
+//                 color: "#0F172A",
 //               }}
 //             >
 //               {previewTarget.level === "intermediate"
@@ -2224,14 +2229,14 @@
 //             style={{
 //               padding: 14,
 //               borderRadius: 12,
-//               background: "#111827",
-//               border: "1px solid #1E293B",
+//               background: "#F1F5FB",
+//               border: "1px solid #DDE5F0",
 //             }}
 //           >
 //             <div
 //               style={{
 //                 fontSize: 11,
-//                 color: "#64748B",
+//                 color: "#52627A",
 //                 marginBottom: 7,
 //               }}
 //             >
@@ -2242,7 +2247,7 @@
 //               style={{
 //                 fontSize: 13,
 //                 fontWeight: 700,
-//                 color: "#E2E8F0",
+//                 color: "#0F172A",
 //               }}
 //             >
 //               {previewTarget.categoryLabel || "بدون دسته‌بندی"}
@@ -2255,8 +2260,8 @@
 //           style={{
 //             padding: 16,
 //             borderRadius: 14,
-//             background: "#111827",
-//             border: "1px solid #1E293B",
+//             background: "#F1F5FB",
+//             border: "1px solid #DDE5F0",
 //             marginBottom: 14,
 //           }}
 //         >
@@ -2264,7 +2269,7 @@
 //             style={{
 //               fontSize: 12,
 //               fontWeight: 700,
-//               color: "#94A3B8",
+//               color: "#475569",
 //               marginBottom: 9,
 //             }}
 //           >
@@ -2275,7 +2280,7 @@
 //             style={{
 //               fontSize: 14,
 //               lineHeight: 1.9,
-//               color: "#E2E8F0",
+//               color: "#0F172A",
 //             }}
 //           >
 //             {previewTarget.shortDesc || "توضیحی ثبت نشده است."}
@@ -2288,8 +2293,8 @@
 //             style={{
 //               padding: 16,
 //               borderRadius: 14,
-//               background: "#111827",
-//               border: "1px solid #1E293B",
+//               background: "#F1F5FB",
+//               border: "1px solid #DDE5F0",
 //               marginBottom: 14,
 //             }}
 //           >
@@ -2297,7 +2302,7 @@
 //               style={{
 //                 fontSize: 12,
 //                 fontWeight: 700,
-//                 color: "#94A3B8",
+//                 color: "#475569",
 //                 marginBottom: 10,
 //               }}
 //             >
@@ -2317,9 +2322,9 @@
 //                   style={{
 //                     padding: "6px 10px",
 //                     borderRadius: 8,
-//                     background: "#0F172A",
-//                     border: "1px solid #334155",
-//                     color: "#CBD5E1",
+//                     background: "#FFFFFF",
+//                     border: "1px solid #CBD5E1",
+//                     color: "#334155",
 //                     fontSize: 12,
 //                   }}
 //                 >
@@ -2339,15 +2344,15 @@
 //             style={{
 //               padding: 16,
 //               borderRadius: 14,
-//               background: "#111827",
-//               border: "1px solid #1E293B",
+//               background: "#F1F5FB",
+//               border: "1px solid #DDE5F0",
 //             }}
 //           >
 //             <div
 //               style={{
 //                 fontSize: 12,
 //                 fontWeight: 700,
-//                 color: "#94A3B8",
+//                 color: "#475569",
 //                 marginBottom: 12,
 //               }}
 //             >
@@ -2359,7 +2364,7 @@
 //                 <div
 //                   style={{
 //                     fontSize: 11,
-//                     color: "#64748B",
+//                     color: "#52627A",
 //                     marginBottom: 5,
 //                   }}
 //                 >
@@ -2369,7 +2374,7 @@
 //                 <div
 //                   style={{
 //                     fontSize: 13,
-//                     color: "#E2E8F0",
+//                     color: "#0F172A",
 //                   }}
 //                 >
 //                   {previewTarget.metaTitle}
@@ -2382,7 +2387,7 @@
 //                 <div
 //                   style={{
 //                     fontSize: 11,
-//                     color: "#64748B",
+//                     color: "#52627A",
 //                     marginBottom: 5,
 //                   }}
 //                 >
@@ -2393,7 +2398,7 @@
 //                   style={{
 //                     fontSize: 13,
 //                     lineHeight: 1.8,
-//                     color: "#CBD5E1",
+//                     color: "#334155",
 //                   }}
 //                 >
 //                   {previewTarget.metaDescription}
@@ -2408,7 +2413,7 @@
 //       <div
 //         style={{
 //           padding: "16px 22px",
-//           borderTop: "1px solid #1E293B",
+//           borderTop: "1px solid #DDE5F0",
 //           display: "flex",
 //           justifyContent: "flex-end",
 //         }}
@@ -2420,9 +2425,9 @@
 //             height: 42,
 //             padding: "0 20px",
 //             borderRadius: 10,
-//             border: "1px solid #334155",
-//             background: "#1E293B",
-//             color: "#E2E8F0",
+//             border: "1px solid #CBD5E1",
+//             background: "#E8EEF6",
+//             color: "#0F172A",
 //             fontSize: 13,
 //             fontWeight: 700,
 //             cursor: "pointer",
@@ -2447,8 +2452,8 @@
 //       dir="rtl"
 //       className="min-h-screen"
 //       style={{
-//         background: "#050814",
-//         color: "#E2E8F0",
+//         background: "#EEF3FA",
+//         color: "#0F172A",
 //         fontFamily:
 //           "var(--font-vazirmatn), Vazirmatn, sans-serif",
 //       }}
@@ -2490,9 +2495,9 @@
 //                   borderRadius:
 //                     "50%",
 //                   background:
-//                     "#00E5FF",
+//                     "#1565C0",
 //                   boxShadow:
-//                     "0 0 7px rgba(0,229,255,0.9)",
+//                     "0 0 7px rgba(21,101,192,0.9)",
 //                 }}
 //               />
 
@@ -2503,7 +2508,7 @@
 //                   fontSize:
 //                     "0.6rem",
 //                   color:
-//                     "rgba(0,229,255,0.5)",
+//                     "rgba(21,101,192,0.77)",
 //                   letterSpacing:
 //                     "0.18em",
 //                 }}
@@ -2514,7 +2519,7 @@
 
 //             <h2
 //               style={{
-//                 color: "#fff",
+//                 color: "#0F172A",
 //                 fontWeight: 900,
 //                 fontSize:
 //                   "1.3rem",
@@ -2528,7 +2533,7 @@
 //             <p
 //               style={{
 //                 color:
-//                   "#334155",
+//                   "#74839B",
 //                 fontSize:
 //                   "0.76rem",
 //                 marginTop: 4,
@@ -2563,18 +2568,18 @@
 //               cursor:
 //                 "pointer",
 //               background:
-//                 "#00E5FF",
+//                 "#1565C0",
 //               border:
-//                 "1px solid rgba(0,229,255,0.5)",
+//                 "1px solid rgba(21,101,192,0.77)",
 //               color:
-//                 "#050814",
+//                 "#FFFFFF",
 //               fontSize:
 //                 "0.82rem",
 //               fontWeight: 700,
 //               fontFamily:
 //                 "var(--font-vazirmatn), Vazirmatn, sans-serif",
 //               boxShadow:
-//                 "0 0 20px rgba(0,229,255,0.25)",
+//                 "0 0 20px rgba(21,101,192,0.395)",
 //               whiteSpace:
 //                 "nowrap",
 //             }}
@@ -2605,7 +2610,7 @@
 //                   "active"
 //               ).length,
 //               color:
-//                 "#10B981",
+//                 "#059669",
 //             },
 
 //             {
@@ -2616,7 +2621,7 @@
 //                   "draft"
 //               ).length,
 //               color:
-//                 "#94A3B8",
+//                 "#475569",
 //             },
 
 //             {
@@ -2627,7 +2632,7 @@
 //                   "hidden"
 //               ).length,
 //               color:
-//                 "#F59E0B",
+//                 "#B45309",
 //             },
 //           ].map(
 //             ({
@@ -2639,9 +2644,9 @@
 //                 key={label}
 //                 style={{
 //                   background:
-//                     "#0A1128",
+//                     "#FFFFFF",
 //                   border:
-//                     "1px solid rgba(255,255,255,0.05)",
+//                     "1px solid rgba(30,58,138,0.1)",
 //                   borderRadius: 12,
 //                   padding:
 //                     "14px 16px",
@@ -2655,7 +2660,7 @@
 //                 <span
 //                   style={{
 //                     color:
-//                       "#475569",
+//                       "#74839B",
 //                     fontSize:
 //                       "0.78rem",
 //                   }}
@@ -2683,12 +2688,12 @@
 //         {/* FILTERS */}
 
 //         <div
-//           className="mb-4 overflow-visible rounded-2xl border border-cyan-400/[0.08] bg-[#0A1128]"
+//           className="mb-4 overflow-visible rounded-2xl border border-[#1565C0]/[0.14] bg-[#FFFFFF]"
 //         >
 //           <div
-//             className="border-b border-cyan-400/[0.06] px-5 py-3.5"
+//             className="border-b border-[#1565C0]/[0.12] px-5 py-3.5"
 //           >
-//             <span className="text-sm font-bold text-white">
+//             <span className="text-sm font-bold text-[#0F172A]">
 //               جستجو و فیلتر خدمات
 //             </span>
 //           </div>
@@ -2703,7 +2708,7 @@
 //                 value={search}
 //                 onChange={(e) => setSearch(e.target.value)}
 //                 placeholder="جستجو در عنوان، نامک، توضیح یا شناسه..."
-//                 className="box-border h-10 w-full rounded-[8px] border border-white/[0.07] bg-[#0B1224] px-3 text-right text-[11px] font-bold text-slate-300 outline-none transition-all placeholder:text-slate-600 focus:border-cyan-400/35 focus:ring-[3px] focus:ring-cyan-400/[0.04]"
+//                 className="box-border h-10 w-full rounded-[8px] border border-[#1E3A8A]/[0.14] bg-[#F6F9FD] px-3 text-right text-[11px] font-bold text-slate-700 outline-none transition-all placeholder:text-slate-400 focus:border-[#1565C0]/60 focus:ring-[3px] focus:ring-[#1565C0]/[0.08]"
 //               />
 //             </div>
 
@@ -2745,9 +2750,9 @@
 //         <div
 //           style={{
 //             background:
-//               "#0A1128",
+//               "#FFFFFF",
 //             border:
-//               "1px solid rgba(0,229,255,0.08)",
+//               "1px solid rgba(21,101,192,0.14)",
 //             borderRadius: 16,
 //             overflow: "hidden",
 //           }}
@@ -2757,7 +2762,7 @@
 //               padding:
 //                 "14px 20px",
 //               borderBottom:
-//                 "1px solid rgba(0,229,255,0.06)",
+//                 "1px solid rgba(21,101,192,0.11)",
 //               display: "flex",
 //               alignItems:
 //                 "center",
@@ -2766,7 +2771,7 @@
 //           >
 //             <span
 //               style={{
-//                 color: "#fff",
+//                 color: "#0F172A",
 //                 fontWeight: 700,
 //                 fontSize:
 //                   "0.88rem",
@@ -2779,7 +2784,7 @@
 //             <span
 //               style={{
 //                 color:
-//                   "#334155",
+//                   "#74839B",
 //                 fontSize:
 //                   "0.68rem",
 //                 fontFamily:
@@ -2810,7 +2815,7 @@
 //                 <tr
 //                   style={{
 //                     borderBottom:
-//                       "1px solid rgba(255,255,255,0.04)",
+//                       "1px solid rgba(30,58,138,0.086)",
 //                   }}
 //                 >
 //                   {[
@@ -2832,7 +2837,7 @@
 //                           textAlign:
 //                             "right",
 //                           color:
-//                             "#334155",
+//                             "#74839B",
 //                           fontSize:
 //                             "0.68rem",
 //                           fontWeight: 600,
@@ -2865,7 +2870,7 @@
 //                         textAlign:
 //                           "center",
 //                         color:
-//                           "#475569",
+//                           "#74839B",
 //                         fontSize:
 //                           "0.78rem",
 //                       }}
@@ -2885,7 +2890,7 @@
 //                         textAlign:
 //                           "center",
 //                         color:
-//                           "#475569",
+//                           "#74839B",
 //                         fontSize:
 //                           "0.78rem",
 //                       }}
@@ -2915,13 +2920,13 @@
 //                           }
 //                           style={{
 //                             borderBottom:
-//                               "1px solid rgba(255,255,255,0.03)",
+//                               "1px solid rgba(30,58,138,0.072)",
 //                           }}
 //                           onMouseEnter={(
 //                             e
 //                           ) => {
 //                             e.currentTarget.style.background =
-//                               "rgba(0,229,255,0.028)";
+//                               "rgba(21,101,192,0.062)";
 //                           }}
 //                           onMouseLeave={(
 //                             e
@@ -2960,11 +2965,11 @@
 //                                   justifyContent:
 //                                     "center",
 //                                   background:
-//                                     "rgba(0,229,255,0.06)",
+//                                     "rgba(21,101,192,0.11)",
 //                                   border:
-//                                     "1px solid rgba(0,229,255,0.12)",
+//                                     "1px solid rgba(21,101,192,0.2)",
 //                                   color:
-//                                     "#00E5FF",
+//                                     "#1565C0",
 //                                   fontSize:
 //                                     "0.9rem",
 //                                   overflow:
@@ -2996,7 +3001,7 @@
 //                                     display:
 //                                       "block",
 //                                     color:
-//                                       "#E2E8F0",
+//                                       "#0F172A",
 //                                     fontWeight:
 //                                       600,
 //                                     fontSize:
@@ -3011,7 +3016,7 @@
 //                                 <span
 //                                   style={{
 //                                     color:
-//                                       "#334155",
+//                                       "#74839B",
 //                                     fontSize:
 //                                       "0.58rem",
 //                                     fontFamily:
@@ -3036,7 +3041,7 @@
 //                             <span
 //                               style={{
 //                                 color:
-//                                   "#475569",
+//                                   "#74839B",
 //                                 fontSize:
 //                                   "0.78rem",
 //                               }}
@@ -3146,9 +3151,9 @@
 //     height: 30,
 //     borderRadius: 7,
 //     cursor: "pointer",
-//     background: "rgba(255,255,255,0.03)",
-//     border: "1px solid rgba(255,255,255,0.07)",
-//     color: "#475569",
+//     background: "rgba(30,58,138,0.072)",
+//     border: "1px solid rgba(30,58,138,0.128)",
+//     color: "#74839B",
 //     transition:
 //       "all 0.18s ease",
 //   }}
@@ -3169,9 +3174,9 @@
 //     height: 30,
 //     borderRadius: 7,
 //     cursor: "pointer",
-//     background: "rgba(255,255,255,0.03)",
-//     border: "1px solid rgba(255,255,255,0.07)",
-//     color: "#475569",
+//     background: "rgba(30,58,138,0.072)",
+//     border: "1px solid rgba(30,58,138,0.128)",
+//     color: "#74839B",
 //     transition: "all 0.18s ease",
 //   }}
 // >
@@ -3191,9 +3196,9 @@
 //     height: 30,
 //     borderRadius: 7,
 //     cursor: "pointer",
-//     background: "rgba(255,255,255,0.03)",
-//     border: "1px solid rgba(255,255,255,0.07)",
-//     color: "#475569",
+//     background: "rgba(30,58,138,0.072)",
+//     border: "1px solid rgba(30,58,138,0.128)",
+//     color: "#74839B",
 //     transition: "all 0.18s ease",
 //   }}
 // >
@@ -3221,7 +3226,7 @@
 //                 onClick={() =>
 //                   setCurrentPage((prev) => Math.max(1, prev - 1))
 //                 }
-//                 className="flex h-9 w-9 items-center justify-center rounded-[8px] border border-white/[0.07] bg-[#0B1224] text-slate-400 transition-all disabled:cursor-not-allowed disabled:opacity-40"
+//                 className="flex h-9 w-9 items-center justify-center rounded-[8px] border border-[#1E3A8A]/[0.14] bg-[#F6F9FD] text-slate-600 transition-all disabled:cursor-not-allowed disabled:opacity-40"
 //               >
 //                 <IconChevronRight />
 //               </button>
@@ -3231,7 +3236,7 @@
 //                   p === "..." ? (
 //                     <span
 //                       key={`ellipsis-${index}`}
-//                       className="flex h-9 w-9 items-center justify-center text-[11px] font-black text-slate-700"
+//                       className="flex h-9 w-9 items-center justify-center text-[11px] font-black text-slate-400"
 //                     >
 //                       …
 //                     </span>
@@ -3242,8 +3247,8 @@
 //                       onClick={() => setCurrentPage(p)}
 //                       className={`flex h-9 min-w-9 items-center justify-center rounded-[8px] border px-2 text-[11px] font-black transition-all ${
 //                         p === currentPage
-//                           ? "border-[#00E5FF]/60 bg-[#00E5FF] text-[#050814]"
-//                           : "border-white/[0.07] bg-[#0B1224] text-slate-400 hover:border-[#00E5FF]/25 hover:text-cyan-300"
+//                           ? "border-[#1565C0]/60 bg-[#1565C0] text-[#FFFFFF]"
+//                           : "border-[#1E3A8A]/[0.14] bg-[#F6F9FD] text-slate-600 hover:border-[#1565C0]/25 hover:text-[#1565C0]"
 //                       }`}
 //                     >
 //                       {p}
@@ -3260,7 +3265,7 @@
 //                     Math.min(servicesTotalPages, prev + 1)
 //                   )
 //                 }
-//                 className="flex h-9 w-9 items-center justify-center rounded-[8px] border border-white/[0.07] bg-[#0B1224] text-slate-400 transition-all disabled:cursor-not-allowed disabled:opacity-40"
+//                 className="flex h-9 w-9 items-center justify-center rounded-[8px] border border-[#1E3A8A]/[0.14] bg-[#F6F9FD] text-slate-600 transition-all disabled:cursor-not-allowed disabled:opacity-40"
 //               >
 //                 <IconChevronLeft />
 //               </button>
@@ -3281,7 +3286,7 @@
 //       position: "fixed",
 //       inset: 0,
 //       zIndex: 1200,
-//       background: "rgba(5,8,20,0.78)",
+//       background: "rgba(15,23,42,0.429)",
 //       backdropFilter: "blur(4px)",
 //       display: "flex",
 //       alignItems: "center",
@@ -3300,10 +3305,10 @@
 //         maxWidth: 760,
 //         maxHeight: "90vh",
 //         overflowY: "auto",
-//         background: "#0A1128",
-//         border: "1px solid rgba(0,229,255,0.12)",
+//         background: "#FFFFFF",
+//         border: "1px solid rgba(21,101,192,0.2)",
 //         borderRadius: 16,
-//         boxShadow: "0 24px 80px rgba(0,0,0,0.45)",
+//         boxShadow: "0 24px 80px rgba(15,23,42,0.18)",
 //       }}
 //     >
 //       {/* HEADER */}
@@ -3313,7 +3318,7 @@
 //           alignItems: "center",
 //           justifyContent: "space-between",
 //           padding: "18px 22px",
-//           borderBottom: "1px solid rgba(255,255,255,0.06)",
+//           borderBottom: "1px solid rgba(30,58,138,0.114)",
 //         }}
 //       >
 //         <div>
@@ -3321,7 +3326,7 @@
 //             style={{
 //               fontSize: 11,
 //               fontWeight: 700,
-//               color: "#00E5FF",
+//               color: "#1565C0",
 //               letterSpacing: "0.08em",
 //               marginBottom: 5,
 //             }}
@@ -3333,7 +3338,7 @@
 //             style={{
 //               fontSize: 17,
 //               fontWeight: 800,
-//               color: "#F8FAFC",
+//               color: "#0F172A",
 //             }}
 //           >
 //             مشاهده خدمت
@@ -3351,9 +3356,9 @@
 //             alignItems: "center",
 //             justifyContent: "center",
 //             cursor: "pointer",
-//             background: "rgba(255,255,255,0.03)",
-//             border: "1px solid rgba(255,255,255,0.07)",
-//             color: "#64748B",
+//             background: "rgba(30,58,138,0.072)",
+//             border: "1px solid rgba(30,58,138,0.128)",
+//             color: "#52627A",
 //           }}
 //         >
 //           <IconClose />
@@ -3381,8 +3386,8 @@
 //               display: "flex",
 //               alignItems: "center",
 //               justifyContent: "center",
-//               background: "rgba(0,229,255,0.06)",
-//               border: "1px solid rgba(0,229,255,0.12)",
+//               background: "rgba(21,101,192,0.11)",
+//               border: "1px solid rgba(21,101,192,0.2)",
 //             }}
 //             dangerouslySetInnerHTML={{
 //               __html: sanitizeSvg(
@@ -3396,7 +3401,7 @@
 //               style={{
 //                 fontSize: 20,
 //                 fontWeight: 800,
-//                 color: "#F8FAFC",
+//                 color: "#0F172A",
 //                 marginBottom: 5,
 //                 wordBreak: "break-word",
 //               }}
@@ -3407,7 +3412,7 @@
 //             <div
 //               style={{
 //                 fontSize: 12,
-//                 color: "#64748B",
+//                 color: "#52627A",
 //                 direction: "ltr",
 //                 textAlign: "right",
 //                 wordBreak: "break-all",
@@ -3433,14 +3438,14 @@
 //             style={{
 //               padding: 13,
 //               borderRadius: 10,
-//               background: "rgba(255,255,255,0.025)",
-//               border: "1px solid rgba(255,255,255,0.06)",
+//               background: "rgba(30,58,138,0.065)",
+//               border: "1px solid rgba(30,58,138,0.114)",
 //             }}
 //           >
 //             <div
 //               style={{
 //                 fontSize: 11,
-//                 color: "#64748B",
+//                 color: "#52627A",
 //                 marginBottom: 7,
 //               }}
 //             >
@@ -3463,14 +3468,14 @@
 //             style={{
 //               padding: 13,
 //               borderRadius: 10,
-//               background: "rgba(255,255,255,0.025)",
-//               border: "1px solid rgba(255,255,255,0.06)",
+//               background: "rgba(30,58,138,0.065)",
+//               border: "1px solid rgba(30,58,138,0.114)",
 //             }}
 //           >
 //             <div
 //               style={{
 //                 fontSize: 11,
-//                 color: "#64748B",
+//                 color: "#52627A",
 //                 marginBottom: 7,
 //               }}
 //             >
@@ -3493,14 +3498,14 @@
 //             style={{
 //               padding: 13,
 //               borderRadius: 10,
-//               background: "rgba(255,255,255,0.025)",
-//               border: "1px solid rgba(255,255,255,0.06)",
+//               background: "rgba(30,58,138,0.065)",
+//               border: "1px solid rgba(30,58,138,0.114)",
 //             }}
 //           >
 //             <div
 //               style={{
 //                 fontSize: 11,
-//                 color: "#64748B",
+//                 color: "#52627A",
 //                 marginBottom: 7,
 //               }}
 //             >
@@ -3511,7 +3516,7 @@
 //               style={{
 //                 fontSize: 13,
 //                 fontWeight: 700,
-//                 color: "#CBD5E1",
+//                 color: "#334155",
 //               }}
 //             >
 //               {previewTarget.categoryLabel || "—"}
@@ -3525,7 +3530,7 @@
 //             style={{
 //               fontSize: 12,
 //               fontWeight: 700,
-//               color: "#94A3B8",
+//               color: "#475569",
 //               marginBottom: 9,
 //             }}
 //           >
@@ -3536,9 +3541,9 @@
 //             style={{
 //               padding: 14,
 //               borderRadius: 10,
-//               background: "rgba(255,255,255,0.025)",
-//               border: "1px solid rgba(255,255,255,0.06)",
-//               color: "#CBD5E1",
+//               background: "rgba(30,58,138,0.065)",
+//               border: "1px solid rgba(30,58,138,0.114)",
+//               color: "#334155",
 //               fontSize: 13,
 //               lineHeight: 1.9,
 //               whiteSpace: "pre-wrap",
@@ -3554,7 +3559,7 @@
 //             style={{
 //               fontSize: 12,
 //               fontWeight: 700,
-//               color: "#94A3B8",
+//               color: "#475569",
 //               marginBottom: 9,
 //             }}
 //           >
@@ -3566,9 +3571,9 @@
 //             style={{
 //               padding: 16,
 //               borderRadius: 10,
-//               background: "rgba(255,255,255,0.025)",
-//               border: "1px solid rgba(255,255,255,0.06)",
-//               color: "#CBD5E1",
+//               background: "rgba(30,58,138,0.065)",
+//               border: "1px solid rgba(30,58,138,0.114)",
+//               color: "#334155",
 //               fontSize: 13,
 //               lineHeight: 2,
 //               minHeight: 70,
@@ -3588,7 +3593,7 @@
 //             style={{
 //               fontSize: 12,
 //               fontWeight: 700,
-//               color: "#94A3B8",
+//               color: "#475569",
 //               marginBottom: 9,
 //             }}
 //           >
@@ -3611,9 +3616,9 @@
 //                     alignItems: "center",
 //                     padding: "6px 10px",
 //                     borderRadius: 7,
-//                     background: "rgba(0,229,255,0.05)",
-//                     border: "1px solid rgba(0,229,255,0.10)",
-//                     color: "#94A3B8",
+//                     background: "rgba(21,101,192,0.095)",
+//                     border: "1px solid rgba(21,101,192,0.17)",
+//                     color: "#475569",
 //                     fontSize: 11,
 //                   }}
 //                 >
@@ -3624,7 +3629,7 @@
 //           ) : (
 //             <div
 //               style={{
-//                 color: "#475569",
+//                 color: "#74839B",
 //                 fontSize: 12,
 //               }}
 //             >
@@ -3640,7 +3645,7 @@
 //             style={{
 //               fontSize: 12,
 //               fontWeight: 700,
-//               color: "#94A3B8",
+//               color: "#475569",
 //               marginBottom: 9,
 //             }}
 //           >
@@ -3651,9 +3656,9 @@
 //             style={{
 //               padding: 14,
 //               borderRadius: 10,
-//               background: "rgba(255,255,255,0.025)",
-//               border: "1px solid rgba(255,255,255,0.06)",
-//               color: "#CBD5E1",
+//               background: "rgba(30,58,138,0.065)",
+//               border: "1px solid rgba(30,58,138,0.114)",
+//               color: "#334155",
 //               fontSize: 13,
 //               lineHeight: 1.9,
 //             }}
@@ -3668,7 +3673,7 @@
 //     style={{
 //       fontSize: 12,
 //       fontWeight: 700,
-//       color: "#94A3B8",
+//       color: "#475569",
 //       marginBottom: 9,
 //     }}
 //   >
@@ -3689,8 +3694,8 @@
 //           style={{
 //             padding: 14,
 //             borderRadius: 10,
-//             background: "rgba(255,255,255,0.025)",
-//             border: "1px solid rgba(255,255,255,0.06)",
+//             background: "rgba(30,58,138,0.065)",
+//             border: "1px solid rgba(30,58,138,0.114)",
 //           }}
 //         >
 //           {/* شماره + تگ */}
@@ -3711,9 +3716,9 @@
 //                 display: "flex",
 //                 alignItems: "center",
 //                 justifyContent: "center",
-//                 background: "rgba(0,229,255,0.08)",
-//                 border: "1px solid rgba(0,229,255,0.14)",
-//                 color: "#00E5FF",
+//                 background: "rgba(21,101,192,0.14)",
+//                 border: "1px solid rgba(21,101,192,0.23)",
+//                 color: "#1565C0",
 //                 fontSize: 11,
 //                 fontWeight: 800,
 //               }}
@@ -3728,9 +3733,9 @@
 //                   alignItems: "center",
 //                   padding: "5px 8px",
 //                   borderRadius: 6,
-//                   background: "rgba(0,229,255,0.05)",
-//                   border: "1px solid rgba(0,229,255,0.10)",
-//                   color: "#00E5FF",
+//                   background: "rgba(21,101,192,0.095)",
+//                   border: "1px solid rgba(21,101,192,0.17)",
+//                   color: "#1565C0",
 //                   fontSize: 10,
 //                   fontWeight: 700,
 //                 }}
@@ -3743,7 +3748,7 @@
 //           {/* عنوان */}
 //           <div
 //             style={{
-//               color: "#F8FAFC",
+//               color: "#0F172A",
 //               fontSize: 14,
 //               fontWeight: 800,
 //               marginBottom: 6,
@@ -3756,7 +3761,7 @@
 //           {/* توضیحات */}
 //           <div
 //             style={{
-//               color: "#94A3B8",
+//               color: "#475569",
 //               fontSize: 12,
 //               lineHeight: 1.9,
 //               wordBreak: "break-word",
@@ -3773,9 +3778,9 @@
 //       style={{
 //         padding: 14,
 //         borderRadius: 10,
-//         background: "rgba(255,255,255,0.025)",
-//         border: "1px solid rgba(255,255,255,0.06)",
-//         color: "#475569",
+//         background: "rgba(30,58,138,0.065)",
+//         border: "1px solid rgba(30,58,138,0.114)",
+//         color: "#74839B",
 //         fontSize: 12,
 //       }}
 //     >
@@ -3791,7 +3796,7 @@
 //             style={{
 //               fontSize: 12,
 //               fontWeight: 700,
-//               color: "#94A3B8",
+//               color: "#475569",
 //               marginBottom: 9,
 //             }}
 //           >
@@ -3809,14 +3814,14 @@
 //               style={{
 //                 padding: 13,
 //                 borderRadius: 10,
-//                 background: "rgba(255,255,255,0.025)",
-//                 border: "1px solid rgba(255,255,255,0.06)",
+//                 background: "rgba(30,58,138,0.065)",
+//                 border: "1px solid rgba(30,58,138,0.114)",
 //               }}
 //             >
 //               <div
 //                 style={{
 //                   fontSize: 11,
-//                   color: "#64748B",
+//                   color: "#52627A",
 //                   marginBottom: 7,
 //                 }}
 //               >
@@ -3825,7 +3830,7 @@
 
 //               <div
 //                 style={{
-//                   color: "#CBD5E1",
+//                   color: "#334155",
 //                   fontSize: 13,
 //                   lineHeight: 1.7,
 //                   wordBreak: "break-word",
@@ -3840,14 +3845,14 @@
 //               style={{
 //                 padding: 13,
 //                 borderRadius: 10,
-//                 background: "rgba(255,255,255,0.025)",
-//                 border: "1px solid rgba(255,255,255,0.06)",
+//                 background: "rgba(30,58,138,0.065)",
+//                 border: "1px solid rgba(30,58,138,0.114)",
 //               }}
 //             >
 //               <div
 //                 style={{
 //                   fontSize: 11,
-//                   color: "#64748B",
+//                   color: "#52627A",
 //                   marginBottom: 7,
 //                 }}
 //               >
@@ -3856,7 +3861,7 @@
 
 //               <div
 //                 style={{
-//                   color: "#CBD5E1",
+//                   color: "#334155",
 //                   fontSize: 13,
 //                   lineHeight: 1.8,
 //                   wordBreak: "break-word",
@@ -3873,7 +3878,7 @@
 //       <div
 //         style={{
 //           padding: "15px 22px",
-//           borderTop: "1px solid rgba(255,255,255,0.06)",
+//           borderTop: "1px solid rgba(30,58,138,0.114)",
 //           display: "flex",
 //           justifyContent: "flex-end",
 //         }}
@@ -3885,9 +3890,9 @@
 //             minWidth: 90,
 //             height: 38,
 //             borderRadius: 8,
-//             border: "1px solid rgba(255,255,255,0.08)",
-//             background: "rgba(255,255,255,0.04)",
-//             color: "#CBD5E1",
+//             border: "1px solid rgba(30,58,138,0.142)",
+//             background: "rgba(30,58,138,0.086)",
+//             color: "#334155",
 //             cursor: "pointer",
 //             fontSize: 12,
 //             fontWeight: 700,
@@ -3935,7 +3940,7 @@
 //                 "absolute",
 //               inset: 0,
 //               background:
-//                 "rgba(5,8,20,0.72)",
+//                 "rgba(15,23,42,0.396)",
 //               backdropFilter:
 //                 "blur(3px)",
 //             }}
@@ -3956,13 +3961,13 @@
 //               width:
 //                 "min(500px, 100vw)",
 
-//               background: "#0A1128",
+//               background: "#FFFFFF",
 
 //               borderRight:
-//                 "1px solid rgba(0,229,255,0.12)",
+//                 "1px solid rgba(21,101,192,0.2)",
 
 //               boxShadow:
-//                 "-24px 0 80px rgba(0,0,0,0.8)",
+//                 "-24px 0 80px rgba(15,23,42,0.32)",
 
 //               display: "flex",
 //               flexDirection:
@@ -3981,7 +3986,7 @@
 //                 width: 2,
 //                 height: "100%",
 //                 background:
-//                   "linear-gradient(to bottom, rgba(0,229,255,0.5), rgba(0,229,255,0.1), transparent)",
+//                   "linear-gradient(to bottom, rgba(21,101,192,0.77), rgba(21,101,192,0.17), transparent)",
 //               }}
 //             />
 
@@ -3991,7 +3996,7 @@
 //                   "18px 20px 16px",
 
 //                 borderBottom:
-//                   "1px solid rgba(0,229,255,0.07)",
+//                   "1px solid rgba(21,101,192,0.125)",
 
 //                 display: "flex",
 //                 alignItems:
@@ -4009,7 +4014,7 @@
 //                 <span
 //                   style={{
 //                     color:
-//                       "rgba(0,229,255,0.45)",
+//                       "rgba(21,101,192,0.695)",
 //                     fontSize:
 //                       "0.58rem",
 //                     fontFamily:
@@ -4025,7 +4030,7 @@
 
 //                 <h3
 //                   style={{
-//                     color: "#fff",
+//                     color: "#0F172A",
 //                     fontWeight: 700,
 //                     fontSize:
 //                       "0.92rem",
@@ -4060,13 +4065,13 @@
 //                     "pointer",
 
 //                   background:
-//                     "rgba(255,255,255,0.04)",
+//                     "rgba(30,58,138,0.086)",
 
 //                   border:
-//                     "1px solid rgba(255,255,255,0.07)",
+//                     "1px solid rgba(30,58,138,0.128)",
 
 //                   color:
-//                     "#475569",
+//                     "#74839B",
 //                 }}
 //               >
 //                 <IconClose />
@@ -4287,11 +4292,11 @@
 //                           justifyContent:
 //                             "center",
 //                           background:
-//                             "rgba(0,229,255,0.06)",
+//                             "rgba(21,101,192,0.11)",
 //                           border:
-//                             "1px solid rgba(0,229,255,0.14)",
+//                             "1px solid rgba(21,101,192,0.23)",
 //                           color:
-//                             "#00E5FF",
+//                             "#1565C0",
 //                           fontSize:
 //                             "1.05rem",
 //                           overflow:
@@ -4399,17 +4404,17 @@
 //                               background:
 //                                 selected
 //                                   ? `${level.color}12`
-//                                   : "rgba(255,255,255,0.02)",
+//                                   : "rgba(30,58,138,0.058)",
 
 //                               border:
 //                                 selected
 //                                   ? `1px solid ${level.color}55`
-//                                   : "1px solid rgba(255,255,255,0.06)",
+//                                   : "1px solid rgba(15,23,42,0.06)",
 
 //                               color:
 //                                 selected
 //                                   ? level.color
-//                                   : "#475569",
+//                                   : "#74839B",
 
 //                               fontSize:
 //                                 "0.67rem",
@@ -4492,17 +4497,17 @@
 //                               background:
 //                                 selected
 //                                   ? status.bg
-//                                   : "rgba(255,255,255,0.02)",
+//                                   : "rgba(30,58,138,0.058)",
 
 //                               border:
 //                                 selected
 //                                   ? `1px solid ${status.border}`
-//                                   : "1px solid rgba(255,255,255,0.06)",
+//                                   : "1px solid rgba(15,23,42,0.06)",
 
 //                               color:
 //                                 selected
 //                                   ? status.color
-//                                   : "#334155",
+//                                   : "#74839B",
 
 //                               fontSize:
 //                                 "0.7rem",
@@ -4525,7 +4530,7 @@
 //                                 background:
 //                                   selected
 //                                     ? status.color
-//                                     : "#334155",
+//                                     : "#74839B",
 //                               }}
 //                             />
 
@@ -4577,7 +4582,7 @@
 //                     style={{
 //                       fontSize: "0.82rem",
 //                       fontWeight: 600,
-//                       color: "#cbd5e1",
+//                       color: "#334155",
 //                     }}
 //                   >
 //                     مراحل شناسایی
@@ -4586,7 +4591,7 @@
 //                   <div
 //                     style={{
 //                       fontSize: "0.68rem",
-//                       color: "#64748b",
+//                       color: "#52627A",
 //                       lineHeight: 1.8,
 //                     }}
 //                   >
@@ -4602,15 +4607,15 @@
 //                         gap: 10,
 //                         padding: 12,
 //                         borderRadius: 10,
-//                         border: "1px solid rgba(255,255,255,0.06)",
-//                         background: "rgba(255,255,255,0.015)",
+//                         border: "1px solid rgba(30,58,138,0.114)",
+//                         background: "rgba(30,58,138,0.051)",
 //                       }}
 //                     >
 //                       <div
 //                         style={{
 //                           fontSize: "0.72rem",
 //                           fontWeight: 600,
-//                           color: "#94a3b8",
+//                           color: "#475569",
 //                         }}
 //                       >
 //                         مرحله {index + 1}
@@ -4705,10 +4710,10 @@
 //                 <div
 //                   style={{
 //                     background:
-//                       "rgba(5,8,20,0.6)",
+//                       "rgba(15,23,42,0.33)",
 
 //                     border:
-//                       "1px solid rgba(0,229,255,0.1)",
+//                       "1px solid rgba(21,101,192,0.17)",
 
 //                     borderRadius: 12,
 
@@ -4739,16 +4744,16 @@
 //                         borderRadius:
 //                           "50%",
 //                         background:
-//                           "#00E5FF",
+//                           "#1565C0",
 //                         boxShadow:
-//                           "0 0 7px rgba(0,229,255,.5)",
+//                           "0 0 7px rgba(21,101,192,0.77)",
 //                       }}
 //                     />
 
 //                     <span
 //                       style={{
 //                         color:
-//                           "#00E5FF",
+//                           "#1565C0",
 //                         fontSize:
 //                           "0.65rem",
 //                         fontFamily:
@@ -4829,7 +4834,7 @@
 //                     "14px 20px",
 
 //                   borderTop:
-//                     "1px solid rgba(0,229,255,0.07)",
+//                     "1px solid rgba(21,101,192,0.125)",
 
 //                   display: "flex",
 
@@ -4841,7 +4846,7 @@
 //                   flexShrink: 0,
 
 //                   background:
-//                     "#0A1128",
+//                     "#FFFFFF",
 //                 }}
 //               >
 //                 <button
@@ -4851,9 +4856,9 @@
 //                     padding: "10px 16px",
 //                     borderRadius: 10,
 //                     cursor: "pointer",
-//                     background: "rgba(148,163,184,0.08)",
-//                     border: "1px solid rgba(148,163,184,0.18)",
-//                     color: "#CBD5E1",
+//                     background: "rgba(100,116,139,0.104)",
+//                     border: "1px solid rgba(100,116,139,0.234)",
+//                     color: "#334155",
 //                     fontSize: "0.82rem",
 //                     fontWeight: 700,
 //                     fontFamily: "var(--font-vazirmatn), Vazirmatn, sans-serif",
@@ -4887,18 +4892,18 @@
 
 //                     background:
 //                       saved
-//                         ? "rgba(16,185,129,0.15)"
-//                         : "#00E5FF",
+//                         ? "rgba(5,150,105,0.15)"
+//                         : "#1565C0",
 
 //                     border:
 //                       saved
-//                         ? "1px solid rgba(16,185,129,0.4)"
-//                         : "1px solid rgba(0,229,255,0.5)",
+//                         ? "1px solid rgba(5,150,105,0.4)"
+//                         : "1px solid rgba(21,101,192,0.77)",
 
 //                     color:
 //                       saved
-//                         ? "#10B981"
-//                         : "#050814",
+//                         ? "#059669"
+//                         : "#FFFFFF",
 
 //                     fontSize:
 //                       "0.84rem",
@@ -4934,10 +4939,10 @@
 //                       "transparent",
 
 //                     border:
-//                       "1px solid rgba(255,255,255,0.08)",
+//                       "1px solid rgba(30,58,138,0.142)",
 
 //                     color:
-//                       "#475569",
+//                       "#74839B",
 
 //                     fontSize:
 //                       "0.82rem",
@@ -4980,7 +4985,7 @@
 //                 "absolute",
 //               inset: 0,
 //               background:
-//                 "rgba(5,8,20,0.78)",
+//                 "rgba(15,23,42,0.429)",
 //               backdropFilter:
 //                 "blur(4px)",
 //             }}
@@ -4996,13 +5001,13 @@
 //               width:
 //                 "min(420px, 100%)",
 //               background:
-//                 "#0A1128",
+//                 "#FFFFFF",
 //               border:
-//                 "1px solid rgba(239,68,68,0.18)",
+//                 "1px solid rgba(220,38,38,0.18)",
 //               borderRadius: 14,
 //               padding: 20,
 //               boxShadow:
-//                 "0 24px 80px rgba(0,0,0,0.65)",
+//                 "0 24px 80px rgba(15,23,42,0.26)",
 //             }}
 //           >
 //             <div
@@ -5027,11 +5032,11 @@
 //                   justifyContent:
 //                     "center",
 //                   background:
-//                     "rgba(239,68,68,0.08)",
+//                     "rgba(220,38,38,0.08)",
 //                   border:
-//                     "1px solid rgba(239,68,68,0.18)",
+//                     "1px solid rgba(220,38,38,0.18)",
 //                   color:
-//                     "#EF4444",
+//                     "#DC2626",
 //                 }}
 //               >
 //                 <IconTrash />
@@ -5040,7 +5045,7 @@
 //               <div>
 //                 <div
 //                   style={{
-//                     color: "#fff",
+//                     color: "#0F172A",
 //                     fontSize:
 //                       "0.88rem",
 //                     fontWeight: 700,
@@ -5052,7 +5057,7 @@
 //                 <div
 //                   style={{
 //                     color:
-//                       "#475569",
+//                       "#74839B",
 //                     fontSize:
 //                       "0.68rem",
 //                     marginTop: 3,
@@ -5067,7 +5072,7 @@
 //             <p
 //               style={{
 //                 color:
-//                   "#94A3B8",
+//                   "#475569",
 //                 fontSize:
 //                   "0.78rem",
 //                 lineHeight: 1.9,
@@ -5080,7 +5085,7 @@
 //               <span
 //                 style={{
 //                   color:
-//                     "#E2E8F0",
+//                     "#0F172A",
 //                   fontWeight: 700,
 //                 }}
 //               >
@@ -5116,11 +5121,11 @@
 //                       ? "default"
 //                       : "pointer",
 //                   background:
-//                     "rgba(239,68,68,0.1)",
+//                     "rgba(220,38,38,0.1)",
 //                   border:
-//                     "1px solid rgba(239,68,68,0.25)",
+//                     "1px solid rgba(220,38,38,0.25)",
 //                   color:
-//                     "#EF4444",
+//                     "#DC2626",
 //                   fontSize:
 //                     "0.78rem",
 //                   fontWeight: 700,
@@ -5155,11 +5160,11 @@
 //                       ? "default"
 //                       : "pointer",
 //                   background:
-//                     "rgba(255,255,255,0.03)",
+//                     "rgba(30,58,138,0.072)",
 //                   border:
-//                     "1px solid rgba(255,255,255,0.07)",
+//                     "1px solid rgba(30,58,138,0.128)",
 //                   color:
-//                     "#64748B",
+//                     "#52627A",
 //                   fontSize:
 //                     "0.78rem",
 //                   fontFamily:
@@ -5191,10 +5196,10 @@
 
 //         .service-rich-editor {
 //           width: 100%;
-//           border: 1px solid rgba(255,255,255,0.07);
+//           border: 1px solid rgba(30,58,138,0.128);
 //           border-radius: 10px;
 //           overflow: hidden;
-//           background: #060B19;
+//           background: #F3F7FC;
 //         }
 
 //         .service-rich-editor-toolbar {
@@ -5203,8 +5208,8 @@
 //           align-items: stretch;
 //           gap: 5px;
 //           padding: 7px 8px;
-//           background: rgba(255,255,255,0.025);
-//           border-bottom: 1px solid rgba(255,255,255,0.06);
+//           background: rgba(30,58,138,0.065);
+//           border-bottom: 1px solid rgba(30,58,138,0.114);
 //         }
 
 //         .service-rich-editor-toolbar-row {
@@ -5217,7 +5222,7 @@
 //         }
 
 //         .service-rich-editor-divider {
-//           color: #475569;
+//           color: #74839B;
 //           font-size: 16px;
 //           line-height: 1;
 //           margin: 0 7px;
@@ -5226,8 +5231,8 @@
 
 //         .service-rich-editor-toolbar button:hover,
 //         .service-rich-editor-extra-toolbar button:hover {
-//           color: #00E5FF !important;
-//           background: rgba(0,229,255,0.07) !important;
+//           color: #1565C0 !important;
+//           background: rgba(21,101,192,0.125) !important;
 //         }
 
 //         .service-rich-editor-toolbar { overflow:visible; }
@@ -5247,8 +5252,8 @@
 //           align-items: stretch;
 //           gap: 7px;
 //           padding: 8px;
-//           background: rgba(0,229,255,0.018);
-//           border-bottom: 1px solid rgba(255,255,255,0.06);
+//           background: rgba(21,101,192,0.047);
+//           border-bottom: 1px solid rgba(30,58,138,0.114);
 //         }
 
 //         .service-rich-editor-extra-toolbar .service-rich-editor-extra-group {
@@ -5261,13 +5266,13 @@
 //           align-items: center;
 //           gap: 6px;
 //           padding: 3px 6px;
-//           border: 1px solid rgba(255,255,255,0.055);
+//           border: 1px solid rgba(30,58,138,0.107);
 //           border-radius: 8px;
-//           background: rgba(255,255,255,0.018);
+//           background: rgba(30,58,138,0.055);
 //         }
 
 //         .service-rich-editor-extra-label {
-//           color: #64748B;
+//           color: #52627A;
 //           font-size: 10px;
 //           font-weight: 800;
 //           white-space: nowrap;
@@ -5287,7 +5292,7 @@
 //         .service-rich-editor .ProseMirror h5,
 //         .service-rich-editor .ProseMirror h6 {
 //           margin: 14px 0 8px;
-//           color: #F8FAFC;
+//           color: #0F172A;
 //           line-height: 1.6;
 //         }
 
@@ -5296,8 +5301,8 @@
 //         .service-rich-editor .ProseMirror h6 { font-size: 0.82rem; }
 
 //         .service-rich-editor-toolbar button:hover {
-//           color: #00E5FF !important;
-//           background: rgba(0,229,255,0.07) !important;
+//           color: #1565C0 !important;
+//           background: rgba(21,101,192,0.125) !important;
 //         }
 
 //         .service-list-icon {
@@ -5330,8 +5335,8 @@
 //         .service-rich-editor .ProseMirror [data-indent="4"] { text-indent: 8em; }
 
 //         .service-rich-editor .ProseMirror code {
-//           background: rgba(0,229,255,0.08);
-//           border: 1px solid rgba(0,229,255,0.12);
+//           background: rgba(21,101,192,0.14);
+//           border: 1px solid rgba(21,101,192,0.2);
 //           border-radius: 5px;
 //           padding: 2px 5px;
 //           font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -5341,8 +5346,8 @@
 //           direction: ltr;
 //           text-align: left;
 //           white-space: pre-wrap;
-//           background: #020617;
-//           border: 1px solid rgba(255,255,255,0.08);
+//           background: #F8FAFD;
+//           border: 1px solid rgba(30,58,138,0.142);
 //           border-radius: 10px;
 //           padding: 14px;
 //         }
@@ -5359,13 +5364,13 @@
 //         }
 //         .service-rich-editor .ProseMirror ins {
 //           text-decoration: underline;
-//           text-decoration-color: rgba(16,185,129,0.75);
+//           text-decoration-color: rgba(5,150,105,0.75);
 //           text-decoration-thickness: 2px;
 //         }
 
 //         .service-rich-editor .ProseMirror del {
 //           text-decoration: line-through;
-//           text-decoration-color: #EF4444;
+//           text-decoration-color: #DC2626;
 //         }
 
 //         .service-rich-editor .ProseMirror img {
@@ -5381,7 +5386,7 @@
 //           align-items: center;
 //           gap: 10px;
 //           margin: 16px 0;
-//           color: #64748B;
+//           color: #52627A;
 //           font-size: 10px;
 //           font-weight: 700;
 //           text-align: center;
@@ -5392,7 +5397,7 @@
 //           content: "";
 //           flex: 1;
 //           height: 1px;
-//           background: rgba(148,163,184,0.22);
+//           background: rgba(100,116,139,0.286);
 //         }
 
 //         .service-rich-link-editor {
@@ -5401,8 +5406,8 @@
 //           gap: 6px;
 //           flex-wrap: wrap;
 //           padding: 8px;
-//           background: rgba(0,229,255,0.035);
-//           border-bottom: 1px solid rgba(255,255,255,0.06);
+//           background: rgba(21,101,192,0.073);
+//           border-bottom: 1px solid rgba(30,58,138,0.114);
 //         }
 
 //         .service-rich-link-editor input {
@@ -5411,26 +5416,26 @@
 //           height: 32px;
 //           padding: 0 10px;
 //           border-radius: 7px;
-//           border: 1px solid rgba(255,255,255,0.09);
+//           border: 1px solid rgba(30,58,138,0.156);
 //           outline: none;
-//           background: #0B1224;
-//           color: #E2E8F0;
+//           background: #F6F9FD;
+//           color: #0F172A;
 //           font-size: 12px;
 //           font-family: var(--font-vazirmatn), Vazirmatn, sans-serif;
 //         }
 
 //         .service-rich-link-editor input:focus {
-//           border-color: rgba(0,229,255,0.35);
-//           box-shadow: 0 0 0 3px rgba(0,229,255,0.06);
+//           border-color: rgba(21,101,192,0.545);
+//           box-shadow: 0 0 0 3px rgba(21,101,192,0.11);
 //         }
 
 //         .service-rich-link-editor button {
 //           height: 32px;
 //           padding: 0 10px;
 //           border-radius: 7px;
-//           border: 1px solid rgba(255,255,255,0.08);
-//           background: rgba(255,255,255,0.04);
-//           color: #CBD5E1;
+//           border: 1px solid rgba(30,58,138,0.142);
+//           background: rgba(30,58,138,0.086);
+//           color: #334155;
 //           cursor: pointer;
 //           font-size: 11px;
 //           font-family: var(--font-vazirmatn), Vazirmatn, sans-serif;
@@ -5438,16 +5443,16 @@
 //         }
 
 //         .service-rich-link-editor button:hover {
-//           background: rgba(0,229,255,0.08);
-//           color: #00E5FF;
+//           background: rgba(21,101,192,0.14);
+//           color: #1565C0;
 //         }
 
 //         .service-rich-link-editor .service-rich-link-remove {
-//           color: #F87171;
+//           color: #DC2626;
 //         }
 
 //         .service-rich-link-editor .service-rich-link-cancel {
-//           color: #94A3B8;
+//           color: #475569;
 //         }
 
 //         .service-color-tool {
@@ -5459,14 +5464,14 @@
 //           justify-content: center;
 //           border-radius: 7px;
 //           cursor: pointer;
-//           color: #CBD5E1;
+//           color: #334155;
 //           overflow: hidden;
 //           border: 1px solid transparent;
 //         }
 
 //         .service-color-tool:hover {
-//           background: rgba(0,229,255,0.07);
-//           border-color: rgba(0,229,255,0.12);
+//           background: rgba(21,101,192,0.125);
+//           border-color: rgba(21,101,192,0.2);
 //         }
 
 //         .service-color-tool input {
@@ -5494,21 +5499,21 @@
 
 //         .service-mark-ins {
 //           text-decoration: underline;
-//           text-decoration-color: #10B981;
+//           text-decoration-color: #059669;
 //           text-decoration-thickness: 2px;
 //           font-size: 9px;
 //         }
 
 //         .service-mark-del {
 //           text-decoration: line-through;
-//           text-decoration-color: #EF4444;
+//           text-decoration-color: #DC2626;
 //           font-size: 9px;
 //         }
 
 //         .service-rich-editor-divider {
 //           width: 1px;
 //           height: 20px;
-//           background: rgba(255,255,255,0.07);
+//           background: rgba(30,58,138,0.128);
 //           margin: 0 4px;
 //         }
 
@@ -5516,7 +5521,7 @@
 //           min-height: 240px;
 //           padding: 14px;
 //           outline: none;
-//           color: #E2E8F0;
+//           color: #0F172A;
 //           font-family: var(--font-vazirmatn), Vazirmatn, sans-serif;
 //           font-size: 0.82rem;
 //           line-height: 2;
@@ -5544,7 +5549,7 @@
 
 //         .service-rich-editor .ProseMirror h1 {
 //           margin: 20px 0 12px;
-//           color: #F8FAFC;
+//           color: #0F172A;
 //           font-size: 1.4rem;
 //           font-weight: 800;
 //           line-height: 1.55;
@@ -5552,14 +5557,14 @@
 
 //         .service-rich-editor .ProseMirror h2 {
 //           margin: 18px 0 10px;
-//           color: #F8FAFC;
+//           color: #0F172A;
 //           font-size: 1.15rem;
 //           line-height: 1.6;
 //         }
 
 //         .service-rich-editor .ProseMirror h3 {
 //           margin: 16px 0 9px;
-//           color: #F8FAFC;
+//           color: #0F172A;
 //           font-size: 1rem;
 //           line-height: 1.6;
 //         }
@@ -5586,7 +5591,7 @@
 //         }
 
 //         .service-rich-editor .ProseMirror li::marker {
-//           color: #94A3B8;
+//           color: #475569;
 //           font-weight: 700;
 //         }
 
@@ -5596,7 +5601,7 @@
 //           align-items: center;
 //           gap: 10px;
 //           margin: 18px 0;
-//           color: #64748B;
+//           color: #52627A;
 //           font-size: 10px;
 //           font-weight: 700;
 //           user-select: none;
@@ -5607,17 +5612,17 @@
 //           content: "";
 //           flex: 1;
 //           height: 1px;
-//           background: rgba(148,163,184,0.18);
+//           background: rgba(100,116,139,0.234);
 //         }
 
 //         .service-rich-editor .ProseMirror hr {
 //           border: 0;
-//           border-top: 1px solid rgba(148,163,184,0.25);
+//           border-top: 1px solid rgba(100,116,139,0.325);
 //           margin: 18px 0;
 //         }
 
 //         .service-rich-editor .ProseMirror code {
-//           background: rgba(148,163,184,0.12);
+//           background: rgba(100,116,139,0.156);
 //           border-radius: 4px;
 //           padding: 2px 5px;
 //           font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -5625,23 +5630,23 @@
 //         }
 
 //         .service-rich-editor .ProseMirror blockquote {
-//           border-right: 3px solid rgba(0,229,255,0.4);
+//           border-right: 3px solid rgba(21,101,192,0.62);
 //           border-left: 0;
 //           margin: 12px 0;
 //           padding: 4px 12px;
-//           color: #94A3B8;
+//           color: #475569;
 //         }
 
 //         .service-rich-editor .ProseMirror a,
 //         .service-rich-preview a {
-//           color: #00E5FF;
+//           color: #1565C0;
 //           text-decoration: underline;
 //           text-underline-offset: 3px;
 //         }
 
 //         .service-rich-preview .ProseMirror {
 //           outline: none;
-//           color: #CBD5E1;
+//           color: #334155;
 //           direction: rtl;
 //           text-align: right;
 //         }
@@ -5653,7 +5658,7 @@
 //         .service-rich-preview .ProseMirror h1,
 //         .service-rich-preview .ProseMirror h2,
 //         .service-rich-preview .ProseMirror h3 {
-//           color: #F8FAFC;
+//           color: #0F172A;
 //           line-height: 1.7;
 //           margin: 16px 0 9px;
 //         }
@@ -5664,9 +5669,9 @@
 //         }
 
 //         .service-rich-preview .ProseMirror blockquote {
-//           border-right: 3px solid rgba(0,229,255,0.35);
+//           border-right: 3px solid rgba(21,101,192,0.545);
 //           padding-right: 12px;
-//           color: #94A3B8;
+//           color: #475569;
 //         }
 
 //         /* ───────── RESPONSIVE ───────── */
@@ -5723,11 +5728,11 @@
 //         }
 
 //         .service-eye-button:hover {
-//   background: rgba(0, 229, 255, 0.08) !important;
-//   border-color: rgba(0, 229, 255, 0.28) !important;
-//   color: #00E5FF !important;
+//   background: rgba(21,101,192,0.14) !important;
+//   border-color: rgba(21,101,192,0.44) !important;
+//   color: #1565C0 !important;
 //   transform: translateY(-1px);
-//   box-shadow: 0 0 12px rgba(0, 229, 255, 0.12);
+//   box-shadow: 0 0 12px rgba(21,101,192,0.2);
 // }
 
 // .service-eye-button:active {
@@ -5736,11 +5741,11 @@
 
 
 // .service-edit-button:hover {
-//   background: rgba(167, 139, 250, 0.08) !important;
-//   border-color: rgba(167, 139, 250, 0.28) !important;
-//   color: #A78BFA !important;
+//   background: rgba(124,58,237,0.08) !important;
+//   border-color: rgba(124,58,237,0.28) !important;
+//   color: #7C3AED !important;
 //   transform: translateY(-1px);
-//   box-shadow: 0 0 12px rgba(167, 139, 250, 0.12);
+//   box-shadow: 0 0 12px rgba(124,58,237,0.12);
 // }
 
 // .service-edit-button:active {
@@ -5748,11 +5753,11 @@
 // }
 
 // .service-delete-button:hover {
-//   background: rgba(239, 68, 68, 0.08) !important;
-//   border-color: rgba(239, 68, 68, 0.28) !important;
-//   color: #EF4444 !important;
+//   background: rgba(220,38,38,0.08) !important;
+//   border-color: rgba(220,38,38,0.28) !important;
+//   color: #DC2626 !important;
 //   transform: translateY(-1px);
-//   box-shadow: 0 0 12px rgba(239, 68, 68, 0.12);
+//   box-shadow: 0 0 12px rgba(220,38,38,0.12);
 // }
 
 // .service-delete-button:active {
@@ -5764,10 +5769,6 @@
 //     </div>
 //   );
 // }
-
-
-
-
 
 
 
@@ -5787,6 +5788,7 @@ import { Extension, Mark, Node, mergeAttributes } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Underline from "@tiptap/extension-underline";
+import { Table, TableRow, TableHeader, TableCell } from "@tiptap/extension-table";
 import {
   AlignCenter,
   AlignJustify,
@@ -6651,6 +6653,27 @@ const ServiceParagraphStyle = Extension.create({
   },
 });
 
+const cellAttrs = {
+  backgroundColor: {
+    default: null,
+    parseHTML: (el: HTMLElement) => el.style.backgroundColor || null,
+    renderHTML: (attrs: Record<string, any>) =>
+      attrs.backgroundColor ? { style: `background-color: ${attrs.backgroundColor}` } : {},
+  },
+};
+
+const ServiceTableCell = TableCell.extend({
+  addAttributes() {
+    return { ...this.parent?.(), ...cellAttrs };
+  },
+});
+
+const ServiceTableHeader = TableHeader.extend({
+  addAttributes() {
+    return { ...this.parent?.(), ...cellAttrs };
+  },
+});
+
 const HTML_TAGS = [
   ["<div>", "<div>", "</div>"],
   ["<section>", "<section>", "</section>"],
@@ -6727,6 +6750,18 @@ const EditorIcon = ({ name }: { name: string }) => {
     heading: I(["M5 5v14", "M19 5v14", "M5 12h14"]),
     indentIn: I(["M9 6h11", "M9 12h11", "M9 18h11", "M5 8l-3 4 3 4"]),
     indentOut: I(["M4 6h16", "M4 12h16", "M4 18h16", "M2 8l3 4-3 4"]),
+    table: I(["M3 5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2z", "M3 10h18", "M3 15h18", "M9 3v18", "M15 3v18"]),
+    rowAbove: I(["M4 13h16v7H4z", "M12 3v6", "M9 6h6"]),
+    rowBelow: I(["M4 4h16v7H4z", "M12 15v6", "M9 18h6"]),
+    colLeft: I(["M13 4h7v16h-7z", "M3 12h6", "M6 9v6"]),
+    colRight: I(["M4 4h7v16H4z", "M15 12h6", "M18 9v6"]),
+    delRow: I(["M4 8h16v8H4z", "M9 12h6"]),
+    delCol: I(["M8 4h8v16H8z", "M12 9v6"]),
+    merge: I(["M4 4h16v16H4z", "M4 12h5", "M20 12h-5", "M9 9l3 3-3 3", "M15 9l-3 3 3 3"]),
+    split: I(["M4 4h16v16H4z", "M12 4v16", "M8 9l-3 3 3 3", "M16 9l3 3-3 3"]),
+    headerRow: I(["M3 4h18v16H3z", "M3 10h18", "M3 7h18"]),
+    trashTable: I(["M3 6h18", "M8 6V4h8v2", "M6 6l1 14h10l1-14", "M10 11v5", "M14 11v5"]),
+    xmark: I(["M18 6L6 18", "M6 6l12 12"], 11, 2.5),
   };
 
   return icons[name] ?? icons.more;
@@ -6750,6 +6785,10 @@ function RichTextEditor({
   const [highlightColor, setHighlightColor] = useState("#FFF59D");
   const [, setSelectionVersion] = useState(0);
   const selectionRef = useRef<{ from: number; to: number } | null>(null);
+  const [showTable, setShowTable] = useState(false);
+  const [hoverCell, setHoverCell] = useState({ r: 0, c: 0 });
+  const [tableMenuLeft, setTableMenuLeft] = useState(0);
+const tableWrapRef = useRef<HTMLDivElement>(null);
 
   const editor = useEditor({
     extensions: [
@@ -6760,6 +6799,10 @@ function RichTextEditor({
       ServiceSub,
       ServiceMore,
       ServiceParagraphStyle,
+      Table.configure({ resizable: true, HTMLAttributes: { class: "service-table" } }),
+      TableRow,
+      ServiceTableHeader,
+      ServiceTableCell,
       Underline,
       Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true }),
     ],
@@ -6809,6 +6852,23 @@ useEffect(() => {
   const currentIndent = Number(parent.attrs.indent || 0);
   const currentStyles = editor.getAttributes("serviceTextStyle");
   const currentFontSize = currentStyles.fontSize || "16px";
+  const inTable = editor.isActive("table");
+
+  const toggleTableMenu = () => {
+  if (!showTable && tableWrapRef.current) {
+    const wrap = tableWrapRef.current.getBoundingClientRect();
+    const box = (tableWrapRef.current.closest(".service-rich-editor") as HTMLElement | null)?.getBoundingClientRect();
+    if (box) {
+      const MENU_W = 210;
+      const desired = wrap.right - MENU_W;
+      const min = box.left + 6;
+      const max = box.right - MENU_W - 6;
+      const abs = Math.max(min, Math.min(desired, max));
+      setTableMenuLeft(abs - wrap.left);
+    }
+  }
+  setShowTable((v) => !v);
+};
 
   const run = (fn: () => boolean) => {
     fn();
@@ -6916,7 +6976,45 @@ useEffect(() => {
           <button type="button" title="کد درون متن" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().toggleCode().run())} className={buttonStyle(editor.isActive("code"))}><EditorIcon name="code" /></button>
           <button type="button" title="Code — پنل HTML و تگ‌ها" onMouseDown={(e) => e.preventDefault()} onClick={() => setCodePanelOpen((v) => !v)} className={buttonStyle(codePanelOpen)}><span className="font-mono text-[9px] font-black">Code</span></button>
           <button type="button" title="لینک" onMouseDown={(e) => e.preventDefault()} onClick={openLinkEditor} className={buttonStyle(editor.isActive("link"))}><EditorIcon name="link" /></button>
-          <button type="button" title="پاک کردن قالب‌بندی" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().unsetAllMarks().clearNodes().run())} className={buttonStyle()}><EditorIcon name="clear" /></button>
+          <div className="relative">
+            <button type="button" title="درج جدول" onMouseDown={(e) => e.preventDefault()}   onClick={toggleTableMenu} className={buttonStyle(showTable || inTable)}><EditorIcon name="table" /></button>
+            {showTable && (
+              <>
+<div aria-hidden="true" onMouseDown={(e) => e.preventDefault()} onClick={() => { setShowTable(false); setHoverCell({ r: 0, c: 0 }); }} className="fixed inset-0 z-40 cursor-default" />
+                <div className={`${menuStyle} w-[210px] p-3`} style={{ left: tableMenuLeft, right: "auto" }} onMouseLeave={() => setHoverCell({ r: 0, c: 0 })}>
+                  <div className="mb-2 text-center font-mono text-[11px] font-bold text-slate-600">
+                    {hoverCell.r > 0 ? `${hoverCell.r} × ${hoverCell.c}` : "اندازه جدول را انتخاب کنید"}
+                  </div>
+                  <div dir="ltr" className="grid gap-[3px]" style={{ gridTemplateColumns: "repeat(8, 1fr)" }}>
+                    {Array.from({ length: 48 }).map((_, i) => {
+                      const r = Math.floor(i / 8) + 1;
+                      const c = (i % 8) + 1;
+                      const active = r <= hoverCell.r && c <= hoverCell.c;
+                      return (
+<div
+  key={i}
+  role="button"
+  onMouseDown={(e) => e.preventDefault()}
+  onMouseEnter={() => setHoverCell({ r, c })}
+  onClick={() => {
+    editor.chain().focus().insertTable({ rows: r, cols: c, withHeaderRow: true }).run();
+    setShowTable(false);
+    setHoverCell({ r: 0, c: 0 });
+  }}
+  className={`h-4 w-4 cursor-pointer rounded-[3px] border transition-colors ${active ? "border-[#1565C0] bg-[#1565C0]/30" : "border-[#1E3A8A]/20 bg-white"}`}
+/>
+                      );
+                    })}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+          <button type="button" title="پاک کردن قالب‌بندی" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => {
+            const chain = editor.chain().focus().unsetAllMarks();
+            if (!editor.isActive("table")) chain.clearNodes();
+            return chain.run();
+          })} className={buttonStyle()}><EditorIcon name="clear" /></button>
           <button type="button" title="خط جداکننده" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().setHorizontalRule().run())} className={buttonStyle()}><EditorIcon name="minus" /></button>
           <span className="service-rich-editor-divider">|</span>
           <button type="button" title="ابزارهای بیشتر" onMouseDown={(e) => e.preventDefault()} onClick={() => setShowMore((v) => !v)} className={buttonStyle(showMore)}><span className="text-xs font-extrabold tracking-[0.2px]">more</span></button>
@@ -6936,7 +7034,7 @@ useEffect(() => {
           <button type="button" title="خط جداکننده" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().setHorizontalRule().run())} className={buttonStyle()}><EditorIcon name="minus" /></button>
           <button type="button" title="More" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().insertContent({ type: "serviceMore" }).run())} className={buttonStyle(false, "w-[52px]")}><span className="text-xs font-extrabold tracking-[0.2px]">more</span></button>
         </div></div>
-        <div className="service-rich-editor-extra-group"><span className="service-rich-editor-extra-label">نمادها</span><div className="service-rich-editor-extra-buttons"><div className="relative">
+        <div className="service-rich-editor-extra-group"><span className="service-rich-editor-extra-label">نمادها</span><div className="service-rich-editor-extra-buttons">  <div className="relative" ref={tableWrapRef}>
           <button type="button" title="نمادهای ویژه" onMouseDown={(e) => e.preventDefault()} onClick={() => setShowSymbols((v) => !v)} className={buttonStyle(showSymbols)}><EditorIcon name="symbols" /></button>
           {showSymbols && <div className={`${menuStyle} right-0 grid min-w-[288px] grid-cols-8 gap-[3px]`}>{symbols.map((symbol) => <button key={symbol} type="button" title={`درج ${symbol}`} onMouseDown={(e) => e.preventDefault()} onClick={() => { editor.chain().focus().insertContent(symbol).run(); setShowSymbols(false); }} className="h-[30px] cursor-pointer rounded-[5px] border-0 bg-transparent text-[13px] text-[#334155] hover:bg-[#1565C0]/[0.07] hover:text-[#1565C0]">{symbol}</button>)}</div>}
         </div></div></div>
@@ -6950,6 +7048,48 @@ useEffect(() => {
         <button type="button" onClick={() => { editor.chain().focus().unsetLink().run(); setShowLinkEditor(false); }} className="service-rich-link-remove">حذف لینک</button>
         <button type="button" onClick={() => setShowLinkEditor(false)} className="service-rich-link-cancel">انصراف</button>
       </div>}
+
+      {inTable && (
+        <div className="service-rich-editor-extra-toolbar" style={{ flexDirection: "row", flexWrap: "wrap" }}>
+          <div className="service-rich-editor-extra-group">
+            <span className="service-rich-editor-extra-label">سطر</span>
+            <div className="service-rich-editor-extra-buttons">
+              <button type="button" title="افزودن سطر بالا" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().addRowBefore().run())} className={buttonStyle()}><EditorIcon name="rowAbove" /></button>
+              <button type="button" title="افزودن سطر پایین" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().addRowAfter().run())} className={buttonStyle()}><EditorIcon name="rowBelow" /></button>
+              <button type="button" title="حذف سطر" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().deleteRow().run())} className={buttonStyle()}><EditorIcon name="delRow" /></button>
+            </div>
+          </div>
+          <div className="service-rich-editor-extra-group">
+            <span className="service-rich-editor-extra-label">ستون</span>
+            <div className="service-rich-editor-extra-buttons">
+              <button type="button" title="افزودن ستون سمت راست" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().addColumnBefore().run())} className={buttonStyle()}><EditorIcon name="colRight" /></button>
+              <button type="button" title="افزودن ستون سمت چپ" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().addColumnAfter().run())} className={buttonStyle()}><EditorIcon name="colLeft" /></button>
+              <button type="button" title="حذف ستون" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().deleteColumn().run())} className={buttonStyle()}><EditorIcon name="delCol" /></button>
+            </div>
+          </div>
+          <div className="service-rich-editor-extra-group">
+            <span className="service-rich-editor-extra-label">سلول</span>
+            <div className="service-rich-editor-extra-buttons">
+              <button type="button" title="ادغام سلول‌ها" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().mergeCells().run())} className={buttonStyle()}><EditorIcon name="merge" /></button>
+              <button type="button" title="جداسازی سلول" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().splitCell().run())} className={buttonStyle()}><EditorIcon name="split" /></button>
+              <button type="button" title="سطر سرتیتر" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().toggleHeaderRow().run())} className={buttonStyle()}><EditorIcon name="headerRow" /></button>
+              <button type="button" title="ستون اول به‌عنوان سرتیتر" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().toggleHeaderColumn().run())} className={buttonStyle(false, "w-[54px]")}><span className="text-[10px] font-extrabold">ستون ۱</span></button>
+            </div>
+          </div>
+          <div className="service-rich-editor-extra-group">
+            <span className="service-rich-editor-extra-label">رنگ سلول</span>
+            <div className="service-rich-editor-extra-buttons">
+              {["#EAF2FF", "#E8F5E9", "#FFF8E1", "#FDECEA", "#F3E8FF"].map((c) => (
+                <button key={c} type="button" title="رنگ پس‌زمینه سلول" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().setCellAttribute("backgroundColor", c).run())} className="h-5 w-5 cursor-pointer rounded-full border border-slate-300" style={{ background: c }} />
+              ))}
+              <button type="button" title="حذف رنگ سلول" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().setCellAttribute("backgroundColor", null).run())} className={buttonStyle()}><EditorIcon name="xmark" /></button>
+            </div>
+          </div>
+          <div className="service-rich-editor-extra-group">
+            <button type="button" title="حذف کامل جدول" onMouseDown={(e) => e.preventDefault()} onClick={() => run(() => editor.chain().focus().deleteTable().run())} className={buttonStyle(false, "text-red-600 hover:text-red-700")}><EditorIcon name="trashTable" /></button>
+          </div>
+        </div>
+      )}
 
       <EditorContent editor={editor} />
     </div>
@@ -7061,6 +7201,10 @@ function RichTextPreview({
       ServiceSub,
       ServiceMore,
       ServiceParagraphStyle,
+      Table.configure({ resizable: false, HTMLAttributes: { class: "service-table" } }),
+      TableRow,
+      ServiceTableHeader,
+      ServiceTableCell,
       Underline,
       InsertMark,
       DeleteMark,
@@ -11441,6 +11585,102 @@ const normalizedData = {
           color: #475569;
         }
 
+        /* ───────── TABLE ───────── */
+
+        .service-rich-editor .ProseMirror .tableWrapper,
+        .service-rich-preview .ProseMirror .tableWrapper {
+          overflow-x: auto;
+          margin: 1.2rem 0;
+          border-radius: .75rem;
+          border: 1px solid rgba(21,101,192,0.17);
+        }
+
+        .service-rich-editor .ProseMirror table,
+        .service-rich-preview .ProseMirror table {
+          border-collapse: separate;
+          border-spacing: 0;
+          width: 100%;
+          min-width: 420px;
+          table-layout: fixed;
+          direction: rtl;
+          margin: 0;
+          overflow: hidden;
+        }
+
+        .service-rich-editor .ProseMirror table td,
+        .service-rich-editor .ProseMirror table th,
+        .service-rich-preview .ProseMirror table td,
+        .service-rich-preview .ProseMirror table th {
+          position: relative;
+          min-width: 80px;
+          padding: 10px 14px;
+          vertical-align: top;
+          border-bottom: 1px solid rgba(30,58,138,0.12);
+          border-left: 1px solid rgba(30,58,138,0.12);
+          text-align: right;
+          box-sizing: border-box;
+          line-height: 1.9;
+        }
+
+        .service-rich-editor .ProseMirror table td:last-child,
+        .service-rich-editor .ProseMirror table th:last-child,
+        .service-rich-preview .ProseMirror table td:last-child,
+        .service-rich-preview .ProseMirror table th:last-child {
+          border-left: 0;
+        }
+
+        .service-rich-editor .ProseMirror table tr:last-child td,
+        .service-rich-editor .ProseMirror table tr:last-child th,
+        .service-rich-preview .ProseMirror table tr:last-child td,
+        .service-rich-preview .ProseMirror table tr:last-child th {
+          border-bottom: 0;
+        }
+
+        .service-rich-editor .ProseMirror table th,
+        .service-rich-preview .ProseMirror table th {
+          background: rgba(21,101,192,0.09);
+          color: #0F172A;
+          font-weight: 800;
+          font-size: .92rem;
+        }
+
+        .service-rich-editor .ProseMirror table tbody tr:nth-child(even) td:not([style*="background"]),
+        .service-rich-preview .ProseMirror table tbody tr:nth-child(even) td:not([style*="background"]) {
+          background: rgba(30,58,138,0.025);
+        }
+
+        .service-rich-editor .ProseMirror table td p,
+        .service-rich-editor .ProseMirror table th p,
+        .service-rich-preview .ProseMirror table td p,
+        .service-rich-preview .ProseMirror table th p {
+          margin: 0;
+          color: inherit;
+        }
+
+        .service-rich-editor .ProseMirror table .selectedCell::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: rgba(21,101,192,0.16);
+          pointer-events: none;
+          z-index: 2;
+        }
+
+        .service-rich-editor .ProseMirror table .column-resize-handle {
+          position: absolute;
+          left: -2px;
+          top: 0;
+          bottom: 0;
+          width: 4px;
+          background: #1565C0;
+          pointer-events: none;
+          z-index: 3;
+        }
+
+        .service-rich-editor .ProseMirror.resize-cursor {
+          cursor: col-resize;
+        }
+
         /* ───────── RESPONSIVE ───────── */
 
         @media (max-width: 760px) {
@@ -11536,6 +11776,7 @@ const normalizedData = {
     </div>
   );
 }
+
 
 
 

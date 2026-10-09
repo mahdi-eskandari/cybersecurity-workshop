@@ -64,7 +64,7 @@ export async function POST(req: Request) {
 
     if (!contact) {
       return NextResponse.json(
-        { message: "شماره تماس یا آیدی تلگرام الزامی است" },
+        { message: "شماره تماس الزامی است" },
         { status: 400 }
       );
     }
@@ -107,7 +107,7 @@ export async function POST(req: Request) {
       trackingCode,
       incidentType,
       description,
-      contact,
+      contact: phone,
       status: "pending",
     });
 

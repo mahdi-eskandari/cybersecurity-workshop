@@ -117,8 +117,8 @@ function normalizeServices(items: RawService[]): Service[] {
   }));
 }
 
-async function getInitialData(): Promise<ServicesPageInitialData> {
-  const h = await headers();
+async function getInitialData(): Promise<Omit<ServicesPageInitialData, "initialPage">> {
+    const h = await headers();
   const forwardedHost = h.get("x-forwarded-host") || h.get("host");
   const forwardedProto = h.get("x-forwarded-proto") || "https";
   const origin = forwardedHost
@@ -276,7 +276,14 @@ export default async function ServicesPage({
         description={seo.metaDescription}
       />
 
-      <ServicesPageClient initialData={initialData} />
-    </>
+      <ServicesPageClient
+        initialData={{
+          ...initialData,
+          initialPage: pagination.canonical.endsWith("/services")
+            ? 1
+            : Math.min(currentPage, totalPages),
+        }}
+      />
+          </>
   );
 }

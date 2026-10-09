@@ -1226,7 +1226,7 @@ export default function App({
   return (
     <div
       dir="rtl"
-      className={`min-h-screen transition-colors duration-300 pt-5 ${
+      className={`min-h-screen transition-colors duration-300 pt-[70px] ${
         darkMode
           ? "bg-[#0A1128] text-[#E6F7FF]"
           : "bg-white text-[#0F172A]"
@@ -1457,9 +1457,9 @@ export default function App({
             <div className="absolute inset-0 pointer-events-none"
               style={{ background: "linear-gradient(to bottom, transparent 60%, rgba(10, 17, 40, 0.47) 100%)" }} />
           </div>
-          <p className="mt-2.5 text-xs text-center" style={{ color: "#1E293B", fontFamily: "monospace", letterSpacing: "0.1em" }}>
+          {/* <p className="mt-2.5 text-xs text-center" style={{ color: "#1E293B", fontFamily: "monospace", letterSpacing: "0.1em" }}>
             نمودار ردیابی جریان تراکنش‌ها — پرونده MySol // REF-48291
-          </p>
+          </p> */}
         </div>
       </div>
       {/* ───────────────── ARTICLE CONTENT ───────────────── */}
@@ -1796,7 +1796,7 @@ export default function App({
                     borderRadius: 99,
                     background: darkMode
                       ? "#00E5FF"
-                      : "#1E3A8A",
+                      : "#1565C0",
                   }}
                 />
 
@@ -1834,11 +1834,14 @@ export default function App({
     return (
       <article
         key={related._id}
-        className={`group flex h-full min-w-0 flex-col border rounded-2xl overflow-hidden transition-all duration-200 ${
-          darkMode
-            ? "bg-cyan-900/15 border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/20 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
-            : "bg-white border-[rgba(29,78,216,0.20)] hover:border-[rgba(29,78,216,0.52)] hover:bg-[rgba(237,242,255,0.52)] hover:shadow-[0_16px_40px_rgba(30,58,138,0.34)]"
-        }`}
+       className={`group flex flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
+            darkMode
+              ? "bg-[rgba(255,255,255,0.028)] border border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
+              : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"
+          }`}
+          style={{
+            backdropFilter: "blur(10px)",
+          }}
       >
         {/* Thumbnail */}
         <div
@@ -1875,8 +1878,17 @@ export default function App({
           {/* دسته‌بندی روی گوشه‌ی عکس */}
 
 <span
-  className="absolute top-3 right-3 z-10 max-w-[calc(100%-1.5rem)] truncate text-[11px] font-bold px-2.5 py-1 rounded-full ring-1 ring-inset shadow-sm backdrop-blur-sm"
-  style={getCategoryBadgeStyle(relatedCategory, darkMode)}
+  className="absolute top-3 right-3 z-10 max-w-[calc(100%-1.5rem)] truncate text-[11px] font-bold px-2.5 py-1 rounded-full"
+  style={{
+    color: darkMode ? "#4babeb" : "#295db1",
+    background: darkMode
+      ? "rgba(11, 25, 62, 0.89)"
+      : "rgba(233, 243, 255, 0.95)",
+    border: darkMode
+      ? "1px solid rgba(0,229,255,0.35)"
+      : "1px solid rgba(255,255,255,0.35)",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
+  }}
 >
   {relatedCategory}
 </span>
@@ -1889,7 +1901,7 @@ export default function App({
             className={`text-base font-bold leading-snug mb-3 break-words line-clamp-2 ${
               darkMode
                 ? "text-[#E6F7FF]"
-                : "text-[#111827] group-hover:text-[#1E3A8A] transition-colors duration-300"
+                : "text-[#111827] group-hover:text-[#1565C0] transition-colors duration-300"
             }`}
           >
             {related.title}
@@ -1908,43 +1920,53 @@ export default function App({
 
           {/* Footer */}
           <div
-            className={`mt-auto pt-4 border-t flex flex-wrap items-center justify-between gap-x-3 gap-y-3 ${
+            className={`mt-auto pt-4 border-t flex flex-nowrap items-center justify-between gap-3 ${
               darkMode ? "border-[#1E334A]" : "border-[#E2E8F0]"
             }`}
           >
-            <Link
-            href={post.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"}
-             className="flex items-center gap-2.5 min-w-0 pt-1"
-             >
-              <div
-                className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 ${
-                  darkMode
-                    ? "bg-cyan-400/10 text-cyan-300"
-                    : "bg-blue-100 text-[#1565C0]"
+            <div className="flex items-center gap-2.5 min-w-0 flex-1">
+              <Link
+                href={related.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"}
+                className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden border ${
+                  darkMode ? "border-transparent" : "border-[#1565C0]/25"
                 }`}
               >
-                     <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center flex-shrink-0">
-                       <IconUser />
-                     </div>
-              </div>
+                <div className="w-full h-full rounded-full bg-white flex items-center justify-center flex-shrink-0">
+                  <IconUser />
+                </div>
+              </Link>
 
-              <div className="min-w-0">
-                <div 
-                
-                  className={`text-xs font-semibold truncate pb-1 transition-all duration-300 ${
-                    darkMode ? "text-[#9DB0C0] hover:text-white/80" : "text-[#475569]"
+              <div className="min-w-0 flex-1">
+                <div className="min-w-0">
+                  <Link
+                    href={related.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"}
+                    className={`block text-xs font-semibold truncate pb-1 transition-all duration-300 ${
+                      darkMode ? "text-[#9DB0C0] hover:text-white/80" : "text-[#475569]"
+                    }`}
+                  >
+                    {related.author}
+                  </Link>
+                </div>
+
+                <div
+                  className={`flex flex-nowrap items-center gap-x-2 text-[10px] whitespace-nowrap ${
+                    darkMode ? "text-[#71869A]" : "text-[#64748B]"
                   }`}
                 >
-                  {post.author}
-                  {/* تیم تخصصی پاراهور */}
+                  <span>{formatPersianDate(related.createdAt || related.updatedAt)}</span>
+                  <span>·</span>
+                  <span className="inline-flex items-center gap-1">
+                    <Clock className="w-2.5 h-2.5" />
+                    {related.readingTime || 0} دقیقه
+                  </span>
                 </div>
               </div>
-            </Link>
+            </div>
 
             <Link
               href={`/blogs/${related.slug || related._id}`}
               className={`flex items-center gap-1 text-xs font-semibold whitespace-nowrap hover:gap-1.5 transition-all flex-shrink-0 ${
-                darkMode ? "text-[#00E5FF]" : "text-[#1E3A8A]"
+                darkMode ? "text-[#00E5FF]" : "text-[#1565C0]"
               }`}
             >
               ادامه مطلب

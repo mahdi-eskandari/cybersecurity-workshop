@@ -37,6 +37,10 @@ const CrisisReportSchema = new Schema(
       type: String,
       required: true,
       trim: true,
+      match: [
+        /^(\+98|0098|98|0)?9\d{9}$/,
+        "شماره موبایل معتبر نیست",
+      ],
     },
 
     status: {

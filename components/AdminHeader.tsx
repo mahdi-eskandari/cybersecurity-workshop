@@ -264,12 +264,10 @@
 // }
 
 
-
-
-
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 
 type AdminHeaderProps = {
   onMenuClick: () => void;
@@ -308,10 +306,37 @@ const IconUser = () => (
   </svg>
 );
 
+const ROUTE_TITLES: Record<string, string> = {
+  "/admin": "پیشخوان فرماندهی",
+  "/admin/blogs": "مدیریت پست ها",
+  "/admin/services": "مدیریت خدمات",
+  "/admin/user-feedback": "بازخورد کاربران",
+  "/admin/seo": "SEO",
+  "/admin/comments": "مدیریت نظرات پست ها",
+};
+
+function getRouteTitle(pathname: string, fallback: string) {
+  // اول تطبیق دقیق (با حذف اسلش آخر)
+  const clean =
+    pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+
+  if (ROUTE_TITLES[clean]) return ROUTE_TITLES[clean];
+
+  // بعد طولانی‌ترین prefix مطابق (برای صفحات داخلی مثل /admin/posts/12/edit)
+  const match = Object.keys(ROUTE_TITLES)
+    .filter((route) => route !== "/admin" && clean.startsWith(route + "/"))
+    .sort((a, b) => b.length - a.length)[0];
+
+  return match ? ROUTE_TITLES[match] : fallback;
+}
+
 export default function AdminHeader({
   onMenuClick,
   title = "پیشخوان فرماندهی",
 }: AdminHeaderProps) {
+  const pathname = usePathname();
+  const currentTitle = getRouteTitle(pathname, title);
+
   const [username, setUsername] = useState("");
   const [showProfile, setShowProfile] = useState(false);
 
@@ -346,10 +371,7 @@ export default function AdminHeader({
 
       if (!(target instanceof Node)) return;
 
-      if (
-        profileRef.current &&
-        !profileRef.current.contains(target)
-      ) {
+      if (profileRef.current && !profileRef.current.contains(target)) {
         setShowProfile(false);
       }
     };
@@ -419,21 +441,9 @@ export default function AdminHeader({
             minWidth: 0,
           }}
         >
-          <span
-            style={{
-              color: "#94A3B8",
-            }}
-          >
-            پاراهور
-          </span>
+          <span style={{ color: "#94A3B8" }}>پاراهور</span>
 
-          <span
-            style={{
-              color: "#CBD5E1",
-            }}
-          >
-            /
-          </span>
+          <span style={{ color: "#CBD5E1" }}>/</span>
 
           <span
             style={{
@@ -443,7 +453,7 @@ export default function AdminHeader({
               whiteSpace: "nowrap",
             }}
           >
-            {title}
+            {currentTitle}
           </span>
         </div>
       </div>

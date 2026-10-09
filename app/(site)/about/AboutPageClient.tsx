@@ -517,7 +517,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
             className="mx-auto mb-8"
             style={{
               color: textMuted,
-              fontSize: "clamp(0.92rem,2vw,1.08rem)",
+              fontSize: "clamp(0.92rem,2vw,1.0rem)",
               lineHeight: 1.9,
               maxWidth: 580,
             }}
@@ -805,7 +805,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                 width: 60,
                 background: darkMode
                   ? "linear-gradient(90deg,transparent,rgba(0,229,255,0.5),transparent)"
-                  : "linear-gradient(90deg,transparent,rgba(30,58,138,0.90),transparent)",
+                  : "linear-gradient(90deg,transparent,rgb(21, 101, 192),transparent)",
                 margin: "16px auto 0",
               }}
             />
@@ -823,12 +823,12 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                     background: isHov
                       ? darkMode
                         ? "rgba(0,229,255,0.06)"
-                        : "rgba(192, 200, 221, 0.12)"
+                        : "rgba(226, 230, 239, 0.12)"
                       : cardBg,
                     border: isHov
                       ? darkMode
                         ? "1px solid rgba(0,229,255,0.35)"
-                        : "1px solid #1565C0"
+                        : "1px solid #1d65b88d"
                       : darkMode
                         ? "1px solid rgba(0,229,255,0.12)"
                         : "1px solid #719fd35d",
@@ -902,10 +902,10 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                         color: isHov
                           ? darkMode
                             ? "#fff"
-                            : "#1565C0"
+                            : "black"
                           : darkMode
                             ? "#E2E8F0"
-                            : "#1565C0",
+                            : "black",
                         fontSize: "1.05rem",
                       }}
                     >
@@ -1063,7 +1063,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                           
                         border: darkMode
                           ? "1px solid rgba(0, 229, 255, 0.12)"
-                          : "1px solid rgba(46, 92, 216, 0.68)",
+                          : "1px solid #1565c099",
                         boxShadow: darkMode
                           ? "none"
                           : "0 8px 24px rgba(15,23,42,0.04)",
@@ -1088,7 +1088,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                         style={{
                           color: darkMode
                             ? "#fff"
-                            : "#1565C0",
+                            : "black",
                           fontSize: "0.92rem",
                         }}
                       >
@@ -1120,10 +1120,10 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                         background: accent,
                         boxShadow: darkMode
                           ? "0 0 12px rgba(0,229,255,0.8)"
-                          : "0 0 12px 1565C0",
+                          : "0 0 12px rgba(21,101,192,0.45)",
                         border: darkMode
                           ? "2px solid rgba(0,229,255,0.4)"
-                          : "2px solid 1565C0",
+                          : "2px solid rgba(21,101,192,0.4)",
                       }}
                     />
                   </div>

@@ -240,6 +240,35 @@ const getInitials = (name?: string) => {
     .slice(0, 2);
 };
 
+
+function getPaginationRange(currentPage: number, totalPages: number): (number | "...")[] {
+  const pages = new Set<number>([1]);
+
+  // صفحه فعلی و یکی قبل و بعدش
+  for (let p = currentPage - 1; p <= currentPage + 1; p++) {
+    if (p >= 1 && p <= totalPages) pages.add(p);
+  }
+
+  // سه صفحه آخر
+  for (let p = Math.max(1, totalPages - 2); p <= totalPages; p++) {
+    pages.add(p);
+  }
+
+  const sorted = Array.from(pages).sort((a, b) => a - b);
+  const range: (number | "...")[] = [];
+
+  sorted.forEach((p, i) => {
+    if (i > 0) {
+      const gap = p - sorted[i - 1];
+      if (gap === 2) range.push(p - 1); // فقط یک صفحه جا افتاده: خودش رو نشون بده
+      else if (gap > 2) range.push("...");
+    }
+    range.push(p);
+  });
+
+  return range;
+}
+
 /* =========================================================
    SECTION HOVER (borders/backgrounds are inline styles, so we
    flip them directly on the element to reliably beat inline
@@ -1260,8 +1289,9 @@ color: accent
 
               <div
                 className="data-label mb-5 mt-5"
-                style={{ color: darkMode ? "#57677d" : "#94A3B8",
-                  fontSize: "0.62rem"
+                style={{
+                  fontSize: "0.62rem",
+                  color: accent
                  }}
               >
                 RESEARCH FOCUS
@@ -1566,8 +1596,19 @@ color: accent
                   <ChevronLeft size={18} />
                 </Link>
 
-                {Array.from({ length: totalPages }, (_, index) => {
-                  const pageNumber = index + 1;
+                  {getPaginationRange(safePage, totalPages).map((pageNumber, index) => {
+                  if (pageNumber === "...") {
+                    return (
+                      <span
+                        key={`ellipsis-${index}`}
+                        className="flex h-10 w-10 shrink-0 items-center justify-center text-sm font-medium"
+                        style={{ color: darkMode ? "#8FA5B8" : "#475569" }}
+                      >
+                        …
+                      </span>
+                    );
+                  }
+
                   const activePage = safePage === pageNumber;
                   const inactiveBorder = darkMode ? "#263B4E" : "rgba(29,78,216,0.20)";
                   const inactiveColor = darkMode ? "#8FA5B8" : "#475569";
@@ -1583,7 +1624,7 @@ color: accent
                         background: activePage
                           ? darkMode
                             ? "#00B8D4"
-                            : "#1E3A8A"
+                            : "#1565C0"
                           : "transparent",
                         color: activePage
                           ? darkMode
@@ -1599,7 +1640,7 @@ color: accent
                       {...(!activePage
                         ? makeSectionHover(
                             { border: inactiveBorder, color: inactiveColor, background: "transparent" },
-                            { border: accent, color: accent, background: `${accent}0D` }
+                            { border: "rgba(29,78,216,0.52)", color: `#1E3A8A` }
                           )
                         : {})}
                     >

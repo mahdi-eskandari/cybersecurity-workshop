@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useTheme } from "../../../components/ThemeProvider";
 import { motion } from "framer-motion";
 import EmergencyModal from "@/components/CrisisReportForm";
@@ -324,6 +324,7 @@ interface Service {
 export type ServicesPageInitialData = {
   services: Service[];
   seo: { h1Title: string; title?: string; description?: string };
+  initialPage: number; // ← اضافه شود
 };
 
 export default function ServicesPageClient({ initialData }: { initialData: ServicesPageInitialData }) {
@@ -343,16 +344,11 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 };
     const seo = initialData.seo;
 
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+    const pathname = usePathname();
   const activeServices = services.filter((s) => s.status === "active");
   const pageSize = 6;
   const totalPages = Math.max(1, Math.ceil(activeServices.length / pageSize));
-  const requestedPage = Number(searchParams.get("page"));
-  const currentPage = Math.min(
-    Math.max(1, Number.isFinite(requestedPage) && requestedPage > 0 ? requestedPage : 1),
-    totalPages
-  );
+  const currentPage = Math.min(Math.max(1, initialData.initialPage), totalPages);
   const paginatedServices = activeServices.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
@@ -459,11 +455,11 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
           <div
             style={{
-              height: 1,
+              height: 2,
               width: 80,
               background: darkMode
                 ? "linear-gradient(90deg,transparent,rgba(0,229,255,0.45),transparent)"
-                : "linear-gradient(90deg,transparent,rgba(30,58,138,0.55),transparent)",
+                : "linear-gradient(90deg,transparent,rgb(21, 101, 192),transparent)",
               margin: "28px auto 0",
             }}
           />
@@ -777,7 +773,10 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
           {/* Grid */}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <div
+            key={`services-page-${currentPage}`}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+          >
             {paginatedServices.map((s) => {
               const isHovered = hoveredCard === s.id;
 
@@ -792,7 +791,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                         ? "rgba(0,229,255,0.055)"
                         : "rgba(255,255,255,0.028)"
                       : isHovered
-                        ? "rgba(192, 200, 221, 0.12)"
+                        ? "rgba(229, 234, 243, 0.12)"
                         : "#FFFFFF",
 
                     border: darkMode
@@ -824,10 +823,10 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
                   <div
                     style={{
-                      height: 1.5,
+                      height: 2,
                       background: darkMode
                         ? "linear-gradient(90deg,transparent,rgba(0,229,255,0.7),transparent)"
-                        : "linear-gradient(90deg,transparent,#1D4ED8,transparent)",
+                        : "linear-gradient(90deg,transparent,rgb(21, 101, 192),transparent)",
                       opacity: isHovered ? 1 : 0,
                       transition: "opacity 0.3s",
                     }}
@@ -1054,29 +1053,29 @@ function IconChevronRight() {
 }
 
 function getPaginationRange(currentPage: number, totalPages: number): (number | "...")[] {
+  const pages = new Set<number>([1]);
+
+  // صفحه فعلی و یکی قبل و بعدش
+  for (let p = currentPage - 1; p <= currentPage + 1; p++) {
+    if (p >= 1 && p <= totalPages) pages.add(p);
+  }
+
+  // سه صفحه آخر
+  for (let p = Math.max(1, totalPages - 2); p <= totalPages; p++) {
+    pages.add(p);
+  }
+
+  const sorted = Array.from(pages).sort((a, b) => a - b);
   const range: (number | "...")[] = [];
-  const siblingCount = 1;
 
-  const start = Math.max(2, currentPage - siblingCount);
-  const end = Math.min(totalPages - 1, currentPage + siblingCount);
-
-  range.push(1);
-
-  if (start > 2) {
-    range.push("...");
-  }
-
-  for (let page = start; page <= end; page++) {
-    range.push(page);
-  }
-
-  if (end < totalPages - 1) {
-    range.push("...");
-  }
-
-  if (totalPages > 1) {
-    range.push(totalPages);
-  }
+  sorted.forEach((p, i) => {
+    if (i > 0) {
+      const gap = p - sorted[i - 1];
+      if (gap === 2) range.push(p - 1); // فقط یک صفحه جا افتاده: خودش رو نشون بده
+      else if (gap > 2) range.push("...");
+    }
+    range.push(p);
+  });
 
   return range;
 }
@@ -1109,7 +1108,7 @@ function Pagination({
 
   const activeClass = darkMode
     ? `${baseClass} bg-[#00B8D4] text-[#031018] border-cyan-400 shadow-[0_0_16px_rgba(0,229,255,0.45)]`
-    : `${baseClass} bg-[#1E3A8A] text-white border-[#1E3A8A] shadow-[0_4px_15px_rgba(30,58,138,0.20)]`;
+    : `${baseClass} bg-[#1565C0] text-white border-[#1565C0] shadow-[0_4px_15px_rgba(30,58,138,0.20)]`;
 
   return (
     <nav
@@ -1122,7 +1121,7 @@ function Pagination({
           <IconChevronLeft />
         </span>
       ) : (
-        <Link href={buildHref(nextPage)} className={idleClass} aria-label="صفحه بعد">
+        <Link href={buildHref(nextPage)} scroll={false} className={idleClass} aria-label="صفحه بعد">
           <IconChevronLeft />
         </Link>
       )}
@@ -1141,6 +1140,7 @@ function Pagination({
           <Link
             key={page}
             href={buildHref(page)}
+            scroll={false}
             aria-current={page === currentPage ? "page" : undefined}
             className={`${page === currentPage ? activeClass : idleClass} text-sm font-medium`}
           >
@@ -1154,7 +1154,7 @@ function Pagination({
           <IconChevronRight />
         </span>
       ) : (
-        <Link href={buildHref(prevPage)} className={idleClass} aria-label="صفحه قبل">
+        <Link href={buildHref(prevPage)} scroll={false} className={idleClass} aria-label="صفحه قبل">
           <IconChevronRight />
         </Link>
       )}
