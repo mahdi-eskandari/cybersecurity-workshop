@@ -350,11 +350,14 @@ export default function AdminHeader({
           cache: "no-store",
         });
 
-        if (!response.ok) return;
+        if (!response.ok) {
+          setUsername("ادمین");
+          return;
+        }
 
         const data = await response.json();
 
-        setUsername(data?.user?.username ?? "");
+        setUsername(data?.user?.username ?? "ادمین");
       } catch (error) {
         console.error("Admin profile error:", error);
       }

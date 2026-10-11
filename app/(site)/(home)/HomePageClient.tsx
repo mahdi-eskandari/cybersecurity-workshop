@@ -1196,7 +1196,13 @@ const closeCrisis = () => {
     <span key={index}>
       {index === 5 && <br />}
 
-      <span>
+      <span
+        style={
+          index === 5
+            ? { color: darkMode ? "#00E5FF" : "#1565C0" }
+            : undefined
+        }
+      >
         {word}
       </span>{" "}
     </span>
@@ -1881,12 +1887,11 @@ style={{
 
                         {/* Excerpt */}
                         <p
-                          className={`text-sm leading-relaxed line-clamp-3 break-words mb-5 flex-1 ${
+                          className={`text-sm leading-relaxed line-clamp-1 break-words mb-5 flex-1 ${
                             darkMode ? "text-[#9DB0C0]" : "text-[#334155]"
                           }`}
                         >
-                          {summary.length > 70?
-                          summary.slice(0,70).trim() + "..." :
+                          {
                           summary
                         }
                         </p>

@@ -6021,6 +6021,8 @@ interface Service {
 
   metaTitle: string;
   metaDescription: string;
+    index: boolean;
+  follow: boolean;
 }
 
 type ServiceForm = {
@@ -6042,6 +6044,8 @@ type ServiceForm = {
 
   metaTitle: string;
   metaDescription: string;
+    index: boolean;
+  follow: boolean;
 };
 
 /* ───────────────── DATA ───────────────── */
@@ -6150,6 +6154,100 @@ const errorStyle: CSSProperties = {
   fontSize: "0.64rem",
   marginTop: 1,
 };
+
+
+/* ───────────────── SEO TOGGLE ───────────────── */
+
+function SeoToggle({
+  checked,
+  onChange,
+  title,
+  description,
+}: {
+  checked: boolean;
+  onChange: (value: boolean) => void;
+  title: string;
+  description: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={() => onChange(!checked)}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 12,
+        width: "100%",
+        textAlign: "right",
+        cursor: "pointer",
+        borderRadius: 9,
+        padding: "10px 12px",
+        fontFamily: "var(--font-vazirmatn), Vazirmatn, sans-serif",
+        border: checked
+          ? "1px solid rgba(21,101,192,0.26)"
+          : "1px solid rgba(30,58,138,0.14)",
+        background: checked ? "rgba(21,101,192,0.075)" : "#F3F7FC",
+        transition: "all 0.15s",
+      }}
+    >
+      <span style={{ display: "block" }}>
+        <span
+          style={{
+            display: "block",
+            fontSize: 12,
+            fontWeight: 700,
+            color: checked ? "#1565C0" : "#334155",
+          }}
+        >
+          {title}
+        </span>
+        <span
+          style={{
+            display: "block",
+            marginTop: 3,
+            fontSize: 10,
+            lineHeight: 1.7,
+            color: "#64748B",
+          }}
+        >
+          {description}
+        </span>
+      </span>
+
+      <span
+        style={{
+          position: "relative",
+          width: 36,
+          height: 20,
+          flexShrink: 0,
+          borderRadius: 999,
+          border: checked
+            ? "1px solid rgba(21,101,192,0.4)"
+            : "1px solid rgba(30,58,138,0.16)",
+          background: checked
+            ? "rgba(21,101,192,0.2)"
+            : "rgba(30,58,138,0.054)",
+          transition: "all 0.15s",
+        }}
+      >
+        <span
+          style={{
+            position: "absolute",
+            top: 3,
+            right: checked ? 3 : 18,
+            width: 12,
+            height: 12,
+            borderRadius: "50%",
+            background: checked ? "#1565C0" : "#94A3B8",
+            boxShadow: checked ? "0 0 8px rgba(21,101,192,0.55)" : "none",
+            transition: "all 0.15s",
+          }}
+        />
+      </span>
+    </button>
+  );
+}
 
 /* ───────────────── FIELD ───────────────── */
 
@@ -7282,6 +7380,9 @@ const normalizeService = (
 
   metaDescription:
     item?.metaDescription ?? "",
+
+      index: item?.index ?? true,
+  follow: item?.follow ?? true,
 });
 
 
@@ -7466,6 +7567,8 @@ export default function ServicesPage() {
 
   metaTitle: "",
   metaDescription: "",
+    index: true,
+  follow: true,
 },
   });
 
@@ -7628,6 +7731,9 @@ urgencyContent:
 
         metaDescription:
           service.metaDescription,
+
+        index: service.index,
+        follow: service.follow,
       });
     } else {
       reset({
@@ -7660,6 +7766,8 @@ urgencyContent: {
 
         metaTitle: "",
         metaDescription: "",
+        index: true,
+        follow: true,
       });
     }
 
@@ -7733,6 +7841,9 @@ const normalizedData = {
 
   metaDescription:
     data.metaDescription.trim(),
+
+    index: data.index,
+  follow: data.follow,
 };
 
     try {
@@ -10621,7 +10732,7 @@ const normalizedData = {
                 <div
                   style={{
                     background:
-                      "rgba(15,23,42,0.33)",
+                      "rgba(15,23,42,0.05)",
 
                     border:
                       "1px solid rgba(21,101,192,0.17)",
@@ -10733,6 +10844,23 @@ const normalizedData = {
                       }}
                     />
                   </Field>
+
+<div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+  <SeoToggle
+    checked={watch("index")}
+    onChange={(value) => setValue("index", value, { shouldDirty: true })}
+    title="Index"
+    description="اجازه نمایش صفحه در نتایج جستجو"
+  />
+
+  <SeoToggle
+    checked={watch("follow")}
+    onChange={(value) => setValue("follow", value, { shouldDirty: true })}
+    title="Follow"
+    description="اجازه دنبال کردن لینک‌های صفحه"
+  />
+</div>
+
                 </div>
               </div>
 

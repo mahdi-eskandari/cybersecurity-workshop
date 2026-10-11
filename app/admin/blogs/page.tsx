@@ -707,6 +707,54 @@ type PostFormValues = {
 };
 
 
+function SeoToggle({
+  checked,
+  onChange,
+  title,
+  description,
+}: {
+  checked: boolean;
+  onChange: (value: boolean) => void;
+  title: string;
+  description: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={() => onChange(!checked)}
+      className={`flex w-full items-center justify-between gap-3 rounded-lg border px-3 py-2.5 text-right transition-all ${
+        checked
+          ? "border-[#1565C0]/[0.255] bg-[#1565C0]/[0.075]"
+          : "border-[#1E3A8A]/[0.14] bg-[#F3F7FC]"
+      }`}
+    >
+      <div>
+        <div className={`text-xs font-bold ${checked ? "text-[#1565C0]" : "text-slate-700"}`}>
+          {title}
+        </div>
+        <div className="mt-1 text-[10px] leading-5 text-slate-500">{description}</div>
+      </div>
+
+      <span
+        className={`relative h-5 w-9 shrink-0 rounded-full border transition-all ${
+          checked
+            ? "border-[#1565C0]/[0.4] bg-[#1565C0]/[0.2]"
+            : "border-[#1E3A8A]/[0.16] bg-[#1E3A8A]/[0.054]"
+        }`}
+      >
+        <span
+          className={`absolute top-[3px] h-3 w-3 rounded-full transition-all ${
+            checked
+              ? "right-[3px] bg-[#1565C0] shadow-[0_0_8px_rgba(21,101,192,0.545)]"
+              : "right-[18px] bg-slate-400"
+          }`}
+        />
+      </span>
+    </button>
+  );
+}
+
+
 function CustomSelect({
   value,
   onChange,
@@ -938,6 +986,8 @@ export default function PostsAdminPage() {
   const [metaDesc, setMetaDesc] = useState("");
   const [status, setStatus] = useState<"draft" | "published">("draft");
   const [postType, setPostType] = useState<"normal" | "special">("normal");
+    const [indexFlag, setIndexFlag] = useState(true);
+  const [followFlag, setFollowFlag] = useState(true);
   const [authorId, setAuthorId] = useState<string>("");
   const [createdAt, setCreatedAt] = useState<string>("");
   const [updatedAt, setUpdatedAt] = useState<string>("");
@@ -972,6 +1022,8 @@ export default function PostsAdminPage() {
     metaDescription: string;
     featuredImage: string | null;
     featuredImageAlt: string | null;
+        index: boolean;
+    follow: boolean;
   };
 
   const [view, setView] = useState<"list" | "editor">("list");
@@ -1175,6 +1227,8 @@ const editor = useEditor({
     metaDescription: item?.metaDescription ?? "",
     featuredImage: item?.featuredImage ?? null,
     featuredImageAlt: item?.featuredImageAlt ?? null,
+        index: item?.index ?? true,
+    follow: item?.follow ?? true,
   });
 
   const loadPosts = async () => {
@@ -1254,6 +1308,8 @@ if (!response.ok) {
     setMetaDesc("");
     setStatus("draft");
     setPostType("normal");
+        setIndexFlag(true);
+    setFollowFlag(true);
     setAuthorId("");
     setCreatedAt("");
     setUpdatedAt("");
@@ -1281,6 +1337,8 @@ if (!response.ok) {
     setMetaDesc(post.metaDescription);
     setStatus(post.status);
     setPostType(post.postType);
+        setIndexFlag(post.index);
+    setFollowFlag(post.follow);
     setSelectedCats(post.categoryId ? [post.categoryId] : []);
     setAuthorId(post.authorId);
     setSelectedCats(post.categoryId ? [post.categoryId] : ["forensic-reports"]);
@@ -1314,6 +1372,8 @@ if (!response.ok) {
       readingTime: readMin,
       metaTitle: values?.metaTitle?.trim() || metaTitle.trim(),
       metaDescription: values?.metaDescription?.trim() || metaDesc.trim(),
+            index: indexFlag,
+      follow: followFlag,
       featuredImage: featuredMediaId ? mediaItems.find((item) => item.id === featuredMediaId)?.url ?? null : null,
       featuredImageAlt: featuredAlt.trim() || null,
     };
@@ -1678,6 +1738,18 @@ if (!response.ok) {
               <F label="نامک (URL Slug)" hint="فقط حروف انگلیسی، اعداد و خط تیره"><input {...register("slug", { required: "نامک الزامی است." })} value={slug} maxLength={100} onChange={(e) => { const value = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-"); setSlug(value); setValue("slug", value, { shouldValidate: false }); }} placeholder="post-url-slug" className={`${inputClass} font-mono text-[0.76rem]`} />{errors.slug && <p className="mt-1 text-[0.6rem] font-bold text-red-600">{errors.slug.message}</p>}</F>
               <F label="عنوان سئو (Meta Title)" hint={`${metaTitle.length}/60 — بهتر است زیر 60 کاراکتر باشد`}><input {...register("metaTitle", { required: "عنوان سئو الزامی است." })} value={metaTitle} maxLength={60} onChange={(e) => { setMetaTitle(e.target.value); setValue("metaTitle", e.target.value, { shouldValidate: false }); }} placeholder="عنوان صفحه برای موتورهای جستجو" className={inputClass} /><div className="h-1 w-full overflow-hidden rounded-full bg-[#1E3A8A]/[0.061]"><div className={`h-full transition-all ${metaTitle.length > 55 ? "bg-red-500" : metaTitle.length > 45 ? "bg-amber-400" : "bg-emerald-500"}`} style={{ width: `${Math.min(100, metaTitle.length / 60 * 100)}%` }} /></div>{errors.metaTitle && <p className="mt-1 text-[0.6rem] font-bold text-red-600">{errors.metaTitle.message}</p>}</F>
               <F label="توضیحات متا (Meta Description)" hint={`${metaDesc.length}/160 — حدود 120 تا 160 کاراکتر مناسب است`}><textarea {...register("metaDescription", { required: "توضیحات متا الزامی است." })} value={metaDesc} maxLength={160} onChange={(e) => { setMetaDesc(e.target.value); setValue("metaDescription", e.target.value, { shouldValidate: false }); }} placeholder="توضیح کوتاه و جذاب برای نتایج جستجو..." rows={4} className={`${inputClass} resize-none leading-6`} />{errors.metaDescription && <p className="mt-1 text-[0.6rem] font-bold text-red-600">{errors.metaDescription.message}</p>}<div className="h-1 w-full overflow-hidden rounded-full bg-[#1E3A8A]/[0.061]"><div className={`h-full transition-all ${metaDesc.length > 150 ? "bg-red-500" : metaDesc.length > 110 ? "bg-emerald-500" : "bg-amber-400"}`} style={{ width: `${Math.min(100, metaDesc.length / 160 * 100)}%` }} /></div></F>
+                            <SeoToggle
+                checked={indexFlag}
+                onChange={setIndexFlag}
+                title="Index"
+                description="اجازه نمایش صفحه در نتایج جستجو"
+              />
+              <SeoToggle
+                checked={followFlag}
+                onChange={setFollowFlag}
+                title="Follow"
+                description="اجازه دنبال کردن لینک‌های صفحه"
+              />
             </div>
           </SideCard>
 

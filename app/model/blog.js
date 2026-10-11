@@ -83,6 +83,22 @@ const PostSchema = new Schema(
       required: true,
       trim: true,
     },
+
+    h1Title: {
+  type: String,
+  default: "",
+  trim: true,
+},
+
+index: {
+  type: Boolean,
+  default: true,
+},
+
+follow: {
+  type: Boolean,
+  default: true,
+},
   },
   { timestamps: true }
 );

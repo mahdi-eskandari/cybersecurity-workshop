@@ -2,12 +2,29 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Media from "../../model/media";
 import sharp from "sharp";
+import { isAdmin } from "@/lib/adminAuth";
+import Post from "../../model/blog";
 
 export async function GET() {
   try {
     await connectDB();
 
-    const media = await Media.find({})
+    let filter: Record<string, unknown> = {};
+
+    if (!(await isAdmin())) {
+      // غیرادمین: فقط تصاویر شاخص مطالب منتشرشده
+      const used = (
+        (await Post.find({ status: "published" }).distinct("featuredImage")) as (string | null)[]
+      ).filter((v): v is string => Boolean(v));
+
+      const ids = used
+        .map((v) => v.replace("/api/media/", ""))
+        .filter((v) => /^[a-f\d]{24}$/i.test(v));
+
+      filter = { $or: [{ _id: { $in: ids } }, { url: { $in: used } }] };
+    }
+
+    const media = await Media.find(filter)
       .sort({ createdAt: -1 })
       .lean();
 
@@ -118,8 +135,7 @@ export async function POST(request: Request) {
     if (error?.name === "ValidationError") {
       return NextResponse.json(
         {
-          message: "اطلاعات فایل معتبر نیست",
-          errors: error.errors,
+          message: "اطلاعات فایل معتبر نیست"
         },
         { status: 400 }
       );

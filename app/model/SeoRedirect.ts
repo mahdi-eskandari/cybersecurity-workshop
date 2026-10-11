@@ -12,13 +12,14 @@ const SeoRedirectSchema = new Schema(
 
     toPath: {
       type: String,
-      required: true,
+      required: false,
+      default: "",
       trim: true,
     },
 
     statusCode: {
       type: Number,
-      enum: [301, 302],
+      enum: [301, 302, 307, 308, 410],
       default: 301,
     },
   },

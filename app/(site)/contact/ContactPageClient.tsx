@@ -421,7 +421,21 @@ const isDark = darkMode;
       : "0 0 18px rgba(30,58,138,0.10)",
   }}
 >
-  {h1Title}
+  {(() => {
+    const highlight = "پاراهور";
+    const title = h1Title || "";
+    const i = title.indexOf(highlight);
+    if (i === -1) return title;
+    return (
+      <>
+        {title.slice(0, i)}
+        <span style={{ color: darkMode ? "#00E5FF" : "#1565C0" }}>
+          {highlight}
+        </span>
+        {title.slice(i + highlight.length)}
+      </>
+    );
+  })()}
 </h1>
           <p className={`mx-auto max-w-[560px] text-[clamp(0.9rem,1.8vw,1.05rem)] leading-[1.9] ${isDark ? "text-[#64748B]" : "text-[#475569]"}`}>برای گزارش بحران سایبری، ارسال سریع مستندات یا مکاتبات رسمی و حقوقی، از طریق مسیرهای زیر با ما در تماس باشید.</p>
           <div className={`mt-8 flex items-center justify-center gap-5 ${isDark ? "text-[#8292a859]" : "text-[#64748B]"}`}>

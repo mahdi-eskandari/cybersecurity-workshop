@@ -498,7 +498,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
             
             />
           </div>
-        <h1
+<h1
   className="glow-text font-black leading-tight mb-6"
   style={{
     fontSize: "clamp(2rem, 5vw, 3.5rem)",
@@ -510,7 +510,22 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
       : "0 0 18px rgba(30,58,138,0.10)",
   }}
 >
-  {h1Title}
+  {(() => {
+    const highlight = "دنیای دیجیتال";
+    const title = h1Title || "";
+    const i = title.indexOf(highlight);
+    if (i === -1) return title;
+    return (
+      <>
+        {title.slice(0, i).trimEnd()}
+        <br />
+        <span style={{ color: darkMode ? "#00E5FF" : "#1565C0" }}>
+          {highlight}
+        </span>
+        {title.slice(i + highlight.length)}
+      </>
+    );
+  })()}
 </h1>
 
           <p

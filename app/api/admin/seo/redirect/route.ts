@@ -310,6 +310,10 @@ function withLeadingSlash(value: string): string {
   return `/${clean}`;
 }
 
+function getStatusCode(value: unknown): 301 | 302 | 307 | 308 {
+  return value === 302 || value === 307 || value === 308 ? value : 301;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const rawPath =
@@ -328,8 +332,11 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const requestedPath =
-      cleanPath(rawPath);
+    let requestedPath = cleanPath(rawPath);
+
+    try {
+      requestedPath = decodeURIComponent(requestedPath);
+    } catch {}
 
     await connectDB();
 
@@ -401,6 +408,12 @@ export async function GET(request: NextRequest) {
         .lean()
         .exec();
 
+            const manualExact = await SeoRedirect.exists({
+      fromPath: {
+        $in: [requestedPath, withLeadingSlash(requestedPath)],
+      },
+    });
+
     for (const page of dynamicPages) {
       const pageSlug =
         cleanPath(
@@ -412,6 +425,7 @@ export async function GET(request: NextRequest) {
       }
 
       if (
+        !manualExact &&
         requestedPath.startsWith(
           `${pageSlug}/`
         )
@@ -452,6 +466,15 @@ export async function GET(request: NextRequest) {
         .exec();
 
     if (exactRedirect) {
+
+      if (exactRedirect.statusCode === 410) {
+        return NextResponse.json({
+          success: true,
+          redirect: { toPath: "", statusCode: 410 },
+          page: null,
+        });
+      }
+
       const targetPath =
         withLeadingSlash(
           String(
@@ -475,10 +498,7 @@ export async function GET(request: NextRequest) {
         success: true,
         redirect: {
           toPath: targetPath,
-          statusCode:
-            exactRedirect.statusCode === 302
-              ? 302
-              : 301,
+          statusCode: getStatusCode(exactRedirect.statusCode),
         },
         page: null,
       });
@@ -503,6 +523,7 @@ export async function GET(request: NextRequest) {
         .exec();
 
     for (const item of redirects) {
+            if (item.statusCode === 410) continue;
       const fromPath =
         cleanPath(
           String(
@@ -552,10 +573,7 @@ export async function GET(request: NextRequest) {
               withLeadingSlash(
                 targetPath
               ),
-            statusCode:
-              item.statusCode === 302
-                ? 302
-                : 301,
+            statusCode: getStatusCode(item.statusCode),
           },
           page: null,
         });

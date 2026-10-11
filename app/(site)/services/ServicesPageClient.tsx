@@ -435,7 +435,21 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
       : "0 0 18px rgba(30,58,138,0.10)",
   }}
 >
-  {seo.h1Title}
+    {(() => {
+    const highlight = "تخصصی پاراهور";
+    const title = seo.h1Title || "";
+    const i = title.indexOf(highlight);
+    if (i === -1) return title;
+    return (
+      <>
+        {title.slice(0, i)}
+        <span style={{ color: darkMode ? "#00E5FF" : "#1565C0" }}>
+          {highlight}
+        </span>
+        {title.slice(i + highlight.length)}
+      </>
+    );
+  })()}
 </h1>
 
           <p
@@ -455,7 +469,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
           <div
             style={{
-              height: 2,
+              height: 1,
               width: 80,
               background: darkMode
                 ? "linear-gradient(90deg,transparent,rgba(0,229,255,0.45),transparent)"

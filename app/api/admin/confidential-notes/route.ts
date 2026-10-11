@@ -24,11 +24,20 @@ async function getAdmin() {
   if (!decoded.userId || !Types.ObjectId.isValid(decoded.userId)) return null;
 
   const user = await User.findById(decoded.userId).select("_id username name role").lean();
-  if (!user || user.role !== "admin") return null;
 
+  if (user) {
+    if (user.role !== "admin") return null;
+    return {
+      id: user._id.toString(),
+      username: user.username || user.name || decoded.username || "ادمین",
+    };
+  }
+
+  // کاربر تو این کالکشن پیدا نشد؛ به نقش داخل توکن امضاشده اعتماد می‌کنیم
+  if (decoded.role !== "admin") return null;
   return {
-    id: user._id.toString(),
-    username: user.username || user.name || decoded.username || "ادمین",
+    id: decoded.userId,
+    username: decoded.username || "ادمین",
   };
 }
 
@@ -51,7 +60,6 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ notes }, { status: 200 });
   } catch (error) {
-    console.error("GET confidential notes error:", error);
     return NextResponse.json({ error: "Failed to load confidential notes" }, { status: 500 });
   }
 }
@@ -87,7 +95,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ note }, { status: 201 });
   } catch (error) {
-    console.error("POST confidential note error:", error);
     return NextResponse.json({ error: "Failed to create confidential note" }, { status: 500 });
   }
 }
@@ -126,7 +133,6 @@ export async function PATCH(request: Request) {
 
     return NextResponse.json({ note }, { status: 200 });
   } catch (error) {
-    console.error("PATCH confidential note error:", error);
     return NextResponse.json({ error: "Failed to update confidential note" }, { status: 500 });
   }
 }

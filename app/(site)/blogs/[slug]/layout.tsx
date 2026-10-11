@@ -13,6 +13,8 @@ type BlogPost = {
   featuredImage?: string | null;
   featuredImageAlt?: string | null;
   status?: "draft" | "published";
+  index?: boolean;   // اضافه شد
+  follow?: boolean;  // اضافه شد
 };
 
 export async function generateMetadata({
@@ -89,10 +91,10 @@ const title = rawTitle.endsWith("| پاراهور")
         canonical: canonicalUrl,
       },
 
-      robots: {
-        index: true,
-        follow: true,
-      },
+robots: {
+  index: post.index ?? true,
+  follow: post.follow ?? true,
+},
 
       openGraph: {
         type: "article",

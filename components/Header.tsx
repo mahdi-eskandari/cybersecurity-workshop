@@ -658,7 +658,7 @@ const navItems = NAV_ITEMS.map((item) => ({
   <Link
   href="/contact"
     // onClick={() => setCrisisOpen(true)}
-    className="hidden md:flex items-center gap-2 px-4 py-2 bg-[#C62828] text-white text-sm font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors cursor-pointer"
+    className="hidden md:flex items-center gap-2 px-4 py-2 bg-[#9f1414] text-white text-sm font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors cursor-pointer"
   >
 
     تماس اورژانسی

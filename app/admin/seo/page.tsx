@@ -1177,6 +1177,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import RedirectsSection from "./RedirectsSection";
 
 type SeoPage = {
   _id?: string;
@@ -2335,9 +2336,11 @@ return (
             {saving
               ? "در حال ذخیره..."
               : "ذخیره تنظیمات"}
-          </button>
+                    </button>
 
         </div>
+
+        <RedirectsSection />
 
       </div>
     </div>

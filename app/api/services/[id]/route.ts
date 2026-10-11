@@ -3,6 +3,10 @@ import mongoose from "mongoose";
 
 import connectDB from "@/lib/mongodb";
 import Service from "../../../model/Service";
+import { isAdmin } from "@/lib/adminAuth";
+
+import SeoRedirect from "../../../model/SeoRedirect";
+import PageSeo from "../../../model/PageSeo";
 
 type RouteContext = {
   params: Promise<{
@@ -47,7 +51,7 @@ export async function GET(
       }).lean();
     }
 
-    if (!service) {
+    if (!service || (service.status !== "active" && !(await isAdmin()))) {
       return NextResponse.json(
         {
           success: false,
@@ -119,6 +123,8 @@ export async function PATCH(
       urgencyDesc,
       metaTitle,
       metaDescription,
+      follow,
+      index,
     } = body;
 
     /* ───────── Validation ───────── */
@@ -234,6 +240,8 @@ export async function PATCH(
 
     /* ───────── Update ───────── */
 
+const oldService = await Service.findById(id).select("slug").lean();
+
     const updatedService =
       await Service.findByIdAndUpdate(
         id,
@@ -283,6 +291,9 @@ export async function PATCH(
 
           metaDescription:
             metaDescription || "",
+
+          index: typeof index === "boolean" ? index : true,
+follow: typeof follow === "boolean" ? follow : true,
         },
         {
           new: true,
@@ -299,6 +310,25 @@ export async function PATCH(
         { status: 404 }
       );
     }
+
+
+    if (oldService && oldService.slug !== normalizedSlug) {
+  const base = await PageSeo.findOne({ pageKey: "services" })
+    .select("slug")
+    .lean();
+  const baseSlug = (base as any)?.slug || "services";
+
+  const oldPath = `/${baseSlug}/${oldService.slug}`;
+  const newPath = `/${baseSlug}/${normalizedSlug}`;
+
+  await SeoRedirect.updateMany({ toPath: oldPath }, { $set: { toPath: newPath } });
+  await SeoRedirect.deleteMany({ fromPath: newPath });
+  await SeoRedirect.findOneAndUpdate(
+    { fromPath: oldPath },
+    { $set: { toPath: newPath, statusCode: 301 } },
+    { upsert: true }
+  );
+}
 
     return NextResponse.json(
       {

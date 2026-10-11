@@ -1211,7 +1211,7 @@ useEffect(() => {
                     className={`group flex flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
             darkMode
               ? "bg-[rgba(255,255,255,0.028)] border border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
-              : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"
+               : "bg-white border border-[#0B1C3E]/10 shadow-sm hover:shadow-md hover:border-[#1565C0]/20"
           }`}
           style={{
             backdropFilter: "blur(10px)",
@@ -1742,16 +1742,16 @@ function ArticleCard({
   i: number;       
 }) {
   return (
-    <article
-     className={`group flex flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
-            darkMode
-              ? "bg-[rgba(255,255,255,0.028)] border border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
-              : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"
-          }`}
-          style={{
-            backdropFilter: "blur(10px)",
-          }}
-    >
+<article
+  className={`group flex flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
+    darkMode
+      ? "bg-[rgba(255,255,255,0.028)] border border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
+      : "bg-white border border-[#0B1C3E]/10 shadow-sm hover:shadow-md hover:border-[#1565C0]/20"
+  }`}
+  style={{
+    backdropFilter: "blur(10px)",
+  }}
+>
       {/* Thumbnail */}
 
       <div

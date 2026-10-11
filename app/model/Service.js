@@ -119,6 +119,8 @@ const ServiceSchema = new Schema(
             default: "",
             trim: true,
           },
+
+
         },
       ],
 
@@ -132,6 +134,22 @@ const ServiceSchema = new Schema(
         message: "دقیقاً ۳ مرحله شناسایی باید وارد شود.",
       },
     },
+
+    h1Title: {
+  type: String,
+  default: "",
+  trim: true,
+},
+
+index: {
+  type: Boolean,
+  default: true,
+},
+
+follow: {
+  type: Boolean,
+  default: true,
+},
 
     // برای داده‌های قدیمی
     urgencyTitle: {

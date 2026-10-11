@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Post from "../../model/blog";
+import { isAdmin } from "@/lib/adminAuth";
 
 export async function GET() {
   try {
     await connectDB();
 
-    const posts = await Post.find({})
+    const filter = (await isAdmin()) ? {} : { status: "published" };
+
+    const posts = await Post.find(filter)
       .sort({ updatedAt: -1 })
       .lean();
 
@@ -43,6 +46,8 @@ export async function POST(request: Request) {
       readingTime = 0,
       metaTitle,
       metaDescription,
+            index = true,
+      follow = true,
     } = body;
 
     const finalAuthor = author ?? authorId;
@@ -131,6 +136,8 @@ export async function POST(request: Request) {
       readingTime,
       metaTitle: metaTitle.trim(),
       metaDescription: metaDescription.trim(),
+            index: typeof index === "boolean" ? index : true,
+      follow: typeof follow === "boolean" ? follow : true,
     });
 
     return NextResponse.json(post, { status: 201 });

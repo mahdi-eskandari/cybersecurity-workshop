@@ -13,6 +13,8 @@ type Service = {
   metaDescription?: string;
   featuredImage?: string | null;
   featuredImageAlt?: string | null;
+    index?: boolean;   // اضافه شد
+  follow?: boolean;  // اضافه شد
 };
 
 export async function generateMetadata({
@@ -94,10 +96,10 @@ const rawTitle =
         canonical: canonicalUrl,
       },
 
-      robots: {
-        index: true,
-        follow: true,
-      },
+robots: {
+  index: service.index ?? true,
+  follow: service.follow ?? true,
+},
 
       openGraph: {
         type: "website",

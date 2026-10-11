@@ -1210,6 +1210,228 @@ const HiddenIdentityHeroArt = ({
     </svg>
   );
 };
+
+
+const ThreatIntelHeroArt = ({
+  darkMode = true,
+}: {
+  darkMode?: boolean;
+}) => {
+  const c = (dark: string, light: string) => (darkMode ? dark : light);
+  const strong = c("rgba(0,229,255,0.85)", "rgba(37,99,235,0.7)");
+  const mid = c("rgba(0,229,255,0.55)", "rgba(37,99,235,0.5)");
+  const soft = c("rgba(0,229,255,0.3)", "rgba(37,99,235,0.28)");
+  const fillMid = c("rgba(0,229,255,0.28)", "rgba(37,99,235,0.24)");
+  const fillSoft = c("rgba(0,229,255,0.12)", "rgba(37,99,235,0.1)");
+  const solid = c("#00E5FF", "#2563EB");
+
+  // شبکه دارک‌وب (چپ)
+  const nodes = [
+    { x: 60, y: 55 },
+    { x: 130, y: 105 },
+    { x: 75, y: 160 },
+    { x: 200, y: 60 },
+    { x: 230, y: 150 },
+    { x: 300, y: 105 },
+  ];
+  const edges = [
+    [0, 1],
+    [1, 2],
+    [1, 3],
+    [1, 4],
+    [3, 5],
+    [4, 5],
+    [0, 3],
+  ];
+  const flagged = 3;
+  const squareNodes = [2, 4];
+
+  const eyePath = "M385 105 Q450 62 515 105 Q450 148 385 105 Z";
+  const shieldPath =
+    "M700 62 L734 75 V108 C734 132 718 148 700 156 C682 148 666 132 666 108 V75 Z";
+
+  return (
+    <svg
+      width="100%"
+      height="220"
+      viewBox="0 0 900 220"
+      preserveAspectRatio="xMidYMid meet"
+      className="w-full"
+      style={{ opacity: darkMode ? 0.4 : 0.7 }}
+    >
+      <defs>
+        <filter id="threatGlow">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      {/* Dark web network (left) */}
+      {edges.map(([a, b], i) => (
+        <line
+          key={i}
+          x1={nodes[a].x}
+          y1={nodes[a].y}
+          x2={nodes[b].x}
+          y2={nodes[b].y}
+          stroke={soft}
+          strokeWidth="1.5"
+          strokeDasharray={a === flagged || b === flagged ? "3 4" : undefined}
+        />
+      ))}
+      {nodes.map((n, i) =>
+        i === flagged ? (
+          <g key={i}>
+            <circle
+              cx={n.x}
+              cy={n.y}
+              r={13}
+              fill="none"
+              stroke={strong}
+              strokeWidth="1.5"
+              strokeDasharray="3 3"
+            >
+              <animateTransform
+                attributeName="transform"
+                type="rotate"
+                from={`0 ${n.x} ${n.y}`}
+                to={`360 ${n.x} ${n.y}`}
+                dur="8s"
+                repeatCount="indefinite"
+              />
+            </circle>
+            <circle cx={n.x} cy={n.y} r={13} fill="none" stroke={solid} strokeWidth="1.5">
+              <animate attributeName="r" values="13;26" dur="2.4s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.9;0" dur="2.4s" repeatCount="indefinite" />
+            </circle>
+            <circle cx={n.x} cy={n.y} r={6} fill={fillMid} stroke={strong} strokeWidth="1.5" filter="url(#threatGlow)" />
+            <circle cx={n.x} cy={n.y} r={2.2} fill={solid} />
+          </g>
+        ) : squareNodes.includes(i) ? (
+          <rect
+            key={i}
+            x={n.x - 7}
+            y={n.y - 7}
+            width={14}
+            height={14}
+            rx={2}
+            fill={fillSoft}
+            stroke={mid}
+            strokeWidth="1.5"
+          />
+        ) : (
+          <circle
+            key={i}
+            cx={n.x}
+            cy={n.y}
+            r={5.5}
+            fill={fillMid}
+            stroke={mid}
+            strokeWidth="1.5"
+          />
+        )
+      )}
+
+      {/* Link: network → eye */}
+      <path
+        d="M300 105 L362 105"
+        fill="none"
+        stroke={strong}
+        strokeWidth="1.8"
+        strokeDasharray="6 6"
+        filter="url(#threatGlow)"
+      >
+        <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="2s" repeatCount="indefinite" />
+      </path>
+
+      {/* Onion rings around the eye */}
+      <circle cx={450} cy={105} r={88} fill={fillSoft} stroke={mid} strokeWidth="1.5" strokeDasharray="4 5">
+        <animateTransform attributeName="transform" type="rotate" from="0 450 105" to="360 450 105" dur="24s" repeatCount="indefinite" />
+      </circle>
+      <circle cx={450} cy={105} r={66} fill="none" stroke={soft} strokeWidth="1.5" strokeDasharray="12 6 3 6">
+        <animateTransform attributeName="transform" type="rotate" from="360 450 105" to="0 450 105" dur="18s" repeatCount="indefinite" />
+      </circle>
+      <circle cx={450} cy={105} r={46} fill="none" stroke={soft} strokeWidth="1" />
+
+      {/* Radar sweep */}
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="0 450 105" to="360 450 105" dur="6s" repeatCount="indefinite" />
+        <path d="M450 105 L450 17 A88 88 0 0 1 512 43 Z" fill={fillMid} />
+        <line x1={450} y1={105} x2={450} y2={17} stroke={strong} strokeWidth="1.8" filter="url(#threatGlow)" />
+      </g>
+
+      {/* Eye */}
+      <path d={eyePath} fill={c("rgba(10,17,40,0.85)", "rgba(255,255,255,0.9)")} stroke={strong} strokeWidth="2" filter="url(#threatGlow)" />
+      <circle cx={450} cy={105} r={19} fill={fillMid} stroke={strong} strokeWidth="1.5" />
+      <circle cx={450} cy={105} r={9} fill={solid} filter="url(#threatGlow)">
+        <animate attributeName="r" values="8;11;8" dur="2.4s" repeatCount="indefinite" />
+      </circle>
+      <circle cx={455} cy={100} r={2.5} fill={c("#0A1128", "#FFFFFF")} opacity="0.85" />
+
+
+      {/* Link: eye → shield */}
+      <path
+        d="M538 105 L666 105"
+        fill="none"
+        stroke={strong}
+        strokeWidth="1.8"
+        strokeDasharray="6 6"
+        filter="url(#threatGlow)"
+      >
+        <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="2s" repeatCount="indefinite" />
+      </path>
+
+      {/* Alert shield (right) */}
+      <circle cx={700} cy={108} r={34} fill="none" stroke={solid} strokeWidth="1.5">
+        <animate attributeName="r" values="34;56" dur="2.8s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.7;0" dur="2.8s" repeatCount="indefinite" />
+      </circle>
+      <path d={shieldPath} fill={fillMid} stroke={strong} strokeWidth="2" filter="url(#threatGlow)" />
+      <line x1={700} y1={86} x2={700} y2={114} stroke={solid} strokeWidth="3" strokeLinecap="round" />
+      <circle cx={700} cy={127} r={2.8} fill={solid}>
+        <animate attributeName="opacity" values="1;0.3;1" dur="1.2s" repeatCount="indefinite" />
+      </circle>
+
+      {/* Threat level bars */}
+      {[0, 1, 2, 3, 4].map((i) => (
+        <rect
+          key={i}
+          x={770 + i * 17}
+          y={150 - (14 + i * 11)}
+          width={10}
+          height={14 + i * 11}
+          rx={2}
+          fill={i > 2 ? fillMid : fillSoft}
+          stroke={i > 2 ? strong : mid}
+          strokeWidth="1.5"
+        >
+          <animate attributeName="opacity" values="0.35;1;0.35" dur="2.5s" begin={`${i * 0.3}s`} repeatCount="indefinite" />
+        </rect>
+      ))}
+
+      {/* Timeline */}
+      <line x1={60} y1={205} x2={840} y2={205} stroke={c("rgba(0,229,255,0.35)", "rgba(37,99,235,0.32)")} strokeWidth="1.5" />
+      {Array.from({ length: 20 }).map((_, i) => (
+        <line
+          key={i}
+          x1={60 + i * 40}
+          y1={200}
+          x2={60 + i * 40}
+          y2={210}
+          stroke={mid}
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+      ))}
+      <circle cx={60} cy={205} r={3.5} fill={solid} filter="url(#threatGlow)">
+        <animate attributeName="cx" values="60;840;840" keyTimes="0;0.9;1" dur="6s" repeatCount="indefinite" />
+      </circle>
+    </svg>
+  );
+};
  
 /* ─── RICH TEXT DISPLAY ─── */
 const EMPTY_TIPTAP_CONTENT = { type: "doc", content: [] };
@@ -1486,6 +1708,7 @@ const HERO_ARTS: Record<string, React.ComponentType<{ darkMode?: boolean }>> = {
   "فارنزیک و کالبدشکافی دیجیتال": DigitalForensicsHeroArt,
   "ردیابی رمزارز و تحلیل بلاک‌چین": CryptoTracingHeroArt,
   "هویت‌سنجی پنهان": HiddenIdentityHeroArt,
+    "هوش تهدیدات": ThreatIntelHeroArt,
 };
 
 
@@ -1495,6 +1718,7 @@ const DEPARTMENTS: Record<string, string> = {
   "فارنزیک و کالبدشکافی دیجیتال": "دپارتمان پزشکی قانونی دیجیتال",
   "هویت‌سنجی پنهان": "دپارتمان کشف هویت",
   "ردیابی رمزارز و تحلیل بلاک‌چین": "دپارتمان ردیابی مالی",
+    "هوش تهدیدات": "دپارتمان هوش تهدیدات",
 };
 
 const department =
@@ -1699,7 +1923,7 @@ const department =
 
             <div 
               className="mt-4 mx-auto" 
-              style={{ height: 1, width: 80, background: darkMode ? "linear-gradient(90deg,transparent,rgba(0,229,255,0.5),transparent)" : "linear-gradient(90deg,transparent,rgba(29,78,216,0.35),transparent)" }} 
+              style={{ height: 2, width: 80, background: darkMode ? "linear-gradient(90deg,transparent,rgba(0,229,255,0.5),transparent)" : "linear-gradient(90deg,transparent,rgba(30, 77, 205, 0.87),transparent)" }} 
             /> 
           </div> 
  

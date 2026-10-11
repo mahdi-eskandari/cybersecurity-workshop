@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Post from "../../../model/blog";
+import SeoRedirect from "../../../model/SeoRedirect";
+import PageSeo from "../../../model/PageSeo";
 
 export async function PATCH(
   request: Request,
@@ -23,6 +25,8 @@ export async function PATCH(
       );
     }
 
+const oldPost = await Post.findById(id).select("slug").lean();
+
     const post = await Post.findByIdAndUpdate(
       id,
       body,
@@ -38,6 +42,24 @@ export async function PATCH(
         { status: 404 }
       );
     }
+
+    const newSlug = String(body.slug || "").trim().toLowerCase();
+
+if (oldPost && newSlug && oldPost.slug !== newSlug) {
+  const base = await PageSeo.findOne({ pageKey: "blogs" }).select("slug").lean();
+  const baseSlug = (base as any)?.slug || "blogs";
+
+  const oldPath = `/${baseSlug}/${oldPost.slug}`;
+  const newPath = `/${baseSlug}/${newSlug}`;
+
+  await SeoRedirect.updateMany({ toPath: oldPath }, { $set: { toPath: newPath } });
+  await SeoRedirect.deleteMany({ fromPath: newPath });
+  await SeoRedirect.findOneAndUpdate(
+    { fromPath: oldPath },
+    { $set: { toPath: newPath, statusCode: 301 } },
+    { upsert: true }
+  );
+}
 
     return NextResponse.json(post);
   } catch (error: any) {

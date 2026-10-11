@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Service from '../../model/Service';
+import { isAdmin } from "@/lib/adminAuth";
 
 export async function GET() {
   try {
     await connectDB();
 
-    const services = await Service.find({})
+    const filter = (await isAdmin()) ? {} : { status: "active" };
+
+    const services = await Service.find(filter)
       .sort({ createdAt: -1 })
       .lean();
 
@@ -50,6 +53,8 @@ export async function POST(request: NextRequest) {
       trackingTitle,
       metaTitle,
       metaDescription,
+            index,
+      follow,
     } = body;
 
     if (!slug?.trim()) {
@@ -220,6 +225,9 @@ export async function POST(request: NextRequest) {
         typeof metaDescription === "string"
           ? metaDescription.trim()
           : "",
+
+            index: typeof index === "boolean" ? index : true,
+      follow: typeof follow === "boolean" ? follow : true,
     });
 
     return NextResponse.json(

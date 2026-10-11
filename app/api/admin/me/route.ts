@@ -29,6 +29,7 @@ export async function GET() {
     const decoded = jwt.verify(token, process.env.JWT_SECRET) as {
       userId: string;
       username?: string;
+      email?: string;
       role?: string;
     };
 
@@ -37,9 +38,25 @@ export async function GET() {
     );
 
     if (!user) {
+      // کاربر تو این کالکشن پیدا نشد؛ از اطلاعات توکن امضاشده استفاده می‌کنیم
+      if (decoded.role !== "admin") {
+        return NextResponse.json(
+          { error: "User not found" },
+          { status: 404 }
+        );
+      }
+
       return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
+        {
+          user: {
+            id: decoded.userId,
+            username: decoded.username || "ادمین",
+            email: decoded.email || "",
+            role: decoded.role,
+            isVerified: true,
+          },
+        },
+        { status: 200 }
       );
     }
 

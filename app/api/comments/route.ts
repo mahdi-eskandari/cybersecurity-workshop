@@ -1,36 +1,51 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb"; // مسیر اتصال به دیتابیس شما
 import Comment from "../../model/comment"; // مسیر مدل نظرات شما
+import mongoose from "mongoose";
+import { isAdmin } from "@/lib/adminAuth";
+import { getIp, record, retryAfter, MIN } from "@/lib/rateLimit";
 
 // GET: دریافت لیست نظرات با قابلیت صفحه‌بندی و فیلتر وضعیت
 export async function GET(request: Request) {
   try {
     await dbConnect();
     const { searchParams } = new URL(request.url);
+    const admin = await isAdmin();
 
-    const page = parseInt(searchParams.get("page") || "1", 10);
-    const limit = parseInt(searchParams.get("limit") || "12", 10);
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10) || 1);
+    const limit = Math.min(
+      50,
+      Math.max(1, parseInt(searchParams.get("limit") || "12", 10) || 12)
+    );
     const status = searchParams.get("status");
     const postId = searchParams.get("postId");
 
     const query: Record<string, any> = {};
-    if (status && status !== "all") {
-      query.approvalStatus = status;
-    }
 
-   if (postId) {
-     query.postId = postId;
-   }
+    if (admin) {
+      if (status && status !== "all") query.approvalStatus = status;
+      if (postId) query.postId = postId;
+    } else {
+      // عمومی: فقط نظرات تاییدشده‌ی یک مطلب مشخص
+      if (!postId || !mongoose.Types.ObjectId.isValid(postId)) {
+        return NextResponse.json({ comments: [], total: 0, page: 1, totalPages: 0 });
+      }
+      query.postId = postId;
+      query.approvalStatus = "approved";
+    }
 
     const skip = (page - 1) * limit;
 
+    const finder = Comment.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    if (admin) finder.populate("postId", "title");
+    else finder.select("name comment createdAt");
+
     const [comments, total] = await Promise.all([
-      Comment.find(query)
-        .populate("postId", "title") // در صورت داشتن رفرنس به پست
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limit)
-        .lean(),
+      finder.lean(),
       Comment.countDocuments(query),
     ]);
 
@@ -49,34 +64,66 @@ export async function GET(request: Request) {
   }
 }
 
-// POST: ثبت نظر جدید (توسط کاربران در سایت)
+
 export async function POST(request: Request) {
   try {
+
+    const ip = getIp(request);
+    const wait = retryAfter(`comment:${ip}`, 5, 10 * MIN);
+    if (wait > 0) {
+      return NextResponse.json(
+        { message: `تعداد ارسال زیاد است. ${Math.ceil(wait / 60)} دقیقه دیگر تلاش کنید.` },
+        { status: 429 }
+      );
+    }
+
     await dbConnect();
     const body = await request.json();
-    // فرم سمت کاربر (CommentSection) فیلد را با اسم "comment" می‌فرسته
-    // و خودِ اسکیمای Comment هم فیلدش دقیقاً همین "comment"ه —
-    // قبلاً اینجا به‌اشتباه دنبال "message" می‌گشت که هیچ‌وقت
-    // فرستاده نمی‌شد، برای همین همیشه 400 می‌گرفتی.
-    const { postId, name, contact, comment } = body;
 
-    if (!comment || !name) {
+    const { postId, name, contact, comment } = body ?? {};
+
+    if (
+      typeof name !== "string" ||
+      typeof comment !== "string" ||
+      !name.trim() ||
+      !comment.trim()
+    ) {
       return NextResponse.json(
         { message: "نام و متن نظر الزامی است." },
         { status: 400 }
       );
     }
 
-    const newComment = await Comment.create({
+    if (
+      name.length > 100 ||
+      comment.length > 2000 ||
+      (typeof contact === "string" && contact.length > 100)
+    ) {
+      return NextResponse.json(
+        { message: "طول ورودی بیش از حد مجاز است." },
+        { status: 400 }
+      );
+    }
+
+    if (postId && !mongoose.Types.ObjectId.isValid(String(postId))) {
+      return NextResponse.json(
+        { message: "شناسه مطلب نامعتبر است." },
+        { status: 400 }
+      );
+    }
+
+
+        record(`comment:${ip}`, 10 * MIN);
+    await Comment.create({
       postId: postId || null,
-      name,
-      contact: contact || "",
-      comment,
-      approvalStatus: "pending", // پیش‌فرض در انتظار تایید
+      name: name.trim(),
+      contact: typeof contact === "string" ? contact.trim() : "",
+      comment: comment.trim(),
+      approvalStatus: "pending", // همیشه سمت سرور
     });
 
     return NextResponse.json(
-      { message: "نظر شما با موفقیت ثبت شد و پس از تایید نمایش داده خواهد شد.", comment: newComment },
+      { message: "نظر شما با موفقیت ثبت شد و پس از تایید نمایش داده خواهد شد." },
       { status: 201 }
     );
   } catch (error) {
