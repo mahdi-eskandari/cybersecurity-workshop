@@ -174,6 +174,20 @@ follow: {
       default: "",
       maxlength: 160,
     },
+
+        faqs: {
+      type: [
+        new Schema(
+          {
+            question: { type: String, required: true, trim: true, maxlength: 300 },
+            answer: { type: String, required: true, trim: true, maxlength: 2000 },
+          },
+          { _id: false }
+        ),
+      ],
+      default: [],
+    },
+
   },
   {
     timestamps: true,

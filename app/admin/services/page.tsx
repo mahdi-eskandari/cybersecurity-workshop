@@ -6023,6 +6023,7 @@ interface Service {
   metaDescription: string;
     index: boolean;
   follow: boolean;
+    faqs: { question: string; answer: string }[];
 }
 
 type ServiceForm = {
@@ -6046,6 +6047,7 @@ type ServiceForm = {
   metaDescription: string;
     index: boolean;
   follow: boolean;
+    faqs: { question: string; answer: string }[];
 };
 
 /* ───────────────── DATA ───────────────── */
@@ -6155,6 +6157,118 @@ const errorStyle: CSSProperties = {
   marginTop: 1,
 };
 
+
+
+
+/* ───────────────── FAQ EDITOR ───────────────── */
+
+function FaqEditor({
+  value,
+  onChange,
+}: {
+  value?: { question: string; answer: string }[];
+  onChange: (value: { question: string; answer: string }[]) => void;
+}) {
+  const items = Array.isArray(value) ? value : [];
+
+  const update = (
+    index: number,
+    patch: Partial<{ question: string; answer: string }>
+  ) =>
+    onChange(
+      items.map((item, i) => (i === index ? { ...item, ...patch } : item))
+    );
+
+  const remove = (index: number) =>
+    onChange(items.filter((_, i) => i !== index));
+
+  const add = () => onChange([...items, { question: "", answer: "" }]);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      {items.map((item, index) => (
+        <div
+          key={index}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+            padding: 12,
+            borderRadius: 10,
+            border: "1px solid rgba(30,58,138,0.128)",
+            background: "#FFFFFF",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#475569" }}>
+              سوال {index + 1}
+            </span>
+
+            <button
+              type="button"
+              onClick={() => remove(index)}
+              style={{
+                fontSize: 10,
+                fontWeight: 700,
+                color: "#B91C1C",
+                background: "transparent",
+                border: "1px solid rgba(239,68,68,0.25)",
+                borderRadius: 6,
+                padding: "3px 10px",
+                cursor: "pointer",
+                fontFamily: "inherit",
+              }}
+            >
+              حذف
+            </button>
+          </div>
+
+          <input
+            value={item.question}
+            maxLength={300}
+            onChange={(e) => update(index, { question: e.target.value })}
+            placeholder="متن سوال"
+            style={inputStyle()}
+          />
+
+          <textarea
+            value={item.answer}
+            maxLength={2000}
+            rows={4}
+            onChange={(e) => update(index, { answer: e.target.value })}
+            placeholder="پاسخ"
+            style={{ ...inputStyle(), minHeight: 90, resize: "vertical" }}
+          />
+        </div>
+      ))}
+
+      <button
+        type="button"
+        onClick={add}
+        style={{
+          alignSelf: "flex-start",
+          fontSize: 12,
+          fontWeight: 700,
+          color: "#1565C0",
+          background: "rgba(21,101,192,0.075)",
+          border: "1px solid rgba(21,101,192,0.26)",
+          borderRadius: 8,
+          padding: "8px 16px",
+          cursor: "pointer",
+          fontFamily: "inherit",
+        }}
+      >
+        + افزودن سوال
+      </button>
+    </div>
+  );
+}
 
 /* ───────────────── SEO TOGGLE ───────────────── */
 
@@ -7383,6 +7497,7 @@ const normalizeService = (
 
       index: item?.index ?? true,
   follow: item?.follow ?? true,
+      faqs: Array.isArray(item?.faqs) ? item.faqs : [],
 });
 
 
@@ -7569,6 +7684,7 @@ export default function ServicesPage() {
   metaDescription: "",
     index: true,
   follow: true,
+      faqs: [],
 },
   });
 
@@ -7734,6 +7850,7 @@ urgencyContent:
 
         index: service.index,
         follow: service.follow,
+                faqs: service.faqs ?? [],
       });
     } else {
       reset({
@@ -7768,6 +7885,7 @@ urgencyContent: {
         metaDescription: "",
         index: true,
         follow: true,
+                faqs: [],
       });
     }
 
@@ -7844,6 +7962,7 @@ const normalizedData = {
 
     index: data.index,
   follow: data.follow,
+        faqs: data.faqs ?? [],
 };
 
     try {
@@ -8481,11 +8600,7 @@ const normalizedData = {
       }}
     >
       <main
-        className="services-page-main"
-        style={{
-          padding: "26px 22px",
-          overflowY: "auto",
-        }}
+className="mx-auto grid w-full gap-4 px-6 py-6 md:px-7"
       >
         {/* PAGE HEADER */}
 
@@ -9069,7 +9184,7 @@ const normalizedData = {
                               }}
                             >
                               {
-                                service.shortDesc.length > 80 ? service.shortDesc.slice(0,80) + "..." : service.shortDesc
+                                service.shortDesc.length > 60 ? service.shortDesc.slice(0,60) + "..." : service.shortDesc
                               }
                             </span>
                           </td>
@@ -10725,6 +10840,37 @@ const normalizedData = {
 
 
 
+                {/* FAQ */}
+
+                <div
+                  style={{
+                    background: "rgba(15,23,42,0.05)",
+                    border: "1px solid rgba(21,101,192,0.17)",
+                    borderRadius: 12,
+                    padding: 16,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 14,
+                  }}
+                >
+                  <span
+                    style={{
+                      color: "#1565C0",
+                      fontSize: "0.65rem",
+                      fontFamily: "monospace",
+                      letterSpacing: "0.12em",
+                    }}
+                  >
+                    FAQ
+                  </span>
+
+                  <FaqEditor
+                    value={watch("faqs")}
+                    onChange={(value) =>
+                      setValue("faqs", value, { shouldDirty: true })
+                    }
+                  />
+                </div>
 
 
                 {/* SEO */}

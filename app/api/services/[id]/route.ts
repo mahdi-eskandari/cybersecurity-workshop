@@ -15,6 +15,19 @@ type RouteContext = {
   }>;
 };
 
+
+
+function normalizeFaqs(faqs: unknown) {
+  if (!Array.isArray(faqs)) return [];
+
+  return faqs
+    .map((item: any) => ({
+      question: typeof item?.question === "string" ? item.question.trim() : "",
+      answer: typeof item?.answer === "string" ? item.answer.trim() : "",
+    }))
+    .filter((item) => item.question && item.answer);
+}
+
 /* ───────────────── GET ───────────────── */
 
 export async function GET(
@@ -123,6 +136,7 @@ export async function PATCH(
       urgencyDesc,
       metaTitle,
       metaDescription,
+      faqs,
       follow,
       index,
     } = body;
@@ -291,6 +305,8 @@ const oldService = await Service.findById(id).select("slug").lean();
 
           metaDescription:
             metaDescription || "",
+
+          ...(Array.isArray(faqs) ? { faqs: normalizeFaqs(faqs) } : {}),
 
           index: typeof index === "boolean" ? index : true,
 follow: typeof follow === "boolean" ? follow : true,

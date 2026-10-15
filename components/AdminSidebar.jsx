@@ -607,6 +607,44 @@ const IconWrench = () => (
 );
 
 
+// ریدایرکت‌ها: فلش چرخشی
+const IconRedirects = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="15 10 20 15 15 20" />
+    <path d="M4 4v7a4 4 0 0 0 4 4h12" />
+  </svg>
+);
+
+
+// سئوی صفحات: سند با ذره‌بین
+const IconSeoPages = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v3" />
+    <polyline points="14 2 14 8 20 8" />
+    <path d="M5 17a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+    <path d="m9 18-1.5-1.5" />
+  </svg>
+);
+
+
 // مدیریت نظرات پست‌ها (حباب پیام)
 const IconComments = () => (
   <svg
@@ -713,12 +751,6 @@ icon: (
 ),
 },
 {
-  id: "seo",
-  label: "SEO",
-  href: "/admin/seo",
-  icon: <IconWrench />,
-},
-{
   id: "comments",
   label: "مدیریت نظرات پست ها",
   href: "/admin/comments",
@@ -728,6 +760,25 @@ icon: (
   </span>
 ),
 },
+{
+  id: "pages-seo",
+  label: "سئو صفحات",
+  href: "/admin/seo",
+  icon: <IconSeoPages />,
+},
+{
+  id: "seo",
+  label: "ریدایرکت ها",
+  href: "/admin/redirects",
+  icon: <IconRedirects />,
+},
+{
+  id: "global seo",
+  label: "سئو سراسری",
+  href: "/admin/site-seo",
+  icon: <IconWrench />,
+},
+
 
 ];
 

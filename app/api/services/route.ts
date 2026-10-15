@@ -3,6 +3,18 @@ import connectDB from '@/lib/mongodb';
 import Service from '../../model/Service';
 import { isAdmin } from "@/lib/adminAuth";
 
+
+function normalizeFaqs(faqs: unknown) {
+  if (!Array.isArray(faqs)) return [];
+
+  return faqs
+    .map((item: any) => ({
+      question: typeof item?.question === "string" ? item.question.trim() : "",
+      answer: typeof item?.answer === "string" ? item.answer.trim() : "",
+    }))
+    .filter((item) => item.question && item.answer);
+}
+
 export async function GET() {
   try {
     await connectDB();
@@ -53,7 +65,8 @@ export async function POST(request: NextRequest) {
       trackingTitle,
       metaTitle,
       metaDescription,
-            index,
+      faqs,
+       index,
       follow,
     } = body;
 
@@ -225,6 +238,9 @@ export async function POST(request: NextRequest) {
         typeof metaDescription === "string"
           ? metaDescription.trim()
           : "",
+
+
+                faqs: normalizeFaqs(faqs),
 
             index: typeof index === "boolean" ? index : true,
       follow: typeof follow === "boolean" ? follow : true,

@@ -283,9 +283,6 @@ const IconMail = ({
 
 
 
-
-/* ─── DATA ─── */
-
 /* ─── DATA ─── */
 
 type ServiceStatus = "active" | "draft" | "hidden";

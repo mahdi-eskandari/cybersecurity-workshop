@@ -4,6 +4,7 @@ import Comment from "../../model/comment"; // مسیر مدل نظرات شما
 import mongoose from "mongoose";
 import { isAdmin } from "@/lib/adminAuth";
 import { getIp, record, retryAfter, MIN } from "@/lib/rateLimit";
+import Post from "../../model/blog";
 
 // GET: دریافت لیست نظرات با قابلیت صفحه‌بندی و فیلتر وضعیت
 export async function GET(request: Request) {

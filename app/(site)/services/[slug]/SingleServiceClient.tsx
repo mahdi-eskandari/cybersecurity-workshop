@@ -9,6 +9,7 @@ import { useTheme } from "../../.../../../../components/ThemeProvider"
 import Link from "next/link"; 
 import {EmergencyModal} from "../../.../../../../components/CrisisReportForm" 
 import { motion } from "framer-motion";
+import ServiceFaq from "./ServiceFaq";
 
  
 /* ─── ICONS ─── */ 
@@ -1676,6 +1677,9 @@ const hasTiptapContent = (value: any) =>
         ); 
       }) 
   ); 
+
+
+  
  
 /* ─── APP ─── */ 
 export type SingleServiceInitialData = {
@@ -1859,7 +1863,7 @@ const department =
        <motion.div
         className="px-6 py-16 md:px-12"  
         style={{ 
-          background: darkMode ? "#060b1986" : "#F8FAFC", 
+          background: darkMode ? "#060b199d" : "#F8FAFC", 
           borderBottom: darkMode 
             ? "1px solid #060b1986" 
             : "1px solid rgba(29,78,216,0.12)" 
@@ -2095,12 +2099,14 @@ const department =
           </div> 
         </div> 
 </motion.div>
+
+      
  
       {/* ─── STATS BAND ─── */} 
      <motion.div
         className="px-6 py-12 md:px-12" 
         style={{ 
-          background: darkMode ? "rgba(0,229,255,0.025)" : "#F8FAFC", 
+          background: darkMode ? "rgba(0,229,255,0.025)" : "#ebeeefe7", 
           borderTop: darkMode 
             ? "1px solid rgba(0,229,255,0.07)" 
             : "1px solid rgba(29,78,216,0.12)", 
@@ -2206,7 +2212,7 @@ const department =
 
 
 
-
+<ServiceFaq faqs={service?.faqs} darkMode={darkMode} />
 
 
 

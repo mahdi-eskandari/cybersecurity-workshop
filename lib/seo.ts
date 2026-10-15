@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import connectDB from "./mongodb";
 import PageSeo from "../app/model/PageSeo";
+import { getSiteSeo } from "./siteSeo";
 
 export const SITE_URL =
 //   process.env.NEXT_PUBLIC_SITE_URL || "https://parahoor.com";
@@ -125,6 +126,7 @@ export async function getPageSeo(pageKey: PageKey) {
     return {
       pageKey,
       ...defaultSeo,
+      canonical: "",
     };
   }
 
@@ -153,6 +155,11 @@ export async function getPageSeo(pageKey: PageKey) {
       typeof seo.follow === "boolean"
         ? seo.follow
         : defaultSeo.follow,
+
+    canonical:
+      typeof seo.canonical === "string"
+        ? seo.canonical.trim()
+        : "",
   };
 }
 
@@ -163,34 +170,66 @@ function getSeoPath(pageKey: PageKey, slug: string) {
     : `/${slug}`;
 }
 
+// Canonical نهایی صفحه:
+// - اگر در پنل مقدار معتبری ثبت شده باشد (مسیر داخلی یا آدرس کامل) همان
+// - در غیر این صورت (یا مقدار خراب) آدرس خود صفحه
+function resolveCanonicalUrl(
+  pageKey: PageKey,
+  slug: string,
+  customCanonical?: string
+) {
+  const custom = (customCanonical || "").trim();
+
+  if (custom) {
+    try {
+      const url = new URL(custom, SITE_URL);
+
+      if (url.protocol === "http:" || url.protocol === "https:") {
+        url.hash = "";
+        return url.toString();
+      }
+    } catch {
+      // مقدار نامعتبر → برگرد به canonical خودکار
+    }
+  }
+
+  return new URL(getSeoPath(pageKey, slug), SITE_URL).toString();
+}
+
+
+// تنظیم سراسری همیشه بر تنظیم هر روت غلبه می‌کند.
+// اگر دیتابیس خطا بدهد، مقدار خود روت دست‌نخورده می‌ماند.
+async function applyGlobalRobots(index: boolean, follow: boolean) {
+  try {
+    const site = await getSiteSeo();
+    return {
+      index: site.noindexAll || site.globalNoindex ? false : index,
+      follow: site.noindexAll || site.globalNofollow ? false : follow,
+    };
+  } catch {
+    return { index, follow };
+  }
+}
+
 export async function getPageMetadata(
   pageKey: PageKey
 ): Promise<Metadata> {
   const seo = await getPageSeo(pageKey);
 
-  const pathname = getSeoPath(
+  const canonicalUrl = resolveCanonicalUrl(
     pageKey,
-    seo.slug || ""
+    seo.slug || "",
+    seo.canonical
   );
 
-  const canonicalUrl = new URL(
-    pathname,
-    SITE_URL
-  ).toString();
+  const robots = await applyGlobalRobots(seo.index, seo.follow);
+
 
   return {
-    title: seo.metaTitle,
-
-    description: seo.metaDescription,
-
-    robots: {
-      index: seo.index,
-      follow: seo.follow,
-    },
-
-    alternates: {
-      canonical: canonicalUrl,
-    },
+  title: seo.metaTitle,
+  description: seo.metaDescription,
+  robots,            // ← به‌جای { index: seo.index, follow: seo.follow }
+  alternates: { canonical: canonicalUrl },
 
     openGraph: {
       type: "website",

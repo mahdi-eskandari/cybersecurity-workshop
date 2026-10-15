@@ -1909,13 +1909,11 @@ export default function App({
 
           {/* Excerpt */}
           <p
-            className={`text-sm leading-relaxed line-clamp-3 break-words mb-5 flex-1 ${
+            className={`text-sm leading-relaxed line-clamp-1 break-words mb-5 flex-1 ${
               darkMode ? "text-[#9DB0C0]" : "text-[#334155]"
             }`}
           >
-            {relatedExcerpt.length > 70
-              ? relatedExcerpt.slice(0, 70).trim() + "..."
-              : relatedExcerpt}
+            {relatedExcerpt}
           </p>
 
           {/* Footer */}

@@ -2631,14 +2631,13 @@ export default function FeedbackAdminPage() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen w-full bg-[#EEF3FA] px-4 py-6 text-slate-800 sm:px-6 lg:px-8"
-    >
-      <div className="mx-auto max-w-[1600px]">
+      className="min-h-screen w-full bg-[#EEF3FA] text-slate-800"
+      style={{ fontFamily: "var(--font-vazirmatn), sans-serif" }}
+    > 
+      <div className="mx-auto grid w-full gap-4 px-6 py-6 md:px-7">
         {/* HEADER */}
         <section className="mb-7">
           <div className="mb-2 flex items-center gap-3">
-            <div className="h-8 w-1 rounded-full bg-[#1565C0]" />
-
             <div>
                <div
               style={{
@@ -2680,16 +2679,15 @@ export default function FeedbackAdminPage() {
             </div>
               
 
-              <h1 className="mt-1 text-2xl font-black tracking-tight text-[#0F172A] sm:text-3xl">
+              <h1 className="text-xl font-black text-[#0F172A]">
                 بازخورد کاربران
               </h1>
-            </div>
-          </div>
-
-          <p className="mr-4 text-[12px] font-bold text-slate-500">
+                        <p className="mt-2 text-xs font-medium text-slate-500">
             مدیریت، بررسی و تأیید بازخوردهای
             ارسال‌شده توسط کاربران
           </p>
+            </div>
+          </div>
         </section>
 
         {/* STATS */}

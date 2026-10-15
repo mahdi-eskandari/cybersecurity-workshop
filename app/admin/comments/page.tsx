@@ -1297,27 +1297,32 @@ export default function PostCommentsAdminPage() {
   const rejectedCount = comments.filter((i) => i.approvalStatus === "rejected").length;
 
   return (
-    <main dir="rtl" className="min-h-screen w-full bg-[#EEF3FA] px-4 py-6 text-slate-800 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-[1600px]">
+    <main
+      dir="rtl"
+      className="min-h-screen w-full bg-[#EEF3FA] text-slate-800"
+      style={{ fontFamily: "var(--font-vazirmatn), sans-serif" }}
+    >      {/* <div className="mx-auto max-w-[1600px]"> */}
+        <div className="mx-auto grid w-full gap-4 px-6 py-6 md:px-7">
         {/* HEADER */}
         <section className="mb-7">
           <div className="mb-2 flex items-center gap-3">
-            <div className="h-8 w-1 rounded-full bg-[#1565C0]" />
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 4 }}>
-                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#1565C0", boxShadow: "0 0 7px rgba(21,101,192,0.9)" }} />
+
+               <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 4 }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#1565C0", boxShadow: "0 0 7px rgba(21,101,192,0.9)", marginBottom: "1px" }} />
                 <span style={{ fontFamily: "monospace", fontSize: "0.6rem", color: "rgba(21,101,192,0.77)", letterSpacing: "0.18em" }}>
                   COMMENTS MANAGEMENT
                 </span>
               </div>
-              <h1 className="mt-1 text-2xl font-black tracking-tight text-[#0F172A] sm:text-3xl">
-                مدیریت نظرات پست‌ها
-              </h1>
-            </div>
-          </div>
-          <p className="mr-4 text-[12px] font-bold text-slate-500">
+
+
+                        <h1 className="m-0 text-xl font-black leading-tight text-[#0F172A]"> مدیریت نظرات پست‌ها</h1>
+          <p className="mt-2 text-xs font-medium text-slate-500">
             بررسی، تایید یا رد نظرات ثبت‌شده کاربران
           </p>
+            
+            </div>
+          </div>
         </section>
 
         {/* STATS */}

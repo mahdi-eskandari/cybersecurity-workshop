@@ -22,6 +22,24 @@ const SeoRedirectSchema = new Schema(
       enum: [301, 302, 307, 308, 410],
       default: 301,
     },
+
+    matchType: {
+      type: String,
+      enum: ["exact", "regex"],
+      default: "exact",
+    },
+
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+
+    reason: {
+      type: String,
+      default: "",
+      trim: true,
+      maxlength: 300,
+    },
   },
   {
     timestamps: true,

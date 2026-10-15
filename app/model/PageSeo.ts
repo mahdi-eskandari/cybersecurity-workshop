@@ -68,6 +68,16 @@ const PageSeoSchema = new Schema(
       type: Boolean,
       default: true,
     },
+
+    // Canonical اختیاری
+    // خالی = آدرس خود صفحه به‌صورت خودکار canonical می‌شود.
+    // مقدار مجاز: مسیر داخلی (/services) یا آدرس کامل http(s)
+    canonical: {
+      type: String,
+      default: "",
+      trim: true,
+      maxlength: 500,
+    },
   },
   {
     timestamps: true,

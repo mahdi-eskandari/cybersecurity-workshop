@@ -6,6 +6,47 @@ type RouteContext = {
   params: Promise<{ id: string }>;
 };
 
+
+
+
+export async function GET(_request: Request, context: RouteContext) {
+  try {
+    await connectDB();
+
+    const { id } = await context.params;
+
+    if (!/^[a-f\d]{24}$/i.test(id)) {
+      return new NextResponse("Not found", { status: 404 });
+    }
+
+    const media: any = await Media.findById(id).select("url").lean();
+
+    if (!media?.url) {
+      return new NextResponse("Not found", { status: 404 });
+    }
+
+    // اگر آدرس معمولی بود، ریدایرکت
+    const match = /^data:([^;]+);base64,(.+)$/.exec(media.url);
+    if (!match) {
+      return NextResponse.redirect(media.url);
+    }
+
+    const buffer = Buffer.from(match[2], "base64");
+
+    return new NextResponse(new Uint8Array(buffer), {
+      status: 200,
+      headers: {
+        "Content-Type": match[1],
+        "Content-Length": String(buffer.length),
+        "Cache-Control": "public, max-age=31536000, immutable",
+      },
+    });
+  } catch (error) {
+    console.error("GET /api/media/:id error:", error);
+    return new NextResponse("Server error", { status: 500 });
+  }
+}
+
 export async function PATCH(
   request: Request,
   context: RouteContext
