@@ -4,12 +4,14 @@
 
 "use client"
 
-import { useState } from "react";
 import type React from "react";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import { useTheme } from "@/components/ThemeProvider";
 import { siTelegram } from "simple-icons";
+import { useState, useRef } from "react";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
+
 
 /* ─── SHARED ─── */
 const PulseDot = ({ size = 7, color = "#00E5FF" }: { size?: number; color?: string }) => (
@@ -179,6 +181,10 @@ const ContactForm = ({ isDark }: { isDark: boolean }) => {
   const [submitError, setSubmitError] = useState("");
   const [subjectOpen, setSubjectOpen] = useState(false);
 
+const [turnstileToken, setTurnstileToken] = useState("");
+const turnstileRef = useRef<TurnstileInstance>(null);
+const errorRetries = useRef(0);
+
   const {
     register,
     handleSubmit,
@@ -194,28 +200,40 @@ const ContactForm = ({ isDark }: { isDark: boolean }) => {
   const message = watch("message", "");
   const subject = watch("subject", "");
 
+
+
   const onSubmit = async (data: FeedbackFormValues) => {
-    setSubmitError("");
-    try {
-      const response = await fetch("/api/feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: data.name.trim(),
-          contact: data.contact.trim(),
-          subject: data.subject,
-          message: data.message.trim(),
-        }),
-      });
-      const result = await response.json().catch(() => null);
-      if (!response.ok) throw new Error(result?.message || "خطایی در ثبت پیام رخ داد. لطفاً دوباره تلاش کنید.");
-      setSent(true);
-      reset();
-    } catch (error) {
-      console.error("Feedback form submit error:", error);
-      setSubmitError(error instanceof Error ? error.message : "خطایی در ثبت پیام رخ داد. لطفاً دوباره تلاش کنید.");
-    }
-  };
+  setSubmitError("");
+
+  if (!turnstileToken) {
+    setSubmitError("ابتدا تایید امنیتی را کامل کنید");
+    return;
+  }
+
+  try {
+    const response = await fetch("/api/feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: data.name.trim(),
+        contact: data.contact.trim(),
+        subject: data.subject,
+        message: data.message.trim(),
+        turnstileToken,
+      }),
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok) throw new Error(result?.message || "خطایی در ثبت پیام رخ داد. لطفاً دوباره تلاش کنید.");
+    setSent(true);
+    reset();
+  } catch (error) {
+    console.error("Feedback form submit error:", error);
+    setSubmitError(error instanceof Error ? error.message : "خطایی در ثبت پیام رخ داد. لطفاً دوباره تلاش کنید.");
+  } finally {
+    turnstileRef.current?.reset();
+    setTurnstileToken("");
+  }
+};
 
   const field = (name: string) => [
     "w-full rounded-xl border px-4 py-3 text-sm outline-none transition-all duration-200",
@@ -323,6 +341,33 @@ const ContactForm = ({ isDark }: { isDark: boolean }) => {
       </div>
 
 
+<div className="w-full min-h-[65px] [&>div]:!w-full [&_iframe]:!w-full">
+  <Turnstile
+    ref={turnstileRef}
+    siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+    style={{ width: "100%" }}
+    options={{
+      theme: isDark ? "dark" : "light",
+      size: "flexible",
+      language: "fa",
+    }}
+    onSuccess={(t: string) => {
+      errorRetries.current = 0;
+      setTurnstileToken(t);
+      setSubmitError("");
+    }}
+    onExpire={() => setTurnstileToken("")}
+    onError={() => {
+      setTurnstileToken("");
+      if (errorRetries.current < 2) {
+        errorRetries.current += 1;
+        setTimeout(() => turnstileRef.current?.reset(), 1500);
+      }
+    }}
+  />
+</div>
+
+
       {submitError && <div className="rounded-xl border border-[#991B1B]/[0.16] bg-[#991B1B]/[0.06] px-4 py-3 text-xs text-[#991B1B]" role="alert">{submitError}</div>}
 
       <button type="submit" disabled={isSubmitting} className={`flex w-full items-center justify-center gap-2.5 rounded-xl border py-3.5 text-sm font-bold font-[var(--font-vazirmatn),sans-serif] transition-all duration-300 ${isSubmitting ? (isDark ? "cursor-wait border-[#00E5FF]/20 bg-[#00E5FF]/10 text-[#00E5FF]/50" : "cursor-wait border-[#1E3A8A]/20 bg-[#1E3A8A]/10 text-[#1E3A8A]/50") : (isDark ? "cursor-pointer border-[#00E5FF]/40 bg-[#00E5FF] text-[#0A1128] shadow-[0_0_20px_rgba(0,229,255,0.22)] hover:bg-[#00D5EE] hover:shadow-[0_0_30px_rgba(0,229,255,0.28)]" : "cursor-pointer border-[#1565C0] bg-[#1565C0] text-white shadow-[0_10px_24px_rgba(30,58,138,0.17)] hover:bg-[#0D47A1] hover:shadow-[0_12px_26px_rgba(30,58,138,0.20)]")}`}>
@@ -398,7 +443,7 @@ const isDark = darkMode;
             style={{
               color: darkMode ? "#00E5FF" : "#1565C0",
             }}
-            >SECURE CHANNEL // ENCRYPTED</span>
+            >CONTACT US // SECURE CHANNEL </span>
 
                         <span className="node-dot pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
                     background: darkMode

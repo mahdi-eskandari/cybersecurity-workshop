@@ -1771,14 +1771,14 @@ style={{
         style={{
   ...(!darkMode && { color: "#1565C0" }),
 }}
-        >FORENSIC RADAR</span>
+        >LATEST POSTS</span>
             <h2
               className="text-2xl md:text-3xl font-black"
               style={{
                 color: darkMode ? "#fff" : "#0F172A",
               }}
             >
-              آخرین گزارش‌های میدانی
+             آخرین مطالب
 
             </h2>
             <div className="scan-line w-24 mx-auto mt-4" />

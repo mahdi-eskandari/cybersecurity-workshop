@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface CommentSectionProps {
@@ -65,6 +66,9 @@ export default function CommentSection({ postId, darkMode, initialComments }: Co
 
   const [errors, setErrors] = useState<{ name?: string; contact?: string; comment?: string }>({});
     const [submitting, setSubmitting] = useState(false);
+    const [turnstileToken, setTurnstileToken] = useState("");
+const turnstileRef = useRef<TurnstileInstance>(null);
+const errorRetries = useRef(0);
   const [isHov, setIsHov] = useState(false);
 
   const isDark = darkMode;
@@ -104,13 +108,19 @@ export default function CommentSection({ postId, darkMode, initialComments }: Co
     }
 
     setErrors({});
+
+    if (!turnstileToken) {
+      setServerMessage({ success: false, text: "ابتدا تایید امنیتی را کامل کنید" });
+      return;
+    }
+
     setSubmitting(true);
 
     try {
       const response = await fetch("/api/comments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ postId, name, contact, comment }),
+                body: JSON.stringify({ postId, name, contact, comment, turnstileToken }),
       });
 
       const result = await response.json();
@@ -130,6 +140,8 @@ export default function CommentSection({ postId, darkMode, initialComments }: Co
       setServerMessage({ success: false, text: "خطا در ارتباط با سرور." });
     } finally {
       setSubmitting(false);
+      turnstileRef.current?.reset();
+      setTurnstileToken("");
     }
   };
 
@@ -293,6 +305,33 @@ onMouseLeave={(e) => {
               }`}
             />
             {errors.comment && <span className="text-[10px] text-red-400 mt-1 block">{errors.comment}</span>}
+          </div>
+
+
+                    <div className="w-full min-h-[65px] [&>div]:!w-full [&_iframe]:!w-full">
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+              style={{ width: "100%" }}
+              options={{
+                theme: darkMode ? "dark" : "light",
+                size: "flexible",
+                language: "fa",
+              }}
+              onSuccess={(t: string) => {
+                errorRetries.current = 0;
+                setTurnstileToken(t);
+                setServerMessage(null);
+              }}
+              onExpire={() => setTurnstileToken("")}
+              onError={() => {
+                setTurnstileToken("");
+                if (errorRetries.current < 2) {
+                  errorRetries.current += 1;
+                  setTimeout(() => turnstileRef.current?.reset(), 1500);
+                }
+              }}
+            />
           </div>
 
           <button

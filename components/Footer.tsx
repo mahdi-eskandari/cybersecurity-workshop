@@ -9,8 +9,7 @@ import {
   MapPin,
 } from "lucide-react"
 import Image from "next/image";
-import { useState, type CSSProperties, type ReactNode } from "react";
-
+import { useState, useEffect, type CSSProperties, type ReactNode } from "react";
 
 /* =========================================================
    SOCIAL BUTTON
@@ -80,19 +79,30 @@ const IconInstagram = () => (
 
 const F_SERVICES = [
   {
-    title: "کشف هویت پشت نقاب",
+    title: "ردیابی رمزارز و تحلیل بلاک‌چین",
     href: "/services",
   },
   {
-    title: "ردیابی رمز ارز",
+    title: "کشف هویت پنهان",
+    match: "هویت سنجی پنهان",
     href: "/services",
   },
   {
-    title: "پاکسازی سیستم آلوده",
+    title: "تست نفوذ",
     href: "/services",
   },
   {
-    title: "مستند سازی ادله دیجیتال",
+    title: "کالبدشکافی دیجیتال",
+    match: "فارنزیک و کالبدشکافی دیجیتال",
+    href: "/services",
+  },
+  {
+    title: "مقابله با باج‌افزارها",
+    match: "مقابله و مذاکره با باج افزارها",
+    href: "/services",
+  },
+  {
+    title: "هوش تهدیدات",
     href: "/services",
   },
 ];
@@ -114,7 +124,7 @@ const COMPANY_LINKS = [
 
 const BLOG_LINKS = [
   {
-    title: "اخبار",
+    title: "درباره ما",
     href: "/blogs",
   },
   {
@@ -147,14 +157,71 @@ const PulseDot = ({
   />
 );
 
+
+// یکسان‌سازی عنوان‌ها برای تطبیق (ی/ک عربی، نیم‌فاصله، فاصله‌ی اضافه)
+const norm = (v: string) =>
+  v
+    .normalize("NFKC")
+    .replace(/ي/g, "ی")
+    .replace(/ك/g, "ک")
+    .replace(/\u0640/g, "")           // کشیده
+    .replace(/\p{M}/gu, "")           // اعراب: کسره، فتحه، ...
+    .replace(/[^\p{L}\p{N}]+/gu, " ") // خط تیره، نیم‌فاصله و علامت‌ها → فاصله
+    .trim();
+
 export default function Footer() {
   const { darkMode } = useTheme();
     const [crisisOpen, setCrisisOpen] = useState(false);
 
+      const [serviceSlugs, setServiceSlugs] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    let alive = true;
+
+    fetch("/api/services")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!alive || !data) return;
+
+        const list = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.data)
+          ? data.data
+          : [];
+
+        const map: Record<string, string> = {};
+        for (const s of list) {
+          if (!s?.slug) continue;
+          if (s.status && s.status !== "active") continue;
+          if (s.title) map[norm(String(s.title))] = String(s.slug);
+          if (s.trackingTitle) map[norm(String(s.trackingTitle))] = String(s.slug);
+        }
+        setServiceSlugs(map);
+
+      })
+      .catch(() => {});
+
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+
+    const findSlug = (text: string) => {
+    const key = norm(text);
+    if (serviceSlugs[key]) return serviceSlugs[key];
+
+    const found = Object.keys(serviceSlugs).find((k) => k.includes(key));
+    return found ? serviceSlugs[found] : undefined;
+  };
+
   const footerMenus = [
     {
       title: "خدمات",
-      links: F_SERVICES,
+            links: F_SERVICES.map((l) => {
+                        const slug = findSlug(l.match ?? l.title);
+        return { ...l, href: slug ? `/services/${slug}` : l.href };
+      }),
     },
     {
       title: "شرکت",
@@ -253,7 +320,7 @@ export default function Footer() {
                 }}
                 >
                   <MapPin className="w-4 h-4 flex-shrink-0" />
-                  <span>آیت الله کاشانی، بلوار اباذر، نبش خیابان شالی، پلاک9، طبقه چهارم، واحد6</span>
+                  <span>تهران، آیت الله کاشانی، بلوار اباذر، نبش خیابان شالی، پلاک 9، طبقه 4، واحد 6</span>
                 </div>
                 <div>
 <div className="flex items-center gap-2">

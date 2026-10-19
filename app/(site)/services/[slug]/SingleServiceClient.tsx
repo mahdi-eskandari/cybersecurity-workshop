@@ -1804,7 +1804,7 @@ const department =
           {/* Primary CTA */} 
           <button 
             onClick={() => setCrisisOpen(true)} 
-            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold transition-all duration-300 mb-4" 
+            className="inline-flex items-center justify-center gap-2 px-12 py-3.5 rounded-xl font-bold transition-all duration-300 mb-4" 
            style={{ 
                 background: "#EF4444", 
                 color: "#ffffff", 
@@ -1832,19 +1832,7 @@ const department =
             درخواست فوری      
           </button> 
  
-          {/* Trust micro-signals */} 
-          <div className="flex flex-wrap items-center justify-center gap-4 mt-2"> 
-            {[ 
-              "پاسخ اولیه در کمتر از ۲ ساعت", 
-              "رازداری کامل پرونده", 
-              "گزارش دادگاه‌پسند", 
-            ].map((item) => ( 
-              <div key={item} className="flex items-center gap-1.5"> 
-                <IconCheck darkMode={darkMode} /> 
-                <span style={{ color: darkMode ? "#64748B" : "#475569", fontSize: "0.78rem" }}>{item}</span> 
-              </div> 
-            ))} 
-          </div> 
+          
         </div> 
  
         {/* Blockchain art */} 
@@ -2101,113 +2089,7 @@ const department =
 </motion.div>
 
       
- 
-      {/* ─── STATS BAND ─── */} 
-     <motion.div
-        className="px-6 py-12 md:px-12" 
-        style={{ 
-          background: darkMode ? "rgba(0,229,255,0.025)" : "#ebeeefe7", 
-          borderTop: darkMode 
-            ? "1px solid rgba(0,229,255,0.07)" 
-            : "1px solid rgba(29,78,216,0.12)", 
-          borderBottom: darkMode 
-            ? "1px solid rgba(0,229,255,0.07)" 
-            : "1px solid rgba(29,78,216,0.12)", 
-        }} 
-  initial={{ opacity: 0, y: 60 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.7 }}
-  viewport={{ once: true, amount: 0.2 }}
->
-        <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center"> 
-          {[ 
-            { 
-              value: "۵۰", 
-              label: "پرونده بسته‌شده", 
-            }, 
-            { 
-              value: "۱۰",
-              label: "پرونده های در حال بررسی", 
-            }, 
-            { 
-              value: "۸۰%", 
-              label: "میزان موفقیت", 
-            }, 
-            { 
-              value: "۲", 
-              unit: "H", 
-              label: "میانگین پاسخ اولیه", 
-            }, 
-          ].map(({ value, unit, label }) => ( 
-            <div key={label}> 
-              <div 
-                className="font-black mb-1" 
-                style={{ 
-                  fontSize: "clamp(1.75rem, 3.8vw, 2.55rem)", 
-                  color: darkMode ? "#00E5FF" : "#1565C0", 
-                   
- 
-                  fontWeight: 800, 
- 
-                  // فاصله حروف کمی فشرده ولی نه بیش از حد 
-                  letterSpacing: "-0.025em", 
- 
-                  // اعداد مرتب و هم‌عرض 
-                  fontVariantNumeric: "tabular-nums lining-nums", 
-                  fontFeatureSettings: '"tnum" 1, "lnum" 1', 
- 
-                  lineHeight: 1.05, 
- 
-                  // جلوگیری از به‌هم‌ریختن ترکیب فارسی و لاتین 
-                  direction: "ltr", 
-                  unicodeBidi: "isolate", 
- 
-                  // ظاهر نرم‌تر 
-                  WebkitFontSmoothing: "antialiased", 
-                  MozOsxFontSmoothing: "grayscale", 
-                }} 
-              > 
-                <span 
-                  style={{ 
-                    display: "inline-block", 
-                    verticalAlign: "baseline", 
-                  }} 
-                > 
-                  <AnimatedStatNumber value={value} darkMode={darkMode} />
-                </span> 
- 
-                {unit && ( 
-                  <span 
-                    style={{ 
-                      display: "inline-block", 
-                      marginRight: "0.08em", 
-                      marginLeft: "0.08em", 
-                      fontSize: "1em", 
-                      fontWeight: 700, 
-                      letterSpacing: "-0.025em", 
-                      opacity: 0.95, 
-                      verticalAlign: "baseline", 
-                    }} 
-                  > 
-                    {unit} 
-                  </span> 
-                )} 
-              </div> 
- 
-              <div 
-                style={{ 
-                  color: darkMode ? "#94A3B8" : "#334155", 
-                  fontSize: "0.78rem", 
-                  fontWeight: 600, 
-                  lineHeight: 1.7, 
-                }} 
-              > 
-                {label} 
-              </div> 
-            </div> 
-          ))} 
-        </div> 
-</motion.div>
+
 
 
 
@@ -2218,136 +2100,7 @@ const department =
 
 
  
-      {/* ─── BOTTOM CONVERSION AREA ─── */} 
-          <motion.div
-        className="px-6 py-20 md:px-12"
-  initial={{ opacity: 0, y: 60 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.7 }}
-  viewport={{ once: true, amount: 0.2 }}
->
-        <div
-      className={`max-w-2xl mx-auto rounded-2xl`}
-      style={{
-        boxShadow: darkMode
-          ? "0 18px 60px rgba(0, 229, 255, 0), 0 0 70px rgba(0,229,255,0.05)"
-          : "0 18px 50px rgba(48, 94, 175, 0.32)",
-
-        transition:
-          "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
-      }}  
-      >
-          <div 
-            className="relative p-8 md:p-12 rounded-2xl text-center overflow-hidden" 
-            style={{ 
-              background: darkMode ? "rgba(255,255,255,0.03)" : "#FFFFFF", 
-              border: darkMode 
-                ? "1px solid rgba(0,229,255,0.18)" 
-                : "1px solid rgba(39, 83, 206, 0.72)", 
-              boxShadow: darkMode 
-                ? "0 0 60px rgba(0,229,255,0.06), 0 0 100px rgba(0,229,255,0.03), inset 0 0 60px rgba(0,229,255,0.02)" 
-                : "0 4px 20px rgba(15,23,42,0.06)", 
-            }} 
-          > 
-            {/* Corner accents */} 
-            <div 
-              style={{ 
-                position: "absolute", 
-                top: 0, 
-                right: 0, 
-                width: 60, 
-                height: 60, 
-                borderTop: darkMode 
-                  ? "2px solid rgba(0,229,255,0.3)" 
-                  : "2px solid #1565C0", 
-                borderRight: darkMode 
-                  ? "2px solid rgba(0,229,255,0.3)" 
-                  : "2px solid #1565C0", 
-                borderRadius: "0 16px 0 0" 
-              }} 
-            /> 
-
-            <div 
-              style={{ 
-                position: "absolute", 
-                bottom: 0, 
-                left: 0, 
-                width: 60, 
-                height: 60, 
-                borderBottom: darkMode 
-                  ? "2px solid rgba(0,229,255,0.3)" 
-                  : "2px solid #1565C0", 
-                borderLeft: darkMode 
-                  ? "2px solid rgba(0,229,255,0.3)" 
-                  : "2px solid #1565C0", 
-                borderRadius: "0 0 0 16px" 
-              }} 
-            /> 
- 
-            <span 
-              style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.62rem", color: darkMode ? "rgba(0,229,255,0.45)" : "#1565C0", letterSpacing: "0.2em", textTransform: "uppercase" }} 
-              className="block mb-4" 
-            > 
-              FREE INITIAL ASSESSMENT 
-            </span> 
- 
-            <h2 
-              className="font-bold mb-4" 
-              style={{ fontSize: "clamp(1.15rem, 2.5vw, 1.6rem)", color: darkMode ? "#fff" : "#0F172A", lineHeight: 1.5 }} 
-            > 
-              همین الان موضوع خود را<br />برای بررسی اولیه ارسال کنید. 
-            </h2> 
- 
-            <p 
-              className="mb-8" 
-              style={{ 
-                color: darkMode ? "#606d7f" : "#475569", 
-                fontSize: "0.88rem", 
-                lineHeight: 1.8 
-              }} 
-            > 
-              تیم فنی پاراهور موضوع شما را بدون هزینه ارزیابی اولیه می‌کند و امکان‌سنجی ردیابی را به شما اعلام می‌نماید. 
-            </p> 
- 
-            <button 
-              onClick={() => setCrisisOpen(true)} 
-              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold transition-all duration-300" 
-              style={{ 
-                background: "#EF4444" , 
-                color: "#ffffff", 
-                border:  "1px solid rgba(239, 68, 68, 0.6)",
-                boxShadow: "0 0 15px rgba(239,68,68,0.35)"
-              }} 
-              onMouseEnter={(e) => { 
-                e.currentTarget.style.boxShadow = "0 0 22px rgba(239,68,68,0.55)" 
-                e.currentTarget.style.transform = "translateY(-1px)";
-
-              }} 
-              onMouseLeave={(e) => { 
-                e.currentTarget.style.boxShadow = "0 0 15px rgba(239,68,68,0.35)"
-               e.currentTarget.style.transform = "none";
-              }} 
-            > 
-              تکمیل فرم گزارش بحران 
-              <IconLink /> 
-            </button> 
- 
-            {/* Modal */} 
-            {crisisOpen && ( 
-              <EmergencyModal 
-                onClose={() => setCrisisOpen(false)} 
-              /> 
-            )} 
- 
-            <p 
-              className="mt-4 text-xs" 
-              style={{ color: darkMode ? "#606d7f" : "#475569" }} 
-            > 
-                 کاملاً محرمانه • پاسخ در کمتر از ۲ ساعت 
-            </p> 
-          </div> 
-        </div> 
-</motion.div>
+    
  
       <style jsx global>{`
         @keyframes serviceTitleSkeleton {

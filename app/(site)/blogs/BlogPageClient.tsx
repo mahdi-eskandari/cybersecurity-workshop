@@ -831,7 +831,7 @@ useEffect(() => {
          className={`border-b transition-colors duration-300 pt-24 ${
             darkMode
               ? "bg-transparent border-[#1E334A]"
-              : "bg-transparent border-[rgba(29,78,216,0.12)] shadow-[0_10px_35px_rgba(30,58,138,0.10)] bg-[#F7F9FC] border-b border-[#0B1C3E]/10"
+              : "bg-transparent border-[rgba(29,78,216,0.12)] shadow-[0_10px_35px_rgba(30,58,138,0.10)] bg-gray-100 border-b border-[#0B1C3E]/10"
           }`}
     initial={{ opacity: 0, y: 30 }}
   whileInView={{ opacity: 1, y: 0 }}
@@ -853,7 +853,7 @@ useEffect(() => {
                         style={{
               background: darkMode
                 ? "rgba(0,229,255,0.07)"
-                : "#EBF3FF",
+                : "#e3edfc",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.2)"
                 : "none",
@@ -866,7 +866,8 @@ useEffect(() => {
             style={{
               color: darkMode ? "#00E5FF" : "#1565C0",
             }}
-            >PARAHOOR // ANALYTICAL & LEGAL REPORTS</span>
+
+            > PARAHOOR // ARTICLES & REPORTS </span>
 
                         <span className="node-dot pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
                     background: darkMode
@@ -973,7 +974,7 @@ useEffect(() => {
     } border-b transition-colors duration-300 ${
       darkMode
         ? "bg-[#060E18] border-[#1E334A]"
-        : "bg-white border-[rgba(29,78,216,0.12)]"
+        : "bg-white border-[rgba(88,102,142,0.29)]"
     }`}
     initial={{ opacity: 0, y: 60 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -1273,26 +1274,7 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
                           {featuredArticle.category}
                         </span>
 
-                        <span
-                          className={`text-xs font-medium ${
-                            darkMode
-                              ? "text-[#71869A]"
-                              : "text-[#64748B]"
-                          }`}
-                        >
-                          {featuredArticle.date}
-                        </span>
-
-                        <span
-                          className={`flex items-center gap-1 text-xs ${
-                            darkMode
-                              ? "text-[#71869A]"
-                              : "text-[#64748B]"
-                          }`}
-                        >
-                          <Clock className="w-3 h-3" />
-                          {featuredArticle.readTime} مطالعه
-                        </span>
+                       
                       </div>
 
                       <h2
@@ -1318,16 +1300,15 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
                     </div>
 
                     <div
-                      className={`flex flex-wrap items-center justify-between gap-3 mt-6 sm:mt-8 pt-5 sm:pt-6 border-t ${
+                      className={`flex flex-wrap items-center justify-between gap-x-3 gap-y-3 mt-6 sm:mt-8 pt-5 sm:pt-6 border-t ${
                         darkMode
                           ? "border-[#1E334A]"
                           : "border-[#E2E8F0]"
                       }`}
                     >
-                      <Link className="flex items-center gap-3"
-                      href={featuredArticle.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"} 
-                      >
-                        <div
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <Link
+                          href={featuredArticle.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"}
                           className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden border ${
                             darkMode ? "border-transparent" : "border-[#1565C0]/25"
                           }`}
@@ -1335,17 +1316,34 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
                           <div className="w-full h-full rounded-full bg-white flex items-center justify-center flex-shrink-0">
                             <IconUser />
                           </div>
+                        </Link>
+
+                        <div className="min-w-0">
+                          <div>
+                            <Link
+                              href={featuredArticle.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"}
+                              className={`inline-flex items-center gap-1.5 text-[13px] font-semibold truncate pb-1 transition-all duration-300 ${
+                                darkMode ? "text-[#9DB0C0] hover:text-white/80" : "text-[#475569]"
+                              }`}
+                            >
+                              {featuredArticle.author}
+                            </Link>
+                          </div>
+
+                          <div
+                            className={`flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[12px] ${
+                              darkMode ? "text-[#71869A]" : "text-[#64748B]"
+                            }`}
+                          >
+                            <span>{featuredArticle.date}</span>
+                            <span>·</span>
+                            <span className="inline-flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              {featuredArticle.readTime}
+                            </span>
+                          </div>
                         </div>
-                     
-                     <div 
-                       className={`inline-flex items-center gap-1.5 text-xs font-semibold truncate pb-1 transition-all duration-300 ${
-                         darkMode ? "text-[#9DB0C0] hover:text-white/80" : "text-[#475569]"
-                       }`}
-                     >
-                       {featuredArticle.author}
-                       {/* تیم تخصصی پاراهور */}
-                     </div>
-                      </Link>
+                      </div>
 
                       <Link
                         href={`/blogs/${featuredArticle.slug || featuredArticle.id}`}

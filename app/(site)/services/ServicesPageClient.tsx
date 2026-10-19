@@ -406,7 +406,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
             style={{
               color: darkMode ? "#00E5FF" : "#1565C0",
             }}
-            >PARAHOOR // SERVICE ARCHIVE</span>
+            >PARAHOOR // SERVICES ARCHIVE</span>
 
                         <span className="node-dot pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
                     background: darkMode
@@ -433,7 +433,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   }}
 >
     {(() => {
-    const highlight = "تخصصی پاراهور";
+    const highlight = "پاراهور";
     const title = seo.h1Title || "";
     const i = title.indexOf(highlight);
     if (i === -1) return title;
@@ -774,7 +774,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
             <p
               className="mt-2 text-sm"
               style={{
-                color: darkMode ? "#334155" : "#334155",
+                color: darkMode ? "#576376" : "#334155",
                 maxWidth: 480,
               }}
             >
@@ -906,9 +906,9 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
         ? "#fff"
         : "#E2E8F0"
       : isHovered
-        ? "#1565C0"
-        : "#1565C0",
-    fontSize: darkMode ? "0.95rem" : "1rem",
+        ? "#000000"
+        : "#000000",
+    fontSize:"1rem",
     lineHeight: 1.5,
     transition: "color 0.3s",
   }}
@@ -919,11 +919,11 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 {/* Description */}
 <p
   style={{
-    color: darkMode ? "#475569" : "#334155",
-    fontSize: darkMode ? "0.8rem" : "0.86rem",
-    lineHeight: darkMode ? 1.8 : 1.95,
+    color: darkMode ? "#576376" : "#334155",
+    fontSize:"0.86rem",
+    lineHeight:1.95,
     flexGrow: 1,
-    letterSpacing: darkMode ? "normal" : "-0.01em",
+    letterSpacing:"-0.01em",
   }}
 >
   {s.shortDesc.length > 80 ? s.shortDesc.slice(0,80) + "..." : s.shortDesc}
@@ -937,7 +937,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   key={tag}
   style={{
     fontFamily: "monospace",
-    fontSize: darkMode ? "0.62rem" : "0.68rem",
+    fontSize:"0.68rem",
     color: darkMode
       ? "rgba(0,229,255,0.4)"
       : "#1565C0",
@@ -982,10 +982,10 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                         color: darkMode
                           ? isHovered
                             ? "#00E5FF"
-                            : "#334155"
+                            : "#576376"
                           : isHovered
                             ? "#1565C0"
-                            : "#1565C0",
+                            : "#000000",
                         transition: "color 0.25s",
                         fontSize: "0.8rem",
                         fontWeight: 600,

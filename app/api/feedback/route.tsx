@@ -3,6 +3,9 @@ import mongoose from "mongoose";
 import Feedback, {
   FEEDBACK_SUBJECTS,
 } from "../../model/feedback";
+import { verifyTurnstile } from "@/lib/turnstile";
+import { claimToken } from "@/lib/tokenGuard";
+import { getIp, retryAfter, record, MIN, HOUR } from "@/lib/rateLimit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -111,6 +114,24 @@ export async function GET(request: Request) {
 /* POST */
 /* -------------------------------------------------------------------------- */
 
+const LIMITS = [
+  { id: "main", limit: 3, windowMs: HOUR },      // ۳ بار، بعدش حدود ۱ ساعت قفل
+] as const;
+
+const FAIL_LIMIT = 10;
+const FAIL_WINDOW = 10 * MIN;
+
+function tooMany(seconds: number) {
+  const t =
+    seconds >= 3600 ? `${Math.ceil(seconds / 3600)} ساعت` :
+    seconds > 90 ? `${Math.ceil(seconds / 60)} دقیقه` :
+    `${seconds} ثانیه`;
+  return NextResponse.json(
+    { message: `تعداد ارسال‌های شما به حد مجاز رسیده است. لطفاً ${t} دیگر دوباره تلاش کنید.` },
+    { status: 429, headers: { "Retry-After": String(seconds) } }
+  );
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -134,6 +155,10 @@ export async function POST(request: Request) {
       typeof body?.message === "string"
         ? body.message.trim()
         : "";
+
+
+    const turnstileToken =
+  typeof body?.turnstileToken === "string" ? body.turnstileToken : "";
 
     if (
       name.length < 2 ||
@@ -164,7 +189,7 @@ export async function POST(request: Request) {
 
     if (
       message.length < 10 ||
-      message.length > 5000
+      message.length > 3500
     ) {
       return NextResponse.json(
         {
@@ -184,6 +209,39 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
+
+    const ip = getIp(request);
+
+// ۱) چک لیمیت‌ها (چیزی ثبت نمی‌کند)
+for (const l of LIMITS) {
+  const wait = retryAfter(`feedback:${l.id}:${ip}`, l.limit, l.windowMs);
+  if (wait > 0) return tooMany(wait);
+}
+const failWait = retryAfter(`feedback:fail:${ip}`, FAIL_LIMIT, FAIL_WINDOW);
+if (failWait > 0) return tooMany(failWait);
+
+// ۲) توکن خالی یا تکراری
+if (!turnstileToken || !claimToken(turnstileToken)) {
+  record(`feedback:fail:${ip}`, FAIL_WINDOW);
+  return NextResponse.json(
+    { message: "تأیید امنیتی نامعتبر یا منقضی شده است. لطفاً دوباره تلاش کنید." },
+    { status: 400 }
+  );
+}
+
+// ۳) تأیید توکن با کلادفلر
+const human = await verifyTurnstile(turnstileToken, ip);
+if (!human) {
+  record(`feedback:fail:${ip}`, FAIL_WINDOW);
+  return NextResponse.json(
+    { message: "تأیید امنیتی ناموفق بود. لطفاً دوباره تلاش کنید." },
+    { status: 403 }
+  );
+}
+
+// ۴) ثبت در لیمیت‌ها
+for (const l of LIMITS) record(`feedback:${l.id}:${ip}`, l.windowMs);
 
     await connectDatabase();
 

@@ -542,9 +542,9 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
 
           <div className="flex flex-wrap justify-center gap-8 mt-10">
             {[
-              { val: "+۳۰۰", label: "پرونده موفق" },
-              { val: "+۴.۵M$", label: "دارایی ردیابی‌شده" },
-              { val: "۱۴", label: "شبکه بلاک‌چین" },
+              { val: "+300", label: "پرونده موفق" },
+              { val: "1401", label: "سال تاسیس" },
+              { val: "90%", label: "نرخ موفقیت " },
             ].map(({ val, label }) => (
               <div key={label} className="text-center">
                 <div
@@ -564,7 +564,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
 
                 <div
                   style={{
-                    color: darkMode ? "#404e62eb" : "#64748B",
+                    color: darkMode ? "#697483eb" : "#64748B",
                     fontSize: "0.75rem",
                     marginTop: 3,
                   }}
@@ -594,7 +594,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
         viewport={{ once: true, amount: 0.2 }}
-        className="px-6 py-20 md:px-12 md:py-28"
+        className="px-6 py-14 md:px-12 md:py-28"
       >
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
@@ -654,7 +654,8 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                     fontWeight: 600,
                   }}
                 >
-                 محمدرضا یوسفی،
+                  <a href="/authors/mohammadreza-yousefi"> محمدرضا یوسفی،</a>
+                
                 </span>{" "}
               پژوهشگر جرائم رایانه‌ای، با مأموریتِ نفوذ به تاریک‌ترین شبکه‌های کلاهبرداری، گراف‌کاوی بلاک‌چین و کالبدشکافی دیجیتال پایه‌گذاری شد.<br /> از آنجا که کشف سرنخِ سایبری بدون استنادپذیریِ قانونی در دادگاه بی‌ارزش است، همراهی جناب آقای &nbsp;&nbsp;&nbsp;&nbsp;
                              {" "}
@@ -664,7 +665,8 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                     fontWeight: 600,
                   }}
                 >
-              علیرضا طباطبایی،
+                  <a href="/authors/alireza-tabatabaei-hashemi"> علیرضا طباطبایی،</a>
+             
                 </span>{" "}
                 وکیل سایبری برجسته در این تیم، تضمین می‌کند که تمامی داده‌های استخراج‌شده، به ادله‌ای کاملاً محکمه‌پسند و غیرقابل‌انکار برای مراجع قضایی تبدیل شوند. <br />پاراهور، خط پایانِ گمنامیِ مجرمانِ دیجیتال است.
               </p>
@@ -1168,7 +1170,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
       >
         <div className="max-w-5xl mx-auto flex items-start gap-4">
           <div
-            className="flex-shrink-0 mt-0.5 p-2 rounded-lg"
+              className="flex-shrink-0 self-center p-2 rounded-lg"
             style={{
               background: darkMode
                 ? "rgba(0,229,255,0.07)"

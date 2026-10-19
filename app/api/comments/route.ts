@@ -3,7 +3,9 @@ import dbConnect from "@/lib/mongodb"; // مسیر اتصال به دیتابی�
 import Comment from "../../model/comment"; // مسیر مدل نظرات شما
 import mongoose from "mongoose";
 import { isAdmin } from "@/lib/adminAuth";
-import { getIp, record, retryAfter, MIN } from "@/lib/rateLimit";
+import { getIp, record, retryAfter, MIN, HOUR } from "@/lib/rateLimit";
+import { verifyTurnstile } from "@/lib/turnstile";
+import { claimToken } from "@/lib/tokenGuard";
 import Post from "../../model/blog";
 
 // GET: دریافت لیست نظرات با قابلیت صفحه‌بندی و فیلتر وضعیت
@@ -66,22 +68,29 @@ export async function GET(request: Request) {
 }
 
 
+const LIMITS = [
+  { id: "main", limit: 3, windowMs: HOUR },  // ۳ نظر، بعدش حدود ۱ ساعت قفل
+] as const;
+
+const FAIL_LIMIT = 10;
+const FAIL_WINDOW = 10 * MIN;
+
+function tooMany(seconds: number) {
+  const t =
+    seconds >= 3600 ? `${Math.ceil(seconds / 3600)} ساعت` :
+    seconds > 90 ? `${Math.ceil(seconds / 60)} دقیقه` :
+    `${seconds} ثانیه`;
+  return NextResponse.json(
+    { message: `تعداد ارسال‌های شما به حد مجاز رسیده است. لطفاً ${t} دیگر دوباره تلاش کنید.` },
+    { status: 429, headers: { "Retry-After": String(seconds) } }
+  );
+}
+
 export async function POST(request: Request) {
   try {
-
-    const ip = getIp(request);
-    const wait = retryAfter(`comment:${ip}`, 5, 10 * MIN);
-    if (wait > 0) {
-      return NextResponse.json(
-        { message: `تعداد ارسال زیاد است. ${Math.ceil(wait / 60)} دقیقه دیگر تلاش کنید.` },
-        { status: 429 }
-      );
-    }
-
-    await dbConnect();
     const body = await request.json();
 
-    const { postId, name, contact, comment } = body ?? {};
+    const { postId, name, contact, comment, turnstileToken } = body ?? {};
 
     if (
       typeof name !== "string" ||
@@ -113,8 +122,40 @@ export async function POST(request: Request) {
       );
     }
 
+    /* ───── لیمیت + کپچا ───── */
+    const ip = getIp(request);
 
-        record(`comment:${ip}`, 10 * MIN);
+    for (const l of LIMITS) {
+      const wait = retryAfter(`comment:${l.id}:${ip}`, l.limit, l.windowMs);
+      if (wait > 0) return tooMany(wait);
+    }
+    const failWait = retryAfter(`comment:fail:${ip}`, FAIL_LIMIT, FAIL_WINDOW);
+    if (failWait > 0) return tooMany(failWait);
+
+    const token = typeof turnstileToken === "string" ? turnstileToken : "";
+
+    if (!token || !claimToken(token)) {
+      record(`comment:fail:${ip}`, FAIL_WINDOW);
+      return NextResponse.json(
+        { message: "تأیید امنیتی نامعتبر یا منقضی شده است. لطفاً دوباره تلاش کنید." },
+        { status: 400 }
+      );
+    }
+
+    const human = await verifyTurnstile(token, ip);
+    if (!human) {
+      record(`comment:fail:${ip}`, FAIL_WINDOW);
+      return NextResponse.json(
+        { message: "تأیید امنیتی ناموفق بود. لطفاً دوباره تلاش کنید." },
+        { status: 403 }
+      );
+    }
+
+    for (const l of LIMITS) record(`comment:${l.id}:${ip}`, l.windowMs);
+    /* ───── پایان ───── */
+
+    await dbConnect();
+
     await Comment.create({
       postId: postId || null,
       name: name.trim(),
@@ -139,6 +180,10 @@ export async function POST(request: Request) {
 // PATCH: آپدیت وضعیت تایید نظر (توسط مدیر)
 export async function PATCH(request: Request) {
   try {
+if (!(await isAdmin())) {
+  return NextResponse.json({ message: "دسترسی غیرمجاز" }, { status: 403 });
+}
+
     await dbConnect();
     const body = await request.json();
     const { id, approvalStatus } = body;
@@ -176,6 +221,10 @@ export async function PATCH(request: Request) {
 // DELETE: حذف نظر (توسط مدیر)
 export async function DELETE(request: Request) {
   try {
+if (!(await isAdmin())) {
+  return NextResponse.json({ message: "دسترسی غیرمجاز" }, { status: 403 });
+}
+
     await dbConnect();
     const body = await request.json();
     const { id } = body;
