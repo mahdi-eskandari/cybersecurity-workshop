@@ -11,11 +11,36 @@ import { useTheme } from "@/components/ThemeProvider";
 import { siTelegram } from "simple-icons";
 import { useState, useRef } from "react";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
+import Link from "next/link";
 
 
 /* ─── SHARED ─── */
 const PulseDot = ({ size = 7, color = "#00E5FF" }: { size?: number; color?: string }) => (
   <span style={{ display: "inline-block", width: size, height: size, borderRadius: "50%", background: color, boxShadow: `0 0 8px ${color}cc`, flexShrink: 0 }} />
+);
+
+
+const IconHome = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M3 11l9-8 9 8" />
+    <path d="M5 10v10h14V10" />
+    <path d="M9 20v-6h6v6" />
+  </svg>
+);
+
+const IconChevronLeft = () => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="15 18 9 12 15 6" />
+  </svg>
 );
 
 /* ─── ICONS ─── */
@@ -238,7 +263,7 @@ const errorRetries = useRef(0);
   const field = (name: string) => [
     "w-full rounded-xl border px-4 py-3 text-sm outline-none transition-all duration-200",
     isDark
-      ? "border-[#00E5FF]/20 bg-[#060B19] text-[#E2E8F0] placeholder:text-[#475569] caret-[#00E5FF] hover:border-[#00E5FF]/45 focus:border-[#00E5FF]/70 focus:ring-4 focus:ring-[#00E5FF]/[0.06]"
+      ? "border-[#00E5FF]/20 bg-[#060B19] text-[#E2E8F0] placeholder:text-[#475569] caret-[#00E5FF]focus:border-[#00E5FF]/70 focus:ring-4 focus:ring-[#00E5FF]/[0.06]"
       : "border-[#1E3A8A]/25 bg-white text-[#0F172A] placeholder:text-[#94A3B8] caret-[#1E3A8A] hover:border-[#1E3A8A]/55 focus:border-[#1E3A8A] focus:ring-4 focus:ring-[#1E3A8A]/[0.08]",
     focus === name && (isDark ? "border-[#00E5FF]/40 shadow-[0_0_16px_rgba(0,229,255,0.02)]" : "border-[#1E3A8A] shadow-[0_8px_20px_rgba(30,58,138,0.06)]"),
   ].filter(Boolean).join(" ");
@@ -414,6 +439,87 @@ const isDark = darkMode;
   return (
     <>
     <div dir="rtl" className={`contact-page min-h-screen bg-[length:52px_52px] bg-fixed font-[var(--font-vazirmatn),sans-serif] transition-colors duration-300 pt-[70px] ${isDark ? "bg-[#0A1128] text-[#E6F7FF] " : "bg-white text-[#0F172A]"}`}>
+
+{/* ─── BREADCRUMB ─── */}
+
+    <section
+  // className="pt-[30px]"
+  style={{
+    background: darkMode ? "#070D1E" : "#F1F5FB",
+  }}
+>
+  <div className="px-6 md:px-12 mt-[10px]">
+    <nav
+      aria-label="مسیر راهنما"
+      className="max-w-5xl mx-auto py-3"
+    >
+      
+    <ol className="flex items-center gap-2 whitespace-nowrap overflow-x-auto text-xs">
+      <li className="flex items-center">
+        <Link
+    href="/"
+    className={`flex items-center gap-1.5 leading-none transition-colors ${
+      darkMode
+        ? "text-[#64748B] hover:text-[#00E5FF]"
+        : "text-[#475569] hover:text-[#1565C0]"
+    }`}
+  >
+    <IconHome />
+خانه
+        </Link>
+      </li>
+
+      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
+        <IconChevronLeft />
+      </li>
+
+      <li>
+        <Link
+          href="/about"
+          className={`transition-colors ${
+            darkMode
+              ? "text-[#64748B] hover:text-[#00E5FF]"
+              : "text-[#475569] hover:text-[#1565C0]"
+          }`}
+        >
+درباره ما
+        </Link>
+      </li>
+
+      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
+        <IconChevronLeft />
+      </li>
+
+      <li>
+        <span
+          aria-current="page"
+          className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md"
+          style={{
+            color: darkMode ? "#00E5FF" : "#1565C0",
+            background: darkMode ? "rgba(0,229,255,0.055)" : "rgba(21,101,192,0.08)",
+            border: darkMode
+              ? "1px solid rgba(0,229,255,0.1)"
+              : "1px solid rgba(21,101,192,0.2)",
+          }}
+        >
+          <span
+            style={{
+              width: 4,
+              height: 4,
+              borderRadius: "50%",
+              background: darkMode ? "#00E5FF" : "#1565C0",
+              display: "inline-block",
+            }}
+          />
+تماس با ما
+  </span>
+      </li>
+    </ol>
+  </nav>
+</div>
+</section>
+
+
       {/* HERO */}
       <motion.section className="contact-hero relative overflow-hidden px-6 pb-16 pt-20 text-center md:px-12 md:pb-20 md:pt-28" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.65, ease: "easeOut" }}
        style={{
@@ -600,7 +706,7 @@ const isDark = darkMode;
 
         <p
           className={`flex-grow text-[0.82rem] leading-[1.75] ${
-            isDark ? "text-[#475569]" : "text-[#64748B]"
+            isDark ? "text-[#576376]" : "text-[#64748B]"
           }`}
         >
           {ch.desc}
@@ -615,7 +721,7 @@ const isDark = darkMode;
         >
           <span
             className={`mb-1 block text-[0.65rem] ${
-              isDark ? "text-[#334155]" : "text-[#64748B]"
+              isDark ? "text-[#576376]" : "text-[#64748B]"
             }`}
           >
             {ch.valueLabel}
@@ -808,7 +914,7 @@ const isDark = darkMode;
 
             <div>
               <span
-                className={`mb-[5px] block font-mono text-[0.58rem] tracking-[0.14em] ${
+                className={`mb-[5px] block font-mono text-[0.68rem] tracking-[0.14em] ${
                   isDark ? "text-[#00E5FF]/40" : "text-[#1565C0]"
                 }`}
               >
@@ -820,20 +926,21 @@ const isDark = darkMode;
                   isDark ? "text-white" : "text-[#0F172A]"
                 }`}
               >
-                آدرس دفتر: آیت‌الله کاشانی، بلوار اباذر
+               آدرس دفتر مرکزی: تهران
               </h4>
 
               <p
                 className={`text-[0.75rem] leading-[1.75] ${
-                  isDark ? "text-[#475569]" : "text-[#64748B]"
+                  isDark ? "text-[#576376]" : "text-[#64748B]"
                 }`}
               >
-                مراجعه حضوری صرفاً با هماهنگی قبلی و تعیین وقت مشاوره امکان‌پذیر است.
+                آیت الله کاشانی، بلوار اباذر، نبش خیابان شالی، پلاک 9، طبقه 4، واحد 6
+               
               </p>
 
               <div
                 className={`mt-3 flex items-center gap-1.5 text-xs ${
-                  isDark ? "text-[#334155]" : "text-[#64748B]"
+                  isDark ? "text-[#4b5463]" : "text-[#64748B]"
                 }`}
               >
                 <svg
@@ -849,7 +956,7 @@ const isDark = darkMode;
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
 
-                نبش خیابان شالی، پلاک ۹، طبقه چهارم، واحد ۶
+               مراجعه حضوری صرفاً با هماهنگی قبلی و تعیین وقت مشاوره امکان‌پذیر است.
               </div>
             </div>
           </div>

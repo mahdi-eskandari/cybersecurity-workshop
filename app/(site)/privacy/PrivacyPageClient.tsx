@@ -117,8 +117,25 @@ const IconServer = () => (
 );
 
 const IconChevronLeft = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <polyline points="15 18 9 12 15 6" />
+  </svg>
+);
+
+const IconHome = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M3 11l9-8 9 8" />
+    <path d="M5 10v10h14V10" />
+    <path d="M9 20v-6h6v6" />
   </svg>
 );
 
@@ -638,6 +655,89 @@ const lightColors = {
             : {})
         }}
       >
+
+
+{/* ─── BREADCRUMB ─── */}
+
+    <section
+  // className="pt-[30px]"
+  style={{
+    background: darkMode ? "#070D1E" : "#F1F5FB",
+  }}
+>
+  <div className="px-6 md:px-12 mt-[15px]">
+    <nav
+      aria-label="مسیر راهنما"
+      className="max-w-5xl mx-auto py-3"
+    >
+      
+    <ol className="flex items-center gap-2 whitespace-nowrap overflow-x-auto text-xs">
+<li className="flex items-center">
+        <Link
+    href="/"
+    className={`flex items-center gap-1.5 leading-none transition-colors ${
+      darkMode
+        ? "text-[#64748B] hover:text-[#00E5FF]"
+        : "text-[#475569] hover:text-[#1565C0]"
+    }`}
+  >
+    <IconHome />
+خانه
+        </Link>
+      </li>
+
+      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
+        <IconChevronLeft />
+      </li>
+
+      <li>
+        <Link
+          href="/contact"
+          className={`transition-colors ${
+            darkMode
+              ? "text-[#64748B] hover:text-[#00E5FF]"
+              : "text-[#475569] hover:text-[#1565C0]"
+          }`}
+        >
+تماس با ما
+        </Link>
+      </li>
+
+      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
+        <IconChevronLeft />
+      </li>
+
+      <li>
+        <span
+          aria-current="page"
+          className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md"
+          style={{
+            color: darkMode ? "#00E5FF" : "#1565C0",
+            background: darkMode ? "rgba(0,229,255,0.055)" : "rgba(21,101,192,0.08)",
+            border: darkMode
+              ? "1px solid rgba(0,229,255,0.1)"
+              : "1px solid rgba(21,101,192,0.2)",
+          }}
+        >
+          <span
+            style={{
+              width: 4,
+              height: 4,
+              borderRadius: "50%",
+              background: darkMode ? "#00E5FF" : "#1565C0",
+              display: "inline-block",
+            }}
+          />
+حریم خصوصی 
+  </span>
+      </li>
+    </ol>
+  </nav>
+</div>
+</section>
+
+
+
         {modalOpen && (
           <EmergencyModal
             isDark={isDark}
@@ -670,30 +770,7 @@ const lightColors = {
           />
 
           <div className="relative z-10 max-w-5xl mx-auto">
-            <div className="flex items-center gap-2 mb-6">
-              <Link
-                href="/"
-                className={`privacy-breadcrumb ${isDark ? "" : "text-[#475569]"}`}
-                style={{
-                  fontSize: "0.75rem",
-                  ...(isDark ? { color: "#334155" } : {})
-                }}
-              >
-                خانه
-              </Link>
-
-              <IconChevronLeft />
-
-              <span
-                className={`privacy-breadcrumb-current ${isDark ? "" : "text-[#1565C0]"}`}
-                style={{
-                  fontSize: "0.75rem",
-                  ...(isDark ? { color: "#00E5FF" } : {})
-                }}
-              >
-                حریم خصوصی
-              </span>
-            </div>
+          
 
 <div className="flex items-start gap-4 mb-5">
   <div
@@ -763,8 +840,8 @@ const lightColors = {
                   className={isDark ? "" : "text-[#475569]"}
                   style={{
                     fontFamily: "monospace",
-                    fontSize: "0.68rem",
-                    ...(isDark ? { color: "#334155" } : {})
+                    fontSize: "0.75rem",
+                    ...(isDark ? { color: "#576376" } : {})
                   }}
                 >
                   آخرین به‌روزرسانی:
@@ -774,7 +851,7 @@ const lightColors = {
                   className={isDark ? "" : "text-[#475569]"}
                   style={{
                     fontFamily: "monospace",
-                    fontSize: "0.68rem",
+                    fontSize: "0.75rem",
                     fontWeight: 600,
                     ...(isDark ? { color: "#475569" } : {})
                   }}
@@ -803,7 +880,7 @@ const lightColors = {
                 <span
                   style={{
                     fontFamily: "monospace",
-                    fontSize: "0.68rem",
+                    fontSize: "0.75rem",
                     color: "#22C55E"
                   }}
                 >

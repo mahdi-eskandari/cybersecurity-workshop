@@ -215,19 +215,6 @@ const cleanContent = (content: string) => {
     .trim();
 };
 
-const makeExcerpt = (content?: string, maxLength = 70) => {
-  if (!content) {
-    return "برای این مقاله توضیح کوتاهی ثبت نشده است.";
-  }
-
-  const text = cleanContent(content);
-
-  if (text.length <= maxLength) {
-    return text;
-  }
-
-  return `${text.slice(0, maxLength).trim()}...`;
-};
 
 const getInitials = (name?: string) => {
   if (!name) return "پ";
@@ -546,7 +533,7 @@ const ArticleCard = ({
       (item) => item.id === (post.categoryId || "").trim()
     )?.label || CATEGORY_FALLBACK;
 
-  const summary = makeExcerpt(post.content, 70);
+  const summary = post.content
   const dateText = formatDate(post.updatedAt || post.createdAt);
   const readTime =
     post.readingTime && post.readingTime > 0
@@ -554,24 +541,16 @@ const ArticleCard = ({
       : "مطالعه";
 
   return (
-    <div
-      
-
-
-       className={`group flex flex-col h-full min-w-0 rounded-2xl overflow-hidden transition-all duration-200 ${
-            darkMode
-              ? "bg-[rgba(255,255,255,0.028)] border border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
-              : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"
-          }`}
-          style={{
-            backdropFilter: "blur(10px)",
-          }}
-      // style={{
-      //   background: darkMode
-      //     ? "linear-gradient(145deg, rgba(255,255,255,0.035), rgba(255,255,255,0.018))"
-      //     : "linear-gradient(145deg, #FFFFFF, #FBFCFE)",
-      // }}
-    >
+<article
+    className={`group flex h-full flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
+    darkMode
+      ? "bg-[rgba(255,255,255,0.028)] border border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
+      : "bg-white border border-[#0B1C3E]/10 shadow-sm hover:shadow-md hover:border-[#1565C0]/20"
+  }`}
+  style={{
+    backdropFilter: "blur(10px)",
+  }}
+>
       {/* Thumbnail */}
       <div
         className={`relative aspect-video overflow-hidden flex-shrink-0 ${
@@ -613,23 +592,20 @@ const ArticleCard = ({
       {/* Content */}
       <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-5 pt-10">
         <h3
-          className={`text-base font-bold leading-snug mb-3 break-words transition-colors line-clamp-1 ${
+          className={`text-base font-bold leading-snug mb-3 break-words transition-colors line-clamp-2 min-h-[2.85rem] ${
             darkMode ? "text-[#E6F7FF]" : "group-hover:text-[#1565C0]"
           }`}
         >
           {post.title}
         </h3>
 
-        <p
-          className={`text-sm leading-relaxed line-clamp-1 break-words mb-5 flex-1 min-h-6 ${
-            darkMode ? "text-[#9DB0C0]" : "text-[#475569]"
-          }`}
-        >
-          {summary.length > 60 
-          ? summary.slice(0,60) + "..."
-          : summary
-          }
-        </p>
+<p
+  className={`text-[13px] leading-relaxed line-clamp-2 break-words mb-5 flex-1 min-h-[2.85rem] ${
+    darkMode ? "text-[#9DB0C0]" : "text-[#475569]"
+  }`}
+>
+  { summary }
+</p>
 
         {/* Footer */}
         <div
@@ -648,9 +624,9 @@ const ArticleCard = ({
                   darkMode ? "text-[#71869A]" : "text-[#64748B]"
                 }`}
               >
-                {dateText && <span>{dateText}</span>}
-                {dateText && <span>·</span>}
-                <span>{readTime}</span>
+                {dateText && <span className="text-[11px]">{dateText}</span>}
+                {dateText && <span>-</span>}
+                <span className="text-[11px]">{readTime}</span>
               </div>
             </div>
           </div>
@@ -677,7 +653,7 @@ const ArticleCard = ({
           </Link>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 
@@ -747,7 +723,6 @@ export default function AuthorsClient({
   currentPage,
   postsError = "",
   seoH1,
-  h1Map,
   slugMap,
   basePath: basePathProp,
 }: {
@@ -757,7 +732,6 @@ export default function AuthorsClient({
   currentPage: number;
   postsError?: string;
   seoH1?: string;
-  h1Map?: Record<string, string>;
   slugMap?: Record<string, string>;
   basePath?: string;
 }) {
@@ -767,7 +741,6 @@ export default function AuthorsClient({
 
   const [activeId, setActiveId] = useState(authorSlug);
     const [crisisOpen, setCrisisOpen] = useState(false)
-      const [switched, setSwitched] = useState(false);
   
   
 
@@ -778,7 +751,7 @@ const activeAuthorIndex = Math.max(
 const author = authors[activeAuthorIndex];
 
   const accent = darkMode ? author.accent : author.accentLight;
-    const currentH1 = switched ? h1Map?.[author.id] || seoH1 : seoH1;
+  const currentH1 = seoH1;
 
   const authorPosts = posts
     .filter((post) => post.status === "published")
@@ -799,7 +772,6 @@ const author = authors[activeAuthorIndex];
     const handleSelectAuthor = (id: string) => {
     if (id === activeId) return;
     setActiveId(id);
-    setSwitched(true);
     window.history.pushState(null, "", `/authors/${slugMap?.[id] || id}`);
   };
 
@@ -812,13 +784,7 @@ const author = authors[activeAuthorIndex];
           )
         : undefined;
 
-      if (found) {
-        setActiveId(found.id);
-        setSwitched(true);
-      } else {
-        setActiveId(authorSlug);
-        setSwitched(false);
-      }
+      setActiveId(found ? found.id : authorSlug);
     };
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
@@ -961,7 +927,7 @@ const SocialBtn = ({
               // color: darkMode ? "#00E5FF" : "#1565C0",
               color: accent
             }}
-            >PARAHOOR / EXPERTS</span>
+            >Parahoor // Our Leadership Team</span>
 
                         <span className="node-dot pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
                    backgroundColor: accent,
@@ -974,7 +940,7 @@ const SocialBtn = ({
 
 
 
-            <h1
+<h1
   className="glow-text font-black leading-tight mb-6"
   style={{
     fontSize: "clamp(2rem, 5vw, 3.5rem)",
@@ -986,7 +952,37 @@ const SocialBtn = ({
       : "0 0 18px rgba(30,58,138,0.10)",
   }}
 >
-    {currentH1}
+{(() => {
+  const highlight = "آژانس تحقیقاتی";
+  const brand = "پاراهور";
+  const title = currentH1 || "";
+  const i = title.indexOf(highlight);
+
+  // متنی که بعد از هایلایت می‌آید؛ اگر پاراهور داشت، بره خط بعد
+  const renderRest = (text: string) => {
+    const j = text.indexOf(brand);
+    if (j === -1) return text;
+    return (
+      <>
+        {text.slice(0, j).trimEnd()}
+        <br />
+        {text.slice(j)}
+      </>
+    );
+  };
+
+  if (i === -1) return renderRest(title);
+
+  return (
+    <>
+      {title.slice(0, i)}
+      <span style={{ color: darkMode ? "#00E5FF" : "#1565C0" }}>
+        {highlight}
+      </span>
+      {renderRest(title.slice(i + highlight.length))}
+    </>
+  );
+})()}
 </h1>
 
             <p
@@ -1109,7 +1105,7 @@ const SocialBtn = ({
 
                 <div
                   className="text-[0.72rem] mt-1"
-                  style={{ color: darkMode ? "#475569" : "#64748B" }}
+                  style={{ color: darkMode ? "#64748B" : "#64748B" }}
                 >
                   {author.subtitle}
                 </div>
@@ -1132,73 +1128,7 @@ const SocialBtn = ({
               }}
             />
 
-            {(() => {
-  const ctaBase = darkMode
-    ? {
-        border: accent,
-        background: "transparent",
-        boxShadow: `0 0 16px ${accent}18`,
-      }
-    : {
-        border: `${accent}44`,
-        background: `${accent}10`,
-        boxShadow: undefined,
-      };
-
-  const ctaHover = darkMode
-    ? {
-        border: accent,
-        background: `${accent}10`,
-        boxShadow: `0 0 28px ${accent}30`,
-      }
-    : {
-        border: `${accent}88`,
-        background: `${accent}18`,
-        boxShadow: `0 0 28px ${accent}15`,
-      };
-
-  return (
-    <button
-    onClick={() => setCrisisOpen(true)}
-      className={`w-full h-[43px] rounded-xl font-inherit text-[0.84rem] font-bold flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 ${
-        darkMode ? "border-[1.5px]" : "border"
-      }`}
-      style={{
-        borderStyle: "solid",
-        borderColor: ctaBase.border,
-        background: ctaBase.background,
-        boxShadow: ctaBase.boxShadow,
-        color: accent,
-      }}
-      {...makeSectionHover(ctaBase, ctaHover)}
-    >
-      <IconShield />
-      {author.ctaLabel}
-    </button>
-  );
-})()}
-          </motion.div>
-
-          {/* ===================================================
-              BIO
-          =================================================== */}
-
-
-           <motion.div
-        className="max-w-[1180px] mx-auto mb-5 px-[26px] py-[23px] rounded-[17px] transition-all duration-300"
-            style={{
-              background: darkMode
-                ? "linear-gradient(145deg, rgba(255,255,255,0.035), rgba(255,255,255,0.018))"
-                : "linear-gradient(145deg, #FFFFFF, #FBFCFE)",
-              border: `1px solid ${accent}42`
-            }}
-           
-    initial={{ opacity: 0, y: 30 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.5 }}
-  viewport={{ once: true, amount: 0.2 }}
->
-            <div className="flex items-center gap-[9px] mb-[15px]">
+          <div className="flex items-center gap-[9px] mb-[15px]">
               <span style={{ color: accent }}>
                 <IconShield />
               </span>
@@ -1213,6 +1143,9 @@ const SocialBtn = ({
               {author.bio.join(" ")}
             </p>
           </motion.div>
+
+
+          
 
           {/* ===================================================
               ACTIVITY + CREDENTIALS
@@ -1468,7 +1401,7 @@ color: accent
                           color: !showAllPosts
                             ? accent
                             : darkMode
-                              ? "#475569"
+                              ? "#64748B"
                               : "#64748B",
                         }}
                       >
@@ -1490,7 +1423,7 @@ color: accent
                           color: showAllPosts
                             ? accent
                             : darkMode
-                              ? "#475569"
+                              ? "#64748B"
                               : "#64748B",
                         }}
                       >
@@ -1502,7 +1435,7 @@ color: accent
 
                 <span
                   className="text-[0.65rem] font-mono mr-[3px]"
-                  style={{ color: darkMode ? "#334155" : "#94A3B8" }}
+                  style={{ color: darkMode ? "#64748B" : "#94A3B8" }}
                 >
                   {authorPosts.length} ARTICLES
                 </span>

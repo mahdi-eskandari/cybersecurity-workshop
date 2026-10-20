@@ -549,31 +549,15 @@ const onSubmit = async (data: CrisisReportFormValues) => {
             }}
           />
 
-          <div
-            style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              width: 56,
-              height: 56,
-              borderBottom: darkMode
-                ? "1px solid rgba(0,229,255,0.15)"
-                : "1px solid rgba(37,99,235,0.12)",
-              borderLeft: darkMode
-                ? "1px solid rgba(0,229,255,0.15)"
-                : "1px solid rgba(37,99,235,0.12)",
-              borderRadius: "0 0 0 20px",
-              pointerEvents: "none",
-            }}
-          />
+
 
           {/* ── HEADER ── */}
           <div
             className="flex items-start justify-between px-6 pt-6 pb-5"
             style={{
               borderBottom: darkMode
-                ? "1px solid rgba(255,255,255,0.04)"
-                : "1px solid rgba(37,99,235,0.07)",
+                ? "1px solid rgba(0,229,255,0.15)"
+                : "1px solid rgba(37, 100, 235, 0.32)",
             }}
           >
             <div className="flex-1 pl-4">
@@ -706,7 +690,7 @@ const onSubmit = async (data: CrisisReportFormValues) => {
                           }
                         )
                       }
-className={`w-full min-h-[52px] flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl font-medium text-[11px] leading-5 text-center transition-all ${
+className={`w-full min-h-[48px] flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl font-medium text-[11px] leading-5 text-center transition-all ${
   id === "consulting" ? "sm:col-span-2" : ""
 }`}
                       style={{
@@ -715,16 +699,16 @@ className={`w-full min-h-[52px] flex items-center justify-center gap-2 px-3 py-2
                             ? "rgba(0,229,255,0.1)"
                             : "rgba(37,99,235,0.08)"
                           : darkMode
-                            ? "rgba(255,255,255,0.03)"
-                            : "#F8FAFC",
+                            ? "rgba(105, 194, 223, 0.05)"
+                            : "#f3f5f8",
 
                         border: isActive
                           ? darkMode
                             ? "1px solid rgba(0,229,255,0.45)"
                             : "1px solid rgba(37,99,235,0.38)"
                           : darkMode
-                            ? "1px solid rgba(255,255,255,0.07)"
-                            : "1px solid rgba(37,99,235,0.10)",
+                            ? "1px solid rgba(72, 146, 159, 0.35)"
+                            : "1px solid rgba(165, 170, 182, 0.43)",
 
                         color: isActive
                           ? primary
@@ -790,8 +774,8 @@ className={`w-full min-h-[52px] flex items-center justify-center gap-2 px-3 py-2
               style={{
                 height: 1,
                 background: darkMode
-                  ? "linear-gradient(90deg, transparent, rgba(0,229,255,0.08), transparent)"
-                  : "linear-gradient(90deg, transparent, rgba(37,99,235,0.08), transparent)",
+                  ? "linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.32), transparent)"
+                  : "linear-gradient(90deg, transparent, rgba(37, 100, 235, 0.38), transparent)",
               }}
             />
 
@@ -850,8 +834,8 @@ className={`w-full min-h-[52px] flex items-center justify-center gap-2 px-3 py-2
                         ? "1px solid rgba(0,229,255,0.4)"
                         : "1px solid rgba(37,99,235,0.4)"
                       : darkMode
-                        ? "1px solid rgba(255,255,255,0.06)"
-                        : "1px solid rgba(37,99,235,0.14)",
+                        ? "1px solid rgba(0, 229, 255, 0.19)"
+                        : "1px solid rgba(37, 100, 235, 0.27)",
 
                     color: darkMode ? "#b8bfc8" : "#1E293B",
 
@@ -898,8 +882,8 @@ className={`w-full min-h-[52px] flex items-center justify-center gap-2 px-3 py-2
               style={{
                 height: 1,
                 background: darkMode
-                  ? "linear-gradient(90deg, transparent, rgba(0,229,255,0.08), transparent)"
-                  : "linear-gradient(90deg, transparent, rgba(37,99,235,0.08), transparent)",
+                  ? "linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.32), transparent)"
+                  : "linear-gradient(90deg, transparent, rgba(37, 100, 235, 0.38), transparent)",
               }}
             />
 
@@ -971,8 +955,8 @@ className={`w-full min-h-[52px] flex items-center justify-center gap-2 px-3 py-2
                           ? "1px solid rgba(0,229,255,0.2)"
                           : "1px solid rgba(37,99,235,0.20)"
                         : darkMode
-                          ? "1px solid rgba(255,255,255,0.06)"
-                          : "1px solid rgba(37,99,235,0.14)",
+                          ? "1px solid rgba(0, 229, 255, 0.19)"
+                          : "1px solid rgba(37, 100, 235, 0.27)",
 
                     color: darkMode ? "#E2E8F0" : "#1E293B",
 

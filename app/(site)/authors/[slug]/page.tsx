@@ -126,12 +126,12 @@ export default async function AuthorPage({
       seo: await getPageSeo(`author-${a.id}` as PageKey),
     }))
   );
-  const h1Map = Object.fromEntries(authorSeos.map((x) => [x.id, x.seo.h1Title]));
   const slugMap = Object.fromEntries(authorSeos.map((x) => [x.id, x.seo.slug]));
 
   const [posts, adjacent] = await Promise.all([
     getPosts(),
     getAdjacentPageLinks(toPageKey(match.identity)),
+    getPageSeo("authors"), // ← H1 اصلی از پنل
   ]);
 
   const showAllPosts = query.view === "all";
@@ -168,7 +168,6 @@ export default async function AuthorPage({
   showAllPosts={showAllPosts}
   currentPage={currentPage}
   seoH1={match.seo.h1Title}
-  h1Map={h1Map}
   slugMap={slugMap}
   basePath={basePath}
 />

@@ -64,7 +64,28 @@ const ArticleThumb = ({
 };
 
 
+const IconChevronLeft = () => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="15 18 9 12 15 6" />
+  </svg>
+);
 
+const IconHome = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M3 11l9-8 9 8" />
+    <path d="M5 10v10h14V10" />
+    <path d="M9 20v-6h6v6" />
+  </svg>
+);
 
 const IconUser = () => (
   <svg
@@ -1085,7 +1106,7 @@ const closeCrisis = () => {
   
   return (
       <>
-<div
+       <div
             dir="rtl"
       className={`min-h-screen transition-colors duration-300 pt-[65px] cyber-grid-bg ${
         darkMode
@@ -1096,38 +1117,87 @@ const closeCrisis = () => {
         fontFamily: "var(--font-vazirmatn), sans-serif",
       }}
     >
-      {menuOpen && (
-        <div
-          className="md:hidden flex flex-col gap-4 px-6 py-4"
+
+
+
+{/* ─── BREADCRUMB ─── */}
+
+    <section
+  // className="pt-[30px]"
+  style={{
+    background: darkMode ? "#070D1E" : "#F1F5FB",
+  }}
+>
+  <div className="px-6 md:px-12 mt-[15px]">
+    <nav
+      aria-label="مسیر راهنما"
+      className="max-w-5xl mx-auto py-3"
+    >
+      
+    <ol className="flex items-center gap-2 whitespace-nowrap overflow-x-auto text-xs">
+      <li className="flex items-center">
+        <Link
+    href="/contact"
+    className={`flex items-center gap-1.5 leading-none transition-colors ${
+      darkMode
+        ? "text-[#64748B] hover:text-[#00E5FF]"
+        : "text-[#475569] hover:text-[#1565C0]"
+    }`}
+  >
+تماس با ما
+        </Link>
+      </li>
+
+      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
+        <IconChevronLeft />
+      </li>
+
+      <li>
+        <Link
+          href="/privacy"
+          className={`transition-colors ${
+            darkMode
+              ? "text-[#64748B] hover:text-[#00E5FF]"
+              : "text-[#475569] hover:text-[#1565C0]"
+          }`}
+        >
+حریم خصوصی
+        </Link>
+      </li>
+
+      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
+        <IconChevronLeft />
+      </li>
+
+      <li>
+        <span
+          aria-current="page"
+          className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md"
           style={{
-            background: darkMode ? "rgba(10,17,40,0.97)" : "#FFFFFF",
-            borderBottom: darkMode
+            color: darkMode ? "#00E5FF" : "#1565C0",
+            background: darkMode ? "rgba(0,229,255,0.055)" : "rgba(21,101,192,0.08)",
+            border: darkMode
               ? "1px solid rgba(0,229,255,0.1)"
-              : "1px solid rgba(30,58,138,0.22)",
+              : "1px solid rgba(21,101,192,0.2)",
           }}
         >
-          {["خدمات ما", "وبلاگ", "درباره ما", "تماس با ما"].map(
-            (item) => (
-              <Link
-                key={item}
-                href={
-                  item === "خدمات ما"
-                    ? "/services"
-                    : item === "وبلاگ"
-                      ? "/blog"
-                      : item === "درباره ما"
-                        ? "/about"
-                        : "/contact"
-                }
-                className="nav-link text-base"
-                onClick={() => setMenuOpen(false)}
-              >
-                {item}
-              </Link>
-            )
-          )}
-        </div>
-      )}
+          <span
+            style={{
+              width: 4,
+              height: 4,
+              borderRadius: "50%",
+              background: darkMode ? "#00E5FF" : "#1565C0",
+              display: "inline-block",
+            }}
+          />
+وبلاگ  
+  </span>
+      </li>
+    </ol>
+  </nav>
+</div>
+</section>
+
 
       <motion.div
         className="relative flex flex-col items-center justify-center text-center px-6 pt-24 pb-0 md:pt-32 md:pb-16"
@@ -1786,7 +1856,7 @@ style={{
             <div
               className="hidden md:block w-20 mt-4 flex-shrink-0 mx-auto"
               style={{
-                height: "1.3px",
+                height: "0.5px",
                 background: darkMode
                   ? "linear-gradient(to right, rgba(0,229,255,0.1), rgba(0,229,255,1), rgba(31,74,79,0.1))"
                   : "linear-gradient(to right, rgba(30,58,138,0.08), #1565C0, rgba(30,58,138,0.08))",
@@ -1887,13 +1957,11 @@ style={{
 
                         {/* Excerpt */}
                         <p
-                          className={`text-sm leading-relaxed line-clamp-1 break-words mb-5 flex-1 ${
+                          className={`text-[13px] leading-relaxed line-clamp-2 break-words mb-5 flex-1 min-h-[2.85rem] ${
                             darkMode ? "text-[#9DB0C0]" : "text-[#334155]"
                           }`}
                         >
-                          {
-                          summary
-                        }
+                          {summary}
                         </p>
 
                         {/* Footer */}

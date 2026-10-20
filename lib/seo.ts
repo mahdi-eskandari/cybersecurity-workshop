@@ -113,7 +113,7 @@ export const SEO_DEFAULTS = {
 
 export type PageKey = keyof typeof SEO_DEFAULTS;
 
-export async function getPageSeo(pageKey: PageKey) {
+async function getRawPageSeo(pageKey: PageKey) {
   await connectDB();
 
   const defaultSeo = SEO_DEFAULTS[pageKey];
@@ -161,6 +161,18 @@ export async function getPageSeo(pageKey: PageKey) {
         ? seo.canonical.trim()
         : "",
   };
+}
+
+
+// H1 صفحات نویسنده‌ها همیشه همون H1 اصلیِ صفحه‌ی "authors" از پنل ادمینه؛
+// اسم نویسنده هرگز توی H1 نمیاد.
+export async function getPageSeo(pageKey: PageKey) {
+  const seo = await getRawPageSeo(pageKey);
+
+  if (!pageKey.startsWith("author-")) return seo;
+
+  const main = await getRawPageSeo("authors");
+  return { ...seo, h1Title: main.h1Title };
 }
 
 function getSeoPath(pageKey: PageKey, slug: string) {

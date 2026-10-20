@@ -147,7 +147,7 @@ const errorRetries = useRef(0);
 
   return (
         <div
-      className="mt-12 w-full max-w-4xl mx-auto px-4 sm:px-0"
+      className="mt-20 w-full max-w-4xl mx-auto px-4 sm:px-0"
       onMouseEnter={() => setIsHov(true)}
       onMouseLeave={() => setIsHov(false)}
     >

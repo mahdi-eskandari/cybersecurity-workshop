@@ -155,7 +155,6 @@ export default async function AuthorsPage({
       seo: await getPageSeo(`author-${a.id}` as PageKey),
     }))
   );
-  const h1Map = Object.fromEntries(authorSeos.map((x) => [x.id, x.seo.h1Title]));
   const slugMap = Object.fromEntries(authorSeos.map((x) => [x.id, x.seo.slug]));
 
   const [posts, seo, adjacent] = await Promise.all([
@@ -201,7 +200,6 @@ export default async function AuthorsPage({
         showAllPosts={showAllPosts}
         currentPage={currentPage}
         seoH1={seo.h1Title}
-        h1Map={h1Map}
         slugMap={slugMap}
         basePath={BASE_PATH}
       />

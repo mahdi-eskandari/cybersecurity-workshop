@@ -4,10 +4,36 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "../../../components/ThemeProvider";
 import {EmergencyModal} from "../../.../../../components/CrisisReportForm"
+import Link from "next/link";
 
 
 
 /* ─── SHARED ─── */
+
+const IconHome = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M3 11l9-8 9 8" />
+    <path d="M5 10v10h14V10" />
+    <path d="M9 20v-6h6v6" />
+  </svg>
+);
+
+const IconChevronLeft = () => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="15 18 9 12 15 6" />
+  </svg>
+);
+
+
 const PulseDot = ({ size = 7, darkMode = true }: { size?: number; darkMode?: boolean }) => (
   <span
     style={{
@@ -440,6 +466,88 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
         fontFamily: "var(--font-vazirmatn), sans-serif",
       }}
     >
+
+ {/* ─── BREADCRUMB ─── */}
+
+    <section
+  // className="pt-[30px]"
+  style={{
+    background: darkMode ? "#070D1E" : "#F1F5FB",
+  }}
+>
+  <div className="px-6 md:px-12 mt-[10px]">
+    <nav
+      aria-label="مسیر راهنما"
+      className="max-w-5xl mx-auto py-3"
+    >
+      
+    <ol className="flex items-center gap-2 whitespace-nowrap overflow-x-auto text-xs">
+      <li className="flex items-center">
+        <Link
+    href="/"
+    className={`flex items-center gap-1.5 leading-none transition-colors ${
+      darkMode
+        ? "text-[#64748B] hover:text-[#00E5FF]"
+        : "text-[#475569] hover:text-[#1565C0]"
+    }`}
+  >
+    <IconHome />
+خانه
+        </Link>
+      </li>
+
+      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
+        <IconChevronLeft />
+      </li>
+
+      <li>
+        <Link
+          href="/blogs"
+          className={`transition-colors ${
+            darkMode
+              ? "text-[#64748B] hover:text-[#00E5FF]"
+              : "text-[#475569] hover:text-[#1565C0]"
+          }`}
+        >
+وبلاگ
+        </Link>
+      </li>
+
+      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
+        <IconChevronLeft />
+      </li>
+
+      <li>
+        <span
+          aria-current="page"
+          className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md"
+          style={{
+            color: darkMode ? "#00E5FF" : "#1565C0",
+            background: darkMode ? "rgba(0,229,255,0.055)" : "rgba(21,101,192,0.08)",
+            border: darkMode
+              ? "1px solid rgba(0,229,255,0.1)"
+              : "1px solid rgba(21,101,192,0.2)",
+          }}
+        >
+          <span
+            style={{
+              width: 4,
+              height: 4,
+              borderRadius: "50%",
+              background: darkMode ? "#00E5FF" : "#1565C0",
+              display: "inline-block",
+            }}
+          />
+درباره ما
+  </span>
+      </li>
+    </ol>
+  </nav>
+</div>
+</section>
+
+
+
      {crisisOpen && (
         <EmergencyModal
           onClose={() => setCrisisOpen(false)}

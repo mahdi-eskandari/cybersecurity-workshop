@@ -82,7 +82,13 @@ const TelegramIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
-
+const IconHome = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M3 11l9-8 9 8" />
+    <path d="M5 10v10h14V10" />
+    <path d="M9 20v-6h6v6" />
+  </svg>
+);
 
 
 
@@ -1236,68 +1242,97 @@ export default function App({
 
       }}
     >
+
+
+
+
+
+
+{/* ─── BREADCRUMB ─── */}
+
+    <section
+  // className="pt-[30px]"
+  style={{
+    background: darkMode ? "#070D1E" : "#F1F5FB",
+  }}
+>
+  <div className="px-6 md:px-12 mt-[10px]">
+    <nav
+      aria-label="مسیر راهنما"
+      className="max-w-4xl mx-auto py-3"
+    >
+      
+    <ol className="flex items-center gap-2 whitespace-nowrap overflow-x-auto text-xs">
+      <li className="flex items-center">
+        <Link
+    href="/"
+    className={`flex items-center gap-1.5 leading-none transition-colors ${
+      darkMode
+        ? "text-[#64748B] hover:text-[#00E5FF]"
+        : "text-[#475569] hover:text-[#1565C0]"
+    }`}
+  >
+          <IconHome />
+          خانه
+        </Link>
+      </li>
+
+      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
+        <IconChevronLeft />
+      </li>
+
+      <li>
+        <Link
+          href="/blogs"
+          className={`transition-colors ${
+            darkMode
+              ? "text-[#64748B] hover:text-[#00E5FF]"
+              : "text-[#475569] hover:text-[#1565C0]"
+          }`}
+        >
+          وبلاگ
+        </Link>
+      </li>
+
+      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
+        <IconChevronLeft />
+      </li>
+
+      <li>
+        <span
+          aria-current="page"
+          className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md"
+          style={{
+            color: darkMode ? "#00E5FF" : "#1565C0",
+            background: darkMode ? "rgba(0,229,255,0.055)" : "rgba(21,101,192,0.08)",
+            border: darkMode
+              ? "1px solid rgba(0,229,255,0.1)"
+              : "1px solid rgba(21,101,192,0.2)",
+          }}
+        >
+          <span
+            style={{
+              width: 4,
+              height: 4,
+              borderRadius: "50%",
+              background: darkMode ? "#00E5FF" : "#1565C0",
+              display: "inline-block",
+            }}
+          />
+          {category}
+        </span>
+      </li>
+    </ol>
+  </nav>
+</div>
+</section>
+
+
       {/* ───────────────── ARTICLE HEADER ───────────────── */}
 
       <header className="px-6 pt-14 pb-10 md:px-12 md:pt-20">
         <div className="max-w-4xl mx-auto">
-          {/* Breadcrumbs */}
 
-          <nav className="flex items-center gap-2 mb-7 flex-wrap">
-            <Link
-              href="/"
-              className="text-xs transition-colors"
-              style={{
-                color: darkMode
-                  ? "#334155"
-                  : "#64748B",
-              }}
-            >
-              خانه
-            </Link>
-
-            <span
-              style={{
-                color: darkMode
-                  ? "#1E293B"
-                  : "#CBD5E1",
-              }}
-            >
-              <IconChevronLeft />
-            </span>
-
-            <Link
-              href="/blogs"
-              className="text-xs transition-colors"
-              style={{
-                color: darkMode
-                  ? "#334155"
-                  : "#64748B",
-              }}
-            >
-              پایگاه دانش
-            </Link>
-
-            <span
-              style={{
-                color: darkMode
-                  ? "#1E293B"
-                  : "#CBD5E1",
-              }}
-            >
-              <IconChevronLeft />
-            </span>
-
-            <span
-              className="text-xs"
-              style={{
-                color: darkMode
-                  ? "#00E5FF"
-                  : "#1565C0",
-              }}
-            >
-              {category}
-            </span>
-          </nav>
 
           {/* Category */}
 
@@ -1485,7 +1520,7 @@ export default function App({
         </div>
       </article>
 
-      {/* ───────────────── TAGS ───────────────── */}
+      {/* ───────────────── TAGS ─────────────────
 
       {post.tags.length > 0 && (
         <div className="px-6 pb-8 md:px-12">
@@ -1533,7 +1568,7 @@ export default function App({
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* ───────────────── CTA ───────────────── */}
 
@@ -1620,6 +1655,12 @@ export default function App({
 
       <div className="relative z-10">
      {/* Title */}
+
+                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg mb-5 text-xs font-semibold"
+                style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.28)", color: "#EF4444" }}>
+                <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#EF4444", display: "inline-block", boxShadow: "0 0 5px rgba(239,68,68,0.9)", animation: "pulse-cyan 1.5s infinite" }} />
+                توجه فوری
+              </div>
         <h3
           className="font-bold mb-3"
           style={{
@@ -1658,7 +1699,7 @@ export default function App({
         {/* CTA Button */}
 <button
   type="button"
-  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold transition-all duration-300" 
+  className="inline-flex items-center justify-center gap-2 px-14 py-3.5 rounded-xl font-bold transition-all duration-300" 
               style={{ 
                 background:  "#EF4444" , 
                 color: "#ffffff", 
@@ -1683,7 +1724,7 @@ export default function App({
                   }} 
 >
   <IconWarning />
-  درخواست بررسی و ردیابی پرونده
+  درخواست بررسی
 </button>
 
 
@@ -1699,24 +1740,57 @@ export default function App({
         />
       )}
 
-      {/* ───────────────── SHARE ───────────────── */}
+           {/* ───────────────── TAGS + SHARE ───────────────── */}
 
       <div className="px-6 pb-14 md:px-12">
         <div className="max-w-4xl mx-auto">
           <div
-            className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 pt-7"
+            className="flex flex-col gap-5 pt-7 md:flex-row md:items-center md:justify-between"
             style={{
               borderTop: darkMode
                 ? "1px solid rgba(0,229,255,0.07)"
                 : "1px solid rgba(30,58,138,0.10)",
             }}
           >
+            {/* برچسب‌ها */}
+            {post.tags.length > 0 && (
+              <div className="flex flex-wrap items-center gap-2">
+                <span
+                  style={{
+                    color: darkMode ? "#334155" : "#64748B",
+                    fontSize: "0.75rem",
+                    marginLeft: 4,
+                  }}
+                >
+                  برچسب‌ها:
+                </span>
+
+                {post.tags.map((tag) => (
+                  <p
+                    key={tag}
+                    className="px-3 py-1 rounded-lg text-xs font-medium"
+                    style={{
+                      background: darkMode
+                        ? "rgba(0,229,255,0.05)"
+                        : "rgba(32, 113, 205, 0.08)",
+                      border: darkMode
+                        ? "1px solid rgba(0,229,255,0.15)"
+                        : "1px solid rgba(26, 103, 212, 0.43)",
+                      color: darkMode ? "#00E5FF" : "#1565C0",
+                      fontFamily: "monospace",
+                    }}
+                  >
+                    {tag}
+                  </p>
+                ))}
+              </div>
+            )}
+
+            {/* اشتراک‌گذاری */}
             <div className="flex items-center gap-3">
               <span
                 style={{
-                  color: darkMode
-                    ? "#334155"
-                    : "#64748B",
+                  color: darkMode ? "#334155" : "#64748B",
                   fontSize: "0.75rem",
                 }}
               >
@@ -1727,25 +1801,24 @@ export default function App({
                 type="button"
                 onClick={handleTelegramShare}
                 title="تلگرام"
-                  className={`flex items-center justify-center w-[38px] h-[38px] rounded-[10px] transition-all duration-[180ms] ${
-        darkMode
-          ? "bg-white/[0.04] border border-white/[0.08] text-[#475569] hover:bg-[rgba(0,229,255,0.1)] hover:border-[rgba(0,229,255,0.4)] hover:text-[#00E5FF] hover:shadow-[0_0_14px_rgba(0,229,255,0.18)]"
-          : "bg-[rgba(30,58,138,0.03)] border border-[rgba(30,58,138,0.12)] text-[#64748B] hover:bg-[rgba(29,78,216,0.08)] hover:border-[rgba(29,78,216,0.35)] hover:text-[#1D4ED8] hover:shadow-[0_0_14px_rgba(29,78,216,0.12)]"
-      }`}
-
+                className={`flex items-center justify-center w-[38px] h-[38px] rounded-[10px] transition-all duration-[180ms] ${
+                  darkMode
+                    ? "bg-white/[0.04] border border-white/[0.08] text-[#475569] hover:bg-[rgba(0,229,255,0.1)] hover:border-[rgba(0,229,255,0.4)] hover:text-[#00E5FF] hover:shadow-[0_0_14px_rgba(0,229,255,0.18)]"
+                    : "bg-[rgba(30,58,138,0.03)] border border-[rgba(30,58,138,0.12)] text-[#64748B] hover:bg-[rgba(29,78,216,0.08)] hover:border-[rgba(29,78,216,0.35)] hover:text-[#1D4ED8] hover:shadow-[0_0_14px_rgba(29,78,216,0.12)]"
+                }`}
               >
-                <TelegramIcon size={16}/>
+                <TelegramIcon size={16} />
               </button>
 
               <button
                 type="button"
                 onClick={handleCopy}
                 title="کپی لینک"
- className={`flex items-center justify-center w-[38px] h-[38px] rounded-[10px] transition-all duration-[180ms] ${
-        darkMode
-          ? "bg-white/[0.04] border border-white/[0.08] text-[#475569] hover:bg-[rgba(0,229,255,0.1)] hover:border-[rgba(0,229,255,0.4)] hover:text-[#00E5FF] hover:shadow-[0_0_14px_rgba(0,229,255,0.18)]"
-          : "bg-[rgba(30,58,138,0.03)] border border-[rgba(30,58,138,0.12)] text-[#64748B] hover:bg-[rgba(29,78,216,0.08)] hover:border-[rgba(29,78,216,0.35)] hover:text-[#1D4ED8] hover:shadow-[0_0_14px_rgba(29,78,216,0.12)]"
-      }`}
+                className={`flex items-center justify-center w-[38px] h-[38px] rounded-[10px] transition-all duration-[180ms] ${
+                  darkMode
+                    ? "bg-white/[0.04] border border-white/[0.08] text-[#475569] hover:bg-[rgba(0,229,255,0.1)] hover:border-[rgba(0,229,255,0.4)] hover:text-[#00E5FF] hover:shadow-[0_0_14px_rgba(0,229,255,0.18)]"
+                    : "bg-[rgba(30,58,138,0.03)] border border-[rgba(30,58,138,0.12)] text-[#64748B] hover:bg-[rgba(29,78,216,0.08)] hover:border-[rgba(29,78,216,0.35)] hover:text-[#1D4ED8] hover:shadow-[0_0_14px_rgba(29,78,216,0.12)]"
+                }`}
               >
                 {copied ? (
                   <svg
@@ -1753,11 +1826,7 @@ export default function App({
                     height="14"
                     viewBox="0 0 24 24"
                     fill="none"
-                    stroke={
-                      darkMode
-                        ? "#00E5FF"
-                        : "#1E3A8A"
-                    }
+                    stroke={darkMode ? "#00E5FF" : "#1E3A8A"}
                     strokeWidth="2.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -1769,36 +1838,25 @@ export default function App({
                 )}
               </button>
             </div>
-
-            <Link
-              href="/blogs"
-              className="text-xs font-semibold flex items-center gap-1.5 transition-all"
-              style={{
-                color: darkMode
-                  ? "#00E5FF"
-                  : "#1565C0",
-              }}
-            >
-              بازگشت به رادار پاراهور
-              <IconArrowLeft />
-            </Link>
           </div>
+
 
           {/* ───────────── RELATED POSTS ───────────── */}
 
           {relatedPosts.length > 0 && (
             <div className="mt-12">
-              <div className="flex items-center gap-2 mb-5 px-1">
-                <span
-                  style={{
-                    width: 4,
-                    height: 18,
-                    borderRadius: 99,
-                    background: darkMode
-                      ? "#00E5FF"
-                      : "#1565C0",
-                  }}
-                />
+              <div className="flex justify-between items-center gap-2 mb-5 px-1">
+<div className="flex items-center gap-2">
+  <span
+    style={{
+      display: "block",
+      flexShrink: 0,
+      width: 4,
+      height: 18,
+      borderRadius: 99,
+      background: darkMode ? "#00E5FF" : "#1565C0",
+    }}
+  />
 
                 <h3
                   className="font-bold text-sm"
@@ -1810,6 +1868,9 @@ export default function App({
                 >
                   گزارش‌های مرتبط
                 </h3>
+                </div>
+
+                
               </div>
 
 
@@ -1909,7 +1970,7 @@ export default function App({
 
           {/* Excerpt */}
           <p
-            className={`text-sm leading-relaxed line-clamp-1 break-words mb-5 flex-1 ${
+            className={`text-[13px] leading-relaxed line-clamp-2 break-words mb-5 flex-1 ${
               darkMode ? "text-[#9DB0C0]" : "text-[#334155]"
             }`}
           >
@@ -1951,9 +2012,9 @@ export default function App({
                     darkMode ? "text-[#71869A]" : "text-[#64748B]"
                   }`}
                 >
-                  <span>{formatPersianDate(related.createdAt || related.updatedAt)}</span>
-                  <span>·</span>
-                  <span className="inline-flex items-center gap-1">
+                  <span className="text-[11px]">{formatPersianDate(related.createdAt || related.updatedAt)}</span>
+                  {/* <span>·</span> */}
+                  <span className="inline-flex items-center gap-1 text-[11px]">
                     <Clock className="w-2.5 h-2.5" />
                     {related.readingTime || 0} دقیقه
                   </span>
@@ -1963,7 +2024,7 @@ export default function App({
 
             <Link
               href={`/blogs/${related.slug || related._id}`}
-              className={`flex items-center gap-1 text-xs font-semibold whitespace-nowrap hover:gap-1.5 transition-all flex-shrink-0 ${
+              className={`flex items-center gap-1 text-xs font-semibold whitespace-nowrap hover:gap-1.5 transition-all flex-shrink-0 mb-1 ${
                 darkMode ? "text-[#00E5FF]" : "text-[#1565C0]"
               }`}
             >

@@ -16,6 +16,30 @@ import { AnimatePresence, motion, type Variants } from "framer-motion";
 import Link from "next/link";
 
 
+
+const IconChevronLeft = () => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="15 18 9 12 15 6" />
+  </svg>
+);
+
+const IconHome = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M3 11l9-8 9 8" />
+    <path d="M5 10v10h14V10" />
+    <path d="M9 20v-6h6v6" />
+  </svg>
+);
+
 const IconDot = ({
   size = 7,
   glow = true,
@@ -823,6 +847,89 @@ useEffect(() => {
         fontFamily: "var(--font-vazirmatn), sans-serif",
       }}
     >
+
+
+
+{/* ─── BREADCRUMB ─── */}
+
+    <section
+  // className="pt-[30px]"
+  style={{
+    background: darkMode ? "#070D1E" : "#F1F5FB",
+  }}
+>
+  <div className="px-6 md:px-12 mt-[45px]">
+    <nav
+      aria-label="مسیر راهنما"
+      className="max-w-5xl mx-auto py-3"
+    >
+      
+    <ol className="flex items-center gap-2 whitespace-nowrap overflow-x-auto text-xs">
+      <li className="flex items-center">
+        <Link
+    href="/"
+    className={`flex items-center gap-1.5 leading-none transition-colors ${
+      darkMode
+        ? "text-[#64748B] hover:text-[#00E5FF]"
+        : "text-[#475569] hover:text-[#1565C0]"
+    }`}
+  >
+    <IconHome />
+خانه
+        </Link>
+      </li>
+
+      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
+        <IconChevronLeft />
+      </li>
+
+      <li>
+        <Link
+          href="/services"
+          className={`transition-colors ${
+            darkMode
+              ? "text-[#64748B] hover:text-[#00E5FF]"
+              : "text-[#475569] hover:text-[#1565C0]"
+          }`}
+        >
+خدمات
+        </Link>
+      </li>
+
+      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
+        <IconChevronLeft />
+      </li>
+
+      <li>
+        <span
+          aria-current="page"
+          className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md"
+          style={{
+            color: darkMode ? "#00E5FF" : "#1565C0",
+            background: darkMode ? "rgba(0,229,255,0.055)" : "rgba(21,101,192,0.08)",
+            border: darkMode
+              ? "1px solid rgba(0,229,255,0.1)"
+              : "1px solid rgba(21,101,192,0.2)",
+          }}
+        >
+          <span
+            style={{
+              width: 4,
+              height: 4,
+              borderRadius: "50%",
+              background: darkMode ? "#00E5FF" : "#1565C0",
+              display: "inline-block",
+            }}
+          />
+وبلاگ  
+  </span>
+      </li>
+    </ol>
+  </nav>
+</div>
+</section>
+
+
         {/* ─── HERO ─────────────────────────────────────────────────────────── */}
 
 
@@ -1741,7 +1848,7 @@ function ArticleCard({
 }) {
   return (
 <article
-  className={`group flex flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
+    className={`group flex h-full flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
     darkMode
       ? "bg-[rgba(255,255,255,0.028)] border border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
       : "bg-white border border-[#0B1C3E]/10 shadow-sm hover:shadow-md hover:border-[#1565C0]/20"
@@ -1806,7 +1913,7 @@ function ArticleCard({
         {/* Title */}
 
         <h3
-          className={`text-base font-bold leading-snug mb-3 break-words transition-colors line-clamp-1 ${
+                    className={`text-base font-bold leading-snug mb-3 break-words transition-colors line-clamp-2 min-h-[2.75rem] ${
             darkMode
               ? "text-[#E6F7FF] group-hover:text-[#E6F7FF]"
               : "group-hover:text-[#1565C0]"
@@ -1819,7 +1926,7 @@ function ArticleCard({
         {/* Excerpt */}
 
         <p
-          className={`text-sm leading-relaxed line-clamp-1 break-words mb-5 flex-1 min-h-6 ${
+            className={`text-[13px] leading-relaxed line-clamp-2 break-words mb-5 flex-1 min-h-[42.25px] ${
             darkMode ? "text-[#9DB0C0]" : "text-[#475569]"
           }`}
         >
@@ -1862,9 +1969,9 @@ function ArticleCard({
                   darkMode ? "text-[#71869A]" : "text-[#64748B]"
                 }`}
               >
-                <span>{article.date}</span>
+                <span className="text-[11px]">{article.date}</span>
                 <span>·</span>
-                <span className="inline-flex items-center gap-1">
+                <span className="inline-flex items-center gap-1 text-[11px]">
                   <Clock className="w-2.5 h-2.5" />
                   {article.readTime}
                 </span>
