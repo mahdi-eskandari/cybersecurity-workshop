@@ -1742,7 +1742,11 @@ const department =
     }}
   > 
 
-
+     {crisisOpen && (
+        <EmergencyModal
+          onClose={() => setCrisisOpen(false)}
+        />
+      )}
 
        <motion.div
         className="relative flex flex-col items-center text-center px-6 pt-20 pb-10 md:pt-28 md:pb-14 overflow-hidden" 
@@ -1756,7 +1760,7 @@ const department =
           className="absolute inset-0 pointer-events-none" 
           style={{ background: darkMode 
               ? "radial-gradient(ellipse 65% 60% at 50% 50%, rgba(0,229,255,0.065) 0%, transparent 70%)" 
-              : "radial-gradient(ellipse 65% 60% at 50% 50%, rgba(30,58,138,0.10) 0%, transparent 70%)", }} 
+              : "", }} 
         /> 
  
         <div className="relative z-10 max-w-3xl mx-auto"> 
@@ -1928,13 +1932,13 @@ const department =
  
                   {/* Card */} 
                   <div 
-                    className="glass-card p-7 flex items-start gap-6 group transition-all duration-300 border border-cyan-500/30 hover:border-cyan-500 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-800/15 rounded-2xl" 
+                    className="glass-card p-7 flex items-start gap-6 group transition-all duration-300 border border-cyan-500/30 hover:border-cyan-600 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-900/15 rounded-2xl" 
                     style={{ 
                       textAlign: "right", 
-                      background: darkMode ? undefined : "#FFFFFF", 
+                      background: darkMode ? undefined : "#ebebeb4b", 
                       borderColor: darkMode 
                         ? undefined 
-                        : "rgba(155, 178, 236, 0.72)", 
+                        : "rgba(90, 128, 226, 0.49)", 
                       boxShadow: darkMode 
                         ? undefined 
                         : "0 4px 20px rgba(15,23,42,0.06)", 
@@ -1947,7 +1951,7 @@ const department =
                         e.currentTarget.style.borderColor = 
                           "#1565C0"; 
                         e.currentTarget.style.background = 
-                          "rgba(243, 248, 255, 0.26)"; 
+                          "#d0d0d035"; 
                       } 
                     }} 
                     onMouseLeave={(e) => { 
@@ -1955,8 +1959,8 @@ const department =
                         e.currentTarget.style.boxShadow = 
                           "0 4px 20px rgba(15,23,42,0.06)"; 
                         e.currentTarget.style.borderColor = 
-                          "rgba(155, 178, 236, 0.72)"; 
-                        e.currentTarget.style.background = "#FFFFFF"; 
+                          "rgba(90, 128, 226, 0.72)"; 
+                        e.currentTarget.style.background = "#ebebeb4b"; 
                       } 
                     }} 
                   > 
@@ -1985,7 +1989,7 @@ const department =
                         <span 
                           style={{ 
                             fontFamily: "monospace", 
-                            fontSize: "0.65rem", 
+                            fontSize: "0.7rem", 
                             color: darkMode 
                               ? "rgba(0,229,255,0.4)" 
                               : "#1565C0", 
@@ -2001,7 +2005,7 @@ const department =
                             height: 1, 
                             background: darkMode 
                               ? "rgba(0,229,255,0.08)" 
-                              : "rgba(105, 142, 244, 0.35)", 
+                              : "rgba(90, 128, 226, 0.52)", 
                           }} 
                         /> 
                       </div> 
@@ -2009,7 +2013,7 @@ const department =
                       <h3 
                         className="font-bold mb-2" 
                         style={{ 
-                          color: darkMode ? "#fff" : "#1565C0", 
+                          color: darkMode ? "#fff" : undefined, 
                           fontSize: "1.05rem", 
                         }} 
                       > 

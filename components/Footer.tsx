@@ -395,13 +395,13 @@ export default function Footer() {
                     <p className="text-xs text-white/50 mb-3">
                       در صورت حادثه فوری، ۲۴/۷ در دسترسیم
                     </p>
-                    <Link
-                      href="/contact"
+                    <a
+                      href="tel:+982144097162"
                       className="flex w-[65%] items-center gap-2 px-3.5 py-2 bg-[#C62828] text-white text-xs font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors"
                     >
                       <Phone className="w-3.5 h-3.5" />
                       تماس اضطراری
-                    </Link>
+                    </a>
                   </div>
                 )}
               </div>

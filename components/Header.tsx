@@ -1221,14 +1221,12 @@ const navItems = NAV_ITEMS.map((item) => ({
 
 {/* SOS + mobile toggle */}
 <div className="flex items-center gap-3 flex-shrink-0 mr-auto md:mr-0">
-  <Link
-  href="/contact"
-    // onClick={() => setCrisisOpen(true)}
-    className=" md:flex items-center gap-2 px-4 py-2 bg-[#9f1414] text-white text-sm font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors cursor-pointer"
-  >
-
-    تماس اورژانسی
-  </Link>
+<a
+  href="tel:+982144097162"
+  className="md:flex items-center gap-2 px-4 py-2 bg-[#9f1414] text-white text-sm font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors cursor-pointer"
+>
+  تماس اورژانسی
+</a>
 </div>
 
 

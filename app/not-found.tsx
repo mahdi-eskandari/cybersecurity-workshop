@@ -164,7 +164,6 @@ const BrokenGridBg = ({ darkMode }: { darkMode: boolean }) => {
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {/* Grid */}
       <div className="absolute inset-0" style={{
-        backgroundImage: `linear-gradient(rgba(${accent},${darkMode ? 0.03 : 0.045}) 1px,transparent 1px),linear-gradient(90deg,rgba(${accent},${darkMode ? 0.03 : 0.045}) 1px,transparent 1px)`,
         backgroundSize: "52px 52px",
       }} />
       {/* Radial vignette */}
@@ -227,7 +226,7 @@ export default function App() {
       style={{
         background: darkMode ? "#0A1128" : "#FFFFFF",
         color: darkMode ? "#E2E8F0" : "#0F172A",
-        fontFamily: "Vazirmatn, sans-serif",
+        fontFamily: "var(--font-vazirmatn), sans-serif",
         position: "relative",
       }}>
 
@@ -331,7 +330,7 @@ export default function App() {
               boxShadow: darkMode
                 ? "0 0 16px rgba(0,229,255,0.07), inset 0 0 16px rgba(0,229,255,0.03)"
                 : "0 4px 16px rgba(30,58,138,0.06)",
-              fontFamily: "Vazirmatn,sans-serif",
+                 fontFamily: "var(--font-vazirmatn), sans-serif",
               fontSize: "0.95rem",
             }}
             onMouseEnter={(e) => {
@@ -359,7 +358,7 @@ export default function App() {
               boxShadow: darkMode
                 ? "0 0 20px rgba(239,68,68,0.28), 0 0 50px rgba(239,68,68,0.1)"
                 : "0 8px 28px rgba(239,68,68,0.20)",
-              fontFamily: "Vazirmatn,sans-serif",
+                            fontFamily: "var(--font-vazirmatn), sans-serif",
               fontSize: "0.95rem",
             }}
             onMouseEnter={(e) => {
@@ -388,9 +387,9 @@ export default function App() {
           ].map(({ label, href }) => (
             <Link key={href} href={href}
               className="flex items-center gap-1.5 text-xs transition-colors"
-              style={{ color: darkMode ? "#334155" : "#64748B", fontFamily: "monospace" }}
+              style={{ color: darkMode ? "#747e8c" : "#64748B", fontFamily: "monospace" }}
               onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = accentBright)}
-              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = darkMode ? "#334155" : "#64748B")}>
+              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = darkMode ? "#747e8c" : "#64748B")}>
               <span style={{ opacity: 0.4 }}>//</span>
               {label}
             </Link>

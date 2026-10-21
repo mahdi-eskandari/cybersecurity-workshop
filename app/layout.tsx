@@ -122,7 +122,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   icons: {
-    icon: "/favicon.ico?v=3",
+    icon: "/favicon.ico?v=4",
   },
 
 };

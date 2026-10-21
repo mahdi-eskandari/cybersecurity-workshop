@@ -15,6 +15,7 @@ import {
   POSTS_PER_PAGE,
 } from "./authorsData";
 import { EmergencyModal } from "../../../components/CrisisReportForm"
+import { renderHighlightedTitle } from "@/lib/highlightTitle";
 
 
 export type { Post };
@@ -751,7 +752,6 @@ const activeAuthorIndex = Math.max(
 const author = authors[activeAuthorIndex];
 
   const accent = darkMode ? author.accent : author.accentLight;
-  const currentH1 = seoH1;
 
   const authorPosts = posts
     .filter((post) => post.status === "published")
@@ -940,49 +940,28 @@ const SocialBtn = ({
 
 
 
+
+
+
 <h1
   className="glow-text font-black leading-tight mb-6"
   style={{
     fontSize: "clamp(2rem, 5vw, 3.5rem)",
-    color: darkMode ? "#e8f4f8" : "#0c1a43",
+    color: darkMode ? "#ffffff" : "#0c1a43",
     lineHeight: "1.3",
     fontWeight: 900,
     textShadow: darkMode
       ? undefined
       : "0 0 18px rgba(30,58,138,0.10)",
-  }}
+    textWrap: "balance",
+  } as React.CSSProperties}
 >
-{(() => {
-  const highlight = "آژانس تحقیقاتی";
-  const brand = "پاراهور";
-  const title = currentH1 || "";
-  const i = title.indexOf(highlight);
-
-  // متنی که بعد از هایلایت می‌آید؛ اگر پاراهور داشت، بره خط بعد
-  const renderRest = (text: string) => {
-    const j = text.indexOf(brand);
-    if (j === -1) return text;
-    return (
-      <>
-        {text.slice(0, j).trimEnd()}
-        <br />
-        {text.slice(j)}
-      </>
-    );
-  };
-
-  if (i === -1) return renderRest(title);
-
-  return (
-    <>
-      {title.slice(0, i)}
-      <span style={{ color: darkMode ? "#00E5FF" : "#1565C0" }}>
-        {highlight}
-      </span>
-      {renderRest(title.slice(i + highlight.length))}
-    </>
-  );
-})()}
+{renderHighlightedTitle(seoH1, {
+  firstLineWords: 5,
+  maxWordsPerLine: 7,
+  lineBreakClassName: "",
+  style: { color: darkMode ? "#00E5FF" : "#1565C0" },
+})}
 </h1>
 
             <p

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useTheme } from "../../../components/ThemeProvider";
 import {EmergencyModal} from "../../.../../../components/CrisisReportForm"
 import Link from "next/link";
+import { renderHighlightedTitle } from "@/lib/highlightTitle";
 
 
 
@@ -80,7 +81,7 @@ const HeroBg = ({ darkMode = true }: { darkMode?: boolean }) => (
       </radialGradient>
     </defs>
 
-    <rect width="1200" height="520" fill="url(#hbg)" />
+    {darkMode && <rect width="1200" height="520" fill="url(#hbg)" />}
 
     {[
       [120, 80, 300, 200],
@@ -448,10 +449,10 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
 
   const accent = darkMode ? "#00E5FF" : "#1565C0";
   const textMain = darkMode ? "#E2E8F0" : "#0F172A";
-  const textMuted = darkMode ? "#636f81" : "#475569";
+  const textMuted = darkMode ? "#737c88" : "#475569";
   const cardBg = darkMode
     ? "rgba(255,255,255,0.028)"
-    : "#FFFFFF";
+    : "#ffff";
 
   return (
     <>
@@ -585,7 +586,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                 : "#EBF3FF",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.2)"
-                : "1px solid rgba(108, 153, 202, 0.22)",
+                : "1px solid #156cef57",
               
             }}
           >
@@ -610,30 +611,21 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
   className="glow-text font-black leading-tight mb-6"
   style={{
     fontSize: "clamp(2rem, 5vw, 3.5rem)",
-    color: darkMode ? "#e8f4f8" : "#0c1a43",
+    color: darkMode ? "#ffffff" : "#0c1a43",
     lineHeight: "1.3",
     fontWeight: 900,
     textShadow: darkMode
       ? undefined
       : "0 0 18px rgba(30,58,138,0.10)",
-  }}
+    textWrap: "balance",
+  } as React.CSSProperties}
 >
-  {(() => {
-    const highlight = "دنیای دیجیتال";
-    const title = h1Title || "";
-    const i = title.indexOf(highlight);
-    if (i === -1) return title;
-    return (
-      <>
-        {title.slice(0, i).trimEnd()}
-        <br />
-        <span style={{ color: darkMode ? "#00E5FF" : "#1565C0" }}>
-          {highlight}
-        </span>
-        {title.slice(i + highlight.length)}
-      </>
-    );
-  })()}
+{renderHighlightedTitle(h1Title, {
+  firstLineWords: 2,
+  maxWordsPerLine: 7,
+  lineBreakClassName: "",
+  style: { color: darkMode ? "#00E5FF" : "#1565C0" },
+})}
 </h1>
 
           <p
@@ -813,7 +805,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                       
                       background: darkMode
                         ? "#55858b1b"
-                        : "#4a6e971a",
+                        : "#ebebeb4b",
                       border: darkMode
                         ? "1px solid #40929d30"
                         : "1px solid #3281db4e",
@@ -874,7 +866,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
         style={{
           background: darkMode
             ? "rgba(6,11,25,0.6)"
-            : "rgba(255,255,255,0.75)",
+            : "rgba(236, 236, 236, 0.42)",
           borderTop: darkMode
             ? "1px solid rgba(0,229,255,0.06)"
             : "1px solid rgba(30,58,138,0.16)",
@@ -886,6 +878,18 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
             <div className="inline-flex items-center gap-2 mb-2 justify-center">
+              
+
+              <span
+            className="data-label"
+              style={{
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#1565C0",
+            }}
+              >
+                CORE PRINCIPLES // PARAHOOR
+              </span>
+
+
               <span
                 style={{
                   width: 6,
@@ -900,15 +904,6 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                     : "0 0 7px rgba(30,58,138,0.22)",
                 }}
               />
-
-              <span
-            className="data-label"
-              style={{
-              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#1565C0",
-            }}
-              >
-                CORE PRINCIPLES // PARAHOOR
-              </span>
             </div>
             
               
@@ -947,8 +942,8 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                   style={{
                     background: isHov
                       ? darkMode
-                        ? "rgba(0,229,255,0.06)"
-                        : "rgba(226, 230, 239, 0.12)"
+                        ? "#00e5ff0f"
+                        : "#f9f9f987"
                       : cardBg,
                     border: isHov
                       ? darkMode
@@ -1095,6 +1090,18 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
              <div className="inline-flex items-center gap-2 mb-2 justify-center">
+              
+
+              <span
+            className="data-label"
+              style={{
+              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#1565C0",
+            }}
+              >
+                OPERATIONAL HISTORY
+              </span>
+
+
               <span
                 style={{
                   width: 6,
@@ -1109,15 +1116,6 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                     : "0 0 7px rgba(30,58,138,0.22)",
                 }}
               />
-
-              <span
-            className="data-label"
-              style={{
-              color: darkMode ? "rgba(0, 229, 255, 0.5)" : "#1565C0",
-            }}
-              >
-                OPERATIONAL HISTORY
-              </span>
             </div>
               
 
@@ -1184,11 +1182,11 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                       style={{
                         background: darkMode
                           ? "rgba(255,255,255,0.025)"
-                          : "#FFFFFF",
+                          : "#ebebeb4b",
                           
                         border: darkMode
                           ? "1px solid rgba(0, 229, 255, 0.12)"
-                          : "1px solid #1565c099",
+                          : "1px solid #1565c05d",
                         boxShadow: darkMode
                           ? "none"
                           : "0 8px 24px rgba(15,23,42,0.04)",
@@ -1267,7 +1265,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
       <div
         className="px-6 py-5 md:px-12"
         style={{
-          background: darkMode ? "#060B19" : "#FFFFFF",
+          background: darkMode ? "#060B19" : "rgba(236, 236, 236, 0.42)",
           borderTop: darkMode
             ? "1px solid rgba(0,229,255,0.09)"
             : "1px solid rgba(30,58,138,0.34)",
@@ -1300,7 +1298,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
           >
             <span
               style={{
-                color: darkMode ? "#64748B" : "#475569",
+                color: darkMode ? "#737c88" : "#475569",
                 fontWeight: 600,
               }}
             >

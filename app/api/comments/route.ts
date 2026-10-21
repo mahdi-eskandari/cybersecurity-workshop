@@ -45,12 +45,27 @@ export async function GET(request: Request) {
       .limit(limit);
 
     if (admin) finder.populate("postId", "title");
-    else finder.select("name comment createdAt");
+    else finder.select("name comment createdAt parentCommentId");
 
-    const [comments, total] = await Promise.all([
+    const [rawComments, total] = await Promise.all([
       finder.lean(),
       Comment.countDocuments(query),
     ]);
+
+    const comments = admin
+      ? rawComments
+      : (() => {
+          const names = new Map(
+            rawComments.map((c: any) => [String(c._id), c.name])
+          );
+          return rawComments.map((c: any) => ({
+            ...c,
+            parentCommentId: c.parentCommentId ? String(c.parentCommentId) : null,
+            parentName: c.parentCommentId
+              ? names.get(String(c.parentCommentId)) ?? null
+              : null,
+          }));
+        })();
 
     return NextResponse.json({
       comments,
@@ -90,7 +105,14 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const { postId, name, contact, comment, turnstileToken } = body ?? {};
+    const {
+  postId,
+  parentCommentId,
+  name,
+  contact,
+  comment,
+  turnstileToken,
+} = body ?? {};
 
     if (
       typeof name !== "string" ||
@@ -121,6 +143,26 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
+
+    const parentId =
+  typeof parentCommentId === "string"
+    ? parentCommentId.trim()
+    : "";
+
+if (
+  parentId &&
+  (
+    !mongoose.Types.ObjectId.isValid(parentId) ||
+    !postId ||
+    !mongoose.Types.ObjectId.isValid(String(postId))
+  )
+) {
+  return NextResponse.json(
+    { message: "شناسه نظر والد نامعتبر است." },
+    { status: 400 }
+  );
+}
 
     /* ───── لیمیت + کپچا ───── */
     const ip = getIp(request);
@@ -156,13 +198,31 @@ export async function POST(request: Request) {
 
     await dbConnect();
 
-    await Comment.create({
-      postId: postId || null,
-      name: name.trim(),
-      contact: typeof contact === "string" ? contact.trim() : "",
-      comment: comment.trim(),
-      approvalStatus: "pending", // همیشه سمت سرور
-    });
+    if (parentId) {
+  const parent = await Comment.findOne({
+    _id: parentId,
+    postId,
+    approvalStatus: "approved",
+  })
+    .select("_id")
+    .lean();
+
+  if (!parent) {
+    return NextResponse.json(
+      { message: "نظر موردنظر برای پاسخ دادن پیدا نشد." },
+      { status: 400 }
+    );
+  }
+}
+
+await Comment.create({
+  postId,
+  parentCommentId: parentId || null,
+  name: name.trim(),
+  contact: typeof contact === "string" ? contact.trim() : "",
+  comment: comment.trim(),
+  approvalStatus: "pending",
+});
 
     return NextResponse.json(
       { message: "نظر شما با موفقیت ثبت شد و پس از تایید نمایش داده خواهد شد." },

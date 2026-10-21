@@ -938,7 +938,7 @@ useEffect(() => {
          className={`border-b transition-colors duration-300 pt-24 ${
             darkMode
               ? "bg-transparent border-[#1E334A]"
-              : "bg-transparent border-[rgba(29,78,216,0.12)] shadow-[0_10px_35px_rgba(30,58,138,0.10)] bg-gray-100 border-b border-[#0B1C3E]/10"
+              : "bg-[#F8FAFC] border-[rgba(29,78,216,0.12)] shadow-[0_10px_35px_rgba(30,58,138,0.10)] border-b border-[#0B1C3E]/10"
           }`}
     initial={{ opacity: 0, y: 30 }}
   whileInView={{ opacity: 1, y: 0 }}
@@ -963,7 +963,7 @@ useEffect(() => {
                 : "#e3edfc",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.2)"
-                : "none",
+                : "1px solid #156cef57",
               
             }}
           >
@@ -1117,7 +1117,7 @@ useEffect(() => {
               className={`text-[11px] px-1.5 py-0.5 rounded-full font-bold ${
                 darkMode
                   ? "bg-[#073342] text-[#00E5FF]"
-                  : "bg-[rgba(30,58,138,0.08)] text-[#1E3A8A]"
+                  : "bg-[rgba(30,58,138,0.08)] text-[#1565C0]"
               }`}
             >
               {articleCount(activeCategory)}
@@ -1166,7 +1166,7 @@ useEffect(() => {
                     active
                       ? darkMode
                         ? "bg-[#073342] text-[#00E5FF]"
-                        : "bg-[rgba(30,58,138,0.06)] text-[#1E3A8A]"
+                        : "bg-[rgba(30,58,138,0.06)] text-[#1565C0]"
                       : darkMode
                         ? "text-[#8FA5B8] hover:bg-[#101C29] hover:text-[#E6F7FF]"
                         : "text-[#475569] hover:bg-slate-50 hover:text-[#0F172A]"
@@ -1196,7 +1196,7 @@ useEffect(() => {
                       active
                         ? darkMode
                           ? "bg-[#00E5FF]/10 text-[#00E5FF]"
-                          : "bg-[rgba(30,58,138,0.08)] text-[#1E3A8A]"
+                          : "bg-[rgba(30,58,138,0.08)] text-[#1565C0]"
                         : darkMode
                           ? "bg-[#101C29] text-[#71869A]"
                           : "bg-[#F1F5F9] text-[#64748B]"
@@ -1225,7 +1225,7 @@ useEffect(() => {
                 active
                   ? darkMode
                     ? "border-[#00E5FF] text-[#00E5FF]"
-                    : "border-[#1E3A8A] text-[#1E3A8A]"
+                    : "border-[#1565C0] text-[#1565C0]"
                   : darkMode
                     ? "border-transparent text-[#8FA5B8] hover:text-[#E6F7FF] hover:border-[#496276]"
                     : "border-transparent text-[#475569] hover:text-[#0F172A] hover:border-[rgba(29,78,216,0.30)]"
@@ -1238,7 +1238,7 @@ useEffect(() => {
                   active
                     ? darkMode
                       ? "bg-[#073342] text-[#00E5FF]"
-                      : "bg-[rgba(30,58,138,0.08)] text-[#1E3A8A]"
+                      : "bg-[rgba(30,58,138,0.08)] text-[#1565C0]"
                     : darkMode
                       ? "bg-[#101C29] text-[#71869A]"
                       : "bg-[#F1F5F9] text-[#64748B]"
@@ -1262,7 +1262,7 @@ useEffect(() => {
 
         {/* ─── CONTENT ──────────────────────────────────────────────────────── */}
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 ">
           
           {/* ─── FEATURED ARTICLE ───────────────────────────────────────────── */}
 
@@ -1296,13 +1296,16 @@ useEffect(() => {
   viewport={{ once: true, amount: 0.2 }}
 >
               <div className="flex items-center gap-2 mb-5">
-                <span
-                  className={`w-1 h-5 rounded-full block ${
-                    darkMode
-                      ? "bg-[#00E5FF]"
-                      : "bg-[#1E3A8A]"
-                  }`}
-                />
+                  <div
+                  className="w-[3px] h-5"
+                style={{
+
+                  background: darkMode
+                    ? "linear-gradient(180deg,#00E5FF,rgba(0,229,255,0.2))"
+                    : "linear-gradient(180deg,#1565C0,rgba(35, 89, 238, 0.25))",
+                  borderRadius: 2,
+                }}
+              />
 
                 <span
                   className={`text-xs font-bold uppercase tracking-widest ${
@@ -1316,14 +1319,51 @@ useEffect(() => {
               </div>
 
               <article
-                    className={`group flex flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
-            darkMode
-              ? "bg-[rgba(255,255,255,0.028)] border border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
-               : "bg-white border border-[#0B1C3E]/10 shadow-sm hover:shadow-md hover:border-[#1565C0]/20"
+                    className={`group flex flex-col rounded-2xl overflow-hidden transition-border duration-200 ${
+                         darkMode
+                           ? "border border-cyan-500/30 hover:border-cyan-600 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-900/15"
+                           : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"
           }`}
-          style={{
-            backdropFilter: "blur(10px)",
-          }}
+
+
+                          style={
+                  darkMode
+                    ? {backdropFilter: "blur(10px)"}
+                    : {
+                        border:
+                          "1px solid #76a7de",
+                        background: "#ebebeb4b",
+                        boxShadow:
+                          "0 4px 20px rgba(15,23,42,0.06)",
+                        transition:
+                          "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
+                          backdropFilter: "blur(10px)"
+                      }
+                }
+
+
+           onMouseEnter={(e) => {
+                  if (!darkMode) {
+                    e.currentTarget.style.borderColor =
+                      "#1565C0"
+                    e.currentTarget.style.background =
+                      "#d0d0d035"
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
+
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!darkMode) {
+                    e.currentTarget.style.borderColor =
+                      "#76a7de"
+                    e.currentTarget.style.background =
+                      "#ebebeb4b"
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 20px rgba(15,23,42,0.06)"
+
+                  }
+                }}
 
               >
                 <div className="grid md:grid-cols-5">
@@ -1333,7 +1373,7 @@ useEffect(() => {
                     className={`relative md:col-span-2 aspect-video md:aspect-auto overflow-hidden ${
                       darkMode
                         ? "bg-[#0D1B29]"
-                        : "bg-[#F1F5F9]"
+                        : "bg-red-500"
                     }`}
                   >
 
@@ -1386,9 +1426,9 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
 
                       <h2
                         className={`text-xl md:text-2xl font-bold leading-snug mb-4 transition-colors ${
-                          darkMode
-                            ? "text-[#E6F7FF] group-hover:text-[#E6F7FF]"
-                            : "group-hover:text-[#1565C0]"
+                       darkMode
+                         ? "text-[#E6F7FF] group-hover:text-[#00E5FF] transition-colors duration-300"
+                         : "text-[#111827] group-hover:text-[#1565C0] transition-colors duration-300"
                         }`}
                       >
                         {featuredArticle.title}
@@ -1515,7 +1555,7 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
                           : "text-[#0F172A]"
                       }`}
                     >
-                      {activeCategory}
+                      {categories.find((cat) => cat.id === activeCategory)?.label ?? activeCategory}
                     </span>
                   </span>
                 )}
@@ -1849,13 +1889,47 @@ function ArticleCard({
   return (
 <article
     className={`group flex h-full flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
-    darkMode
-      ? "bg-[rgba(255,255,255,0.028)] border border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
-      : "bg-white border border-[#0B1C3E]/10 shadow-sm hover:shadow-md hover:border-[#1565C0]/20"
-  }`}
-  style={{
-    backdropFilter: "blur(10px)",
-  }}
+             darkMode
+                 ? "border border-cyan-500/30 hover:border-cyan-600 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-900/15"
+                 : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"
+           }`}
+               style={
+                  darkMode
+                    ? {backdropFilter: "blur(10px)"}
+                    : {
+                        border:
+                          "1px solid #76a7de",
+                        background: "#ebebeb4b",
+                        boxShadow:
+                          "0 4px 20px rgba(15,23,42,0.06)",
+                        transition:
+                          "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
+                          backdropFilter: "blur(10px)"
+                      }
+                }
+
+                onMouseEnter={(e) => {
+                  if (!darkMode) {
+                    e.currentTarget.style.borderColor =
+                      "#1565C0"
+                    e.currentTarget.style.background =
+                      "#d0d0d035"
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
+
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!darkMode) {
+                    e.currentTarget.style.borderColor =
+                      "#76a7de"
+                    e.currentTarget.style.background =
+                      "#ebebeb4b"
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 20px rgba(15,23,42,0.06)"
+
+                  }
+                }}
 >
       {/* Thumbnail */}
 
@@ -1913,10 +1987,10 @@ function ArticleCard({
         {/* Title */}
 
         <h3
-                    className={`text-base font-bold leading-snug mb-3 break-words transition-colors line-clamp-2 min-h-[2.75rem] ${
+           className={`text-base font-bold leading-snug mb-3 break-words transition-colors line-clamp-2 min-h-[2.75rem] ${
             darkMode
-              ? "text-[#E6F7FF] group-hover:text-[#E6F7FF]"
-              : "group-hover:text-[#1565C0]"
+              ? "text-[#E6F7FF] group-hover:text-[#00E5FF] transition-colors duration-300"
+              : "text-[#111827] group-hover:text-[#1565C0] transition-colors duration-300"
           }`}
           
         >

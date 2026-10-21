@@ -19,7 +19,7 @@ const BRAND = "#1565C0";
    component (they apply only when an ancestor has data-theme="light") */
 const BRAND_STROKE = "[[data-theme=light]_&]:!stroke-[#1565C0]";
 const GREEN_STROKE = "[[data-theme=light]_&]:!stroke-[#16A34A]";
-const RED_STROKE = "[[data-theme=light]_&]:!stroke-[#DC2626]";
+const RED_STROKE = "[[data-theme=light]_&]:!stroke-[#F59E0B]";
 
 
 /* ─── SHARED ─── */
@@ -765,7 +765,7 @@ const lightColors = {
             style={{
                  background: darkMode
               ? "radial-gradient(ellipse 60% 70% at 60% 40%, rgba(0, 229, 255, 0.07) 0%, transparent 70%)"
-              : "radial-gradient(ellipse 60% 70% at 60% 50%, rgba(22, 79, 194, 0.1) 0%, transparent 70%)",
+              : "",
             }}
           />
 
@@ -1467,7 +1467,7 @@ const lightColors = {
                   className={`p-5 rounded-xl mt-2 mb-4 privacy-warning ${
                     isDark
                       ? ""
-                      : "bg-[rgba(239,68,68,0.045)] border border-[rgba(239,68,68,0.27)] shadow-[0_8px_24px_rgba(239,68,68,0.07)]"
+                      : "bg-[rgba(235,156,18,0.045)] border border-[rgba(235,156,18,0.54)] shadow-[0_8px_24px_rgba(235,156,18,0.07)]"
                   }`}
                   style={
                     isDark
@@ -1520,8 +1520,8 @@ const lightColors = {
                       }}
                     >
                       <strong
-                        className={`privacy-warning-title ${isDark ? "" : "text-[#DC2626]"}`}
-                        style={isDark ? { color: "#F59E0B" } : undefined}
+                        className={`privacy-warning-title ${isDark ? "" : "text-[#F59E0B]"}`}
+                        style={{color: "#F59E0B"}}
                       >
                         سلب مسئولیت:{" "}
                       </strong>

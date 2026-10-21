@@ -11,6 +11,9 @@ import { useTheme } from "../../../components/ThemeProvider"
 import { motion } from "framer-motion"
 import { EmergencyModal } from "../../../components/CrisisReportForm"
 import { createPortal } from "react-dom"
+import { renderHighlightedTitle } from "@/lib/highlightTitle";
+
+
 
 
 
@@ -734,6 +737,43 @@ const IconLogout = () => (
   </svg>
 );
 
+
+
+
+const successfulCases = [
+  {
+    number: "۰۱",
+    category: "کشف هویت",
+    title: "شناسایی گرداننده یک شبکه اخاذی ناشناس",
+    result: "کشف هویت عامل اصلی در ۹ روز",
+    description:
+      "با هم‌بستگی ردپاهای پراکنده در پیام‌رسان‌ها، دامنه‌ها و مسیرهای پرداخت، هویت واقعی عامل و شبکه ارتباطی او مستند شد.",
+    tags: ["تحقیقات منابع باز", "تحلیل شبکه", "گزارش هویتی"],
+    icon: <IconOsint />,
+  },
+  {
+    number: "۰۲",
+    category: "ردیابی رمزارز",
+    title: "ردیابی وجوه سرقت‌شده از کیف پول",
+    result: "ردیابی ۸۴٬۰۰۰ تتر تا صرافی مقصد",
+    description:
+      "مسیر ۳۷ تراکنش در شبکه ترون بازسازی و نقطه خروج دارایی شناسایی شد؛ گزارش فنی برای درخواست مسدودسازی ارائه شد.",
+    tags: ["تحلیل زنجیره", "شبکه ترون", "مستندات صرافی"],
+    icon: <IconCrypto />,
+  },
+  {
+    number: "۰۳",
+    category: "فارنزیک دیجیتال",
+    title: "بازیابی شواهد حذف‌شده از تلفن همراه",
+    result: "بازیابی ۱۲ گیگابایت داده قابل استناد",
+    description:
+      "پیام‌ها، تصاویر و فراداده‌های حذف‌شده بازیابی و خط زمانی حادثه با حفظ کامل زنجیره حضانت دیجیتال بازسازی شد.",
+    tags: ["فارنزیک موبایل", "بازیابی داده", "زنجیره حضانت"],
+    icon: <IconForensics />,
+  },
+];
+
+
 const navItems = [
   { label: "داشبورد", icon: IconDashboard },
   { label: "پرونده‌ها", icon: IconCases, active: true },
@@ -1211,7 +1251,7 @@ const closeCrisis = () => {
           style={{
             background: darkMode
               ? "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(0,229,255,0.06) 0%, transparent 70%)"
-              : "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(84, 128, 215, 0.16) 0%, transparent 70%)",
+              : "",
           }}
         />
 
@@ -1228,7 +1268,7 @@ const closeCrisis = () => {
                 : "#EBF3FF",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.2)"
-                : "none",
+                : "1px solid #156cef57",
               
             }}
           >
@@ -1250,7 +1290,7 @@ const closeCrisis = () => {
             />
           </div>
 
-        <h1
+<h1
   className="glow-text font-black leading-tight mb-6"
   style={{
     fontSize: "clamp(2rem, 5vw, 3.5rem)",
@@ -1260,23 +1300,15 @@ const closeCrisis = () => {
     textShadow: darkMode
       ? undefined
       : "0 0 18px rgba(30,58,138,0.10)",
-  }}
+    textWrap: "balance",
+  } as React.CSSProperties}
 >
-  {seo.h1Title.split(" ").map((word, index) => (
-    <span key={index}>
-      {index === 5 && <br />}
-
-      <span
-        style={
-          index === 5
-            ? { color: darkMode ? "#00E5FF" : "#1565C0" }
-            : undefined
-        }
-      >
-        {word}
-      </span>{" "}
-    </span>
-  ))}
+{renderHighlightedTitle(seo.h1Title, {
+  firstLineWords: 5,
+  maxWordsPerLine: 4,
+  lineBreakClassName: "",
+  style: { color: darkMode ? "#00E5FF" : "#1565C0" },
+})}
 </h1>
 
           <p
@@ -1296,93 +1328,63 @@ const closeCrisis = () => {
               onClick={() => setCrisisOpen(true)}
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold transition-all duration-300"
               style={{
-                background: darkMode ? "#EF4444" : "#1565C0",
+                background: "#EF4444",
                 color: "#ffffff",
-                border: darkMode
-                  ? "1px solid rgba(239,68,68,0.6)"
-                  : "1px solid rgba(30,58,138,0.6)",
-                boxShadow: darkMode
-                  ? "0 0 15px rgba(239,68,68,0.35)"
-                  : "0 8px 22px rgba(30,58,138,0.22)",
+                border: "1px solid rgba(239,68,68,0.6)",
+                boxShadow: "0 0 15px rgba(239,68,68,0.35)",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = darkMode
-                  ? "0 0 22px rgba(239,68,68,0.55)"
-                  : "0 12px 30px rgba(29,78,216,0.32)"
+                e.currentTarget.style.boxShadow = "0 0 22px rgba(239,68,68,0.55)"
 
-                    if (!darkMode) {
-                  e.currentTarget.style.background = "#0D47A1"
-                  e.currentTarget.style.borderColor =
-                    "#0D47A1"
-                }
+
 
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = darkMode
-                  ? "0 0 15px rgba(239,68,68,0.35)"
-                  : "0 8px 22px rgba(30,58,138,0.22)"
+                e.currentTarget.style.boxShadow = "0 0 15px rgba(239,68,68,0.35)"
 
-                if (!darkMode) {
-                  e.currentTarget.style.background = "#1565C0"
-                  e.currentTarget.style.borderColor =
-                    "#1565C0"
-                }
+
               }}
             >
               گزارش فوری حادثه
             </button>
 
-            <Link
-              href="/services"
-              className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-semibold transition-all duration-300 px-[60px]"
-              style={{
-                background: darkMode
-                  ? "rgba(0,229,255,0.07)"
-                  : "transparent",
-                color: darkMode ? "#00E5FF" : "#1565C0",
-                border: darkMode
-                  ? "1px solid rgba(0,229,255,0.25)"
-                  : "1px solid rgba(30,58,138,0.45)",
-                boxShadow: darkMode
-                  ? "0 0 15px rgba(6,182,212,0.35)"
-                  : "0 8px 22px rgba(30,58,138,0.06)",
-              }}
-              onMouseEnter={(e) => {
-                if (!darkMode) {
-                  e.currentTarget.style.borderColor = "#0D47A1"
-                  e.currentTarget.style.background = "#0D47A1"
-                  e.currentTarget.style.color = "#FFFFFF"
-                  e.currentTarget.style.boxShadow =
-                    "0 12px 30px rgba(30,58,138,0.20)"
-                } else {
-                  e.currentTarget.style.boxShadow =
-                    "0 0 22px rgba(6,182,212,0.55)"
-                  e.currentTarget.style.borderColor =
-                    "rgba(0,229,255,0.4)"
-                }
-              }}
-              // "#1565C0"#0D47A1
-              onMouseLeave={(e) => {
-                if (!darkMode) {
-                  e.currentTarget.style.borderColor =
-                    "rgba(30,58,138,0.45)"
-                  e.currentTarget.style.background = "transparent"
-                  e.currentTarget.style.color = "#1D4ED8"
-                  e.currentTarget.style.boxShadow =
-                    "0 8px 22px rgba(30,58,138,0.06)"
-                } else {
-                  e.currentTarget.style.boxShadow =
-                    "0 0 15px rgba(6,182,212,0.35)"
-                  e.currentTarget.style.borderColor =
-                    "rgba(0,229,255,0.25)"
-                }
-              }}
-            >
-              خدمات ما
-            </Link>
+<Link
+  href="/services"
+  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-semibold transition-all duration-300 px-[60px]"
+  style={{
+    background: darkMode
+      ? "rgba(0,229,255,0.07)"
+      : "rgba(21,101,192,0.07)",
+    color: darkMode ? "#00E5FF" : "#1565C0",
+    border: darkMode
+      ? "1px solid rgba(0,229,255,0.25)"
+      : "1px solid rgba(21, 101, 192, 0.39)",
+    boxShadow: darkMode
+      ? "0 0 15px rgba(6,182,212,0.35)"
+      : "0 0 15px rgba(21,101,192,0.35)",
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.boxShadow = darkMode
+      ? "0 0 22px rgba(6,182,212,0.55)"
+      : "0 0 22px rgba(21,101,192,0.55)"
+    e.currentTarget.style.borderColor = darkMode
+      ? "rgba(0,229,255,0.4)"
+      : "rgba(21, 101, 192, 0.64)"
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.boxShadow = darkMode
+      ? "0 0 15px rgba(6,182,212,0.35)"
+      : "0 0 15px rgba(21,101,192,0.35)"
+    e.currentTarget.style.borderColor = darkMode
+      ? "rgba(0,229,255,0.25)"
+      : "rgba(21,101,192,0.25)"
+  }}
+>
+  خدمات ما
+</Link>
           </div>
 
-          <div className="scan-line mt-16 w-48 mx-auto opacity-60" />
+          
         </div>
 
 {crisisOpen &&
@@ -1395,18 +1397,7 @@ const closeCrisis = () => {
       <motion.div
         className="px-6 py-20 md:px-12"
         id="process"
-        style={
-          !darkMode
-            ? {
-                background:
-                  "linear-gradient(180deg, rgba(248,250,252,0.92), rgba(248,250,252,0.5))",
-                borderTop:
-                  "1px solid rgba(15,23,42,0.07)",
-                borderBottom:
-                  "1px solid rgba(15,23,42,0.07)",
-              }
-            : undefined
-        }
+
         initial={{ opacity: 0, y: 60 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
@@ -1434,15 +1425,19 @@ style={{
 
             <div className="scan-line w-24 mx-auto mt-4" />
 
-            <div
-              className="hidden md:block w-20 mt-4 flex-shrink-0 mx-auto"
-              style={{
-                height: "1px",
-                background: darkMode
-                  ? "linear-gradient(to right, rgba(0,229,255,0.1), rgba(0,229,255,1), rgba(31,74,79,0.1))"
-                  : "linear-gradient(to right, rgba(30,58,138,0.08), #1D4ED8, rgba(30,58,138,0.08))",
-              }}
-            />
+<div
+  className={`w-24 mx-auto mt-4 ${
+    darkMode
+      ? "bg-gradient-to-r from-transparent via-cyan-400 to-transparent"
+      : "bg-gradient-to-r from-transparent via-[#1565C0] to-transparent"
+  }`}
+  style={{
+    height: "1px",
+    minHeight: "1px",
+    maxHeight: "1px",
+    flexShrink: 0,
+  }}
+/>
           </div>
 
           <div className="flex flex-col md:flex-row items-center gap-0">
@@ -1470,7 +1465,7 @@ style={{
                 <div
                   className={`glass-card w-full max-w-[310px] md:max-w-none md:flex-1 h-[310px] max-w-[300px] flex flex-col  justify-center items-center p-6 md:p-8 text-center group transition-all duration-300 rounded-2xl ${
                     darkMode
-                      ? "border border-cyan-500/30 hover:border-cyan-500 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-800/15 "
+                      ? "border border-cyan-500/30 hover:border-cyan-600 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-900/15 "
                       : ""
                   }`}
                  style={
@@ -1478,7 +1473,7 @@ style={{
         ? { backdropFilter: "blur(10px)" } 
         : {
             border: "1px solid rgba(121, 154, 245, 0.82)",
-            background: "#FFFFFF",
+            background: "#ebebeb4b",
             boxShadow: "0 4px 20px rgba(15,23,42,0.06)",
             transition: "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
             backdropFilter: "blur(10px)",
@@ -1489,7 +1484,7 @@ style={{
                       e.currentTarget.style.borderColor =
                         "#2270ca"
                       e.currentTarget.style.background =
-                        "rgba(247, 249, 255, 0.17)"
+                        "#d0d0d035"
                       e.currentTarget.style.boxShadow =
                         "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
 
@@ -1499,13 +1494,14 @@ style={{
                     if (!darkMode) {
                       e.currentTarget.style.borderColor =
                         "rgba(91, 133, 248, 0.58)"
-                      e.currentTarget.style.background = "#FFFFFF"
+                      e.currentTarget.style.background = "#ebebeb4b"
                       e.currentTarget.style.boxShadow =
                         "0 4px 15px rgba(15,23,42,0.06)"
 
                     }
                   }}
                 >
+                 
                   <div className="mb-4 flex justify-center">
                     <div
                       className="w-16 h-16 rounded-full flex items-center justify-center"
@@ -1555,7 +1551,7 @@ style={{
                   <p
                     style={{
                       color: darkMode
-                        ? "#64748B"
+                        ? "#737c88"
                         : "#334155",
                       fontSize:"0.82rem",
                       lineHeight: 1.7,
@@ -1627,15 +1623,19 @@ style={{
 
                         <div className="scan-line w-24 mx-auto mt-4" />
 
-            <div
-              className="hidden md:block w-20 mt-4 flex-shrink-0 mx-auto"
-              style={{
-                height: "1px",
-                background: darkMode
-                  ? "linear-gradient(to right, rgba(0,229,255,0.1), rgba(0,229,255,1), rgba(31,74,79,0.1))"
-                  : "linear-gradient(to right, rgba(30,58,138,0.08), #1565C0, rgba(30,58,138,0.08))",
-              }}
-            />
+<div
+  className={`w-24 mx-auto mt-4 ${
+    darkMode
+      ? "bg-gradient-to-r from-transparent via-cyan-400 to-transparent"
+      : "bg-gradient-to-r from-transparent via-[#1565C0] to-transparent"
+  }`}
+  style={{
+    height: "1px",
+    minHeight: "1px",
+    maxHeight: "1px",
+    flexShrink: 0,
+  }}
+/>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -1673,7 +1673,7 @@ style={{
                 key={index}
                 className={`glass-card p-7 group cursor-default rounded-2xl transition-all duration-300 ${
                   darkMode
-                    ? "border border-cyan-500/30 hover:border-cyan-500 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-800/15"
+                    ? "border border-cyan-500/30 hover:border-cyan-600 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-900/15"
                     : ""
                 }`}
                 style={
@@ -1682,7 +1682,7 @@ style={{
                     : {
                         border:
                           "1px solid #76a7de",
-                        background: "#FFFFFF",
+                        background: "#ebebeb4b",
                         boxShadow:
                           "0 4px 20px rgba(15,23,42,0.06)",
                         transition:
@@ -1690,12 +1690,13 @@ style={{
                           backdropFilter: "blur(10px)"
                       }
                 }
+                
                 onMouseEnter={(e) => {
                   if (!darkMode) {
                     e.currentTarget.style.borderColor =
                       "#1565C0"
                     e.currentTarget.style.background =
-                      "rgba(244, 247, 255, 0.39)"
+                      "#d0d0d035"
                     e.currentTarget.style.boxShadow =
                       "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
 
@@ -1706,7 +1707,7 @@ style={{
                     e.currentTarget.style.borderColor =
                       "#76a7de"
                     e.currentTarget.style.background =
-                      "#FFFFFF"
+                      "#ebebeb4b"
                     e.currentTarget.style.boxShadow =
                       "0 4px 20px rgba(15,23,42,0.06)"
 
@@ -1757,7 +1758,7 @@ style={{
                     <p
                       style={{
                         color: darkMode
-                          ? "#64748B"
+                          ? "#737c88"
                           : "#334155",
                         fontSize:"0.82rem" ,
                         lineHeight: 1.75,
@@ -1812,21 +1813,7 @@ style={{
       {/* ─── آخرین گزارش‌های میدانی ─────────────────────────────────────── */}
       <motion.div
         className="py-20 px-6 md:px-12"
-        style={{
-          backgroundColor: darkMode ? "#0A1128" : "#FFFFFF",
-
-          ...(darkMode
-            ? {}
-            : {
-                background:
-                  "linear-gradient(180deg, rgba(248,250,252,0.92), rgba(248,250,252,0.5))",
-                borderTop:
-                  "1px solid rgba(15,23,42,0.07)",
-                borderBottom:
-                  "1px solid rgba(15,23,42,0.07)",
-              }
-          ),
-        }}
+       
         initial={{ opacity: 0, y: 60 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
@@ -1853,15 +1840,19 @@ style={{
             </h2>
             <div className="scan-line w-24 mx-auto mt-4" />
 
-            <div
-              className="hidden md:block w-20 mt-4 flex-shrink-0 mx-auto"
-              style={{
-                height: "0.5px",
-                background: darkMode
-                  ? "linear-gradient(to right, rgba(0,229,255,0.1), rgba(0,229,255,1), rgba(31,74,79,0.1))"
-                  : "linear-gradient(to right, rgba(30,58,138,0.08), #1565C0, rgba(30,58,138,0.08))",
-              }}
-            />
+<div
+  className={`w-24 mx-auto mt-4 ${
+    darkMode
+      ? "bg-gradient-to-r from-transparent via-cyan-400 to-transparent"
+      : "bg-gradient-to-r from-transparent via-[#1565C0] to-transparent"
+  }`}
+  style={{
+    height: "1px",
+    minHeight: "1px",
+    maxHeight: "1px",
+    flexShrink: 0,
+  }}
+/>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
@@ -1888,12 +1879,70 @@ style={{
                        key={post._id || i}
                        className={`group flex flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
                          darkMode
-                           ? "bg-[rgba(255,255,255,0.028)] border border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
+                           ? "border border-cyan-500/30 hover:border-cyan-600 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-900/15"
                            : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"
                        }`}
-                       style={{
-                         backdropFilter: "blur(10px)",
-                       }}
+
+                      //  #ebebeb4b #d0d0d035
+                style={
+                  darkMode
+                    ? {backdropFilter: "blur(10px)"}
+                    : {
+                        border:
+                          "1px solid #76a7de",
+                        background: "#ebebeb4b",
+                        boxShadow:
+                          "0 4px 20px rgba(15,23,42,0.06)",
+                        transition:
+                          "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
+                          backdropFilter: "blur(10px)"
+                      }
+                }
+
+
+
+
+                //        className={`glass-card p-7 group cursor-default rounded-2xl transition-all duration-300 ${
+                //   darkMode
+                //     ? "border border-cyan-500/30 hover:border-cyan-500 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-800/15"
+                //     : ""
+                // }`}
+                // style={
+                //   darkMode
+                //     ? {backdropFilter: "blur(10px)"}
+                //     : {
+                //         border:
+                //           "1px solid #76a7de",
+                //         background: "#FFFFFF",
+                //         boxShadow:
+                //           "0 4px 20px rgba(15,23,42,0.06)",
+                //         transition:
+                //           "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
+                //           backdropFilter: "blur(10px)"
+                //       }
+                // }
+                onMouseEnter={(e) => {
+                  if (!darkMode) {
+                    e.currentTarget.style.borderColor =
+                      "#1565C0"
+                    e.currentTarget.style.background =
+                      "#d0d0d035"
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
+
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!darkMode) {
+                    e.currentTarget.style.borderColor =
+                      "#76a7de"
+                    e.currentTarget.style.background =
+                      "#ebebeb4b"
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 20px rgba(15,23,42,0.06)"
+
+                  }
+                }}
                      >
                       {/* Thumbnail */}
                       <div
@@ -1948,7 +1997,7 @@ style={{
                         <h3
                           className={`text-base font-bold leading-snug mb-3 break-words line-clamp-2 ${
                             darkMode
-                              ? "text-[#E6F7FF]"
+                              ? "text-[#E6F7FF] group-hover:text-[#00E5FF] transition-colors duration-300"
                               : "text-[#111827] group-hover:text-[#1565C0] transition-colors duration-300"
                           }`}
                         >
@@ -1958,7 +2007,7 @@ style={{
                         {/* Excerpt */}
                         <p
                           className={`text-[13px] leading-relaxed line-clamp-2 break-words mb-5 flex-1 min-h-[2.85rem] ${
-                            darkMode ? "text-[#9DB0C0]" : "text-[#334155]"
+                            darkMode ? "text-[#737c88]" : "text-[#334155]"
                           }`}
                         >
                           {summary}
@@ -2033,6 +2082,193 @@ style={{
           </div>
         </div>
       </motion.div>
+
+
+
+
+{/* ─── SUCCESSFUL CASES ─── */}
+<section
+  className={`relative px-6 py-20 md:px-12 overflow-hidden ${
+    darkMode
+      ? "bg-[rgba(5,10,25,0.62)] border-y border-cyan-400/[0.07]"
+      : "bg-[#F8FAFC] border-y border-[#1565C0]/10"
+  }`}
+  id="cases"
+>
+  {/* Background glow */}
+  <div
+    className={`absolute inset-0 pointer-events-none ${
+      darkMode
+        ? "bg-[radial-gradient(ellipse_55%_45%_at_50%_45%,rgba(0,229,255,0.055),transparent_70%)]"
+        : "bg-[radial-gradient(ellipse_55%_45%_at_50%_45%,rgba(21,101,192,0.045),transparent_70%)]"
+    }`}
+  />
+
+  <div className="relative max-w-5xl mx-auto">
+    {/* Header */}
+    <div className="flex flex-col items-center text-center gap-6 mb-12">
+      <div>
+        <span 
+        className="data-label block mb-3"
+        style={{
+  ...(!darkMode && { color: "#1565C0" }),
+}}
+        >Successful Projects</span>
+
+        <h2
+          className={`text-[clamp(1.4rem,3vw,2rem)] font-bold ${
+            darkMode ? "text-white" : "text-[#0F172A]"
+          }`}
+        >
+          نمونه‌کارهای موفق
+        </h2>
+
+<div
+  className={`w-24 mx-auto mt-4 ${
+    darkMode
+      ? "bg-gradient-to-r from-transparent via-cyan-400 to-transparent"
+      : "bg-gradient-to-r from-transparent via-[#1565C0] to-transparent"
+  }`}
+  style={{
+    height: "1px",
+    minHeight: "1px",
+    maxHeight: "1px",
+    flexShrink: 0,
+  }}
+/>
+      </div>
+
+     
+    </div>
+
+    {/* Case cards */}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      {successfulCases.map((item) => (
+        <article
+          key={item.number}
+          className={`group relative flex flex-col overflow-hidden rounded-2xl p-6
+            transition-all duration-300 ease-out
+            ${
+              darkMode
+                ? "border border-cyan-500/30 bg-[rgba(255,255,255,0.028)] hover:border-cyan-600 hover:bg-cyan-900/15"
+                : "border border-[#76A7DE] bg-[#EBEBEB4B] shadow-[0_4px_20px_rgba(15,23,42,0.06)] hover:border-[#1565C0] hover:bg-[#D0D0D035] hover:shadow-md"
+            }`}
+        >
+          {/* Card header */}
+          <div className="relative flex items-center justify-between gap-4 mb-6">
+            <div
+className={`w-12 h-12 flex items-center justify-center rounded-xl ${
+  darkMode
+    ? "bg-cyan-400/[0.07] border border-cyan-400/20"
+    : "bg-[#1565C0]/[0.06] border border-[#1565C0]/15 text-[#1565C0]"
+}`}
+
+            >
+              {darkMode
+  ? item.icon
+  : React.cloneElement(item.icon, { color: "#1565C0" })}
+            </div>
+
+            <div
+              className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${
+                darkMode
+                  ? "bg-green-500/[0.07] border border-green-500/20"
+                  : "bg-green-600/[0.06] border border-green-600/20"
+              }`}
+            >
+              <span className="w-[5px] h-[5px] rounded-full bg-green-500 shadow-[0_0_7px_rgba(34,197,94,0.7)]" />
+
+              <span className="text-[0.68rem] font-semibold text-green-600">
+                پرونده موفق
+              </span>
+            </div>
+          </div>
+
+          {/* Category */}
+          <span
+            className={`text-[0.72rem] font-semibold ${
+              darkMode ? "text-cyan-400/60" : "text-[#1565C0]"
+            }`}
+          >
+            {item.category}
+          </span>
+
+          {/* Title */}
+          <h3
+            className={`font-bold mt-2 mb-4 text-base leading-[1.65] transition-colors duration-300 ${
+              darkMode
+                ? "text-white"
+                : "text-[#0F172A] "
+            }`}
+          >
+            {item.title}
+          </h3>
+
+          {/* Result */}
+          <div
+            className={`px-4 py-3 rounded-xl mb-4 ${
+              darkMode
+                ? "bg-cyan-400/[0.05] border-r-2 border-cyan-400/55"
+                : "bg-[#1565C0]/[0.045] border-r-2 border-[#1565C0]/60"
+            }`}
+          >
+            <span
+              className={`block mb-1 text-[0.75rem] ${
+                darkMode ? "text-[#737c88]" : "text-slate-500"
+              }`}
+            >
+              نتیجه پرونده
+            </span>
+
+            <strong
+              className={`text-[0.84rem] leading-[1.7] ${
+                darkMode ? "text-cyan-400" : "text-[#1565C0]"
+              }`}
+            >
+              {item.result}
+            </strong>
+          </div>
+
+          {/* Description */}
+          <p
+            className={`mb-6 text-[0.8rem] leading-[1.85] ${
+              darkMode ? "text-[#737c88]" : "text-[#334155]"
+            }`}
+          >
+            {item.description}
+          </p>
+
+          {/* Tags */}
+          <div
+            className={`mt-auto pt-4 flex flex-wrap gap-2 border-t ${
+              darkMode ? "border-cyan-400/[0.07]" : "border-[#1565C0]/10"
+            }`}
+          >
+            {item.tags.map((tag) => (
+              <span
+                key={tag}
+                className={`px-2.5 py-1 rounded-md text-[0.72rem] ${
+                  darkMode
+                    ? "bg-white/[0.025] text-slate-500"
+                    : "bg-[#1565C0]/[0.045] text-slate-600"
+                }`}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
     </div>
     </>
   )

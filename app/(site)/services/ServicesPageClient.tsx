@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useTheme } from "../../../components/ThemeProvider";
 import { motion } from "framer-motion";
 import EmergencyModal from "@/components/CrisisReportForm";
+import { renderHighlightedTitle } from "@/lib/highlightTitle";
 
 
 /* ─── ICONS ─── */
@@ -464,11 +465,11 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
           style={{
             background: darkMode
               ? "radial-gradient(ellipse 65% 60% at 50% 50%, rgba(0,229,255,0.065) 0%, transparent 70%)"
-              : "radial-gradient(ellipse 65% 60% at 50% 50%, rgba(84, 128, 215, 0.18) 0%, transparent 70%)",
+              : "",
           }}
         />
 
-        <div className="relative z-10 max-w-3xl mx-auto">
+        <div className="relative z-10 max-w-5xl mx-auto">
 
              <div
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 text-xs"
@@ -479,7 +480,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                 : "#EBF3FF",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.2)"
-                : "1px solid #d9e7f7",
+                : "1px solid #156cef57",
               
             }}
           >
@@ -507,29 +508,21 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   className="glow-text font-black leading-tight mb-6"
   style={{
     fontSize: "clamp(2rem, 5vw, 3.5rem)",
-    color: darkMode ? "#e8f4f8" : "#0c1a43",
+    color: darkMode ? "#ffffff" : "#0c1a43",
     lineHeight: "1.3",
     fontWeight: 900,
     textShadow: darkMode
       ? undefined
       : "0 0 18px rgba(30,58,138,0.10)",
-  }}
+    textWrap: "balance",
+  } as React.CSSProperties}
 >
-    {(() => {
-    const highlight = "پاراهور";
-    const title = seo.h1Title || "";
-    const i = title.indexOf(highlight);
-    if (i === -1) return title;
-    return (
-      <>
-        {title.slice(0, i)}
-        <span style={{ color: darkMode ? "#00E5FF" : "#1565C0" }}>
-          {highlight}
-        </span>
-        {title.slice(i + highlight.length)}
-      </>
-    );
-  })()}
+{renderHighlightedTitle(seo.h1Title, {
+  firstLineWords: 4,
+  maxWordsPerLine: 4,
+  lineBreakClassName: "",
+  style: { color: darkMode ? "#00E5FF" : "#1565C0" },
+})}
 </h1>
 
           <p
@@ -885,8 +878,8 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                         ? "rgba(0,229,255,0.055)"
                         : "rgba(255,255,255,0.028)"
                       : isHovered
-                        ? "rgba(229, 234, 243, 0.12)"
-                        : "#FFFFFF",
+                        ? "#d0d0d035"
+                        : "#ebebeb4b",
 
                     border: darkMode
                       ? isHovered
@@ -910,6 +903,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                         ? "0 16px 40px rgba(30,58,138,0.34)"
                         : "0 4px 20px rgba(15,23,42,0.06)",
                   }}
+                  
                   onMouseEnter={() => setHoveredCard(s.id)}
                   onMouseLeave={() => setHoveredCard(null)}
                 >
@@ -941,7 +935,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                             ? "rgba(0,229,255,0.1)"
                             : "rgba(0,229,255,0.06)"
                           : isHovered
-                            ? "rgba(30,58,138,0.10)"
+                            ? "rgba(97, 136, 198, 0.24)"
                             : "rgba(30,58,138,0.06)",
 
                         border: darkMode

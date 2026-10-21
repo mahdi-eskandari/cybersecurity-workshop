@@ -12,6 +12,7 @@ import { siTelegram } from "simple-icons";
 import { useState, useRef } from "react";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import Link from "next/link";
+import { renderHighlightedTitle } from "@/lib/highlightTitle";
 
 
 /* ─── SHARED ─── */
@@ -525,7 +526,7 @@ const isDark = darkMode;
        style={{
             background: darkMode
               ? "radial-gradient(ellipse 65% 60% at 50% 50%, rgba(0, 229, 255, 0.06) 0%, transparent 70%)"
-              : "radial-gradient(ellipse 65% 60% at 50% 50%, rgba(84, 128, 215, 0.18) 0%, transparent 70%)",
+              : "",
           }}
       >
         <div className="relative z-10 mx-auto max-w-3xl">
@@ -539,7 +540,7 @@ const isDark = darkMode;
                 : "#EBF3FF",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.2)"
-                : "1px solid rgba(49, 117, 159, 0.14)",
+                : "1px solid #156cef57",
               
             }}
           >
@@ -564,33 +565,24 @@ const isDark = darkMode;
   className="glow-text font-black leading-tight mb-6"
   style={{
     fontSize: "clamp(2rem, 5vw, 3.5rem)",
-    color: darkMode ? "#e8f4f8" : "#0c1a43",
+    color: darkMode ? "#ffffff" : "#0c1a43",
     lineHeight: "1.3",
     fontWeight: 900,
     textShadow: darkMode
       ? undefined
       : "0 0 18px rgba(30,58,138,0.10)",
-  }}
+    textWrap: "balance",
+  } as React.CSSProperties}
 >
-  {(() => {
-    const highlight = "پاراهور";
-    const title = h1Title || "";
-    const i = title.indexOf(highlight);
-    if (i === -1) return title;
-    return (
-      <>
-        {title.slice(0, i)}
-        <span style={{ color: darkMode ? "#00E5FF" : "#1565C0" }}>
-          {highlight}
-        </span>
-        {title.slice(i + highlight.length)}
-      </>
-    );
-  })()}
+{renderHighlightedTitle(h1Title, {
+  firstLineWords: 5,
+  maxWordsPerLine: 7,
+  lineBreakClassName: "",
+  style: { color: darkMode ? "#00E5FF" : "#1565C0" },
+})}
 </h1>
           <p className={`mx-auto max-w-[560px] text-[clamp(0.9rem,1.8vw,1.05rem)] leading-[1.9] ${isDark ? "text-[#64748B]" : "text-[#475569]"}`}>برای گزارش بحران سایبری، ارسال سریع مستندات یا مکاتبات رسمی و حقوقی، از طریق مسیرهای زیر با ما در تماس باشید.</p>
           <div className={`mt-8 flex items-center justify-center gap-5 ${isDark ? "text-[#8292a859]" : "text-[#64748B]"}`}>
-            {["رمزنگاری سرتاسری", "بدون ذخیره‌سازی ابری", "پروتکل PGP"].map((label) => <div key={label} className="flex items-center gap-1.5 text-[0.76rem]"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={themeBlue} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg><span>{label}</span></div>)}
           </div>
         </div>
       </motion.section>
@@ -618,24 +610,26 @@ const isDark = darkMode;
       onMouseLeave={() => setHoveredCard(null)}
       className={`contact-channel-card group relative flex flex-col overflow-hidden rounded-2xl border transition-all duration-300 ${
         isDark
+        
           ? "bg-white/[0.028] shadow-[0_4px_20px_rgba(0,0,0,0.2)]"
           : crisis
-          ? "border-[#991B1B]/30 bg-white shadow-[0_8px_26px_rgba(15,23,42,0.055)]  hover:border-[#991B1B]/55 hover:shadow-[0_16px_38px_rgba(153,27,27,0.28)]"
-          : "border-[#1565C0]/30 bg-white shadow-[0_8px_26px_rgba(15,23,42,0.055)]  hover:border-[#1565C0]/55 hover:shadow-[0_16px_38px_rgba(21,101,192,0.28)]"
+          ? "border-[#991B1B]/30 bg-[#ebebeb4b] hover:bg-[#d0d0d035] shadow-[0_8px_26px_rgba(15,23,42,0.055)]  hover:border-[#991B1B]/85 hover:shadow-[0_16px_38px_rgba(153,27,27,0.1)]"
+          : "border-[#1565C0]/30 bg-[#ebebeb4b] hover:bg-[#d0d0d035] shadow-[0_8px_26px_rgba(15,23,42,0.055)]  hover:border-[#1565C0]/85 hover:shadow-[0_16px_38px_rgba(21,101,192,0.1)]"
       }`}
-      style={{
-        backdropFilter: "blur(10px)",
-        borderColor: isDark
-          ? isHov
-            ? `${ac}45`
-            : `${ac}18`
-          : undefined,
-        background: isDark && isHov ? `${ac}09` : undefined,
-        boxShadow:
-          isDark && isHov
-            ? `0 16px 48px rgba(0,0,0,0.4), 0 0 30px ${ac}10`
-            : undefined,
-      }}
+style={{
+  backdropFilter: "blur(10px)",
+  transform: isHov ? "translateY(-4px)" : "none",
+  borderColor: isDark
+    ? isHov
+      ? `${ac}45`
+      : `${ac}18`
+    : undefined,
+  background: isDark && isHov ? `${ac}09` : undefined,
+  boxShadow:
+    isDark && isHov
+      ? `0 16px 48px rgba(0,0,0,0.4), 0 0 30px ${ac}10`
+      : undefined,
+}}
     >
       <div
         className=" transition-opacity duration-300"

@@ -9,6 +9,13 @@ const CommentSchema = new Schema(
       required: true,
     },
 
+    parentCommentId: {
+  type: Schema.Types.ObjectId,
+  ref: "Comment",
+  default: null,
+  index: true,
+},
+
     name: {
       type: String,
       required: true,

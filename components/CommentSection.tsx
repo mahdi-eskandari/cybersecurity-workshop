@@ -14,6 +14,60 @@ export interface ApprovedComment {
   name: string;
   comment: string;
   createdAt: string;
+  parentCommentId?: string | null;
+  parentName?: string | null;
+}
+
+
+interface CommentNode extends ApprovedComment {
+  replies: CommentNode[];
+}
+
+
+type FlatReply = { node: CommentNode; parentName: string };
+
+/* همه‌ی نوه‌ها را تخت می‌کند، به ترتیب زمان (قدیمی‌تر اول) */
+function flattenReplies(node: CommentNode): FlatReply[] {
+  const sorted = [...node.replies].sort(
+    (a, b) =>
+      new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+  );
+
+  return sorted.flatMap((reply): FlatReply[] => [
+    { node: reply, parentName: node.name },
+    ...flattenReplies(reply),
+  ]);
+}
+
+function buildCommentTree(
+  comments: ApprovedComment[]
+): CommentNode[] {
+  const nodes = new Map<string, CommentNode>();
+
+  comments.forEach((comment) => {
+    nodes.set(comment._id, {
+      ...comment,
+      replies: [],
+    });
+  });
+
+  const roots: CommentNode[] = [];
+
+  nodes.forEach((node) => {
+    const parentId = node.parentCommentId
+      ? String(node.parentCommentId)
+      : "";
+
+    const parent = nodes.get(parentId);
+
+    if (parent && parent._id !== node._id) {
+      parent.replies.push(node);
+    } else {
+      roots.push(node);
+    }
+  });
+
+  return roots;
 }
 
 const IconWarning = () => (
@@ -59,6 +113,144 @@ function formatRelativeTime(dateString: string): string {
   return date.toLocaleDateString("fa-IR", { year: "numeric", month: "long", day: "numeric" });
 }
 
+
+
+
+function CommentItem({
+  node,
+  darkMode,
+  onReply,
+}: {
+  node: CommentNode;
+  darkMode: boolean;
+  onReply: (comment: ApprovedComment) => void;
+}) {
+  const ac = darkMode ? "#00E5FF" : "#1565C0";
+  const replies = flattenReplies(node);
+
+  const nameColor = darkMode ? "#E2E8F0" : "#0F172A";
+  const textColor = darkMode ? "#CBD5E1" : "#334155";
+  const mutedColor = darkMode ? "#64748B" : "#94A3B8";
+  const lineColor = darkMode ? "rgba(255,255,255,0.07)" : "rgba(21,101,192,0.14)";
+
+  const Avatar = ({ name, size }: { name: string; size: number }) => (
+    <div
+      className="flex flex-shrink-0 items-center justify-center rounded-full font-bold"
+      style={{
+        width: size,
+        height: size,
+        fontSize: size * 0.4,
+        background: darkMode ? "rgba(0,229,255,0.12)" : "rgba(148,193,229,0.26)",
+        color: ac,
+        border: `1px solid ${ac}44`,
+      }}
+    >
+      {name?.charAt(0) || "؟"}
+    </div>
+  );
+
+  const ReplyBtn = ({ target }: { target: ApprovedComment }) => (
+    <button
+      type="button"
+      onClick={() => onReply(target)}
+      className="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-bold transition-opacity hover:opacity-70"
+      style={{
+        color: ac,
+        background: darkMode ? "rgba(0,229,255,0.08)" : "rgba(21,101,192,0.07)",
+      }}
+    >
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="9 14 4 9 9 4" />
+        <path d="M20 20v-7a4 4 0 0 0-4-4H4" />
+      </svg>
+      پاسخ
+    </button>
+  );
+
+  /* یک ردیف نظر: هدر (آواتار + نام ... پاسخ + زمان) و متن */
+  const Row = ({
+    item,
+    size,
+    textSize,
+    toName,
+  }: {
+    item: CommentNode;
+    size: number;
+    textSize: string;
+    toName?: string;
+  }) => (
+    <div className="flex items-start gap-2.5">
+      <Avatar name={item.name} size={size} />
+
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex min-w-0 flex-wrap items-baseline gap-x-2">
+            <span className="truncate text-[13px] font-bold" style={{ color: nameColor }}>
+              {item.name || "کاربر مهمان"}
+            </span>
+            {toName && (
+              <span className="text-[10.5px]" style={{ color: ac }}>
+                ↪ {toName}
+              </span>
+            )}
+          </div>
+
+          {/* سمت چپ: زمان + پاسخ */}
+          <div className="flex flex-shrink-0 items-center gap-2.5">
+            <span className="text-[10.5px]" style={{ color: mutedColor }}>
+              {formatRelativeTime(item.createdAt)}
+            </span>
+            <ReplyBtn target={item} />
+          </div>
+        </div>
+
+        <p
+          className={`mt-1 whitespace-pre-line break-words leading-[1.9] ${textSize}`}
+          style={{ color: textColor }}
+        >
+          {item.comment}
+        </p>
+      </div>
+    </div>
+  );
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25 }}
+      className={`rounded-2xl border px-4 py-3.5 ${
+        darkMode
+          ? "border-white/[0.08] bg-white/[0.03]"
+          : "border-[#1565C0]/25 bg-white shadow-[0_2px_10px_rgba(15,23,42,0.05)]"
+      }`}
+    >
+      <Row item={node} size={34} textSize="text-[13px]" />
+
+      {replies.length > 0 && (
+        <div
+          className="mr-[17px] mt-3 space-y-3 border-r-2 pr-4"
+          style={{ borderColor: lineColor }}
+        >
+          {replies.map(({ node: reply, parentName }) => (
+            <Row
+              key={reply._id}
+              item={reply}
+              size={26}
+              textSize="text-[12.5px]"
+              toName={parentName !== node.name ? parentName : undefined}
+            />
+          ))}
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
+
+
+
+
 export default function CommentSection({ postId, darkMode, initialComments }: CommentSectionProps) {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
@@ -71,14 +263,45 @@ const turnstileRef = useRef<TurnstileInstance>(null);
 const errorRetries = useRef(0);
   const [isHov, setIsHov] = useState(false);
 
-  const isDark = darkMode;
-  const ac = darkMode ? "#00E5FF" : "#1565C0";
-  const [serverMessage, setServerMessage] = useState<{ success: boolean; text: string } | null>(null);
+const [replyToComment, setReplyToComment] =
+  useState<ApprovedComment | null>(null);
+
+const [serverMessage, setServerMessage] = useState<{
+  success: boolean;
+  text: string;
+} | null>(null);
+
+const formCardRef = useRef<HTMLDivElement>(null);
+
+const [comments] = useState<ApprovedComment[]>(initialComments);
+const commentTree = buildCommentTree(comments);
+
+console.log(
+  "COMMENTS DEBUG:",
+  comments.map((c) => ({
+    id: c._id,
+    name: c.name,
+    parentCommentId: c.parentCommentId,
+    parentName: c.parentName,
+  }))
+);
+
+const handleReply = (target: ApprovedComment) => {
+  setReplyToComment(target);
+  setServerMessage(null);
+
+  formCardRef.current?.scrollIntoView({
+    behavior: "smooth",
+    block: "center",
+  });
+};
+
+const isDark = darkMode;
+const ac = darkMode ? "#00E5FF" : "#1565C0";
 
   // نظرات تایید و منتشرشده، مستقیم از سرور (page.tsx) به‌عنوان prop
   // می‌رسن -- دیگه نیازی به فچ کلاینتی یا حالت لودینگ نیست، چون
   // همون اولین HTML سرور، این محتوا رو از قبل داره (سئوفرندلی).
-  const [comments] = useState<ApprovedComment[]>(initialComments);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const phoneRegex = /^09[0-9]{9}$/; // شماره موبایل 11 رقمی ایران با شروع 09
@@ -120,7 +343,14 @@ const errorRetries = useRef(0);
       const response = await fetch("/api/comments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ postId, name, contact, comment, turnstileToken }),
+body: JSON.stringify({
+  postId,
+  name,
+  contact,
+  comment,
+  turnstileToken,
+  parentCommentId: replyToComment?._id ?? null,
+}),
       });
 
       const result = await response.json();
@@ -130,9 +360,11 @@ const errorRetries = useRef(0);
           success: true,
           text: "نظر شما با موفقیت ثبت شد و در انتظار تایید ادمین است.",
         });
-        setName("");
-        setContact("");
-        setComment("");
+setName("");
+setContact("");
+setComment("");
+setReplyToComment(null);
+setErrors({});
       } else {
         setServerMessage({ success: false, text: result.message || "خطایی رخ داد." });
       }
@@ -169,8 +401,9 @@ const errorRetries = useRef(0);
       </div>
 
       {/* کارت فرم با همون ساختار ساده قبلی، ولی با هاورها و رنگ‌ولعاب استایلِ شما */}
-      <div
-        className={`relative overflow-hidden rounded-2xl border transition-all duration-300 w-full p-6 md:p-8 mb-10 ${
+     <div
+  ref={formCardRef}
+  className={`relative overflow-hidden rounded-2xl border transition-all duration-300 w-full p-6 md:p-8 mb-10 ${
           darkMode
             ? "border-[#00E5FF]/25 bg-white/[0.025] backdrop-blur-[10px]  shadow-[0_18px_42px_rgba(0,0,0,0.38),0_12px_40px_rgba(0,229,255,0.20)] "
             : "border-[#1565C0]/40 bg-white  shadow-[0_0_0_1px_rgba(21,101,192,0.1),0_6px_16px_rgba(21,101,192,0.08)]"
@@ -181,9 +414,41 @@ const errorRetries = useRef(0);
   darkMode ? "via-[#00E5FF]/75" : "via-[#1565C0]/65"
 } to-transparent`} />
 
-        <h4 className="font-bold text-sm mb-2 relative z-10" style={{ color: darkMode ? "#FFFFFF" : "black" }}>
-          دیدگاه خود را با ما به اشتراک بگذارید
-        </h4>
+
+<h4
+  className="font-bold text-sm mb-2 relative z-10"
+  style={{ color: darkMode ? "#FFFFFF" : "black" }}
+>
+  {replyToComment
+    ? `پاسخ به ${replyToComment.name}`
+    : "دیدگاه خود را با ما به اشتراک بگذارید"}
+</h4>
+
+{replyToComment && (
+  <div
+    className="mb-4 flex items-center justify-between gap-3 rounded-xl border p-3 text-xs"
+    style={{
+      borderColor: darkMode
+        ? "rgba(0,229,255,0.25)"
+        : "rgba(21,101,192,0.25)",
+      color: darkMode ? "#CBD5E1" : "#334155",
+    }}
+  >
+    <span>
+      در حال پاسخ به دیدگاه {replyToComment.name} هستید.
+    </span>
+
+    <button
+      type="button"
+      onClick={() => setReplyToComment(null)}
+      className="shrink-0 font-bold"
+      style={{ color: darkMode ? "#00E5FF" : "#1565C0" }}
+    >
+      لغو پاسخ
+    </button>
+  </div>
+)}
+
         <p className="text-xs mb-6 relative z-10" style={{ color: darkMode ? "#94A3B8" : "#64748B" }}>
           نظر شما پس از بررسی و تایید تیم مدیریت در صفحه نمایش داده خواهد شد.
         </p>
@@ -343,7 +608,11 @@ onMouseLeave={(e) => {
       : "bg-[#1565C0] text-white hover:bg-[#0D47A1]"
   }`}
 >
-  {submitting ? "در حال ارسال..." : "ارسال دیدگاه"}
+  {submitting
+  ? "در حال ارسال..."
+  : replyToComment
+    ? "ارسال پاسخ"
+    : "ارسال دیدگاه"}
 </button>
         </form>
       </div>
@@ -383,60 +652,23 @@ onMouseLeave={(e) => {
         </div>
       )}
 
-      {/* لیست دیدگاه‌ها */}
-      <div className="w-full bg-[rgba(235, 245, 251, 0.2)]">
 
-{comments.length > 0 && (
-  <div className="space-y-3 max-w-4xl mx-auto">
-    <AnimatePresence initial={false}>
-      {comments.map((c, index) => (
-        <motion.div
-          key={c._id}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.25, delay: Math.min(index, 6) * 0.04 }}
-          className={`relative overflow-hidden rounded-2xl border p-5 transition-all duration-300 ${
-            darkMode
-              ? "border-white/[0.07] bg-white/[0.03] shadow-[0_4px_18px_rgba(0,0,0,0.35)] "
-              : "border-[#1565C0]/40 bg-white shadow-[0_2px_10px_rgba(15,23,42,0.07)] "
-          }`}
-        >
-          <div className="flex items-start gap-3">
-            <div
-              className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-xs font-black mt-1"
-              style={{
-                background: darkMode ? "rgba(0,229,255,0.12)" : "rgba(148, 193, 229, 0.26)",
-                color: darkMode ? "#00e5ffb2" : "#1565C0",
-                border: darkMode ? "1px solid #00e5ffb2" : "1px solid #8ab4e4",
-              }}
-            >
-              {c.name?.charAt(0) || "؟"}
-            </div>
-
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 mb-1.5">
-                <span className="text-[12px] font-bold" style={{ color: darkMode ? "#E2E8F0" : "#0F172A" }}>
-                  {c.name || "کاربر مهمان"}
-                </span>
-                <span className="text-[10px] font-medium" style={{ color: darkMode ? "#64748B" : "#94A3B8" }}>
-                  {formatRelativeTime(c.createdAt)}
-                </span>
-              </div>
-
-              <p
-                className="text-[12.5px] leading-relaxed whitespace-pre-line"
-                style={{ color: darkMode ? "#CBD5E1" : "#334155" }}
-              >
-                {c.comment}
-              </p>
-            </div>
-          </div>
-        </motion.div>
+{/* لیست دیدگاه‌ها */}
+<div className="w-full">
+  {comments.length > 0 && (
+    <div className="space-y-4 max-w-4xl mx-auto">
+      {commentTree.map((node) => (
+        <CommentItem
+          key={node._id}
+          node={node}
+          darkMode={darkMode}
+          onReply={handleReply}
+        />
       ))}
-    </AnimatePresence>
-  </div>
-)}
-      </div>
+    </div>
+  )}
+</div>
+
     </div>
   );
 }

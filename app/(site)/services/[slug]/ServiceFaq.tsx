@@ -51,6 +51,7 @@ const [openFaq, setOpenFaq] = useState<number | null>(null);
       }
     : {
         sectionBg: "#F8FAFC",
+sectionBorder: "1px solid rgba(21,101,192,0.14)",
         tag: BLUE,
         title: "#0F172A",
         text: "#475569",
@@ -71,22 +72,26 @@ const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   return (
     <motion.section
-      id="faq"
-      className="scroll-mt-24 px-6 py-20 md:px-12"
-      style={{ background: t.sectionBg, borderBottom: t.sectionBorder }}
-      initial={{ opacity: 0, y: 60 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7 }}
-      viewport={{ once: true, amount: 0.2 }}
-    >
+  id="faq"
+  className="scroll-mt-24 px-6 py-20 md:px-12"
+  style={{
+    background: t.sectionBg,
+    borderTop: t.sectionBorder,
+    borderBottom: t.sectionBorder,
+  }}
+  initial={{ opacity: 0, y: 60 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.7 }}
+  viewport={{ once: true, amount: 0.2 }}
+>
       <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-[0.75fr_1.25fr] gap-10 lg:gap-16">
         {/* ───── متن ثابت ───── */}
         <div>
           <span
-            className="block mb-3"
+            className="block mb-3 font-bold"
             style={{
               fontFamily: "'JetBrains Mono',monospace",
-              fontSize: "0.65rem",
+              fontSize: "0.7rem",
               color: t.tag,
               letterSpacing: "0.18em",
             }}

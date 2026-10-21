@@ -2352,6 +2352,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { isValidHighlightTitle } from "@/lib/highlightTitle";
 
 type SeoPage = {
   _id?: string;
@@ -3052,6 +3053,13 @@ export default function SeoAdminPage() {
       return;
     }
 
+        if (!isValidHighlightTitle(h1Title)) {
+      setError(
+        "آکولادهای عنوان H1 درست بسته نشده‌اند. مثال: هیچ {مجرمی} در دنیای دیجیتال بی‌ردپا نیست."
+      );
+      return;
+    }
+
     if (!metaTitle.trim()) {
       setError(
         "Meta Title را وارد کنید."
@@ -3281,7 +3289,7 @@ return (
 
               <Field
                 label="H1 TITLE"
-                hint="این عنوان به عنوان H1 اصلی داخل خود صفحه نمایش داده می‌شود و مستقل از Meta Title است."
+                hint="این عنوان به عنوان H1 اصلی داخل خود صفحه نمایش داده می‌شود و مستقل از Meta Title است. کلمه‌ای که بین { } بنویسی (مثلاً: هیچ {مجرمی} بی‌ردپا نیست) با استایل مخصوص نمایش داده می‌شود."
               >
                 <input
                   value={h1Title}
