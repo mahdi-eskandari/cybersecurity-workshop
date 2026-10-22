@@ -314,13 +314,9 @@ const errorRetries = useRef(0);
   {
     (
       {
-        "service-feedback": "انتقاد از خدمات و تجربه کاربری",
-        "website-suggestion": "پیشنهاد برای بهبود سایت",
-        "content-suggestion": "پیشنهاد محتوایی",
-        "technical-feedback": "مشکل فنی یا خطای سایت",
+
         "partnership": "پیشنهاد همکاری با پاراهور",
-        "feature-request": "پیشنهاد قابلیت یا ایده جدید",
-        "other": "سایر انتقادات و پیشنهادات",
+        "other": "انتقادات و پیشنهادات",
       } as Record<string, string>
     )[subject] || "انتخاب موضوع پیام..."
   }
@@ -330,13 +326,9 @@ const errorRetries = useRef(0);
           {subjectOpen && (
             <div role="listbox" className={`absolute inset-x-0 top-[calc(100%+8px)] z-50 overflow-hidden rounded-xl border p-1.5 shadow-2xl backdrop-blur-xl ${isDark ? "border-[#00E5FF]/30 bg-[#071126]/[0.98] shadow-[0_18px_42px_rgba(0,0,0,0.5),0_0_24px_rgba(0,229,255,0.08)]" : "border-[#1E3A8A]/25 bg-white/[0.98] shadow-[0_18px_42px_rgba(15,23,42,0.14),0_0_24px_rgba(30,58,138,0.08)]"}`}>
               {[
-                ["service-feedback", "انتقاد از خدمات و تجربه کاربری"],
-                ["website-suggestion", "پیشنهاد برای بهبود سایت"],
-                ["content-suggestion", "پیشنهاد محتوایی"],
-                ["technical-feedback", "مشکل فنی یا خطای سایت"],
+                
                 ["partnership", "پیشنهاد همکاری با پاراهور"],
-                ["feature-request", "پیشنهاد قابلیت یا ایده جدید"],
-                ["other", "سایر انتقادات و پیشنهادات"],
+                ["other", "انتقادات و پیشنهادات"],
               ].map(([value, label]) => (
                 <button
                   key={value}
@@ -444,7 +436,7 @@ const isDark = darkMode;
 {/* ─── BREADCRUMB ─── */}
 
     <section
-  // className="pt-[30px]"
+ className="flex justify-center"
   style={{
     background: darkMode ? "#070D1E" : "#F1F5FB",
   }}
@@ -470,22 +462,7 @@ const isDark = darkMode;
         </Link>
       </li>
 
-      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
-        <IconChevronLeft />
-      </li>
 
-      <li>
-        <Link
-          href="/about"
-          className={`transition-colors ${
-            darkMode
-              ? "text-[#64748B] hover:text-[#00E5FF]"
-              : "text-[#475569] hover:text-[#1565C0]"
-          }`}
-        >
-درباره ما
-        </Link>
-      </li>
 
       <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
         <IconChevronLeft />

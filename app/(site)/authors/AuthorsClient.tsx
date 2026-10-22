@@ -24,6 +24,32 @@ export type { Post };
    ICONS
 ========================================================= */
 
+
+
+
+const IconChevronLeft = () => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="15 18 9 12 15 6" />
+  </svg>
+);
+
+const IconHome = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M3 11l9-8 9 8" />
+    <path d="M5 10v10h14V10" />
+    <path d="M9 20v-6h6v6" />
+  </svg>
+);
+
 const IconLinkedIn = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
     <path d="M6.5 8.5H3V21h3.5V8.5ZM4.75 3A2.05 2.05 0 1 0 4.75 7.1 2.05 2.05 0 0 0 4.75 3ZM21 13.85c0-3.75-2-5.5-4.65-5.5-2.14 0-3.1 1.18-3.64 2.01V8.5H9.2V21h3.51v-6.18c0-1.63.31-3.2 2.32-3.2 1.98 0 2.01 1.85 2.01 3.31V21H21v-7.15Z" />
@@ -542,15 +568,51 @@ const ArticleCard = ({
       : "مطالعه";
 
   return (
-<article
-    className={`group flex h-full flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
-    darkMode
-      ? "bg-[rgba(255,255,255,0.028)] border border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
-      : "bg-white border border-[#0B1C3E]/10 shadow-sm hover:shadow-md hover:border-[#1565C0]/20"
-  }`}
-  style={{
-    backdropFilter: "blur(10px)",
-  }}
+    <Link  href={`/blogs/${post.slug}`}>
+    
+      <article
+                    className={`group flex flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
+                         darkMode
+                           ? "border border-cyan-500/30 hover:border-cyan-600 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-900/15"
+                           : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"
+                       }`}
+                style={
+                  darkMode
+                    ? {backdropFilter: "blur(10px)"}
+                    : {
+                        border:
+                          "1px solid #76a7de",
+                        background: "#ebebeb4b",
+                        boxShadow:
+                          "0 4px 20px rgba(15,23,42,0.06)",
+                        transition:
+                          "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
+                          backdropFilter: "blur(10px)"
+                      }
+                }
+
+                onMouseEnter={(e) => {
+                  if (!darkMode) {
+                    e.currentTarget.style.borderColor =
+                      "#1565C0"
+                    e.currentTarget.style.background =
+                      "#d0d0d035"
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
+
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!darkMode) {
+                    e.currentTarget.style.borderColor =
+                      "#76a7de"
+                    e.currentTarget.style.background =
+                      "#ebebeb4b"
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 20px rgba(15,23,42,0.06)"
+
+                  }
+                }}
 >
       {/* Thumbnail */}
       <div
@@ -632,8 +694,7 @@ const ArticleCard = ({
             </div>
           </div>
 
-          <Link
-          href={`/blogs/${post.slug}`}
+          <span
             className={`flex items-center gap-1 text-xs font-semibold whitespace-nowrap group-hover:gap-1.5 transition-all flex-shrink-0 ${
               darkMode ? "text-[#00E5FF]" : "text-[#1565C0]"
             }`}
@@ -651,10 +712,11 @@ const ArticleCard = ({
             >
               <path d="m15 18-6-6 6-6" />
             </svg>
-          </Link>
+          </span>
         </div>
       </div>
     </article>
+    </Link>
   );
 };
 
@@ -867,7 +929,7 @@ const SocialBtn = ({
     
     <div
        dir="rtl"
-      className={`min-h-screen transition-colors duration-300 pt-[130px] ${
+      className={`min-h-screen transition-colors duration-300 pt-[80px] ${
         darkMode
           ? "bg-[#0A1128] text-[#E6F7FF]"
           : "bg-white text-[#0F172A]"
@@ -876,6 +938,73 @@ const SocialBtn = ({
         fontFamily: "var(--font-vazirmatn), sans-serif",
       }}
     >
+
+
+
+
+      {/* ─── BREADCRUMB ─── */}
+
+    <section
+  className="flex justify-center"
+  style={{
+    background: darkMode ? "#070D1E" : "#F1F5FB",
+  }}
+>
+  <div className="px-6 md:px-12">
+    <nav
+      aria-label="مسیر راهنما"
+      className="max-w-5xl mx-auto py-3"
+    >
+      
+    <ol className="flex items-center gap-2 whitespace-nowrap overflow-x-auto text-xs">
+<li className="flex items-center">
+        <Link
+    href="/"
+    className={`flex items-center gap-1.5 leading-none transition-colors ${
+      darkMode
+        ? "text-[#64748B] hover:text-[#00E5FF]"
+        : "text-[#475569] hover:text-[#1565C0]"
+    }`}
+  >
+    <IconHome />
+خانه
+        </Link>
+      </li>
+
+
+
+      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
+        <IconChevronLeft />
+      </li>
+
+      <li>
+        <span
+          aria-current="page"
+          className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md"
+          style={{
+            color: darkMode ? "#00E5FF" : "#1565C0",
+            background: darkMode ? "rgba(0,229,255,0.055)" : "rgba(21,101,192,0.08)",
+            border: darkMode
+              ? "1px solid rgba(0,229,255,0.1)"
+              : "1px solid rgba(21,101,192,0.2)",
+          }}
+        >
+          <span
+            style={{
+              width: 4,
+              height: 4,
+              borderRadius: "50%",
+              background: darkMode ? "#00E5FF" : "#1565C0",
+              display: "inline-block",
+            }}
+          />
+راهبران
+  </span>
+      </li>
+    </ol>
+  </nav>
+</div>
+</section>
 
       {/* =====================================================
           MAIN

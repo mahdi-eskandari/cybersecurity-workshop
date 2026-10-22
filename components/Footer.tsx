@@ -120,6 +120,10 @@ const COMPANY_LINKS = [
     title: "حریم خصوصی",
     href: "/privacy",
   },
+     {
+    title: "مدیران",
+    href: "/authors",
+  },
 ];
 
 const BLOG_LINKS = [
@@ -224,7 +228,7 @@ export default function Footer() {
       }),
     },
     {
-      title: "شرکت",
+      title: "ستون پاراهور",
       links: COMPANY_LINKS,
     },
     {
@@ -256,32 +260,15 @@ export default function Footer() {
 
                 <div className="mb-5">
 
-                <Link href="/" aria-label="پراهور - صفحه اصلی" className="flex items-center gap-2 block shrink-0 cursor-pointer">
-                <Image
-                  src={ "/logo/parahoor-logo-v2-transparent-1024.png"}
-                  alt="پراهور"
-                  width={48}
-                  height={48}
-                  priority
-                  className="block h-10 w-10 sm:h-12 sm:w-12 object-contain"
-                  style={{
-                    filter: darkMode
-                      ? "drop-shadow(0 0 6px rgba(34, 211, 238, 0.25))"
-                      : "none",
-                    transition: "filter 0.2s ease",
-                  }}
-                />
-                <span
-                  className="font-black text-lg"
-                  style={{
-                    color: darkMode
-                    ? "rgba(255,255,255,0.7)"
-                    : "#FFFFFF",
-                  }}
-                  >
-                  پاراهور
-                </span>
-                  </Link>
+              <Link href="/" aria-label="پراهور - صفحه اصلی" className="block shrink-0 cursor-pointer w-fit">
+  <Image
+    src="/logo/parahoor-wordmark-dark.png"
+    alt="پراهور"
+    width={600}
+    height={192}
+    className="block h-16 w-auto sm:h-20 object-contain"
+  />
+</Link>
               </div>
 
               <p

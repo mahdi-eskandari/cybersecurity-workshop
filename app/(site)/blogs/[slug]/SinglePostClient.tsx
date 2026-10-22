@@ -1251,7 +1251,7 @@ export default function App({
 {/* ─── BREADCRUMB ─── */}
 
     <section
-  // className="pt-[30px]"
+  className="flex justify-center"
   style={{
     background: darkMode ? "#070D1E" : "#F1F5FB",
   }}
@@ -1587,7 +1587,7 @@ export default function App({
     <div
       className="relative p-8 md:p-12 rounded-2xl text-center overflow-hidden" 
             style={{ 
-              background: darkMode ? "rgba(255,255,255,0.03)" : "#FFFFFF", 
+              background: darkMode ? "rgba(255,255,255,0.03)" : "#ebebeb4b", 
               border: darkMode 
                 ? "1px solid rgba(0,229,255,0.18)" 
                 : "1px solid rgba(39, 83, 206, 0.72)", 
@@ -1893,16 +1893,54 @@ export default function App({
         .trim() || "";
 
     return (
+      <Link href={`/blogs/${related.slug || related._id}`}>
+
       <article
         key={related._id}
-       className={`group flex flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
-            darkMode
-              ? "bg-[rgba(255,255,255,0.028)] border border-cyan-500/30 hover:border-cyan-800 hover:bg-cyan-900/15 hover:shadow-[0_8px_40px_rgba(0,229,255,0.2)]"
-              : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"
-          }`}
-          style={{
-            backdropFilter: "blur(10px)",
-          }}
+className={`group flex flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
+                         darkMode
+                           ? "border border-cyan-500/30 hover:border-cyan-600 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-900/15"
+                           : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"
+                       }`}
+          style={
+                  darkMode
+                    ? {backdropFilter: "blur(10px)"}
+                    : {
+                        border:
+                          "1px solid #76a7de",
+                        background: "#ebebeb4b",
+                        boxShadow:
+                          "0 4px 20px rgba(15,23,42,0.06)",
+                        transition:
+                          "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
+                          backdropFilter: "blur(10px)"
+                      }
+                }
+
+
+
+                                onMouseEnter={(e) => {
+                  if (!darkMode) {
+                    e.currentTarget.style.borderColor =
+                      "#1565C0"
+                    e.currentTarget.style.background =
+                      "#d0d0d035"
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
+
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!darkMode) {
+                    e.currentTarget.style.borderColor =
+                      "#76a7de"
+                    e.currentTarget.style.background =
+                      "#ebebeb4b"
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 20px rgba(15,23,42,0.06)"
+
+                  }
+                }}
       >
         {/* Thumbnail */}
         <div
@@ -1984,8 +2022,7 @@ export default function App({
             }`}
           >
             <div className="flex items-center gap-2.5 min-w-0 flex-1">
-              <Link
-                href={related.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"}
+              <span
                 className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden border ${
                   darkMode ? "border-transparent" : "border-[#1565C0]/25"
                 }`}
@@ -1993,18 +2030,17 @@ export default function App({
                 <div className="w-full h-full rounded-full bg-white flex items-center justify-center flex-shrink-0">
                   <IconUser />
                 </div>
-              </Link>
+              </span>
 
               <div className="min-w-0 flex-1">
                 <div className="min-w-0">
-                  <Link
-                    href={related.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"}
+                  <span
                     className={`block text-xs font-semibold truncate pb-1 transition-all duration-300 ${
                       darkMode ? "text-[#9DB0C0] hover:text-white/80" : "text-[#475569]"
                     }`}
                   >
                     {related.author}
-                  </Link>
+                  </span>
                 </div>
 
                 <div
@@ -2022,18 +2058,19 @@ export default function App({
               </div>
             </div>
 
-            <Link
-              href={`/blogs/${related.slug || related._id}`}
-              className={`flex items-center gap-1 text-xs font-semibold whitespace-nowrap hover:gap-1.5 transition-all flex-shrink-0 mb-1 ${
-                darkMode ? "text-[#00E5FF]" : "text-[#1565C0]"
-              }`}
+            <span
+              
+            className={`flex items-center gap-1 text-xs font-semibold whitespace-nowrap group-hover:gap-1.5 transition-all flex-shrink-0 ${
+              darkMode ? "text-[#00E5FF]" : "text-[#1565C0]"
+            }`}
             >
               ادامه مطلب
               <ChevronLeft className="w-3 h-3" />
-            </Link>
+            </span>
           </div>
         </div>
       </article>
+      </Link>
     );
   })}
 

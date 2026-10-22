@@ -471,7 +471,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
  {/* ─── BREADCRUMB ─── */}
 
     <section
-  // className="pt-[30px]"
+  className="flex justify-center"
   style={{
     background: darkMode ? "#070D1E" : "#F1F5FB",
   }}
@@ -497,22 +497,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
         </Link>
       </li>
 
-      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
-        <IconChevronLeft />
-      </li>
 
-      <li>
-        <Link
-          href="/blogs"
-          className={`transition-colors ${
-            darkMode
-              ? "text-[#64748B] hover:text-[#00E5FF]"
-              : "text-[#475569] hover:text-[#1565C0]"
-          }`}
-        >
-وبلاگ
-        </Link>
-      </li>
 
       <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
         <IconChevronLeft />
@@ -1321,6 +1306,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
         <div 
           className={`max-w-2xl mx-auto text-center rounded-3xl`}
   style={{
+
         boxShadow: darkMode
           ? "0 18px 60px rgba(0, 229, 255, 0), 0 0 70px rgba(0,229,255,0.05)"
           : "0 18px 50px rgba(48, 94, 175, 0.32)",
@@ -1333,7 +1319,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
           <div
             className="relative overflow-hidden rounded-2xl px-8 py-14"
             style={{
-              background: darkMode ? "rgba(255,255,255,0.03)" : "#FFFFFF", 
+              background: darkMode ? "rgba(255,255,255,0.03)" : "#ebebeb4b", 
               border: darkMode 
                 ? "1px solid rgba(0,229,255,0.18)" 
                 : "1px solid rgba(39, 83, 206, 0.72)", 

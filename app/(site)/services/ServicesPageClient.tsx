@@ -372,7 +372,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
     {/* ─── BREADCRUMB ─── */}
 
     <section
-  // className="pt-[30px]"
+ className="flex justify-center"
   style={{
     background: darkMode ? "#070D1E" : "#F1F5FB",
   }}
@@ -398,22 +398,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
         </Link>
       </li>
 
-      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
-        <IconChevronLeft />
-      </li>
-
-      <li>
-        <Link
-          href="/contact"
-          className={`transition-colors ${
-            darkMode
-              ? "text-[#64748B] hover:text-[#00E5FF]"
-              : "text-[#475569] hover:text-[#1565C0]"
-          }`}
-        >
-تماس با ما
-        </Link>
-      </li>
+     
 
       <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
         <IconChevronLeft />
@@ -440,7 +425,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
               display: "inline-block",
             }}
           />
-خدمات
+خدمات ما
   </span>
       </li>
     </ol>

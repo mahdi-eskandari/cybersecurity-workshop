@@ -670,7 +670,7 @@ export default function BlogPageClient({ initialData }: { initialData: BlogPageI
 
 useEffect(() => {
   const handleScroll = () => {
-    setFilterFixed(window.scrollY > 423);
+    setFilterFixed(window.scrollY > 558);
   };
 
   handleScroll();
@@ -853,7 +853,7 @@ useEffect(() => {
 {/* ─── BREADCRUMB ─── */}
 
     <section
-  // className="pt-[30px]"
+  className="flex justify-center"
   style={{
     background: darkMode ? "#070D1E" : "#F1F5FB",
   }}
@@ -875,26 +875,11 @@ useEffect(() => {
     }`}
   >
     <IconHome />
-خانه
+   خانه
         </Link>
       </li>
 
-      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
-        <IconChevronLeft />
-      </li>
 
-      <li>
-        <Link
-          href="/services"
-          className={`transition-colors ${
-            darkMode
-              ? "text-[#64748B] hover:text-[#00E5FF]"
-              : "text-[#475569] hover:text-[#1565C0]"
-          }`}
-        >
-خدمات
-        </Link>
-      </li>
 
       <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
         <IconChevronLeft />
@@ -935,9 +920,9 @@ useEffect(() => {
 
       <main>
            <motion.div
-         className={`border-b transition-colors duration-300 pt-24 ${
+         className={`border-b transition-colors duration-300 pt-10 ${
             darkMode
-              ? "bg-transparent border-[#1E334A]"
+              ? "bg-[#040c1ec8] border-[#1E334A]"
               : "bg-[#F8FAFC] border-[rgba(29,78,216,0.12)] shadow-[0_10px_35px_rgba(30,58,138,0.10)] border-b border-[#0B1C3E]/10"
           }`}
     initial={{ opacity: 0, y: 30 }}
@@ -1318,15 +1303,20 @@ useEffect(() => {
                 </span>
               </div>
 
+
+
+                  <a 
+                    href={`/blogs/${featuredArticle.slug || featuredArticle.id}`}
+
+                  >
+
               <article
-                    className={`group flex flex-col rounded-2xl overflow-hidden transition-border duration-200 ${
-                         darkMode
-                           ? "border border-cyan-500/30 hover:border-cyan-600 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-900/15"
-                           : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"
-          }`}
-
-
-                          style={
+                       className={`group flex h-full flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
+             darkMode
+                 ? "border border-cyan-500/30 hover:border-cyan-600 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-900/15"
+                 : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"
+           }`}
+               style={
                   darkMode
                     ? {backdropFilter: "blur(10px)"}
                     : {
@@ -1341,8 +1331,7 @@ useEffect(() => {
                       }
                 }
 
-
-           onMouseEnter={(e) => {
+                onMouseEnter={(e) => {
                   if (!darkMode) {
                     e.currentTarget.style.borderColor =
                       "#1565C0"
@@ -1454,8 +1443,7 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
                       }`}
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <Link
-                          href={featuredArticle.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"}
+                        <span
                           className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden border ${
                             darkMode ? "border-transparent" : "border-[#1565C0]/25"
                           }`}
@@ -1463,18 +1451,17 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
                           <div className="w-full h-full rounded-full bg-white flex items-center justify-center flex-shrink-0">
                             <IconUser />
                           </div>
-                        </Link>
+                        </span>
 
                         <div className="min-w-0">
                           <div>
-                            <Link
-                              href={featuredArticle.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"}
+                            <span
                               className={`inline-flex items-center gap-1.5 text-[13px] font-semibold truncate pb-1 transition-all duration-300 ${
                                 darkMode ? "text-[#9DB0C0] hover:text-white/80" : "text-[#475569]"
                               }`}
                             >
                               {featuredArticle.author}
-                            </Link>
+                            </span>
                           </div>
 
                           <div
@@ -1492,21 +1479,19 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
                         </div>
                       </div>
 
-                      <Link
-                        href={`/blogs/${featuredArticle.slug || featuredArticle.id}`}
-                        className={`inline-flex items-center gap-1.5 text-sm font-semibold hover:gap-2.5 transition-all ${
-                          darkMode
-                            ? "text-[#00E5FF]"
-                            : "text-[#1565C0]"
-                        }`}
+                      <span
+            className={`flex items-center gap-1 text-sm font-semibold whitespace-nowrap group-hover:gap-1.5 transition-all flex-shrink-0 ${
+              darkMode ? "text-[#00E5FF]" : "text-[#1565C0]"
+            }`}
                       >
                         مطالعه گزارش کامل
                         <ChevronLeft className="w-4 h-4" />
-                      </Link>
+                      </span>
                     </div>
                   </div>
                 </div>
               </article>
+       </a>
           </motion.div>
                 ) : null}
               </motion.div>
@@ -1887,6 +1872,8 @@ function ArticleCard({
   i: number;       
 }) {
   return (
+    <Link href={`/blogs/${article.slug || article.id}`}>
+    
 <article
     className={`group flex h-full flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
              darkMode
@@ -2015,8 +2002,7 @@ function ArticleCard({
           }`}
         >
           <div className="flex items-center gap-2.5 min-w-0">
-<Link
-  href={article.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"}
+<span
   className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden border ${
     darkMode ? "border-transparent" : "border-[#1565C0]/25"
   }`}
@@ -2024,18 +2010,17 @@ function ArticleCard({
   <div className="w-full h-full rounded-full bg-white flex items-center justify-center flex-shrink-0">
     <IconUser />
   </div>
-</Link>
+</span>
 
             <div className="min-w-0">
               <div>
-                <Link 
-                  href={article.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"} 
+                <span 
                   className={`inline-flex items-center gap-1.5 text-xs font-semibold truncate pb-1 transition-all duration-300 ${
                     darkMode ? "text-[#9DB0C0] hover:text-white/80" : "text-[#475569]"
                   }`}
                 >
                   {article.author}
-                </Link>
+                </span>
               </div>
 
               <div
@@ -2053,18 +2038,18 @@ function ArticleCard({
             </div>
           </div>
 
-          <Link
-            href={`/blogs/${article.slug || article.id}`}
-            className={`flex items-center gap-1 text-xs font-semibold whitespace-nowrap hover:gap-1.5 transition-all flex-shrink-0 ${
+          <span
+            className={`flex items-center gap-1 text-xs font-semibold whitespace-nowrap group-hover:gap-1.5 transition-all flex-shrink-0 ${
               darkMode ? "text-[#00E5FF]" : "text-[#1565C0]"
             }`}
           >
             ادامه مطلب
             <ChevronLeft className="w-3 h-3" />
-          </Link>
+          </span>
         </div>
       </div>
     </article>
+    </Link>
   );
 }
 

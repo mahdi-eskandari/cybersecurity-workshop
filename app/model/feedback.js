@@ -1,12 +1,7 @@
 import mongoose from "mongoose";
 
 export const FEEDBACK_SUBJECTS = [
-  "service-feedback",
-  "website-suggestion",
-  "content-suggestion",
-  "technical-feedback",
   "partnership",
-  "feature-request",
   "other",
 ];
 

@@ -739,39 +739,40 @@ const IconLogout = () => (
 
 
 
-
 const successfulCases = [
   {
     number: "۰۱",
     category: "کشف هویت",
-    title: "شناسایی گرداننده یک شبکه اخاذی ناشناس",
-    result: "کشف هویت عامل اصلی در ۹ روز",
+    title: "شناسایی عامل فروش اطلاعات بانکی  ",
+    result: "جلوگیری از نشت و دستگیری متهم",
     description:
-      "با هم‌بستگی ردپاهای پراکنده در پیام‌رسان‌ها، دامنه‌ها و مسیرهای پرداخت، هویت واقعی عامل و شبکه ارتباطی او مستند شد.",
-    tags: ["تحقیقات منابع باز", "تحلیل شبکه", "گزارش هویتی"],
+     "با بهره‌گیری از تکنیک‌های پیشرفته اوسینت، هویت ناشناس فروشنده دیتای بانکی در دارک‌وب کشف و جهت پیگرد قضایی مستندسازی شد.",
+    tags: ["کشف هویت", "نشت اطلاعات", "اطلاعات منبع‌باز"],
     icon: <IconOsint />,
   },
   {
     number: "۰۲",
     category: "ردیابی رمزارز",
-    title: "ردیابی وجوه سرقت‌شده از کیف پول",
-    result: "ردیابی ۸۴٬۰۰۰ تتر تا صرافی مقصد",
+    title: "انهدام شبکه کلاهبرداری رمزارز در تلگرام",
+    result: "رهگیری وجوه و استرداد سرمایه",
     description:
-      "مسیر ۳۷ تراکنش در شبکه ترون بازسازی و نقطه خروج دارایی شناسایی شد؛ گزارش فنی برای درخواست مسدودسازی ارائه شد.",
-    tags: ["تحلیل زنجیره", "شبکه ترون", "مستندات صرافی"],
+     "ردیابی جریان مالی شبکه بزرگ معرفی توکن‌های جعلی تا نقطه خروج نهایی پول، که منجر به بازگشت قانونی سرمایه مالباختگان شد.",
+    tags: [
+      "​توکن جعلی", "​کلاهبرداری مالی", "رهگیری رمزارز"],
     icon: <IconCrypto />,
   },
   {
     number: "۰۳",
     category: "فارنزیک دیجیتال",
-    title: "بازیابی شواهد حذف‌شده از تلفن همراه",
-    result: "بازیابی ۱۲ گیگابایت داده قابل استناد",
+    title: "کالبدشکافی حمله به یک شرکت بانکی",
+    result: "کشف مسیر نفوذ تا امن سازی زیرساخت",
     description:
-      "پیام‌ها، تصاویر و فراداده‌های حذف‌شده بازیابی و خط زمانی حادثه با حفظ کامل زنجیره حضانت دیجیتال بازسازی شد.",
-    tags: ["فارنزیک موبایل", "بازیابی داده", "زنجیره حضانت"],
+      "فارنزیک و مهندسی معکوس حمله سایبری، شناسایی کارمند آلوده به عنوان نقطه ورود هکر و ترمیم قطعی ساختار امنیتی شرکت پرداخت. ",
+    tags: ["آسیب پذیری", "هوش تهدیدات", "فانزیک دیجیتال"],
     icon: <IconForensics />,
   },
 ];
+
 
 
 const navItems = [
@@ -1160,83 +1161,6 @@ const closeCrisis = () => {
 
 
 
-{/* ─── BREADCRUMB ─── */}
-
-    <section
-  // className="pt-[30px]"
-  style={{
-    background: darkMode ? "#070D1E" : "#F1F5FB",
-  }}
->
-  <div className="px-6 md:px-12 mt-[15px]">
-    <nav
-      aria-label="مسیر راهنما"
-      className="max-w-5xl mx-auto py-3"
-    >
-      
-    <ol className="flex items-center gap-2 whitespace-nowrap overflow-x-auto text-xs">
-      <li className="flex items-center">
-        <Link
-    href="/contact"
-    className={`flex items-center gap-1.5 leading-none transition-colors ${
-      darkMode
-        ? "text-[#64748B] hover:text-[#00E5FF]"
-        : "text-[#475569] hover:text-[#1565C0]"
-    }`}
-  >
-تماس با ما
-        </Link>
-      </li>
-
-      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
-        <IconChevronLeft />
-      </li>
-
-      <li>
-        <Link
-          href="/privacy"
-          className={`transition-colors ${
-            darkMode
-              ? "text-[#64748B] hover:text-[#00E5FF]"
-              : "text-[#475569] hover:text-[#1565C0]"
-          }`}
-        >
-حریم خصوصی
-        </Link>
-      </li>
-
-      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
-        <IconChevronLeft />
-      </li>
-
-      <li>
-        <span
-          aria-current="page"
-          className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md"
-          style={{
-            color: darkMode ? "#00E5FF" : "#1565C0",
-            background: darkMode ? "rgba(0,229,255,0.055)" : "rgba(21,101,192,0.08)",
-            border: darkMode
-              ? "1px solid rgba(0,229,255,0.1)"
-              : "1px solid rgba(21,101,192,0.2)",
-          }}
-        >
-          <span
-            style={{
-              width: 4,
-              height: 4,
-              borderRadius: "50%",
-              background: darkMode ? "#00E5FF" : "#1565C0",
-              display: "inline-block",
-            }}
-          />
-وبلاگ  
-  </span>
-      </li>
-    </ol>
-  </nav>
-</div>
-</section>
 
 
       <motion.div
@@ -1810,6 +1734,187 @@ style={{
         </div>
       </motion.div>
 
+
+
+
+
+
+
+
+
+{/* ─── SUCCESSFUL CASES ─── */}
+    <motion.div
+       
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        viewport={{ once: true, amount: 0.2 }}
+      >
+<section
+  className={`relative px-6 py-20 md:px-12 overflow-hidden`}
+  id="cases"
+>
+  {/* Background glow */}
+  <div
+    className={`absolute inset-0 pointer-events-none`}
+  />
+
+  <div className="relative max-w-5xl mx-auto">
+    {/* Header */}
+    <div className="flex flex-col items-center text-center gap-6 mb-12">
+      <div>
+        <span 
+        className="data-label block mb-3"
+        style={{
+  ...(!darkMode && { color: "#1565C0" }),
+}}
+        >Successful Projects</span>
+
+        <h2
+          className={`text-[clamp(1.4rem,3vw,2rem)] font-bold ${
+            darkMode ? "text-white" : "text-[#0F172A]"
+          }`}
+        >
+          نمونه‌کارهای موفق
+        </h2>
+
+<div
+  className={`w-24 mx-auto mt-4 ${
+    darkMode
+      ? "bg-gradient-to-r from-transparent via-cyan-400 to-transparent"
+      : "bg-gradient-to-r from-transparent via-[#1565C0] to-transparent"
+  }`}
+  style={{
+    height: "1px",
+    minHeight: "1px",
+    maxHeight: "1px",
+    flexShrink: 0,
+  }}
+/>
+      </div>
+
+     
+    </div>
+
+    {/* Case cards */}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      {successfulCases.map((item) => (
+        <article
+          key={item.number}
+          className={`group relative flex flex-col overflow-hidden rounded-2xl px-6 pt-6
+            transition-all duration-300 ease-out
+            ${
+              darkMode
+                ? "border border-cyan-500/30 bg-[rgba(255,255,255,0.028)] hover:border-cyan-600 hover:bg-cyan-900/15"
+                : "border border-[#76A7DE] bg-[#EBEBEB4B] shadow-[0_4px_20px_rgba(15,23,42,0.06)] hover:border-[#1565C0] hover:bg-[#D0D0D035] hover:shadow-md"
+            }`}
+        >
+          {/* Card header */}
+          <div className="relative flex items-center justify-between gap-4 mb-6">
+            <div
+className={`w-12 h-12 flex items-center justify-center rounded-xl ${
+  darkMode
+    ? "bg-cyan-400/[0.07] border border-cyan-400/20"
+    : "bg-[#1565C0]/[0.06] border border-[#1565C0]/15 text-[#1565C0]"
+}`}
+
+            >
+              {darkMode
+  ? item.icon
+  : React.cloneElement(item.icon, { color: "#1565C0" })}
+            </div>
+
+          
+          </div>
+
+          {/* Category */}
+          <span
+            className={`text-[0.72rem] font-semibold ${
+              darkMode ? "text-cyan-400/60" : "text-[#1565C0]"
+            }`}
+          >
+            {item.category}
+          </span>
+
+          {/* Title */}
+          <h3
+            className={`font-bold mt-2 mb-4 text-base leading-[1.65] transition-colors duration-300 ${
+              darkMode
+                ? "text-white"
+                : "text-[#0F172A] "
+            }`}
+          >
+            {item.title}
+          </h3>
+
+          {/* Result */}
+          <div
+            className={`px-4 py-3 rounded-xl mb-4 ${
+              darkMode
+                ? "bg-cyan-400/[0.05] border-r-2 border-cyan-400/55"
+                : "bg-[#1565C0]/[0.045] border-r-2 border-[#1565C0]/60"
+            }`}
+          >
+            <span
+              className={`block mb-1 text-[0.75rem] ${
+                darkMode ? "text-[#737c88]" : "text-slate-500"
+              }`}
+            >
+              نتیجه پرونده
+            </span>
+
+            <strong
+              className={`text-[0.84rem] leading-[1.7] ${
+                darkMode ? "text-cyan-400" : "text-[#1565C0]"
+              }`}
+            >
+              {item.result}
+            </strong>
+          </div>
+
+          {/* Description */}
+          <p
+            className={`mb-6 text-[0.8rem] leading-[1.85] ${
+              darkMode ? "text-[#737c88]" : "text-[#334155]"
+            }`}
+          >
+            {item.description}
+          </p>
+
+          {/* Tags */}
+          {/* <div
+            className={`mt-auto pt-4 flex flex-wrap gap-2 border-t ${
+              darkMode ? "border-cyan-400/[0.07]" : "border-[#1565C0]/10"
+            }`}
+          >
+            {item.tags.map((tag) => (
+              <span
+                key={tag}
+                className={`px-2.5 py-1 rounded-md text-[0.72rem] ${
+                  darkMode
+                    ? "bg-white/[0.025] text-slate-500"
+                    : "bg-[#1565C0]/[0.045] text-slate-600"
+                }`}
+              >
+                {tag}
+              </span>
+            ))}
+          </div> */}
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+</motion.div>
+
+
+
+
+
+
+
+
+
       {/* ─── آخرین گزارش‌های میدانی ─────────────────────────────────────── */}
       <motion.div
         className="py-20 px-6 md:px-12"
@@ -1875,6 +1980,8 @@ style={{
                     : ""
 
                   return (
+
+                    <Link href={`/blogs/${post.slug}`}>
                      <article
                        key={post._id || i}
                        className={`group flex flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
@@ -1900,27 +2007,6 @@ style={{
                 }
 
 
-
-
-                //        className={`glass-card p-7 group cursor-default rounded-2xl transition-all duration-300 ${
-                //   darkMode
-                //     ? "border border-cyan-500/30 hover:border-cyan-500 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-800/15"
-                //     : ""
-                // }`}
-                // style={
-                //   darkMode
-                //     ? {backdropFilter: "blur(10px)"}
-                //     : {
-                //         border:
-                //           "1px solid #76a7de",
-                //         background: "#FFFFFF",
-                //         boxShadow:
-                //           "0 4px 20px rgba(15,23,42,0.06)",
-                //         transition:
-                //           "border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease, background 300ms ease",
-                //           backdropFilter: "blur(10px)"
-                //       }
-                // }
                 onMouseEnter={(e) => {
                   if (!darkMode) {
                     e.currentTarget.style.borderColor =
@@ -2020,8 +2106,7 @@ style={{
                           }`}
                         >
                           <div className="flex items-center gap-2.5 min-w-0">
-                            <Link
-                              href={post.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"}
+                            <span
                               className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden border ${
                                 darkMode ? "border-transparent" : "border-[#1565C0]/25"
                               }`}
@@ -2029,18 +2114,17 @@ style={{
                               <div className="w-full h-full rounded-full bg-white flex items-center justify-center flex-shrink-0">
                                 <IconUser />
                               </div>
-                            </Link>
+                            </span>
                       
                          <div className="min-w-0">
-                      <Link 
-                        href={post.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"} 
+                      <span 
                         className={`inline-flex items-center gap-1.5 text-xs font-semibold truncate pb-1 transition-all duration-300 ${
                           darkMode ? "text-[#9DB0C0] hover:text-white/80" : "text-[#475569]"
                         }`}
                       >
                         {post.author}
                         {/* تیم تخصصی پاراهور */}
-                      </Link>
+                      </span>
 
                               <div
                                 className={`flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] ${
@@ -2054,11 +2138,11 @@ style={{
                             </div>
                           </div>
 
-                          <Link
-                         href={`/blogs/${post.slug}`}
-                            className={`flex items-center gap-1 text-xs font-semibold whitespace-nowrap hover:gap-1.5 transition-all flex-shrink-0 ${
-                              darkMode ? "text-[#00E5FF]" : "text-[#1565C0]"
-                            }`}
+                          <span
+                        
+            className={`flex items-center gap-1 text-xs font-semibold whitespace-nowrap group-hover:gap-1.5 transition-all flex-shrink-0 ${
+              darkMode ? "text-[#00E5FF]" : "text-[#1565C0]"
+            }`}
                           >
                             بررسی گزارش
                             <svg
@@ -2073,10 +2157,11 @@ style={{
                             >
                               <path d="m15 18-6-6 6-6" />
                             </svg>
-                          </Link>
+                          </span>
                         </div>
                       </div>
                     </article>
+                    </Link>
                   )
                 })}
           </div>
@@ -2085,183 +2170,6 @@ style={{
 
 
 
-
-{/* ─── SUCCESSFUL CASES ─── */}
-<section
-  className={`relative px-6 py-20 md:px-12 overflow-hidden ${
-    darkMode
-      ? "bg-[rgba(5,10,25,0.62)] border-y border-cyan-400/[0.07]"
-      : "bg-[#F8FAFC] border-y border-[#1565C0]/10"
-  }`}
-  id="cases"
->
-  {/* Background glow */}
-  <div
-    className={`absolute inset-0 pointer-events-none ${
-      darkMode
-        ? "bg-[radial-gradient(ellipse_55%_45%_at_50%_45%,rgba(0,229,255,0.055),transparent_70%)]"
-        : "bg-[radial-gradient(ellipse_55%_45%_at_50%_45%,rgba(21,101,192,0.045),transparent_70%)]"
-    }`}
-  />
-
-  <div className="relative max-w-5xl mx-auto">
-    {/* Header */}
-    <div className="flex flex-col items-center text-center gap-6 mb-12">
-      <div>
-        <span 
-        className="data-label block mb-3"
-        style={{
-  ...(!darkMode && { color: "#1565C0" }),
-}}
-        >Successful Projects</span>
-
-        <h2
-          className={`text-[clamp(1.4rem,3vw,2rem)] font-bold ${
-            darkMode ? "text-white" : "text-[#0F172A]"
-          }`}
-        >
-          نمونه‌کارهای موفق
-        </h2>
-
-<div
-  className={`w-24 mx-auto mt-4 ${
-    darkMode
-      ? "bg-gradient-to-r from-transparent via-cyan-400 to-transparent"
-      : "bg-gradient-to-r from-transparent via-[#1565C0] to-transparent"
-  }`}
-  style={{
-    height: "1px",
-    minHeight: "1px",
-    maxHeight: "1px",
-    flexShrink: 0,
-  }}
-/>
-      </div>
-
-     
-    </div>
-
-    {/* Case cards */}
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-      {successfulCases.map((item) => (
-        <article
-          key={item.number}
-          className={`group relative flex flex-col overflow-hidden rounded-2xl p-6
-            transition-all duration-300 ease-out
-            ${
-              darkMode
-                ? "border border-cyan-500/30 bg-[rgba(255,255,255,0.028)] hover:border-cyan-600 hover:bg-cyan-900/15"
-                : "border border-[#76A7DE] bg-[#EBEBEB4B] shadow-[0_4px_20px_rgba(15,23,42,0.06)] hover:border-[#1565C0] hover:bg-[#D0D0D035] hover:shadow-md"
-            }`}
-        >
-          {/* Card header */}
-          <div className="relative flex items-center justify-between gap-4 mb-6">
-            <div
-className={`w-12 h-12 flex items-center justify-center rounded-xl ${
-  darkMode
-    ? "bg-cyan-400/[0.07] border border-cyan-400/20"
-    : "bg-[#1565C0]/[0.06] border border-[#1565C0]/15 text-[#1565C0]"
-}`}
-
-            >
-              {darkMode
-  ? item.icon
-  : React.cloneElement(item.icon, { color: "#1565C0" })}
-            </div>
-
-            <div
-              className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${
-                darkMode
-                  ? "bg-green-500/[0.07] border border-green-500/20"
-                  : "bg-green-600/[0.06] border border-green-600/20"
-              }`}
-            >
-              <span className="w-[5px] h-[5px] rounded-full bg-green-500 shadow-[0_0_7px_rgba(34,197,94,0.7)]" />
-
-              <span className="text-[0.68rem] font-semibold text-green-600">
-                پرونده موفق
-              </span>
-            </div>
-          </div>
-
-          {/* Category */}
-          <span
-            className={`text-[0.72rem] font-semibold ${
-              darkMode ? "text-cyan-400/60" : "text-[#1565C0]"
-            }`}
-          >
-            {item.category}
-          </span>
-
-          {/* Title */}
-          <h3
-            className={`font-bold mt-2 mb-4 text-base leading-[1.65] transition-colors duration-300 ${
-              darkMode
-                ? "text-white"
-                : "text-[#0F172A] "
-            }`}
-          >
-            {item.title}
-          </h3>
-
-          {/* Result */}
-          <div
-            className={`px-4 py-3 rounded-xl mb-4 ${
-              darkMode
-                ? "bg-cyan-400/[0.05] border-r-2 border-cyan-400/55"
-                : "bg-[#1565C0]/[0.045] border-r-2 border-[#1565C0]/60"
-            }`}
-          >
-            <span
-              className={`block mb-1 text-[0.75rem] ${
-                darkMode ? "text-[#737c88]" : "text-slate-500"
-              }`}
-            >
-              نتیجه پرونده
-            </span>
-
-            <strong
-              className={`text-[0.84rem] leading-[1.7] ${
-                darkMode ? "text-cyan-400" : "text-[#1565C0]"
-              }`}
-            >
-              {item.result}
-            </strong>
-          </div>
-
-          {/* Description */}
-          <p
-            className={`mb-6 text-[0.8rem] leading-[1.85] ${
-              darkMode ? "text-[#737c88]" : "text-[#334155]"
-            }`}
-          >
-            {item.description}
-          </p>
-
-          {/* Tags */}
-          <div
-            className={`mt-auto pt-4 flex flex-wrap gap-2 border-t ${
-              darkMode ? "border-cyan-400/[0.07]" : "border-[#1565C0]/10"
-            }`}
-          >
-            {item.tags.map((tag) => (
-              <span
-                key={tag}
-                className={`px-2.5 py-1 rounded-md text-[0.72rem] ${
-                  darkMode
-                    ? "bg-white/[0.025] text-slate-500"
-                    : "bg-[#1565C0]/[0.045] text-slate-600"
-                }`}
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </article>
-      ))}
-    </div>
-  </div>
-</section>
 
 
 

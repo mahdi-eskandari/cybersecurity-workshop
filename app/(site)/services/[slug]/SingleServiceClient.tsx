@@ -51,6 +51,30 @@ const IconShieldDoc = ({ darkMode = true }: { darkMode?: boolean }) => (
   </svg> 
 ); 
  
+
+const IconHome = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M3 11l9-8 9 8" />
+    <path d="M5 10v10h14V10" />
+    <path d="M9 20v-6h6v6" />
+  </svg>
+);
+
+const IconChevronLeft = () => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="15 18 9 12 15 6" />
+  </svg>
+);
+
 const IconBitcoin = ({ darkMode }: { darkMode: boolean }) => ( 
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={darkMode ? "#00E5FF" : "#2563EB"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"> 
     <circle cx="12" cy="12" r="10" /> 
@@ -330,10 +354,9 @@ const PostCrisisPentestHeroArt = ({
   return (
     <svg
       width="100%"
-      height="220"
-      viewBox="0 0 900 220"
+      viewBox="30 0 840 220"
       preserveAspectRatio="xMidYMid meet"
-      className="w-full"
+      className="w-full h-auto"
       style={{ opacity: darkMode ? 0.4 : 0.7 }}
     >
       <defs>
@@ -580,10 +603,9 @@ const RansomwareNegotiationHeroArt = ({
   return (
     <svg
       width="100%"
-      height="220"
-      viewBox="0 0 900 220"
+      viewBox="30 0 840 220"
       preserveAspectRatio="xMidYMid meet"
-      className="w-full"
+      className="w-full h-auto"
       style={{ opacity: darkMode ? 0.4 : 0.7 }}
     >
       <defs>
@@ -746,10 +768,9 @@ const DigitalForensicsHeroArt = ({
   return (
     <svg
       width="100%"
-      height="220"
-      viewBox="0 0 900 220"
+      viewBox="30 0 840 220"
       preserveAspectRatio="xMidYMid meet"
-      className="w-full"
+      className="w-full h-auto"
       style={{ opacity: darkMode ? 0.4 : 0.7 }}
     >
       <defs>
@@ -942,10 +963,9 @@ const CryptoTracingHeroArt = ({
   return (
     <svg
       width="100%"
-      height="220"
-      viewBox="0 0 900 220"
+      viewBox="30 0 840 220"
       preserveAspectRatio="xMidYMid meet"
-      className="w-full"
+      className="w-full h-auto"
       style={{ opacity: darkMode ? 0.4 : 0.7 }}
     >
       <defs>
@@ -1076,10 +1096,9 @@ const HiddenIdentityHeroArt = ({
   return (
     <svg
       width="100%"
-      height="220"
-      viewBox="0 0 900 220"
+      viewBox="30 0 840 220"
       preserveAspectRatio="xMidYMid meet"
-      className="w-full"
+      className="w-full h-auto"
       style={{ opacity: darkMode ? 0.4 : 0.7 }}
     >
       <defs>
@@ -1254,10 +1273,9 @@ const ThreatIntelHeroArt = ({
   return (
     <svg
       width="100%"
-      height="220"
-      viewBox="0 0 900 220"
+      viewBox="30 0 840 220"
       preserveAspectRatio="xMidYMid meet"
-      className="w-full"
+      className="w-full h-auto"
       style={{ opacity: darkMode ? 0.4 : 0.7 }}
     >
       <defs>
@@ -1741,6 +1759,89 @@ const department =
       backgroundColor: darkMode ? "#0A1128" : "#FFFFFF",
     }}
   > 
+
+
+
+
+  
+    {/* ─── BREADCRUMB ─── */}
+
+    <section
+ className="flex justify-center"
+  style={{
+    background: darkMode ? "#070D1E" : "#F1F5FB",
+  }}
+>
+  <div className="px-6 md:px-12 mt-2 ">
+    <nav
+      aria-label="مسیر راهنما"
+      className="max-w-5xl mx-auto py-3"
+    >
+      
+    <ol className="flex items-center gap-2 whitespace-nowrap overflow-x-auto text-xs">
+      <li className="flex items-center">
+        <Link
+    href="/"
+    className={`flex items-center gap-1.5 leading-none transition-colors ${
+      darkMode
+        ? "text-[#64748B] hover:text-[#00E5FF]"
+        : "text-[#475569] hover:text-[#1565C0]"
+    }`}
+  >
+    <IconHome />
+خانه
+        </Link>
+      </li>
+
+      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
+        <IconChevronLeft />
+      </li>
+
+      <li>
+        <Link
+          href="/contact"
+          className={`transition-colors ${
+            darkMode
+              ? "text-[#64748B] hover:text-[#00E5FF]"
+              : "text-[#475569] hover:text-[#1565C0]"
+          }`}
+        >
+خدمات ما
+        </Link>
+      </li>
+
+      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
+        <IconChevronLeft />
+      </li>
+
+      <li>
+        <span
+          aria-current="page"
+          className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md"
+          style={{
+            color: darkMode ? "#00E5FF" : "#1565C0",
+            background: darkMode ? "rgba(0,229,255,0.055)" : "rgba(21,101,192,0.08)",
+            border: darkMode
+              ? "1px solid rgba(0,229,255,0.1)"
+              : "1px solid rgba(21,101,192,0.2)",
+          }}
+        >
+          <span
+            style={{
+              width: 4,
+              height: 4,
+              borderRadius: "50%",
+              background: darkMode ? "#00E5FF" : "#1565C0",
+              display: "inline-block",
+            }}
+          />
+{service?.categoryLabel || "خدمات"}
+  </span>
+      </li>
+    </ol>
+  </nav>
+</div>
+</section>
 
      {crisisOpen && (
         <EmergencyModal

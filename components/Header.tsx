@@ -852,7 +852,8 @@ const IconSun = () => (
 );
 
 const NAV_ITEMS = [
-  { pageKey: "home", label: "خانه", href: "/"  },
+  { pageKey: "home", label: "پاراهور", href: "/"  },
+  { pageKey: "authors", label: "راهبران"  },
   { pageKey: "services", label: "خدمات ما" },
   { pageKey: "blogs", label: "وبلاگ" },
   { pageKey: "about", label: "درباره ما" },
@@ -861,6 +862,7 @@ const NAV_ITEMS = [
 
 const DEFAULT_SLUGS: Record<string, string> = {
   home: "",
+  authors: "authors",
   services: "services",
   blogs: "blogs",
   about: "about",
@@ -1074,66 +1076,20 @@ const navItems = NAV_ITEMS.map((item) => ({
               style={!darkMode ? { backgroundColor: "#60A5FA" } : undefined}
             />
 
-{/* <Image
-  src={
-    darkMode
-      ? "/logo/parahoor-logo-v2-transparent-1024.png"
-      : "/logo/parahoor-logo-v2-light-1024.png"
-  }
-  alt="پراهور"
-  width={48}
-  height={48}
-  priority
-  className="h-10 w-10 sm:h-12 sm:w-12 object-contain transition-transform duration-200 hover:scale-105"
-  style={{
-    filter: darkMode
-      ? "drop-shadow(0 0 6px rgba(34, 211, 238, 0.25))"
-      : "none",
-  }}
-/> */}
 
 
-<Link href="/" aria-label="پراهور - صفحه اصلی" className="flex items-center gap-2 block shrink-0 cursor-pointer">
+<Link href="/" aria-label="پراهور - صفحه اصلی" className="block shrink-0 cursor-pointer">
   <Image
-    src={
-      darkMode
-        ? "/logo/parahoor-logo-v2-transparent-1024.png"
-        : "/logo/parahoor-logo-v2-light-1024.png"
+  style={{ filter: darkMode ? "none" : "brightness(0.55)" }}
+    src={ "/logo/parahoor-wordmark-dark.png"
     }
     alt="پراهور"
-    width={48}
-    height={48}
+    width={600}
+    height={192}
     priority
-    className="block h-10 w-10 sm:h-12 sm:w-12 object-contain"
-    style={{
-      filter: darkMode
-        ? "drop-shadow(0 0 6px rgba(34, 211, 238, 0.25))"
-        : "none",
-      transition: "filter 0.2s ease",
-    }}
+    className="block h-10 w-auto sm:h-12 object-contain"
   />
-
-{/* <img
-  src="/logo/parahoor-logo-v2-transparent-512.png"
-  srcset="/logo/parahoor-logo-v2-transparent-512.png 1x,
-  /logo/parahoor-logo-v2-transparent-1024.png 2x"
-  alt="پراهور"
-  width="48"
-  height="48"
-  class="site-logo"
-  decoding="async"
-  /> */}
-
-            <span
-              className="text-base sm:text-lg md:text-xl font-bold tracking-wide"
-              style={{
-                letterSpacing: "0.05em",
-                color: darkMode ? "#FFFFFF" : "#072959e1",
-              }}
-              >
-              پاراهور
-            </span>
-              </Link>
+</Link>
           </div>
 
 
@@ -1223,7 +1179,24 @@ const navItems = NAV_ITEMS.map((item) => ({
 <div className="flex items-center gap-3 flex-shrink-0 mr-auto md:mr-0">
 <a
   href="tel:+982144097162"
-  className="md:flex items-center gap-2 px-4 py-2 bg-[#9f1414] text-white text-sm font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors cursor-pointer"
+  className="md:flex items-center gap-2 px-4 py-2 bg-[#EF4444] text-white text-sm font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors cursor-pointer"
+                style={{
+                background: "#EF4444",
+                color: "#ffffff",
+                border: "1px solid rgba(239,68,68,0.6)",
+                boxShadow: "0 0 15px rgba(239,68,68,0.35)",
+              }}
+                onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = "0 0 22px rgba(239,68,68,0.55)"
+
+
+
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = "0 0 15px rgba(239,68,68,0.35)"
+
+
+              }}
 >
   تماس اورژانسی
 </a>
@@ -1406,28 +1379,20 @@ const navItems = NAV_ITEMS.map((item) => ({
               <Image
                 src={
                   darkMode
-                    ? "/logo/parahoor-logo-v2-transparent-1024.png"
-                    : "/logo/parahoor-logo-v2-light-1024.png"
+                    ? "/logo/parahoor-wordmark-dark.png"
+                    : "/logo/parahoor-wordmark-light.png"
                 }
                 alt="پراهور"
-                width={48}
-                height={48}
-                className="block h-11 w-11 object-contain"
+    width={600}
+    height={192}
+                                className="block h-12 w-auto object-contain"
                 style={{
                   filter: darkMode
                     ? "drop-shadow(0 0 8px rgba(34, 211, 238, 0.3))"
                     : "none",
                 }}
               />
-              <span
-                className="text-xl font-extrabold"
-                style={{
-                  letterSpacing: "0.04em",
-                  color: darkMode ? "#FFFFFF" : "#072959",
-                }}
-              >
-                پاراهور
-              </span>
+
             </Link>
 
             <button

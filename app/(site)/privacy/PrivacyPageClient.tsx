@@ -660,7 +660,7 @@ const lightColors = {
 {/* ─── BREADCRUMB ─── */}
 
     <section
-  // className="pt-[30px]"
+  className="flex justify-center"
   style={{
     background: darkMode ? "#070D1E" : "#F1F5FB",
   }}
@@ -686,22 +686,7 @@ const lightColors = {
         </Link>
       </li>
 
-      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
-        <IconChevronLeft />
-      </li>
 
-      <li>
-        <Link
-          href="/contact"
-          className={`transition-colors ${
-            darkMode
-              ? "text-[#64748B] hover:text-[#00E5FF]"
-              : "text-[#475569] hover:text-[#1565C0]"
-          }`}
-        >
-تماس با ما
-        </Link>
-      </li>
 
       <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
         <IconChevronLeft />
