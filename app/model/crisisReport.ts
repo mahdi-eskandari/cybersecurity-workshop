@@ -3,11 +3,12 @@ import { Schema, model, models } from "mongoose";
 const INCIDENT_TYPES = [
   "مشاوره",
   "ردیابی رمزارز",
-  " کشف هویت",
+  "کشف هویت",
   "تست نفوذ",
   "کالبدشکافی دیجیتال",
   "مقابله با باج‌افزار",
   "هوش تهدیدات",
+  "سایر",
 ] as const;
 
 const CrisisReportSchema = new Schema(
@@ -21,9 +22,31 @@ const CrisisReportSchema = new Schema(
 
     incidentType: {
       type: String,
-      enum: INCIDENT_TYPES,
       required: true,
       trim: true,
+      maxlength: 200,
+      validate: {
+        // گزارش صفحه‌ی خدمت: اسم خدمت؛ بقیه: فقط ۸ نوع ثابت
+        validator: function (this: { serviceSlug?: string }, v: string) {
+          return (
+            Boolean(this.serviceSlug) ||
+            (INCIDENT_TYPES as readonly string[]).includes(v)
+          );
+        },
+        message: "نوع حادثه معتبر نیست",
+      },
+    },
+
+    // وقتی گزارش از صفحه‌ی یه خدمت ثبت شده
+    serviceSlug: {
+      type: String,
+      trim: true,
+      maxlength: 200,
+    },
+    serviceTitle: {
+      type: String,
+      trim: true,
+      maxlength: 200,
     },
 
     description: {
@@ -45,13 +68,7 @@ const CrisisReportSchema = new Schema(
 
     status: {
       type: String,
-      enum: [
-        "pending",
-        "reviewing",
-        "consulting",
-        "resolved",
-        "closed",
-      ],
+      enum: ["pending", "reviewing", "consulting", "resolved", "closed"],
       default: "pending",
     },
   },

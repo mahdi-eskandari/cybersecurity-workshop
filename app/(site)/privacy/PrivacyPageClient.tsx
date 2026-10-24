@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useTheme } from "../../../components/ThemeProvider";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { renderHighlightedTitle } from "@/lib/highlightTitle";
 
 
 
@@ -637,89 +638,76 @@ const lightColors = {
   return (
     <>
 
-      <div
-        className={`min-h-full privacy-page pt-[65px] ${
-          isDark
-            ? ""
-            : "bg-white text-[#1565C0] selection:bg-[rgba(21,101,192,0.18)] selection:text-[#0D47A1]"
-        }`}
-        data-theme={isDark ? "dark" : "light"}
-        style={{
-          fontFamily: "var(--font-vazirmatn), sans-serif",
-          ...(isDark
-            ? {
-                background: "#0A1128",
-                color: "#E2E8F0",
-
-              }
-            : {})
-        }}
-      >
-
-
-{/* ─── BREADCRUMB ─── */}
-
-    <section
-  className="flex justify-center"
+     <div
+  dir="rtl"
+  className={`min-h-full privacy-page pt-[var(--header-h,60px)] min-[840px]:pt-[var(--header-h,80px)] ${
+    isDark
+      ? ""
+      : "bg-white text-[#1565C0] selection:bg-[rgba(21,101,192,0.18)] selection:text-[#0D47A1]"
+  }`}
+  data-theme={isDark ? "dark" : "light"}
   style={{
-    background: darkMode ? "#070D1E" : "#F1F5FB",
+    fontFamily: "var(--font-vazirmatn), sans-serif",
+    ...(isDark
+      ? {
+          background: "#0A1128",
+          color: "#E2E8F0",
+        }
+      : {}),
   }}
 >
-  <div className="px-6 md:px-12 mt-[15px]">
+  {/* ─── BREADCRUMB ─── */}
+  <section style={{ background: isDark ? "#070D1E" : "#F1F5FB" }}>
     <nav
       aria-label="مسیر راهنما"
-      className="max-w-5xl mx-auto py-3"
+      className="mx-auto w-full max-w-5xl px-4 py-2.5 sm:px-6 min-[840px]:px-12 min-[840px]:py-3"
     >
-      
-    <ol className="flex items-center gap-2 whitespace-nowrap overflow-x-auto text-xs">
-<li className="flex items-center">
-        <Link
-    href="/"
-    className={`flex items-center gap-1.5 leading-none transition-colors ${
-      darkMode
-        ? "text-[#64748B] hover:text-[#00E5FF]"
-        : "text-[#475569] hover:text-[#1565C0]"
-    }`}
-  >
-    <IconHome />
-خانه
-        </Link>
-      </li>
+      <ol className="flex min-w-0 items-center justify-center gap-1.5 text-[11px] sm:gap-2 sm:text-xs">
+        <li className="flex shrink-0 items-center">
+          <Link
+            href="/"
+            className={`flex items-center gap-1.5 leading-none transition-colors ${
+              isDark
+                ? "text-[#64748B] hover:text-[#00E5FF]"
+                : "text-[#475569] hover:text-[#1565C0]"
+            }`}
+          >
+            <IconHome />
+            خانه
+          </Link>
+        </li>
 
-
-
-      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
-        <IconChevronLeft />
-      </li>
-
-      <li>
-        <span
-          aria-current="page"
-          className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md"
-          style={{
-            color: darkMode ? "#00E5FF" : "#1565C0",
-            background: darkMode ? "rgba(0,229,255,0.055)" : "rgba(21,101,192,0.08)",
-            border: darkMode
-              ? "1px solid rgba(0,229,255,0.1)"
-              : "1px solid rgba(21,101,192,0.2)",
-          }}
+        <li
+          aria-hidden="true"
+          className={`flex shrink-0 items-center ${
+            isDark ? "text-[#334155]" : "text-[#94A3B8]"
+          }`}
         >
+          <IconChevronLeft />
+        </li>
+
+        <li className="min-w-0">
           <span
+            aria-current="page"
+            className="inline-flex max-w-full items-center gap-2 rounded-md px-2 py-1 sm:px-2.5"
             style={{
-              width: 4,
-              height: 4,
-              borderRadius: "50%",
-              background: darkMode ? "#00E5FF" : "#1565C0",
-              display: "inline-block",
+              color: isDark ? "#00E5FF" : "#1565C0",
+              background: isDark ? "rgba(0,229,255,0.055)" : "rgba(21,101,192,0.08)",
+              border: isDark
+                ? "1px solid rgba(0,229,255,0.1)"
+                : "1px solid rgba(21,101,192,0.2)",
             }}
-          />
-حریم خصوصی 
-  </span>
-      </li>
-    </ol>
-  </nav>
-</div>
-</section>
+          >
+            <span
+              className="inline-block h-1 w-1 shrink-0 rounded-full"
+              style={{ background: isDark ? "#00E5FF" : "#1565C0" }}
+            />
+            <span className="truncate">حریم خصوصی</span>
+          </span>
+        </li>
+      </ol>
+    </nav>
+  </section>
 
 
 
@@ -776,22 +764,26 @@ const lightColors = {
     <IconShieldLock />
   </div>
 
-  <div className="pl-80">
-    <h1
-      className="glow-text font-black leading-tight mb-0"
-      style={{
-        fontSize: "clamp(2rem, 5vw, 3.5rem)",
-        color: darkMode ? "#e8f4f8" : "black",
-        lineHeight: "1.3",
-        fontWeight: 900,
-        textShadow: darkMode
-          ? undefined
-          : "0 0 18px rgba(21,101,192,0.10)",
-      }}
-    >
-      {h1Title}
-    </h1>
-  </div>
+<h1
+  className="glow-text font-black leading-tight mb-6"
+  style={{
+    fontSize: "clamp(2rem, 5vw, 3.5rem)",
+    color: darkMode ? "#ffffff" : "#0c1a43",
+    lineHeight: "1.3",
+    fontWeight: 900,
+    textShadow: darkMode
+      ? undefined
+      : "0 0 18px rgba(30,58,138,0.10)",
+    textWrap: "balance",
+  } as React.CSSProperties}
+>
+{renderHighlightedTitle(h1Title, {
+  firstLineWords: 4,
+  maxWordsPerLine: 7,
+  lineBreakClassName: "",
+  style: { color: darkMode ? "#00E5FF" : "#1565C0" },
+})}
+</h1>
 </div>
 
             <p
@@ -893,7 +885,7 @@ const lightColors = {
   viewport={{ once: true, amount: 0.2 }}
 >
                 <button
-                className={`lg:hidden w-full flex items-center justify-between px-4 py-3 rounded-xl mb-2 text-sm font-semibold privacy-toc-mobile ${
+                className={`lg:hidden w-full flex items-center justify-between px-4 py-3 rounded-xl mb-2 text-sm font-semibold privacy-toc-mobile mt-5 ${
                   isDark
                     ? ""
                     : "bg-white text-[#1565C0] border border-[rgba(21,101,192,0.25)] shadow-[0_8px_24px_rgba(21,101,192,0.09)] transition-all duration-200 hover:bg-[#1565C0] hover:text-white hover:shadow-[0_13px_30px_rgba(21,101,192,0.25)]"

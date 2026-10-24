@@ -1981,10 +1981,9 @@ className={`w-12 h-12 flex items-center justify-center rounded-xl ${
 
                   return (
 
-                    <Link href={`/blogs/${post.slug}`}>
+                    <Link key={post._id || i} href={`/blogs/${post.slug}`} className="block h-full">
                      <article
-                       key={post._id || i}
-                       className={`group flex flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
+                       className={`group flex h-full flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
                          darkMode
                            ? "border border-cyan-500/30 hover:border-cyan-600 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-900/15"
                            : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"

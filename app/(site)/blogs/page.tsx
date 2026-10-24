@@ -1,12 +1,9 @@
-
-
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 import BlogPageClient, { type BlogPageInitialData } from "./BlogPageClient";
 import {
   buildBlogsPaginationLinks,
   buildBlogsCategoryLinks,
-  getAdjacentPageLinks,
   getPageMetadata,
   getPageSeo,
   SITE_URL,
@@ -19,16 +16,15 @@ import {
 
 const PER_PAGE = 6;
 
-// همون idهای BLOG_CATEGORIES تو BlogPageClient.tsx (اونجا "use client"ه
-// و نمی‌شه ازش تابع/آرایه رو مستقیم سمت سرور import کرد) — هر وقت اونجا
-// دسته‌بندی اضافه/کم شد، همینجا هم دستی sync کن.
-const VALID_CATEGORY_IDS = [
-  "all",
-  "forensic-reports",
-  "legal-news",
-  "solved-cases",
-  "security-alerts",
-  "security-education",
+type CategoryItem = { id: string; label: string };
+
+// فقط وقتی API در دسترس نبود استفاده می‌شه
+const FALLBACK_CATEGORIES: CategoryItem[] = [
+  { id: "forensic-reports", label: "گزارش‌های جرم‌شناسی" },
+  { id: "legal-news", label: "اخبار حقوقی" },
+  { id: "solved-cases", label: "پرونده‌های حل‌شده" },
+  { id: "security-alerts", label: "هشدارهای امنیتی" },
+  { id: "security-education", label: "آموزش امنیت و تهدیدات سایبری" },
 ];
 
 type RawBlogPost = {
@@ -131,6 +127,23 @@ async function getBaseUrl() {
   return `${protocol}://${host}`;
 }
 
+async function getCategories(baseUrl: string): Promise<CategoryItem[]> {
+  try {
+    const { response, data } = await fetchServerJson(
+      `${baseUrl}/api/categories`
+    );
+    if (!response.ok || !Array.isArray(data) || data.length === 0) {
+      return FALLBACK_CATEGORIES;
+    }
+    const list = data
+      .map((c: any) => ({ id: String(c.id), label: String(c.label) }))
+      .filter((c) => c.id && c.label);
+    return list.length ? list : FALLBACK_CATEGORIES;
+  } catch {
+    return FALLBACK_CATEGORIES;
+  }
+}
+
 async function getPublishedPosts(baseUrl: string): Promise<BlogPost[]> {
   const { response, data } = await fetchServerJson(`${baseUrl}/api/posts`);
   if (!response.ok) return [];
@@ -153,9 +166,12 @@ function getSafePage(pageParam: string | undefined, totalPages: number) {
   return Math.max(1, Math.min(Math.floor(requested), totalPages));
 }
 
-function getSafeCategory(categoryParam: string | undefined) {
+function getSafeCategory(
+  categoryParam: string | undefined,
+  validIds: string[]
+) {
   if (!categoryParam) return "all";
-  return VALID_CATEGORY_IDS.includes(categoryParam) ? categoryParam : "all";
+  return validIds.includes(categoryParam) ? categoryParam : "all";
 }
 
 function filterByCategory(posts: BlogPost[], category: string) {
@@ -180,36 +196,46 @@ export async function generateMetadata({
 
   // category=all (یا نبودنش) یعنی بدون فیلتر واقعی، و page=1 (یا نبودنش)
   // یعنی صفحه‌ی اول — یعنی این حالت دقیقاً همون محتوای روتِ خامِ /blogs
-  // رو نشون می‌ده (چون پایین‌تر هم دقیقاً همین دوتا default حساب می‌شن)،
-  // پس نباید canonical جدا از /blogs بگیره.
-  const category = getSafeCategory(categoryParam);
+  // رو نشون می‌ده، پس نباید canonical جدا از /blogs بگیره.
   const isFirstPageParam = !pageParam || Number(pageParam) <= 1;
-  const isBareEquivalent = category === "all" && isFirstPageParam;
 
-  if (isBareEquivalent) return baseMetadata;
+  if ((!categoryParam || categoryParam === "all") && isFirstPageParam) {
+    return baseMetadata;
+  }
 
   try {
-    const publishedPosts = await getPublishedPosts(baseUrl);
+    const [publishedPosts, categories] = await Promise.all([
+      getPublishedPosts(baseUrl),
+      getCategories(baseUrl),
+    ]);
+
+    const category = getSafeCategory(
+      categoryParam,
+      categories.map((c) => c.id)
+    );
+
+    // دسته‌ی نامعتبر که به all برمی‌گرده + صفحه‌ی اول
+    if (category === "all" && isFirstPageParam) return baseMetadata;
+
     const scopedPosts = filterByCategory(publishedPosts, category);
     const totalPages = Math.max(1, Math.ceil(scopedPosts.length / PER_PAGE));
     const currentPage = getSafePage(pageParam, totalPages);
 
-    // "all" یعنی «بدون فیلتر دسته»، پس دقیقاً مثل نبودن categoryParam
-    // حساب می‌شه؛ وگرنه /blogs?category=all یه کانونیکال جدا از /blogs
-    // می‌گرفت و می‌شد محتوای تکراری. فقط دسته‌های واقعی صفحه‌بندی
+    // "all" یعنی «بدون فیلتر دسته»؛ فقط دسته‌های واقعی صفحه‌بندی
     // مخصوص خودشون رو می‌گیرن.
-    const { canonical } = categoryParam && categoryParam !== "all"
-      ? buildBlogsCategoryLinks({
-          basePath: "/blogs",
-          category,
-          currentPage,
-          totalPages,
-        })
-      : buildBlogsPaginationLinks({
-          basePath: "/blogs",
-          currentPage,
-          totalPages,
-        });
+    const { canonical } =
+      category !== "all"
+        ? buildBlogsCategoryLinks({
+            basePath: "/blogs",
+            category,
+            currentPage,
+            totalPages,
+          })
+        : buildBlogsPaginationLinks({
+            basePath: "/blogs",
+            currentPage,
+            totalPages,
+          });
 
     return {
       ...baseMetadata,
@@ -223,8 +249,6 @@ export async function generateMetadata({
     return baseMetadata;
   }
 }
-
-
 
 function BlogsJsonLd({
   title,
@@ -273,34 +297,40 @@ export default async function Page({
 }) {
   const { page: pageParam, category: categoryParam } = await searchParams;
   const pageSeo = await getPageSeo("blogs");
-const h1Title = pageSeo.h1Title;
+  const h1Title = pageSeo.h1Title;
   const baseUrl = await getBaseUrl();
 
   const hasQuery = pageParam !== undefined || categoryParam !== undefined;
-  const category = getSafeCategory(categoryParam);
 
-  const emptyData: BlogPageInitialData = {
+  // دیتای خالی برای وقتی که چیزی از سرور نیومده
+  const fallbackData: BlogPageInitialData = {
     blogs: [],
     mediaItems: [],
+    categories: FALLBACK_CATEGORIES,
     seo: { h1Title },
     initialPage: 1,
-    initialCategory: category,
+    initialCategory: getSafeCategory(
+      categoryParam,
+      FALLBACK_CATEGORIES.map((c) => c.id)
+    ),
     isBare: !hasQuery,
   };
 
   if (!baseUrl) {
     return (
       <div className="min-h-screen">
-        <BlogPageClient initialData={emptyData} />
+        <BlogPageClient initialData={fallbackData} />
       </div>
     );
   }
 
   try {
-    const [postsResult, mediaResult] = await Promise.allSettled([
-      fetchServerJson(`${baseUrl}/api/posts`),
-      fetchServerJson(`${baseUrl}/api/media`),
-    ]);
+    const [postsResult, mediaResult, categoriesResult] =
+      await Promise.allSettled([
+        fetchServerJson(`${baseUrl}/api/posts`),
+        fetchServerJson(`${baseUrl}/api/media`),
+        getCategories(baseUrl),
+      ]);
 
     if (postsResult.status === "rejected") {
       throw postsResult.reason;
@@ -311,6 +341,16 @@ const h1Title = pageSeo.h1Title;
     if (!postsResponse.ok) {
       throw new Error(postsData?.message || "خطا در دریافت پست‌ها");
     }
+
+    const categories: CategoryItem[] =
+      categoriesResult.status === "fulfilled"
+        ? categoriesResult.value
+        : FALLBACK_CATEGORIES;
+
+    const category = getSafeCategory(
+      categoryParam,
+      categories.map((c) => c.id)
+    );
 
     const rawPosts: RawBlogPost[] = Array.isArray(postsData)
       ? postsData
@@ -342,55 +382,53 @@ const h1Title = pageSeo.h1Title;
     const totalPages = Math.max(1, Math.ceil(scopedPosts.length / PER_PAGE));
     const initialPage = getSafePage(pageParam, totalPages);
 
-
     // rel=next/prev همیشه باید پجینیشنِ واقعی رو نشون بده -- مستقل از
     // اینکه URL «خام» بوده یا صریح. این با canonical فرق داره: کنونیکال
     // حق داره دو تا URL همسان رو یکی حساب کنه، ولی prev/next یه مفهوم
-    // جداگانه‌ست (آیا صفحه‌ی بعدی/قبلیِ همین لیست وجود داره یا نه) و
-    // نباید با ناوبریِ سطح‌سایت (خدمات/درباره‌ما) قاطی بشه -- دقیقاً
+    // جداگانه‌ست و نباید با ناوبریِ سطح‌سایت قاطی بشه -- دقیقاً
     // همون قانونی که توی /services داریم.
-    const { prevUrl, nextUrl } = categoryParam && categoryParam !== "all"
-      ? buildBlogsCategoryLinks({
-          basePath: "/blogs",
-          category,
-          currentPage: initialPage,
-          totalPages,
-        })
-      : buildBlogsPaginationLinks({
-          basePath: "/blogs",
-          currentPage: initialPage,
-          totalPages,
-        });
+    const { prevUrl, nextUrl } =
+      category !== "all"
+        ? buildBlogsCategoryLinks({
+            basePath: "/blogs",
+            category,
+            currentPage: initialPage,
+            totalPages,
+          })
+        : buildBlogsPaginationLinks({
+            basePath: "/blogs",
+            currentPage: initialPage,
+            totalPages,
+          });
 
     const initialData: BlogPageInitialData = {
       blogs: publishedPosts,
       mediaItems,
+      categories,
       seo: { h1Title },
       initialPage,
       initialCategory: category,
       isBare: !hasQuery,
     };
 
-return (
-  <div className="min-h-screen">
-    <BlogsJsonLd
-      title={pageSeo.metaTitle}
-      description={pageSeo.metaDescription}
-    />
-    {prevUrl && <link rel="prev" href={prevUrl} />}
-    {nextUrl && <link rel="next" href={nextUrl} />}
-    <BlogPageClient initialData={initialData} />
-  </div>
-);
+    return (
+      <div className="min-h-screen">
+        <BlogsJsonLd
+          title={pageSeo.metaTitle}
+          description={pageSeo.metaDescription}
+        />
+        {prevUrl && <link rel="prev" href={prevUrl} />}
+        {nextUrl && <link rel="next" href={nextUrl} />}
+        <BlogPageClient initialData={initialData} />
+      </div>
+    );
   } catch (error) {
     console.error("GET blogs list error:", error);
 
     return (
       <div className="min-h-screen">
-        <BlogPageClient initialData={emptyData} />
+        <BlogPageClient initialData={fallbackData} />
       </div>
     );
-    
   }
 }
-

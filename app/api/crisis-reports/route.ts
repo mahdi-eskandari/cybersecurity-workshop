@@ -15,6 +15,7 @@ const VALID_INCIDENT_TYPES = [
   "کالبدشکافی دیجیتال",
   "مقابله با باج‌افزار",
   "هوش تهدیدات",
+  "سایر",
 ] as const;
 
 const VALID_STATUSES = [
@@ -34,6 +35,18 @@ export async function POST(req: Request) {
         ? body.incidentType.trim()
         : "";
 
+    const serviceSlug =
+      typeof body?.serviceSlug === "string"
+        ? body.serviceSlug.trim().slice(0, 200)
+        : "";
+
+    const serviceTitle =
+      typeof body?.serviceTitle === "string"
+        ? body.serviceTitle.trim().slice(0, 200)
+        : "";
+
+    const isServiceReport = Boolean(serviceSlug);
+
     const description =
       typeof body?.description === "string"
         ? body.description.trim()
@@ -44,22 +57,35 @@ export async function POST(req: Request) {
         ? body.contact.trim()
         : "";
 
-    if (!incidentType) {
-      return NextResponse.json(
-        { message: "نوع حادثه را انتخاب کنید" },
-        { status: 400 }
-      );
-    }
+    let finalIncidentType = incidentType;
 
-    if (
-      !VALID_INCIDENT_TYPES.includes(
-        incidentType as (typeof VALID_INCIDENT_TYPES)[number]
-      )
-    ) {
-      return NextResponse.json(
-        { message: "نوع حادثه انتخاب‌شده معتبر نیست" },
-        { status: 400 }
-      );
+    if (isServiceReport) {
+      // گزارش صفحه‌ی خدمت: نوع = اسم خدمت
+      if (!serviceTitle) {
+        return NextResponse.json(
+          { message: "نام خدمت مشخص نیست" },
+          { status: 400 }
+        );
+      }
+      finalIncidentType = serviceTitle;
+    } else {
+      if (!incidentType) {
+        return NextResponse.json(
+          { message: "نوع حادثه را انتخاب کنید" },
+          { status: 400 }
+        );
+      }
+
+      if (
+        !VALID_INCIDENT_TYPES.includes(
+          incidentType as (typeof VALID_INCIDENT_TYPES)[number]
+        )
+      ) {
+        return NextResponse.json(
+          { message: "نوع حادثه انتخاب‌شده معتبر نیست" },
+          { status: 400 }
+        );
+      }
     }
 
     if (!contact) {
@@ -105,7 +131,9 @@ export async function POST(req: Request) {
 
     const report = await CrisisReport.create({
       trackingCode,
-      incidentType,
+            incidentType: finalIncidentType,
+      serviceSlug: isServiceReport ? serviceSlug : undefined,
+      serviceTitle: isServiceReport ? serviceTitle || serviceSlug : undefined,
       description,
       contact: phone,
       status: "pending",
@@ -135,7 +163,12 @@ export async function POST(req: Request) {
     console.error("Crisis report error:", error);
 
     return NextResponse.json(
-      { message: "خطایی هنگام ثبت گزارش رخ داد" },
+      {
+        message:
+          process.env.NODE_ENV !== "production" && error instanceof Error
+            ? `[DEV] ${error.message}`
+            : "خطایی هنگام ثبت گزارش رخ داد",
+      },
       { status: 500 }
     );
   }

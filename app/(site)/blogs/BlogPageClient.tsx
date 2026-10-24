@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Search as SearchIcon,
@@ -14,6 +14,7 @@ import {
 import { useTheme } from "../../../components/ThemeProvider";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import Link from "next/link";
+import { renderHighlightedTitle } from "@/lib/highlightTitle";
 
 
 
@@ -462,6 +463,23 @@ const BLOG_CATEGORIES = [
   { id: "security-education", label: "آموزش امنیت و تهدیدات سایبری" },
 ];
 
+
+function dedupeCategories<T extends { id: string; label: string }>(list: T[]): T[] {
+  const seenIds = new Set<string>();
+  const seenLabels = new Set<string>();
+
+  return list.filter((cat) => {
+    const id = String(cat.id).trim();
+    const label = String(cat.label).trim();
+
+    if (seenIds.has(id) || seenLabels.has(label)) return false;
+
+    seenIds.add(id);
+    seenLabels.add(label);
+    return true;
+  });
+}
+
 function findMedia(
   featuredImage: string | null | undefined,
   mediaItems: MediaItem[]
@@ -551,6 +569,7 @@ function getCategoryBadgeClass(category: string, darkMode: boolean): string {
 export type BlogPageInitialData = {
   blogs: BlogPost[];
   mediaItems: MediaItem[];
+  categories?: { id: string; label: string }[];
   seo: { h1Title: string };
   initialPage: number;
   initialCategory: string; // "all" یا یکی از id های BLOG_CATEGORIES
@@ -658,29 +677,79 @@ export default function BlogPageClient({ initialData }: { initialData: BlogPageI
     const blueBright = darkMode ? "#00E5FF" : "#1D4ED8";
     const accent = darkMode ? "#00E5FF" : "#1D4ED8"; 
 
-  const [activeCategory, setActiveCategory] = useState(initialData.initialCategory);
+    const [activeCategory, setActiveCategory] = useState(initialData.initialCategory);
+ 
+  const hasServerCategories = !!initialData.categories?.length;
+
+  const [blogCategories, setBlogCategories] = useState(
+    hasServerCategories
+      ? dedupeCategories(initialData.categories!)
+      : BLOG_CATEGORIES
+  );
+
+
+
+
+
+  useEffect(() => {
+  const check = () => {
+    const wrapper = wrapperRef.current;
+    const bar = barRef.current;
+    if (!wrapper || !bar) return;
+
+    const headerH =
+      parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue("--header-h")
+      ) || 70;
+
+    const shouldFix = wrapper.getBoundingClientRect().top <= headerH;
+
+    // ارتفاع نوار رو فقط وقتی فیکس نیست اندازه می‌گیریم
+    if (!shouldFix) setFilterH(bar.offsetHeight);
+    setFilterFixed(shouldFix);
+  };
+
+  check();
+  window.addEventListener("scroll", check, { passive: true });
+  window.addEventListener("resize", check);
+
+  return () => {
+    window.removeEventListener("scroll", check);
+    window.removeEventListener("resize", check);
+  };
+}, []);
+
+  // فقط اگه سرور نتونست دسته‌ها رو بده، از کلاینت بگیر
+  useEffect(() => {
+    if (hasServerCategories) return;
+    let cancelled = false;
+
+    fetch("/api/categories")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!cancelled && Array.isArray(data) && data.length) {
+          setBlogCategories(dedupeCategories(data));
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
+  }, [hasServerCategories]);
+
+
   const [searchQuery, setSearchQuery] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [currentPage, setCurrentPage] = useState(initialData.initialPage);
   const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
-  const [filterFixed, setFilterFixed] = useState(false);
   // تا وقتی کاربر هیچ فیلتر/صفحه‌ای رو دستی عوض نکرده، روی روت خامِ
   // /blogs هستیم و نباید prev/next سطح سایت (خدمات/درباره‌ما) رو دست بزنیم.
   const [isBareRoute, setIsBareRoute] = useState(initialData.isBare);
-
-useEffect(() => {
-  const handleScroll = () => {
-    setFilterFixed(window.scrollY > 558);
-  };
-
-  handleScroll();
-
-  window.addEventListener("scroll", handleScroll, { passive: true });
-
-  return () => {
-    window.removeEventListener("scroll", handleScroll);
-  };
-}, []);
+const [filterFixed, setFilterFixed] = useState(false);
+const wrapperRef = useRef<HTMLDivElement>(null);
+const barRef = useRef<HTMLDivElement>(null);
+const [filterH, setFilterH] = useState(0);
 
   const loading = false;
   const mediaItems = initialData.mediaItems;
@@ -706,7 +775,7 @@ useEffect(() => {
     const categoryId = post.categoryId?.trim() || "";
 
     const category =
-      BLOG_CATEGORIES.find((item) => item.id === categoryId)?.label ||
+            blogCategories.find((item) => item.id === categoryId)?.label ||
       CATEGORY_FALLBACK;
 
     const initials = post.author
@@ -734,11 +803,11 @@ useEffect(() => {
       avatarColor: "bg-blue-100 text-[#1565C0]",
     };
   });
-}, [publishedBlogs, mediaItems]);
+}, [publishedBlogs, mediaItems, blogCategories]);
 
   const categories = [
     { id: "all", label: "همه مطالب" },
-    ...BLOG_CATEGORIES,
+        ...blogCategories,
   ];
 
   const featuredArticle = useMemo<Article | null>(() => {
@@ -836,83 +905,66 @@ useEffect(() => {
     <>
 
     
-    <div
-      dir="rtl"
-      className={`min-h-screen transition-colors duration-300 pt-[35px] ${
-        darkMode
-          ? "bg-[#0A1128] text-[#E6F7FF]"
-          : "bg-white text-[#0F172A]"
-      }`}
-      style={{
-        fontFamily: "var(--font-vazirmatn), sans-serif",
-      }}
-    >
-
-
-
-{/* ─── BREADCRUMB ─── */}
-
-    <section
-  className="flex justify-center"
-  style={{
-    background: darkMode ? "#070D1E" : "#F1F5FB",
-  }}
+  <div
+  dir="rtl"
+  className={`min-h-screen transition-colors duration-300 pt-[var(--header-h,60px)] min-[840px]:pt-[var(--header-h,80px)] ${
+    darkMode ? "bg-[#0A1128] text-[#E6F7FF]" : "bg-white text-[#0F172A]"
+  }`}
+  style={{ fontFamily: "var(--font-vazirmatn), sans-serif" }}
 >
-  <div className="px-6 md:px-12 mt-[45px]">
+  {/* ─── BREADCRUMB ─── */}
+  <section style={{ background: darkMode ? "#070D1E" : "#F1F5FB" }}>
     <nav
       aria-label="مسیر راهنما"
-      className="max-w-5xl mx-auto py-3"
+      className="mx-auto w-full max-w-5xl px-4 py-2.5 sm:px-6 min-[840px]:px-12 min-[840px]:py-3"
     >
-      
-    <ol className="flex items-center gap-2 whitespace-nowrap overflow-x-auto text-xs">
-      <li className="flex items-center">
-        <Link
-    href="/"
-    className={`flex items-center gap-1.5 leading-none transition-colors ${
-      darkMode
-        ? "text-[#64748B] hover:text-[#00E5FF]"
-        : "text-[#475569] hover:text-[#1565C0]"
-    }`}
-  >
-    <IconHome />
-   خانه
-        </Link>
-      </li>
+      <ol className="flex min-w-0 items-center justify-center gap-1.5 text-[11px] sm:gap-2 sm:text-xs">
+        <li className="flex shrink-0 items-center">
+          <Link
+            href="/"
+            className={`flex items-center gap-1.5 leading-none transition-colors ${
+              darkMode
+                ? "text-[#64748B] hover:text-[#00E5FF]"
+                : "text-[#475569] hover:text-[#1565C0]"
+            }`}
+          >
+            <IconHome />
+            خانه
+          </Link>
+        </li>
 
-
-
-      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
-        <IconChevronLeft />
-      </li>
-
-      <li>
-        <span
-          aria-current="page"
-          className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md"
-          style={{
-            color: darkMode ? "#00E5FF" : "#1565C0",
-            background: darkMode ? "rgba(0,229,255,0.055)" : "rgba(21,101,192,0.08)",
-            border: darkMode
-              ? "1px solid rgba(0,229,255,0.1)"
-              : "1px solid rgba(21,101,192,0.2)",
-          }}
+        <li
+          aria-hidden="true"
+          className={`flex shrink-0 items-center ${
+            darkMode ? "text-[#334155]" : "text-[#94A3B8]"
+          }`}
         >
+          <IconChevronLeft />
+        </li>
+
+        <li className="min-w-0">
           <span
+            aria-current="page"
+            className="inline-flex max-w-full items-center gap-2 rounded-md px-2 py-1 sm:px-2.5"
             style={{
-              width: 4,
-              height: 4,
-              borderRadius: "50%",
-              background: darkMode ? "#00E5FF" : "#1565C0",
-              display: "inline-block",
+              color: darkMode ? "#00E5FF" : "#1565C0",
+              background: darkMode ? "rgba(0,229,255,0.055)" : "rgba(21,101,192,0.08)",
+              border: darkMode
+                ? "1px solid rgba(0,229,255,0.1)"
+                : "1px solid rgba(21,101,192,0.2)",
             }}
-          />
-وبلاگ  
-  </span>
-      </li>
-    </ol>
-  </nav>
-</div>
-</section>
+          >
+            <span
+              className="inline-block h-1 w-1 shrink-0 rounded-full"
+              style={{ background: darkMode ? "#00E5FF" : "#1565C0" }}
+            />
+            <span className="truncate">وبلاگ</span>
+          </span>
+        </li>
+      </ol>
+    </nav>
+  </section>
+
 
 
         {/* ─── HERO ─────────────────────────────────────────────────────────── */}
@@ -976,15 +1028,21 @@ useEffect(() => {
   className="glow-text font-black leading-tight mb-6"
   style={{
     fontSize: "clamp(2rem, 5vw, 3.5rem)",
-    color: darkMode ? "#e8f4f8" : "#0c1a43",
+    color: darkMode ? "#ffffff" : "#0c1a43",
     lineHeight: "1.3",
     fontWeight: 900,
     textShadow: darkMode
       ? undefined
       : "0 0 18px rgba(30,58,138,0.10)",
-  }}
+    textWrap: "balance",
+  } as React.CSSProperties}
 >
-  {seo.h1Title}
+{renderHighlightedTitle(seo.h1Title, {
+  firstLineWords: 4,
+  maxWordsPerLine: 7,
+  lineBreakClassName: "",
+  style: { color: darkMode ? "#00E5FF" : "#1565C0" },
+})}
 </h1>
 
             <p
@@ -1053,17 +1111,17 @@ useEffect(() => {
         {/* ─── CATEGORY TABS ────────────────────────────────────────────────── */}
 
 
-     <div className="relative">
-  {filterFixed && (
-    <div className="h-[58px] md:h-[76px]" />
-  )}
-
+<div
+  ref={wrapperRef}
+  style={filterFixed ? { height: filterH } : undefined}
+>
   <motion.div
+    ref={barRef}
     className={`${
       filterFixed
-        ? "fixed top-[55px] md:top-[70px] left-0 right-0 z-40"
+        ? "fixed top-[var(--header-h,70px)] left-0 right-0"
         : "relative"
-    } border-b transition-colors duration-300 ${
+    } z-40 border-b transition-colors duration-300 ${
       darkMode
         ? "bg-[#060E18] border-[#1E334A]"
         : "bg-white border-[rgba(88,102,142,0.29)]"
@@ -1197,7 +1255,14 @@ useEffect(() => {
       </div>
 
       {/* ================= DESKTOP ================= */}
-      <div className="hidden md:flex items-center gap-1 overflow-x-auto scrollbar-hide py-1">
+      <div
+  className="hidden md:flex items-center gap-1 overflow-x-auto scrollbar-hide py-1 "
+  style={
+    darkMode
+      ? { colorScheme: "dark", scrollbarColor: "#1E334A transparent" }
+      : undefined
+  }
+>
         {categories.map((cat) => {
           const active = activeCategory === cat.id;
           const count = articleCount(cat.id);
@@ -1238,7 +1303,8 @@ useEffect(() => {
 
     </div>
   </motion.div>
-</div>
+  </div>
+  
 
 
 

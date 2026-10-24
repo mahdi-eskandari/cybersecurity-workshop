@@ -359,79 +359,67 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
    
 
-   <div
-    className="min-h-full transition-colors duration-300 pt-20"
-    style={{
-      color: darkMode ? "#E2E8F0" : "#0F172A",
-      fontFamily: "var(--font-vazirmatn), sans-serif",
-      backgroundColor: darkMode ? "#0A1128" : "#FFFFFF",
-    }}
-  >
-
-
-    {/* ─── BREADCRUMB ─── */}
-
-    <section
- className="flex justify-center"
+  <div
+  dir="rtl"
+  className="min-h-full transition-colors duration-300 pt-[var(--header-h,60px)] min-[840px]:pt-[var(--header-h,80px)]"
   style={{
-    background: darkMode ? "#070D1E" : "#F1F5FB",
+    color: darkMode ? "#E2E8F0" : "#0F172A",
+    fontFamily: "var(--font-vazirmatn), sans-serif",
+    backgroundColor: darkMode ? "#0A1128" : "#FFFFFF",
   }}
 >
-  <div className="px-6 md:px-12 ">
+  {/* ─── BREADCRUMB ─── */}
+  <section style={{ background: darkMode ? "#070D1E" : "#F1F5FB" }}>
     <nav
       aria-label="مسیر راهنما"
-      className="max-w-5xl mx-auto py-3"
+      className="mx-auto w-full max-w-5xl px-4 py-2.5 sm:px-6 min-[840px]:px-12 min-[840px]:py-3"
     >
-      
-    <ol className="flex items-center gap-2 whitespace-nowrap overflow-x-auto text-xs">
-      <li className="flex items-center">
-        <Link
-    href="/"
-    className={`flex items-center gap-1.5 leading-none transition-colors ${
-      darkMode
-        ? "text-[#64748B] hover:text-[#00E5FF]"
-        : "text-[#475569] hover:text-[#1565C0]"
-    }`}
-  >
-    <IconHome />
-خانه
-        </Link>
-      </li>
+      <ol className="flex min-w-0 items-center justify-center gap-1.5 text-[11px] sm:gap-2 sm:text-xs">
+        <li className="flex shrink-0 items-center">
+          <Link
+            href="/"
+            className={`flex items-center gap-1.5 leading-none transition-colors ${
+              darkMode
+                ? "text-[#64748B] hover:text-[#00E5FF]"
+                : "text-[#475569] hover:text-[#1565C0]"
+            }`}
+          >
+            <IconHome />
+            خانه
+          </Link>
+        </li>
 
-     
-
-      <li className={`flex items-center ${darkMode ? "text-[#334155]" : "text-[#94A3B8]"}`}>
-        <IconChevronLeft />
-      </li>
-
-      <li>
-        <span
-          aria-current="page"
-          className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md"
-          style={{
-            color: darkMode ? "#00E5FF" : "#1565C0",
-            background: darkMode ? "rgba(0,229,255,0.055)" : "rgba(21,101,192,0.08)",
-            border: darkMode
-              ? "1px solid rgba(0,229,255,0.1)"
-              : "1px solid rgba(21,101,192,0.2)",
-          }}
+        <li
+          aria-hidden="true"
+          className={`flex shrink-0 items-center ${
+            darkMode ? "text-[#334155]" : "text-[#94A3B8]"
+          }`}
         >
+          <IconChevronLeft />
+        </li>
+
+        <li className="min-w-0">
           <span
+            aria-current="page"
+            className="inline-flex max-w-full items-center gap-2 rounded-md px-2 py-1 sm:px-2.5"
             style={{
-              width: 4,
-              height: 4,
-              borderRadius: "50%",
-              background: darkMode ? "#00E5FF" : "#1565C0",
-              display: "inline-block",
+              color: darkMode ? "#00E5FF" : "#1565C0",
+              background: darkMode ? "rgba(0,229,255,0.055)" : "rgba(21,101,192,0.08)",
+              border: darkMode
+                ? "1px solid rgba(0,229,255,0.1)"
+                : "1px solid rgba(21,101,192,0.2)",
             }}
-          />
-خدمات ما
-  </span>
-      </li>
-    </ol>
-  </nav>
-</div>
-</section>
+          >
+            <span
+              className="inline-block h-1 w-1 shrink-0 rounded-full"
+              style={{ background: darkMode ? "#00E5FF" : "#1565C0" }}
+            />
+            <span className="truncate">خدمات ما</span>
+          </span>
+        </li>
+      </ol>
+    </nav>
+  </section>
 
 
 

@@ -9,6 +9,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Underline from "@tiptap/extension-underline";
 import Placeholder from "@tiptap/extension-placeholder";
+import { createPortal } from "react-dom";
 
 import { Table, TableRow, TableHeader, TableCell } from "@tiptap/extension-table";
 
@@ -136,6 +137,22 @@ const CATS = [
   { id: "security-alerts", label: "هشدارهای امنیتی" },
   { id: "security-education", label: "آموزش امنیت و تهدیدات سایبری" },
 ];
+
+function dedupeCategories<T extends { id: string; label: string }>(list: T[]): T[] {
+  const seenIds = new Set<string>();
+  const seenLabels = new Set<string>();
+
+  return list.filter((cat) => {
+    const id = String(cat.id).trim();
+    const label = String(cat.label).trim();
+
+    if (seenIds.has(id) || seenLabels.has(label)) return false;
+
+    seenIds.add(id);
+    seenLabels.add(label);
+    return true;
+  });
+}
 
 const CATEGORY_ID_ALIASES: Record<string, string> = {
   solved: "solved-cases",
@@ -975,10 +992,268 @@ function Pagination({
    MAIN
 ───────────────────────────────────────────── */
 
+type CategoryItem = { id: string; label: string };
+
+
+function Spinner({ className = "h-3.5 w-3.5" }: { className?: string }) {
+  return (
+    <svg className={`animate-spin ${className}`} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity="0.25" strokeWidth="3" />
+      <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function CategoryManager({
+  categories,
+  onChanged,
+  onDeleted,
+}: {
+  categories: CategoryItem[];
+  onChanged: () => void | Promise<void>;
+  onDeleted: (id: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [newLabel, setNewLabel] = useState("");
+  const [newSlug, setNewSlug] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editLabel, setEditLabel] = useState("");
+  const [busy, setBusy] = useState(false);
+    const [action, setAction] = useState<string | null>(null); // "add" | "edit:<id>" | "delete:<id>"
+  const [deleteTarget, setDeleteTarget] = useState<CategoryItem | null>(null);
+
+   const call = async (url: string, init: RequestInit, act: string) => {
+    setBusy(true);
+    setAction(act);
+    try {
+      const res = await fetch(url, {
+        ...init,
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        alert(data?.message || "عملیات انجام نشد.");
+        return false;
+      }
+      await onChanged();
+      return true;
+    } catch {
+      alert("عملیات انجام نشد.");
+      return false;
+    } finally {
+      setBusy(false);
+      setAction(null);
+    }
+  };
+
+  const add = async () => {
+    if (!newLabel.trim() || !newSlug.trim()) {
+      alert("نام و نامک دسته‌بندی را وارد کنید.");
+      return;
+    }
+    const ok = await call(
+      "/api/categories",
+      { method: "POST", body: JSON.stringify({ label: newLabel, slug: newSlug }) },
+      "add"
+    );
+    if (ok) {
+      setNewLabel("");
+      setNewSlug("");
+    }
+  };
+
+  const saveEdit = async (id: string) => {
+    const ok = await call(
+      `/api/categories/${id}`,
+      { method: "PATCH", body: JSON.stringify({ label: editLabel }) },
+      `edit:${id}`
+    );
+    if (ok) setEditingId(null);
+  };
+
+  const confirmRemove = async () => {
+    if (!deleteTarget) return;
+    const { id } = deleteTarget;
+    const ok = await call(`/api/categories/${id}`, { method: "DELETE" }, `delete:${id}`);
+    setDeleteTarget(null);
+    if (ok) onDeleted(id);
+  };
+
+  return (
+    <div className="rounded-lg border border-[#1E3A8A]/[0.12] bg-[#EEF3FA]/60">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full cursor-pointer items-center justify-between border-0 bg-transparent px-3 py-2 text-[0.72rem] font-bold text-slate-700"
+      >
+        <span>مدیریت دسته‌بندی‌ها</span>
+        <span className="text-slate-400">{open ? "−" : "+"}</span>
+      </button>
+
+      {open && (
+        <div className="flex flex-col gap-2 border-t border-[#1E3A8A]/[0.08] p-3">
+          {categories.map(({ id, label }) => (
+            <div key={id} className="flex items-center gap-2">
+              {editingId === id ? (
+                <>
+                  <input
+                    value={editLabel}
+                    onChange={(e) => setEditLabel(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        void saveEdit(id);
+                      }
+                    }}
+                    className={inputClass}
+                  />
+<button
+  type="button"
+  disabled={busy}
+  onClick={() => saveEdit(id)}
+  className="inline-flex shrink-0 cursor-pointer items-center gap-1 border-0 bg-transparent p-0 text-[0.68rem] font-bold text-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
+>
+  {action === `edit:${id}` ? <Spinner className="h-3 w-3" /> : "ذخیره"}
+</button>
+                  <button
+                    type="button"
+                    onClick={() => setEditingId(null)}
+                    className="shrink-0 cursor-pointer border-0 bg-transparent p-0 text-[0.68rem] text-slate-500"
+                  >
+                    لغو
+                  </button>
+                </>
+              ) : (
+                <>
+                  <span className="flex-1 text-[0.76rem] text-slate-700">{label}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingId(id);
+                      setEditLabel(label);
+                    }}
+                    className="shrink-0 cursor-pointer border-0 bg-transparent p-0 text-[0.68rem] font-bold text-[#1565C0]"
+                  >
+                    ویرایش
+                  </button>
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => setDeleteTarget({ id, label })}
+                    className="shrink-0 cursor-pointer border-0 bg-transparent p-0 text-[0.68rem] font-bold text-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    حذف
+                  </button>
+                </>
+              )}
+            </div>
+          ))}
+
+          <div className="mt-1 flex flex-col gap-1.5 border-t border-[#1E3A8A]/[0.08] pt-2.5">
+            <input
+              value={newLabel}
+              onChange={(e) => setNewLabel(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") e.preventDefault();
+              }}
+              placeholder="نام دسته‌بندی (فارسی)"
+              className={inputClass}
+            />
+            <input
+              value={newSlug}
+              dir="ltr"
+              onChange={(e) =>
+                setNewSlug(
+                  e.target.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9-]/g, "-")
+                    .replace(/-+/g, "-")
+                )
+              }
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  void add();
+                }
+              }}
+              placeholder="نامک انگلیسی، مثلاً legal-news"
+              className={inputClass}
+            />
+<button
+  type="button"
+  disabled={busy}
+  onClick={add}
+  className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-[#1565C0]/[0.33] bg-[#1565C0]/[0.075] px-3 py-2 text-[0.72rem] font-bold text-[#1565C0] hover:bg-[#1565C0]/[0.12] disabled:cursor-not-allowed disabled:opacity-60"
+>
+  {action === "add" ? (
+    <>
+      <Spinner />
+      در حال افزودن...
+    </>
+  ) : (
+    "افزودن دسته‌بندی"
+  )}
+</button>
+          </div>
+        </div>
+      )}
+
+      {deleteTarget &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0F172A]/[0.39] p-5 backdrop-blur-sm"
+            onMouseDown={(e) => {
+              if (e.target === e.currentTarget && !busy) setDeleteTarget(null);
+            }}
+          >
+            <div
+              className="w-full max-w-sm rounded-2xl border border-[#1E3A8A]/[0.16] bg-[#F6F9FD] p-5 text-right shadow-2xl"
+              dir="rtl"
+            >
+              <h3 className="text-sm font-black text-[#0F172A]">حذف دسته‌بندی</h3>
+              <p className="mt-2 text-xs leading-6 text-slate-700">
+                آیا مطمئن هستید که دسته‌بندی «{deleteTarget.label}» حذف شود؟ این عملیات قابل بازگشت نیست.
+              </p>
+              <div className="mt-5 flex gap-2">
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={() => setDeleteTarget(null)}
+                  className="flex-1 cursor-pointer rounded-lg border border-[#1E3A8A]/[0.14] bg-[#1E3A8A]/[0.054] py-2 text-[12px] font-bold text-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  انصراف
+                </button>
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={confirmRemove}
+                  className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg border border-red-500/[0.33] bg-red-500/[0.114] py-2 text-[12px] font-bold text-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {action?.startsWith("delete:") ? (
+                    <>
+                      <Spinner className="h-3.5 w-3.5" />
+                      در حال حذف...
+                    </>
+                  ) : (
+                    "حذف دسته‌بندی"
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
+
+
+    </div>
+  );
+}
+
 export default function PostsAdminPage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState(INITIAL_CONTENT);
-  const [selectedCats, setSelectedCats] = useState<string[]>([]);
+    const [selectedCats, setSelectedCats] = useState<string[]>([]);
+  const [categories, setCategories] = useState<{ id: string; label: string }[]>(CATS);
   const [tags, setTags] = useState<string[]>(["#ردیابی_تتر", "#بلاکچین"]);
   const [tagInput, setTagInput] = useState("");
   const [slug, setSlug] = useState("ponzi-tracking-case-2025");
@@ -1231,6 +1506,17 @@ const editor = useEditor({
     follow: item?.follow ?? true,
   });
 
+    const loadCategories = async () => {
+    try {
+      const response = await fetch("/api/categories", { cache: "no-store" });
+      if (!response.ok) throw new Error("خطا در دریافت دسته‌بندی‌ها");
+      const data = await response.json();
+            if (Array.isArray(data) && data.length) setCategories(dedupeCategories(data));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const loadPosts = async () => {
     setPostsLoading(true);
     setPostsError(null);
@@ -1250,7 +1536,8 @@ const editor = useEditor({
 
   useEffect(() => {
     void loadPosts();
-    void loadMedia();
+        void loadMedia();
+    void loadCategories();
   }, []);
 
 
@@ -1709,8 +1996,13 @@ if (!response.ok) {
           </SideCard>
 
           <SideCard title="دسته‌بندی و برچسب‌ها" icon={<IconTag />} accentColor="#7C3AED">
-            <div className="flex flex-col gap-3.5"><div><p className="mb-2 font-mono text-[0.65rem] font-semibold tracking-widest text-slate-600">CATEGORIES</p><div className="flex flex-col gap-1.5">{CATS.map(({ id, label }) => { const checked = selectedCats.includes(id); return <div key={id} className="flex items-center gap-2.5"><button type="button" onClick={() => toggleCat(id)} className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-[5px] ${checked ? "border-[1.5px] border-[#1565C0] bg-[#1565C0]/[0.166]" : "border-[1.5px] border-[#1E3A8A]/[0.3] bg-transparent"}`}>{checked && <IconCheck />}</button><button type="button" onClick={() => toggleCat(id)} className={`border-0 bg-transparent p-0 text-right text-[0.8rem] ${checked ? "text-slate-800" : "text-slate-500"}`}>{label}</button></div>; })}</div></div>
-              <div><p className="mb-2 font-mono text-[0.65rem] font-semibold tracking-widest text-slate-600">TAGS</p><div className="mb-2 flex flex-wrap gap-1.5">{tags.map((t) => <span key={t} className="inline-flex items-center gap-1 rounded-md border border-purple-500/[0.405] bg-purple-500/[0.14] px-2 py-[3px] font-mono text-[0.7rem] text-purple-600">{t}<button type="button" onClick={() => removeTag(t)} className="flex cursor-pointer border-0 bg-transparent p-0 text-purple-600/[0.7] hover:text-red-600"><IconX /></button></span>)}</div><input value={tagInput} onChange={(e) => setTagInput(e.target.value)} onKeyDown={addTag} placeholder="مثلاً #ردیابی_تتر — Enter برای افزودن" className={inputClass} /></div>
+            <div className="flex flex-col gap-3.5"><div><p className="mb-2 font-mono text-[0.65rem] font-semibold tracking-widest text-slate-600">CATEGORIES</p><div className="flex flex-col gap-1.5">{categories.map(({ id, label }) => { const checked = selectedCats.includes(id); return <div key={id} className="flex items-center gap-2.5"><button type="button" onClick={() => toggleCat(id)} className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-[5px] ${checked ? "border-[1.5px] border-[#1565C0] bg-[#1565C0]/[0.166]" : "border-[1.5px] border-[#1E3A8A]/[0.3] bg-transparent"}`}>{checked && <IconCheck />}</button><button type="button" onClick={() => toggleCat(id)} className={`border-0 bg-transparent p-0 text-right text-[0.8rem] ${checked ? "text-slate-800" : "text-slate-500"}`}>{label}</button></div>; })}</div></div>
+              <CategoryManager
+              categories={categories}
+              onChanged={loadCategories}
+              onDeleted={(id) => setSelectedCats((c) => c.filter((x) => x !== id))}
+            />
+            <div><p className="mb-2 font-mono text-[0.65rem] font-semibold tracking-widest text-slate-600">TAGS</p><div className="mb-2 flex flex-wrap gap-1.5">{tags.map((t) => <span key={t} className="inline-flex items-center gap-1 rounded-md border border-purple-500/[0.405] bg-purple-500/[0.14] px-2 py-[3px] font-mono text-[0.7rem] text-purple-600">{t}<button type="button" onClick={() => removeTag(t)} className="flex cursor-pointer border-0 bg-transparent p-0 text-purple-600/[0.7] hover:text-red-600"><IconX /></button></span>)}</div><input value={tagInput} onChange={(e) => setTagInput(e.target.value)} onKeyDown={addTag} placeholder="مثلاً #ردیابی_تتر — Enter برای افزودن" className={inputClass} /></div>
             </div>
           </SideCard>
 

@@ -771,74 +771,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
           </div>
         </div>
 
-        {/* نوار اطمینان امنیتی */}
-        <div
-          className="w-full max-w-2xl mb-10"
-          style={{ animation: "fade-in-success 0.5s ease 0.5s both" }}
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {[
-              {
-                icon: <IconLock />,
-                label: "رمزنگاری انتها-به-انتها",
-                sub: "پروتکل AES-256",
-              },
-              {
-                icon: <IconShieldCheck darkMode={darkMode} />,
-                label: "عدم افشای اطلاعات",
-                sub: "محرمانه‌بودن مطلق",
-              },
-              {
-                icon: <IconTimelineCheck />,
-                label: "ذخیره‌سازی آفلاین",
-                sub: "سرورهای ایزوله",
-              },
-            ].map(({ icon, label, sub }, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl"
-                style={{
-                  background: darkMode ? "rgba(6,11,28,0.7)" : "#FFFFFF",
-                  border: darkMode
-                    ? "1px solid rgba(0,229,255,0.08)"
-                    : "1px solid rgba(21,101,192,0.12)",
-                }}
-              >
-                <span
-                  style={{
-                    color: darkMode
-                      ? "rgba(0,229,255,0.5)"
-                      : "rgba(21,101,192,0.75)",
-                    flexShrink: 0,
-                    display: "flex",
-                  }}
-                >
-                  {icon}
-                </span>
-                <div>
-                  <p
-                    style={{
-                      color: darkMode ? "#E2E8F0" : "#1E293B",
-                      fontSize: "0.78rem",
-                      fontWeight: 600,
-                    }}
-                  >
-                    {label}
-                  </p>
-                  <p
-                    style={{
-                      color: darkMode ? "#475569" : "#94A3B8",
-                      fontSize: "0.66rem",
-                      fontFamily: "monospace",
-                    }}
-                  >
-                    {sub}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+
 
         {/* دکمه‌های اقدام */}
         <div
@@ -868,83 +801,54 @@ className="relative min-h-screen overflow-x-hidden pt-10"
             بازگشت به پایگاه اصلی
           </Link>
 
-          <Link
-            href="/blogs?category=solved-cases&page=1"
-            className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl font-bold text-sm transition-all duration-300"
-            style={{
-              background: "transparent",
-              color: "#1565C0",
-              border: `1px solid ${primary}61`,
-              boxShadow: "none",
-              fontSize: "0.95rem",
-              transform: "none",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.background = `#0D47A1`;
-              (e.currentTarget as HTMLElement).style.borderColor = "#0D47A1";
-              (e.currentTarget as HTMLElement).style.boxShadow = darkMode ? `0 0 30px ${primary}4d, inset 0 0 24px ${primary}1a` : "0 10px 24px rgba(15,23,42,0.12)";
-              (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-              (e.currentTarget as HTMLElement).style.color = "white";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.background = "transparent";
-              (e.currentTarget as HTMLElement).style.borderColor = `#0D47A1`;
-              (e.currentTarget as HTMLElement).style.boxShadow = "none";
-              (e.currentTarget as HTMLElement).style.transform = "none";
-              (e.currentTarget as HTMLElement).style.color = "#1565C0";
-            }}
-          >
-            <IconTimelineBook />
-            مطالعه پرونده‌های حل‌شده
-          </Link>
+<Link
+  href="/blogs?category=solved-cases&page=1"
+  className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl font-bold text-sm transition-all duration-300"
+  style={{
+    background: darkMode ? `${primary}14` : "transparent",
+    color: darkMode ? primary : "#1565C0",
+    border: `1px solid ${primary}61`,
+    boxShadow: "none",
+    fontSize: "0.95rem",
+    transform: "none",
+  }}
+  onMouseEnter={(e) => {
+    const el = e.currentTarget as HTMLElement;
+    if (darkMode) {
+      el.style.background = `${primary}26`;
+      el.style.borderColor = `${primary}99`;
+      el.style.boxShadow = `0 0 30px ${primary}4d, inset 0 0 24px ${primary}1a`;
+      el.style.transform = "translateY(-2px)";
+    } else {
+      el.style.background = "#0D47A1";
+      el.style.borderColor = "#0D47A1";
+      el.style.boxShadow = "0 10px 24px rgba(15,23,42,0.12)";
+      el.style.transform = "translateY(-2px)";
+      el.style.color = "white";
+    }
+  }}
+  onMouseLeave={(e) => {
+    const el = e.currentTarget as HTMLElement;
+    if (darkMode) {
+      el.style.background = `${primary}14`;
+      el.style.borderColor = `${primary}61`;
+      el.style.boxShadow = "none";
+      el.style.transform = "none";
+    } else {
+      el.style.background = "transparent";
+      el.style.borderColor = "#0D47A1";
+      el.style.boxShadow = "none";
+      el.style.transform = "none";
+      el.style.color = "#1565C0";
+    }
+  }}
+>
+  <IconTimelineBook />
+  مطالعه پرونده‌های حل‌شده
+</Link>
         </div>
 
-        <div
-          className="mt-6 px-5 py-2.5 rounded-xl"
-          style={{
-            animation: "fade-in-success 0.5s ease 0.7s both",
-            background: darkMode ? "rgba(6,11,28,0.7)" : "#FFFFFF",
-            border: darkMode
-              ? "1px solid rgba(0,229,255,0.07)"
-              : "1px solid rgba(21,101,192,0.10)",
-            fontFamily: "monospace",
-            fontSize: "0.65rem",
-            color: darkMode ? "#334155" : "#64748B",
-          }}
-        >
-          <span style={{ color: darkMode ? "rgba(16,185,129,0.6)" : "#047857" }}>✓</span>{" "}
-          <span
-            style={{
-              color: darkMode
-                ? "rgba(0,229,255,0.4)"
-                : "rgba(21,101,192,0.70)",
-            }}
-          >
-            parahoor.io
-          </span>{" "}
-          report submitted —{" "}
-          <span style={{ color: darkMode ? "rgba(16,185,129,0.5)" : "#047857" }}>encrypted</span>{" "}
-          // ref:{" "}
-          <span
-            style={{
-              color: darkMode
-                ? "rgba(0,229,255,0.35)"
-                : "rgba(21,101,192,0.60)",
-            }}
-          >
-            {trackingCode || "PENDING"}
-          </span>{" "}
-          // agents:{" "}
-          <span
-            style={{
-              color: darkMode
-                ? "rgba(0,229,255,0.35)"
-                : "rgba(21,101,192,0.60)",
-            }}
-          >
-            standby
-          </span>
-        </div>
+
       </main>
     </div>
   );

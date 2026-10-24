@@ -812,10 +812,10 @@
 
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useTheme } from "./ThemeProvider";
 import { usePathname } from "next/navigation";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   AlertTriangle,
   ChevronDown,
@@ -907,7 +907,10 @@ export default function Header() {
   const [megaOpen, setMegaOpen] = useState(false);
   const [services, setServices] = useState<ServiceItem[]>([]);
   const [servicesState, setServicesState] = useState<ServicesState>("idle");
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+const navRef = useRef<HTMLElement>(null);
+  // آکاردئون خدمات در منوی موبایل
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
 
   // ---------------------------------------------------------
   // گرفتن اسلاگ‌های فعلی صفحات از دیتابیس
@@ -931,13 +934,18 @@ export default function Header() {
     };
   }, []);
 
+  // وقتی منوی موبایل بسته شد، آکاردئون خدمات هم جمع بشه
+  useEffect(() => {
+    if (!menuOpen) setMobileServicesOpen(false);
+  }, [menuOpen]);
+
   // قفل اسکرول صفحه وقتی منو بازه + بستن منو اگه صفحه بزرگ شد (دسکتاپ)
   useEffect(() => {
     if (!menuOpen) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onResize = () => {
-      if (window.innerWidth >= 768) setMenuOpen(false);
+            if (window.innerWidth >= 840) setMenuOpen(false);
     };
     window.addEventListener("resize", onResize);
     return () => {
@@ -1012,6 +1020,26 @@ export default function Header() {
     return () => window.removeEventListener("keydown", onKey);
   }, [megaOpen]);
 
+
+  // ارتفاع واقعی هدر را روی متغیر CSS می‌نویسد تا بقیه‌ی صفحه‌ها ازش استفاده کنن
+useEffect(() => {
+  const el = navRef.current;
+  if (!el) return;
+
+  const update = () => {
+    document.documentElement.style.setProperty(
+      "--header-h",
+      `${el.getBoundingClientRect().height}px`
+    );
+  };
+
+  update();
+  const ro = new ResizeObserver(update);
+  ro.observe(el);
+
+  return () => ro.disconnect();
+}, []);
+
   // انیمیشن ظاهر شدن آیتم‌ها: یکی‌یکی از بالا به پایین
   const itemAnim = (i: number): React.CSSProperties => ({
     opacity: menuOpen ? 1 : 0,
@@ -1045,6 +1073,7 @@ const navItems = NAV_ITEMS.map((item) => ({
   return (
     <div className="min-h-full cyber-grid-bg text-gray-600 dark:text-[#]">
   <nav
+  ref={navRef}
     className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-cyan-500/10 dark:bg-[#050a19cc]"
     style={{
       backgroundColor: darkMode ? "#050a19cc" : "#ffffffbd",
@@ -1055,11 +1084,11 @@ const navItems = NAV_ITEMS.map((item) => ({
     }}
     onMouseLeave={closeMegaSoon}
   >
-    <div className="max-w-6xl mx-auto flex items-center justify-between px-3 py-2.5 sm:px-6 md:px-12 md:py-4">
+        <div className="max-w-6xl mx-auto flex items-center justify-between px-3 py-2.5 sm:px-6 min-[840px]:px-12 min-[840px]:py-4">
         {/* سمت راست: همبرگر منو در موبایل + لوگو و برند */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <button
-            className="md:hidden p-1.5 -mr-1 text-slate-300 hover:text-cyan-400 transition-colors"
+             className="min-[840px]:hidden p-1.5 -mr-1 text-slate-300 hover:text-cyan-400 transition-colors"
             onClick={() => setMenuOpen(true)}
             aria-label="باز کردن منو"
           >
@@ -1096,7 +1125,7 @@ const navItems = NAV_ITEMS.map((item) => ({
         </div>
 
         {/* لینک‌های دسکتاپ – وسط */}
-        <div className="hidden md:flex items-center gap-6 lg:gap-8">
+                <div className="hidden min-[840px]:flex items-center gap-6 lg:gap-8">
           {navItems.map((item) => {
             const isActive =
               currentPath === item.href ||
@@ -1176,10 +1205,10 @@ const navItems = NAV_ITEMS.map((item) => ({
 
 
 {/* SOS + mobile toggle */}
-<div className="flex items-center gap-3 flex-shrink-0 mr-auto md:mr-0">
+<div className="flex items-center gap-3 flex-shrink-0 mr-auto min-[840px]:mr-0">
 <a
   href="tel:+982144097162"
-  className="md:flex items-center gap-2 px-4 py-2 bg-[#EF4444] text-white text-sm font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors cursor-pointer"
+   className="min-[840px]:flex items-center gap-2 px-4 py-2 bg-[#EF4444] text-white text-sm font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors cursor-pointer"
                 style={{
                 background: "#EF4444",
                 color: "#ffffff",
@@ -1217,7 +1246,7 @@ const navItems = NAV_ITEMS.map((item) => ({
           style={{
             width: `min(${megaCols === 3 ? "56rem" : "40rem"}, calc(100vw - 3rem))`,
           }}
-          className={`hidden md:block absolute left-1/2 top-full -translate-x-1/2 pt-2 transition-[opacity,visibility] duration-150 ease-out ${
+                    className={`hidden min-[840px]:block absolute left-1/2 top-full -translate-x-1/2 pt-2 transition-[opacity,visibility] duration-150 ease-out ${
             megaOpen ? "visible opacity-100" : "invisible pointer-events-none opacity-0"
           }`}
         >
@@ -1353,7 +1382,7 @@ const navItems = NAV_ITEMS.map((item) => ({
       {/* منوی تمام‌صفحه (فقط موبایل و تبلت) */}
       <div
         aria-hidden={!menuOpen}
-        className={`fixed inset-0 z-[70] md:hidden transition-[opacity,visibility] duration-300 ${
+                className={`fixed inset-0 z-[70] min-[840px]:hidden transition-[opacity,visibility] duration-300 ${
           menuOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
         }`}
         style={{
@@ -1362,7 +1391,7 @@ const navItems = NAV_ITEMS.map((item) => ({
             : "radial-gradient(120% 60% at 100% 0%, rgba(96,165,250,0.22) 0%, rgba(255,255,255,0) 60%), radial-gradient(100% 50% at 0% 100%, rgba(21,101,192,0.10) 0%, rgba(255,255,255,0) 60%), #FFFFFF",
         }}
       >
-        <div className="flex h-full w-full flex-col overflow-y-auto px-6 pb-6 pt-5 sm:px-10">
+                <div className="flex h-full w-full flex-col overflow-y-auto overflow-x-hidden px-6 pb-6 pt-5 sm:px-10">
           {/* هدر منو: لوگو + نام برند + بستن */}
           <div
             className={`flex items-center justify-between pb-5 border-b ${
@@ -1418,6 +1447,144 @@ const navItems = NAV_ITEMS.map((item) => ({
                 currentPath === item.href ||
                 (item.href !== "/" && currentPath.startsWith(`${item.href}/`));
 
+              if (item.pageKey === "services") {
+                const itemClass = `flex w-full items-center justify-between rounded-2xl border px-5 py-4 text-md font-semibold transition-all ${
+                  darkMode
+                    ? isActive || mobileServicesOpen
+                      ? "border-cyan-400/40 bg-cyan-500/10 text-white shadow-[0_0_24px_rgba(0,229,255,0.12)]"
+                      : "border-white/10 bg-white/[0.03] text-slate-200 hover:border-cyan-400/30 hover:bg-cyan-500/10 hover:text-cyan-300"
+                    : isActive || mobileServicesOpen
+                      ? "border-[#1565C0]/30 bg-[#1565C0]/10 text-[#1565C0]"
+                      : "border-[#1565C0]/10 bg-white/70 text-slate-700 hover:border-[#1565C0]/30 hover:bg-[#1565C0]/5 hover:text-[#1565C0]"
+                }`;
+
+                return (
+                  <div key={item.label} style={itemAnim(i + 1)}>
+                    <button
+                      type="button"
+                      aria-expanded={mobileServicesOpen}
+                      onClick={() => {
+                        const next = !mobileServicesOpen;
+                        setMobileServicesOpen(next);
+                        if (next) loadServices();
+                      }}
+                      className={itemClass}
+                    >
+                      <span>{item.label}</span>
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className={`transition-transform duration-300 ${
+                          mobileServicesOpen
+                            ? "-rotate-90 opacity-100"
+                            : isActive
+                              ? "opacity-100"
+                              : "opacity-40"
+                        }`}
+                      >
+                        <polyline points="15 18 9 12 15 6" />
+                      </svg>
+                    </button>
+
+                    <div
+                      className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                        mobileServicesOpen
+                          ? "grid-rows-[1fr] opacity-100"
+                          : "grid-rows-[0fr] opacity-0"
+                      }`}
+                    >
+                      <div className="min-h-0 overflow-hidden">
+                        <div
+                          className={`mt-2 flex flex-col gap-1 rounded-2xl border p-2 ${
+                            darkMode
+                              ? "border-white/10 bg-white/[0.02]"
+                              : "border-[#1565C0]/10 bg-white/60"
+                          }`}
+                        >
+                          {servicesState === "loading" || servicesState === "idle" ? (
+                            <div
+                              className="py-4 text-center text-sm"
+                              style={{ color: darkMode ? "#94A3B8" : "#64748B" }}
+                            >
+                              در حال دریافت خدمات...
+                            </div>
+                          ) : servicesState === "error" ? (
+                            <div
+                              className="flex flex-col items-center gap-3 py-4 text-center text-sm"
+                              style={{ color: darkMode ? "#94A3B8" : "#64748B" }}
+                            >
+                              دریافت خدمات انجام نشد.
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setServicesState("idle");
+                                  setTimeout(loadServices, 0);
+                                }}
+                                className={`rounded-lg border px-4 py-1.5 text-xs font-semibold ${
+                                  darkMode
+                                    ? "border-cyan-400/30 text-cyan-300"
+                                    : "border-[#1565C0]/30 text-[#1565C0]"
+                                }`}
+                              >
+                                تلاش دوباره
+                              </button>
+                            </div>
+                          ) : services.length === 0 ? (
+                            <div
+                              className="py-4 text-center text-sm"
+                              style={{ color: darkMode ? "#94A3B8" : "#64748B" }}
+                            >
+                              فعلاً خدمتی ثبت نشده است.
+                            </div>
+                          ) : (
+                            <>
+                              {services.map((service) => {
+                                const serviceHref = `${servicesHref}/${service.slug}`;
+                                const isCurrent = currentPath === serviceHref;
+                                return (
+                                  <Link
+                                    key={service._id}
+                                    href={serviceHref}
+                                    onClick={() => setMenuOpen(false)}
+                                    className={`rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
+                                      darkMode
+                                        ? isCurrent
+                                          ? "bg-cyan-500/10 text-cyan-300"
+                                          : "text-slate-300 hover:bg-cyan-500/10 hover:text-cyan-300"
+                                        : isCurrent
+                                          ? "bg-[#1565C0]/10 text-[#1565C0]"
+                                          : "text-slate-600 hover:bg-[#1565C0]/5 hover:text-[#1565C0]"
+                                    }`}
+                                  >
+                                    {service.title}
+                                  </Link>
+                                );
+                              })}
+                              <Link
+                                href={item.href}
+                                onClick={() => setMenuOpen(false)}
+                                className={`mt-1 rounded-xl px-4 py-3 text-center text-xs font-bold ${
+                                  darkMode ? "text-cyan-300" : "text-[#1565C0]"
+                                }`}
+                              >
+                                مشاهدهٔ همهٔ خدمات
+                              </Link>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
+                
               return (
                 <div key={item.label} style={itemAnim(i + 1)}>
                   <Link
