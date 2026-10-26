@@ -1236,11 +1236,12 @@ const closeCrisis = () => {
 </h1>
 
           <p
-            className="max-w-2xl mx-auto mb-10 leading-relaxed"
+            className="mx-auto mb-8"
             style={{
-              color: darkMode ? "#737c88" : "#475569",
-              fontSize: "clamp(0.95rem, 2vw, 1.0rem)",
-              fontWeight: 400,
+              color: darkMode ? "#9aa0aa" : "#475569",
+              fontSize: "clamp(0.92rem,2vw,1.0rem)",
+              lineHeight: 1.9,
+              maxWidth: 580,
             }}
           >
             پاراهور؛ آژانس خصوصی تحقیقات سایبری و فارنزیک. ما شواهد را کشف،
@@ -1475,7 +1476,7 @@ style={{
                   <p
                     style={{
                       color: darkMode
-                        ? "#737c88"
+                        ? "#8e939a"
                         : "#334155",
                       fontSize:"0.82rem",
                       lineHeight: 1.7,
@@ -1682,7 +1683,7 @@ style={{
                     <p
                       style={{
                         color: darkMode
-                          ? "#737c88"
+                          ? "#8e939a"
                           : "#334155",
                         fontSize:"0.82rem" ,
                         lineHeight: 1.75,
@@ -1857,7 +1858,7 @@ className={`w-12 h-12 flex items-center justify-center rounded-xl ${
           >
             <span
               className={`block mb-1 text-[0.75rem] ${
-                darkMode ? "text-[#737c88]" : "text-slate-500"
+                darkMode ? "text-[#9aa0aa]" : "text-slate-500"
               }`}
             >
               نتیجه پرونده
@@ -1875,7 +1876,7 @@ className={`w-12 h-12 flex items-center justify-center rounded-xl ${
           {/* Description */}
           <p
             className={`mb-6 text-[0.8rem] leading-[1.85] ${
-              darkMode ? "text-[#737c88]" : "text-[#334155]"
+              darkMode ? "text-[#9aa0aa]" : "text-[#334155]"
             }`}
           >
             {item.description}
@@ -2092,7 +2093,7 @@ className={`w-12 h-12 flex items-center justify-center rounded-xl ${
                         {/* Excerpt */}
                         <p
                           className={`text-[13px] leading-relaxed line-clamp-2 break-words mb-5 flex-1 min-h-[2.85rem] ${
-                            darkMode ? "text-[#737c88]" : "text-[#334155]"
+                            darkMode ? "text-[#9aa0aa]" : "text-[#334155]"
                           }`}
                         >
                           {summary}
@@ -2130,9 +2131,9 @@ className={`w-12 h-12 flex items-center justify-center rounded-xl ${
                                   darkMode ? "text-[#71869A]" : "text-[#64748B]"
                                 }`}
                               >
-                                {dateText && <span>{dateText}</span>}
+                                {dateText && <span className="text-xs">{dateText}</span>}
                                 {dateText && <span>·</span>}
-                                <span>{readTime}</span>
+                                <span className="text-xs">{readTime}</span>
                               </div>
                             </div>
                           </div>

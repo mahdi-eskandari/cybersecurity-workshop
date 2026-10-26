@@ -609,7 +609,7 @@ const IconUser = () => (
     strokeWidth="1.8"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="text-[#475569] "
+    className="text-[#9aa0aa] "
   >
     <circle cx="12" cy="8" r="3.5" />
     <path d="M5 20c.8-3.2 3.2-5 7-5s6.2 1.8 7 5" />
@@ -1249,7 +1249,7 @@ export default function App({
             href="/"
             className={`flex items-center gap-1.5 leading-none transition-colors ${
               darkMode
-                ? "text-[#64748B] hover:text-[#00E5FF]"
+                ? "text-[#7e8691] hover:text-[#00E5FF]"
                 : "text-[#475569] hover:text-[#1565C0]"
             }`}
           >
@@ -1261,7 +1261,7 @@ export default function App({
         <li
           aria-hidden="true"
           className={`flex shrink-0 items-center ${
-            darkMode ? "text-[#334155]" : "text-[#94A3B8]"
+            darkMode ? "text-[#7e8691]" : "text-[#94A3B8]"
           }`}
         >
           <IconChevronLeft />
@@ -1272,7 +1272,7 @@ export default function App({
             href="/blogs"
             className={`transition-colors ${
               darkMode
-                ? "text-[#64748B] hover:text-[#00E5FF]"
+                ? "text-[#7e8691] hover:text-[#00E5FF]"
                 : "text-[#475569] hover:text-[#1565C0]"
             }`}
           >
@@ -1283,7 +1283,7 @@ export default function App({
         <li
           aria-hidden="true"
           className={`flex shrink-0 items-center ${
-            darkMode ? "text-[#334155]" : "text-[#94A3B8]"
+            darkMode ? "text-[#7e8691]" : "text-[#94A3B8]"
           }`}
         >
           <IconChevronLeft />
@@ -1368,7 +1368,7 @@ export default function App({
                 className="flex items-center gap-1.5"
                 style={{
                   color: darkMode
-                    ? "#475569"
+                    ? "#9aa0aa"
                     : "#64748B",
                   fontSize: "0.78rem",
                 }}
@@ -1386,7 +1386,7 @@ export default function App({
                 fontSize: "0.78rem",
               }}
                 className={`flex items-center gap-1.5  ${darkMode
-                  ? "text-gray-600 hover:text-gray-500"
+                  ? "text-[#9aa0aa] hover:text-gray-300"
                   : "text-[#475569]"
                 }`}
               >
@@ -1403,7 +1403,7 @@ export default function App({
                 className="flex items-center gap-1.5"
                 style={{
                   color: darkMode
-                    ? "#475569"
+                    ? "#9aa0aa"
                     : "#64748B",
                   fontSize: "0.78rem",
                 }}
@@ -1488,8 +1488,7 @@ export default function App({
         <div
           className="max-w-4xl mx-auto"
           style={{
-            fontSize:
-              "clamp(0.92rem,1.8vw,1.02rem)",
+            fontSize: "16px",
             lineHeight: 1.95,
             color: darkMode
               ? "#94A3B8"
@@ -1666,16 +1665,17 @@ export default function App({
 
         {/* Description */}
         <p
-          className="mb-7 mx-auto"
-          style={{
-            color: darkMode
-              ? "#CBD5E1"
-              : "#475569",
 
-            fontSize: "0.87rem",
-            lineHeight: 1.85,
-            maxWidth: 440,
-          }}
+
+                        className="mb-7 mx-auto"
+              style={{
+                color: darkMode
+              ? "#9aa0aa"
+              : "#475569",
+                fontSize: "0.88rem",
+                lineHeight: 1.85,
+                maxWidth: 420,
+              }}
         >
           هر ساعت، ردپاها محو‌تر می‌شوند.
           درخواست بررسی اولیه کاملاً رایگان است.
@@ -1742,8 +1742,8 @@ export default function App({
               <div className="flex flex-wrap items-center gap-2">
                 <span
                   style={{
-                    color: darkMode ? "#334155" : "#64748B",
-                    fontSize: "0.75rem",
+                    color: darkMode ? "#9aa0aa" : "#64748B",
+                    fontSize: "0.8rem",
                     marginLeft: 4,
                   }}
                 >
@@ -1753,7 +1753,7 @@ export default function App({
                 {post.tags.map((tag) => (
                   <p
                     key={tag}
-                    className="px-3 py-1 rounded-lg text-xs font-medium"
+                    className="px-3 py-1 rounded-lg font-medium"
                     style={{
                       background: darkMode
                         ? "rgba(0,229,255,0.05)"
@@ -1763,6 +1763,7 @@ export default function App({
                         : "1px solid rgba(26, 103, 212, 0.43)",
                       color: darkMode ? "#00E5FF" : "#1565C0",
                       fontFamily: "monospace",
+                      fontSize: "0.8rem",
                     }}
                   >
                     {tag}
@@ -1775,8 +1776,8 @@ export default function App({
             <div className="flex items-center gap-3">
               <span
                 style={{
-                  color: darkMode ? "#334155" : "#64748B",
-                  fontSize: "0.75rem",
+                  color: darkMode ? "#9aa0aa" : "#64748B",
+                  fontSize: "0.8rem",
                 }}
               >
                 اشتراک‌گذاری:
@@ -1788,7 +1789,7 @@ export default function App({
                 title="تلگرام"
                 className={`flex items-center justify-center w-[38px] h-[38px] rounded-[10px] transition-all duration-[180ms] ${
                   darkMode
-                    ? "bg-white/[0.04] border border-white/[0.08] text-[#475569] hover:bg-[rgba(0,229,255,0.1)] hover:border-[rgba(0,229,255,0.4)] hover:text-[#00E5FF] hover:shadow-[0_0_14px_rgba(0,229,255,0.18)]"
+                    ? "bg-white/[0.04] border border-white/[0.09] text-[#475569] hover:bg-[rgba(0,229,255,0.1)] hover:border-[rgba(0,229,255,0.4)] hover:text-[#00E5FF] hover:shadow-[0_0_14px_rgba(0,229,255,0.18)]"
                     : "bg-[rgba(30,58,138,0.03)] border border-[rgba(30,58,138,0.12)] text-[#64748B] hover:bg-[rgba(29,78,216,0.08)] hover:border-[rgba(29,78,216,0.35)] hover:text-[#1D4ED8] hover:shadow-[0_0_14px_rgba(29,78,216,0.12)]"
                 }`}
               >
@@ -1801,7 +1802,7 @@ export default function App({
                 title="کپی لینک"
                 className={`flex items-center justify-center w-[38px] h-[38px] rounded-[10px] transition-all duration-[180ms] ${
                   darkMode
-                    ? "bg-white/[0.04] border border-white/[0.08] text-[#475569] hover:bg-[rgba(0,229,255,0.1)] hover:border-[rgba(0,229,255,0.4)] hover:text-[#00E5FF] hover:shadow-[0_0_14px_rgba(0,229,255,0.18)]"
+                    ? "bg-white/[0.04] border border-white/[0.09] text-[#475569] hover:bg-[rgba(0,229,255,0.1)] hover:border-[rgba(0,229,255,0.4)] hover:text-[#00E5FF] hover:shadow-[0_0_14px_rgba(0,229,255,0.18)]"
                     : "bg-[rgba(30,58,138,0.03)] border border-[rgba(30,58,138,0.12)] text-[#64748B] hover:bg-[rgba(29,78,216,0.08)] hover:border-[rgba(29,78,216,0.35)] hover:text-[#1D4ED8] hover:shadow-[0_0_14px_rgba(29,78,216,0.12)]"
                 }`}
               >
@@ -1881,13 +1882,12 @@ export default function App({
       <Link href={`/blogs/${related.slug || related._id}`}>
 
       <article
-        key={related._id}
-className={`group flex flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
-                         darkMode
-                           ? "border border-cyan-500/30 hover:border-cyan-600 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-900/15"
-                           : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"
-                       }`}
-          style={
+           className={`group flex h-full flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
+             darkMode
+                 ? "border border-cyan-500/30 hover:border-cyan-600 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-900/15"
+                 : "bg-white border border-[#0B1C3E]/10 hover:border-[#1565C0]/25 hover:shadow-md"
+           }`}
+               style={
                   darkMode
                     ? {backdropFilter: "blur(10px)"}
                     : {
@@ -1902,9 +1902,7 @@ className={`group flex flex-col rounded-2xl overflow-hidden transition-all durat
                       }
                 }
 
-
-
-                                onMouseEnter={(e) => {
+                onMouseEnter={(e) => {
                   if (!darkMode) {
                     e.currentTarget.style.borderColor =
                       "#1565C0"
@@ -2029,13 +2027,13 @@ className={`group flex flex-col rounded-2xl overflow-hidden transition-all durat
                 </div>
 
                 <div
-                  className={`flex flex-nowrap items-center gap-x-2 text-[10px] whitespace-nowrap ${
-                    darkMode ? "text-[#71869A]" : "text-[#64748B]"
+                  className={`flex flex-nowrap items-center gap-x-1.5 text-[10px] whitespace-nowrap mt-1 ${
+                    darkMode ? "text-[#9aa0aa]" : "text-[#64748B]"
                   }`}
                 >
-                  <span className="text-[11px]">{formatPersianDate(related.createdAt || related.updatedAt)}</span>
+                  <span style={{fontSize: "0.7rem",}}>{formatPersianDate(related.createdAt || related.updatedAt)}</span>
                   {/* <span>·</span> */}
-                  <span className="inline-flex items-center gap-1 text-[11px]">
+                  <span className="inline-flex items-center gap-1" style={{fontSize: "0.7rem",}}>
                     <Clock className="w-2.5 h-2.5" />
                     {related.readingTime || 0} دقیقه
                   </span>
@@ -2048,6 +2046,7 @@ className={`group flex flex-col rounded-2xl overflow-hidden transition-all durat
             className={`flex items-center gap-1 text-xs font-semibold whitespace-nowrap group-hover:gap-1.5 transition-all flex-shrink-0 ${
               darkMode ? "text-[#00E5FF]" : "text-[#1565C0]"
             }`}
+            style={{fontSize: "0.7rem",}}
             >
               ادامه مطلب
               <ChevronLeft className="w-3 h-3" />

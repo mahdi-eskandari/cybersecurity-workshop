@@ -499,12 +499,12 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 </h1>
 
           <p
+            className="mx-auto mb-8"
             style={{
-              color: darkMode ? "#64748B" : "#475569",
-              fontSize: "clamp(0.88rem, 1.8vw, 1.05rem)",
-              lineHeight: 1.85,
-              maxWidth: 560,
-              margin: "0 auto",
+              color: darkMode ? "#9aa0aa" : "#475569",
+              fontSize: "clamp(0.92rem,2vw,1.0rem)",
+              lineHeight: 1.9,
+              maxWidth: 580,
             }}
           >
             از ردیابی پیچیده‌ترین جریان‌های مالی تا مشاوره‌های دقیق فنی برای
@@ -823,7 +823,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
             <p
               className="mt-2 text-sm"
               style={{
-                color: darkMode ? "#576376" : "#334155",
+                color: darkMode ? "#8f959e" : "#334155",
                 maxWidth: 480,
               }}
             >
@@ -969,7 +969,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 {/* Description */}
 <p
   style={{
-    color: darkMode ? "#576376" : "#334155",
+    color: darkMode ? "#7f858d" : "#334155",
     fontSize:"0.86rem",
     lineHeight:1.95,
     flexGrow: 1,
@@ -1032,7 +1032,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                         color: darkMode
                           ? isHovered
                             ? "#00E5FF"
-                            : "#576376"
+                            : "#7f858d"
                           : isHovered
                             ? "#1565C0"
                             : "#000000",

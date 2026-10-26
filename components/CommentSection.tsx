@@ -449,7 +449,7 @@ setErrors({});
   </div>
 )}
 
-        <p className="text-xs mb-6 relative z-10" style={{ color: darkMode ? "#94A3B8" : "#64748B" }}>
+        <p className=" mb-6 relative z-10" style={{ color: darkMode ? "#94A3B8" : "#64748B",   fontSize: "0.8rem", }}>
           نظر شما پس از بررسی و تایید تیم مدیریت در صفحه نمایش داده خواهد شد.
         </p>
 
@@ -458,7 +458,11 @@ setErrors({});
           darkMode
             ? "border-[#00E5FF]/[0.08] bg-[#00E5FF]/[0.03] text-cyan-300/80"
             : "border-[#1565C0]/40 bg-[#1565C0]/[0.055] text-[#1565C0]"
-        }`}>
+        }`}
+        style={{
+            fontSize: "0.78rem",
+        }}
+        >
           <IconWarning />
           <span>دیدگاه شما پس از بررسی و تایید ادمین در سایت نمایش داده خواهد شد.</span>
         </div>
@@ -643,10 +647,10 @@ onMouseLeave={(e) => {
           }`}
         >
           <IconChat darkMode={darkMode} />
-          <p className="text-xs font-semibold" style={{ color: darkMode ? "#94A3B8" : "#64748B" }}>
+          <p className=" font-semibold" style={{ color: darkMode ? "#9aa0aa" : "#64748B", fontSize: "0.9rem", }}>
             هنوز دیدگاهی برای این مطلب ثبت نشده است.
           </p>
-          <p className="text-[11px]" style={{ color: darkMode ? "#64748B" : "#94A3B8" }}>
+          <p  style={{ color: darkMode ? "#8e96a1" : "#94A3B8", fontSize: "0.8rem", }}>
             اولین نفری باشید که نظر خود را می‌نویسد.
           </p>
         </div>

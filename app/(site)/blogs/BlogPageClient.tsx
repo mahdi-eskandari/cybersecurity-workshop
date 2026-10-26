@@ -1046,9 +1046,13 @@ const [filterH, setFilterH] = useState(0);
 </h1>
 
             <p
-              className={`text-base mb-10 ${
-                darkMode ? "text-[#737c88]" : "text-[#475569]"
-              }`}
+            className="mx-auto mb-8"
+            style={{
+              color: darkMode ? "#9aa0aa" : "#475569",
+              fontSize: "clamp(0.92rem,2vw,1.0rem)",
+              lineHeight: 1.9,
+              maxWidth: 580,
+            }}
             >
               گزارش‌های جرم‌شناسی، هشدارهای امنیتی و اخبار حقوقی توسط تیم متخصصان پاراهور
             </p>
@@ -1359,7 +1363,7 @@ const [filterH, setFilterH] = useState(0);
               />
 
                 <span
-                  className={`text-xs font-bold uppercase tracking-widest ${
+                  className={`text-sm font-bold uppercase tracking-widest ${
                     darkMode
                       ? "text-[#8FA5B8]"
                       : "text-[#475569]"
@@ -1531,11 +1535,12 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
                           </div>
 
                           <div
-                            className={`flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[12px] ${
-                              darkMode ? "text-[#71869A]" : "text-[#64748B]"
+                            className={`flex flex-wrap items-center gap-x-2 gap-y-0.5 ${
+                              darkMode ? "text-[#9aa0aa]" : "text-[#64748B]"
                             }`}
+                            style={{fontSize: "0.78rem", }}
                           >
-                            <span>{featuredArticle.date}</span>
+                            <span >{featuredArticle.date}</span>
                             <span>·</span>
                             <span className="inline-flex items-center gap-1">
                               <Clock className="w-3 h-3" />
@@ -1578,7 +1583,7 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
             <div
               className={`flex items-center gap-2 text-sm ${
                 darkMode
-                  ? "text-[#8FA5B8]"
+                  ? "text-[#9aa0aa]"
                   : "text-[#475569]"
               }`}
             >
@@ -1616,7 +1621,7 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
             <span
               className={`text-xs ${
                 darkMode
-                  ? "text-[#71869A]"
+                  ? "text-[#9aa0aa]"
                   : "text-[#64748B]"
               }`}
             >
@@ -2090,13 +2095,13 @@ function ArticleCard({
               </div>
 
               <div
-                className={`flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] ${
-                  darkMode ? "text-[#71869A]" : "text-[#64748B]"
+                className={`flex flex-wrap items-center gap-x-2 gap-y-0.5 ${
+                  darkMode ? "text-[#9aa0aa]" : "text-[#64748B]"
                 }`}
               >
-                <span className="text-[11px]">{article.date}</span>
+                <span style={{fontSize: "0.78rem",}}>{article.date}</span>
                 <span>·</span>
-                <span className="inline-flex items-center gap-1 text-[11px]">
+                <span className="inline-flex items-center gap-1" style={{fontSize: "0.78rem", }}>
                   <Clock className="w-2.5 h-2.5" />
                   {article.readTime}
                 </span>
@@ -2105,9 +2110,11 @@ function ArticleCard({
           </div>
 
           <span
-            className={`flex items-center gap-1 text-xs font-semibold whitespace-nowrap group-hover:gap-1.5 transition-all flex-shrink-0 ${
+            className={`flex items-center gap-1 font-semibold whitespace-nowrap group-hover:gap-1.5 transition-all flex-shrink-0 ${
               darkMode ? "text-[#00E5FF]" : "text-[#1565C0]"
             }`}
+
+            style={{fontSize: "0.78rem",}}
           >
             ادامه مطلب
             <ChevronLeft className="w-3 h-3" />

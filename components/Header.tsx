@@ -853,10 +853,10 @@ const IconSun = () => (
 
 const NAV_ITEMS = [
   { pageKey: "home", label: "پاراهور", href: "/"  },
-  { pageKey: "authors", label: "راهبران"  },
   { pageKey: "services", label: "خدمات ما" },
   { pageKey: "blogs", label: "وبلاگ" },
   { pageKey: "about", label: "درباره ما" },
+  { pageKey: "authors", label: "راهبران"  },
   { pageKey: "contact", label: "تماس با ما" },
 ] as const;
 

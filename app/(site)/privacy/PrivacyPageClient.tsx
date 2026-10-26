@@ -787,12 +787,13 @@ const lightColors = {
 </div>
 
             <p
-              className={`mb-5 max-w-2xl privacy-header-description ${isDark ? "" : "text-[#475569]"}`}
-              style={{
-                fontSize: "clamp(0.9rem,1.8vw,1rem)",
-                lineHeight: 1.85,
-                ...(isDark ? { color: "#64748B" } : {})
-              }}
+              className={`mb-8 max-w-2xl privacy-header-description`}
+            style={{
+              color: darkMode ? "#9aa0aa" : "#475569",
+              fontSize: "clamp(0.92rem,2vw,1.0rem)",
+              lineHeight: 1.9,
+              maxWidth: 580,
+            }}
             >
               حفاظت از هویت و داده‌های حساس شما، خط قرمز تیم عملیاتی پاراهور است.
             </p>
@@ -818,7 +819,8 @@ const lightColors = {
                   style={{
                     fontFamily: "monospace",
                     fontSize: "0.75rem",
-                    ...(isDark ? { color: "#576376" } : {})
+                    ...(isDark ? { color: "#86909f" } : {}),
+                    fontWeight: "550"
                   }}
                 >
                   آخرین به‌روزرسانی:
@@ -830,7 +832,8 @@ const lightColors = {
                     fontFamily: "monospace",
                     fontSize: "0.75rem",
                     fontWeight: 600,
-                    ...(isDark ? { color: "#475569" } : {})
+                    ...(isDark ? { color: "#86909f" } : {}),
+                    
                   }}
                 >
                   شهریور ۱۴۰۵
@@ -858,7 +861,8 @@ const lightColors = {
                   style={{
                     fontFamily: "monospace",
                     fontSize: "0.75rem",
-                    color: "#22C55E"
+                    color: "#22C55E",
+                    fontWeight: "550"
                   }}
                 >
                   نسخه ۲.۱ — معتبر
@@ -1114,8 +1118,9 @@ const lightColors = {
                         className={`privacy-progress-label ${isDark ? "" : "text-[#475569]"}`}
                         style={{
                           fontFamily: "monospace",
-                          fontSize: "0.64rem",
-                          ...(isDark ? { color: "#46556d" } : {})
+                          fontSize: "0.74rem",
+                          ...(isDark ? { color: "#46556d" } : {}),
+                          fontWeight: "550"
                         }}
                       >
                         پیشرفت مطالعه
@@ -1125,8 +1130,9 @@ const lightColors = {
                         className={`privacy-progress-percent ${isDark ? "" : "text-[#1565C0] font-bold"}`}
                         style={{
                           fontFamily: "monospace",
-                          fontSize: "0.64rem",
-                          ...(isDark ? { color: "rgba(0,229,255,0.35)" } : {})
+                          fontSize: "0.72rem",
+                          ...(isDark ? { color: "rgba(0,229,255,0.35)" } : {}),
+                          fontWeight: "550"
                         }}
                       >
                         {Math.round(
@@ -1616,9 +1622,10 @@ const lightColors = {
                       className={isDark ? "" : "text-[#1565C0]"}
                       style={{
                         fontFamily: "monospace",
-                        fontSize: "0.7rem",
-                        letterSpacing: "0.12em",
-                        ...(isDark ? { color: "rgba(0,229,255,0.4)" } : {})
+                        fontSize: "0.78rem",
+                        letterSpacing: "0.1em",
+                        ...(isDark ? { color: "rgba(0,229,255,0.4)" } : {}),
+                        fontWeight: "550"
                       }}
                     >
                       خلاصه سیاست اشتراک‌ گذاری
@@ -1673,7 +1680,7 @@ const lightColors = {
                           className={`privacy-table-entity ${isDark ? "" : "text-[#334155]"}`}
                           style={{
                             fontSize: "0.82rem",
-                            ...(isDark ? { color: "#475569" } : {})
+                            ...(isDark ? { color: "#838891" } : {})
                           }}
                         >
                           {entity}
@@ -1866,7 +1873,7 @@ const lightColors = {
                   style={{
                     fontSize: "0.85rem",
                     lineHeight: 1.85,
-                    ...(isDark ? { color: "#475569" } : {})
+                    ...(isDark ? { color: "#838891" } : {})
                   }}
                 >
                   در صورت داشتن هرگونه سوال در خصوص امنیت داده‌های خود، با دپارتمان حقوقی پاراهور در تماس باشید.

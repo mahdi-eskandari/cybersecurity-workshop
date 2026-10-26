@@ -1165,6 +1165,8 @@
 
 
 
+
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -1190,6 +1192,36 @@ const IconClose = () => (
   >
     <line x1="18" y1="6" x2="6" y2="18" />
     <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
+const IconChevronDown = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="6 9 12 15 18 9" />
+  </svg>
+);
+
+const IconCheck = () => (
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.6"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="20 6 9 17 4 12" />
   </svg>
 );
 
@@ -1231,7 +1263,7 @@ const IconShieldCheck = ({ darkMode }: { darkMode: boolean }) => (
     height="14"
     viewBox="0 0 24 24"
     fill="none"
-    stroke={darkMode ? "#00E5FF" : "#2563EB"}
+    stroke="currentColor"
     strokeWidth="1.8"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -1493,6 +1525,80 @@ const clearForceIncidentType = () => {
 };
 
 /* ────────────────────────────────
+   DESCRIPTION PLACEHOLDER (per service page)
+──────────────────────────────── */
+
+const DEFAULT_DESC_PLACEHOLDER =
+  "مثال: کیف پول تراست‌ولت من هک شده و تترها به سرقت رفته...";
+
+const CONSULTING_DESC_PLACEHOLDER =
+  "هزینه مشاوره بعد از بررسی اولیه توسط کارشناسان تعیین خواهد شد - مشاوره حوادث سایبری که به پاراهور ارجاع میشود رایگان میباشد";
+
+/* پلیس‌هولدر شرح مشکل بر اساس «نوع خدمت» انتخاب‌شده (صفحه‌های غیر از صفحه‌ی خدمت) */
+const PH_CRYPTO = "مثال: تتر من به یه کیف پول ناشناس منتقل شده...";
+const PH_IDENTITY = "مثال: یه حساب ناشناس منو تهدید می‌کنه...";
+const PH_PENTEST = "مثال: بعد از یه حمله می‌خوام امنیت سیستمم بررسی بشه...";
+const PH_FORENSIC = "مثال: سیستمم آلوده شده و می‌خوام علتش بررسی بشه...";
+const PH_RANSOM = "مثال: فایل‌های سازمان ما قفل شده و باج خواستن...";
+const PH_THREAT = "مثال: اطلاعات شرکت ما ممکنه تو دارک‌وب باشه...";
+const PH_OTHER =
+  "مثال: مشکلم تو هیچ‌کدوم از دسته‌های بالا نمی‌گنجه، ماجرا رو کوتاه توضیح می‌دم...";
+
+const INCIDENT_DESC_PLACEHOLDERS: Record<string, string> = {
+  "مشاوره": CONSULTING_DESC_PLACEHOLDER,
+  "ردیابی رمزارز": PH_CRYPTO,
+  "کشف هویت": PH_IDENTITY,
+  "تست نفوذ": PH_PENTEST,
+  "کالبدشکافی دیجیتال": PH_FORENSIC,
+  "مقابله با باج‌افزار": PH_RANSOM,
+  "هوش تهدیدات": PH_THREAT,
+  "سایر": PH_OTHER,
+};
+
+/*
+ * پلیس‌هولدر مخصوص هر خدمت. تطبیق بر اساس کلمات کلیدی تو اسلاگ یا عنوان خدمت
+ * انجام می‌شه. ترتیب مهمه: اولین تطبیق برنده‌ست.
+ */
+const SERVICE_DESC_PLACEHOLDERS: { match: RegExp; text: string }[] = [
+  {
+    match: /consult|مشاوره/i,
+    text: CONSULTING_DESC_PLACEHOLDER,
+  },
+  {
+    match: /crypto|blockchain|رمز\s?ارز|بلاک\s?چین|ردیابی/i,
+    text: PH_CRYPTO,
+  },
+  {
+    match: /identity|هویت/i,
+    text: PH_IDENTITY,
+  },
+  {
+    match: /pentest|penetration|نفوذ/i,
+    text: PH_PENTEST,
+  },
+  {
+    match: /forensic|کالبد|فارنزیک/i,
+    text: PH_FORENSIC,
+  },
+  {
+    match: /ransom|باج/i,
+    text: PH_RANSOM,
+  },
+  {
+    match: /threat|intelligence|dark\s?web|دارک|تهدید|پایش/i,
+    text: PH_THREAT,
+  },
+];
+
+const getServiceDescPlaceholder = (slug: string, title: string) => {
+  const haystack = `${slug} ${title}`;
+  const found = SERVICE_DESC_PLACEHOLDERS.find((item) =>
+    item.match.test(haystack)
+  );
+  return found ? found.text : DEFAULT_DESC_PLACEHOLDER;
+};
+
+/* ────────────────────────────────
    MODAL
 ──────────────────────────────── */
 
@@ -1533,6 +1639,34 @@ export const EmergencyModal = ({
   const [otpWait, setOtpWait] = useState(60);
   const [pendingData, setPendingData] = useState<CrisisReportFormValues | null>(null);
 
+  // دراپ‌داون انتخاب نوع خدمت
+  const [selectOpen, setSelectOpen] = useState(false);
+  const [hoverOpt, setHoverOpt] = useState("");
+  const selectRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!selectOpen) return;
+
+    const onDown = (e: MouseEvent) => {
+      if (selectRef.current && !selectRef.current.contains(e.target as Node)) {
+        setSelectOpen(false);
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        setSelectOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [selectOpen]);
+
   const {
     register,
     handleSubmit,
@@ -1551,6 +1685,14 @@ export const EmergencyModal = ({
   const selected = watch("incidentType");
   const desc = watch("description");
   const contact = watch("contact");
+
+  // پلیس‌هولدر شرح مشکل: تو صفحه‌ی خدمت مخصوص همون خدمت؛ تو بقیه‌ی صفحه‌ها بر اساس نوع خدمت انتخاب‌شده
+  const descPlaceholder = hideIncidentType
+    ? getServiceDescPlaceholder(serviceSlug, serviceLabel || "")
+    : INCIDENT_DESC_PLACEHOLDERS[(selected || "").trim()] ||
+      DEFAULT_DESC_PLACEHOLDER;
+
+  const selectedChip = chips.find((c) => c.label === selected);
 
   const primary = darkMode ? "#00E5FF" : "#2563EB";
 
@@ -1892,97 +2034,150 @@ const onSubmit = async (data: CrisisReportFormValues) => {
                     نوع خدمت را مشخص کنید
                   </label>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {chips.map(({ id, label, icon }) => {
-                      const isActive = selected === label;
+                  <div ref={selectRef} className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setSelectOpen((o) => !o)}
+                      aria-haspopup="listbox"
+                      aria-expanded={selectOpen}
+                      className="w-full flex items-center justify-between gap-3 px-4 py-3.5 rounded-xl text-sm font-medium outline-none transition-all"
+                      style={{
+                        background: darkMode ? "#060B19" : "#FFFFFF",
+                        border: selectOpen
+                          ? darkMode
+                            ? "1px solid rgba(0,229,255,0.45)"
+                            : "1px solid rgba(37,99,235,0.45)"
+                          : selectedChip
+                            ? darkMode
+                              ? "1px solid rgba(0, 229, 255, 0.19)"
+                              : "1px solid rgba(37,99,235,0.3)"
+                            : darkMode
+                              ? "1px solid rgba(0, 229, 255, 0.19)"
+                              : "1px solid rgba(37, 100, 235, 0.27)",
+                        color: selectedChip
+                          ? darkMode
+                            ? "#E2E8F0"
+                            : "#1E293B"
+                          : darkMode
+                            ? "#64748B"
+                            : "#94A3B8",
+                        boxShadow: selectOpen
+                          ? darkMode
+                            ? "0 0 0 3px rgba(0,229,255,0.06), inset 0 0 20px rgba(0,229,255,0.02)"
+                            : "0 0 0 3px rgba(37,99,235,0.06), inset 0 0 20px rgba(37,99,235,0.02)"
+                          : "none",
+                        fontFamily:
+                          "var(--font-vazirmatn), IRANSansX, Tahoma, Arial, sans-serif",
+                      }}
+                    >
+                      <span className="flex min-w-0 items-center gap-2.5">
+                        <span className="truncate">
+                          {selectedChip
+                            ? selectedChip.label.trim()
+                            : "یک خدمت را انتخاب کنید"}
+                        </span>
+                      </span>
 
-                      return (
-                        <button
-                          key={id}
-                          type="button"
-                          onClick={() =>
-                            setValue(
-                              "incidentType",
-                              isActive ? "" : label,
-                              {
-                                shouldValidate: true,
-                                shouldDirty: true,
-                                shouldTouch: true,
-                              }
-                            )
-                          }
-                          className={`w-full min-h-[48px] flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl font-medium text-[11px] leading-5 text-center transition-all ${
-                            id === "consulting" || id === "other" ? "sm:col-span-2" : ""
-                          }`}
-                          style={{
-                            background: isActive
-                              ? darkMode
-                                ? "rgba(0,229,255,0.1)"
-                                : "rgba(37,99,235,0.08)"
-                              : darkMode
-                                ? "rgba(105, 194, 223, 0.05)"
-                                : "#f3f5f8",
+                      <span
+                        className="inline-flex shrink-0"
+                        style={{
+                          color: primary,
+                          transform: selectOpen ? "rotate(180deg)" : "none",
+                          transition: "transform 0.25s ease",
+                        }}
+                      >
+                        <IconChevronDown />
+                      </span>
+                    </button>
 
-                            border: isActive
-                              ? darkMode
-                                ? "1px solid rgba(0,229,255,0.45)"
-                                : "1px solid rgba(37,99,235,0.38)"
-                              : darkMode
-                                ? "1px solid rgba(72, 146, 159, 0.35)"
-                                : "1px solid rgba(165, 170, 182, 0.43)",
+                    {selectOpen && (
+                      <div
+                        role="listbox"
+                            className={`absolute left-0 right-0 z-20 mt-2 overflow-y-auto rounded-xl p-1.5 ${
+                          darkMode ? "crisis-select-dark" : ""
+                        }`}
+                        style={{
+                                                    maxHeight: 290,
+                          background: darkMode
+                            ? "rgba(8, 14, 34, 0.98)"
+                            : "rgba(255, 255, 255, 0.99)",
+                          border: darkMode
+                            ? "1px solid rgba(0,229,255,0.22)"
+                            : "1px solid rgba(37,99,235,0.2)",
+                          boxShadow: darkMode
+                            ? "0 18px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,229,255,0.12), 0 10px 40px rgba(0,229,255,0.14), 0 0 60px rgba(0,229,255,0.07)"
+                            : "0 18px 40px rgba(37,99,235,0.14), 0 6px 16px rgba(15,23,42,0.08)",
+                          backdropFilter: "blur(16px)",
+                          animation: "crisisSelectIn 0.16s ease-out",
+                        }}
+                      >
+                                             <style>{`
+  @keyframes crisisSelectIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+  .crisis-select-dark{scrollbar-width:thin;scrollbar-color:#334155 transparent}
+  .crisis-select-dark::-webkit-scrollbar{width:8px}
+  .crisis-select-dark::-webkit-scrollbar-track{background:transparent}
+  .crisis-select-dark::-webkit-scrollbar-thumb{background:#334155;border-radius:8px}
+  .crisis-select-dark::-webkit-scrollbar-thumb:hover{background:#475569}
+`}</style>
 
-                            color: isActive
-                              ? primary
-                              : darkMode
-                                ? "#475569"
-                                : "#475569",
+                        {chips.map(({ id, label, icon }) => {
+                          const isActive = selected === label;
+                          const isHover = hoverOpt === id;
 
-                            boxShadow: isActive
-                              ? darkMode
-                                ? "0 0 20px rgba(0,229,255,0.08), inset 0 0 20px rgba(0,229,255,0.04)"
-                                : "0 4px 16px rgba(37,99,235,0.08), inset 0 0 16px rgba(37,99,235,0.025)"
-                              : "none",
-
-                            transform: isActive
-                              ? "translateY(-1px)"
-                              : "none",
-
-                            fontFamily:
-                              "var(--font-vazirmatn), IRANSansX, Tahoma, Arial, sans-serif",
-                          }}
-                        >
-
-
-                          <span
-                            style={{
-                              minWidth: 0,
-                              flex: 1,
-                              textAlign: "center",
-                              whiteSpace: "normal",
-                              overflowWrap: "anywhere",
-                            }}
-                          >
-                            {label}
-                          </span>
-
-                          {isActive && (
-                            <span
-                              style={{
-                                width: 6,
-                                height: 6,
-                                borderRadius: "50%",
-                                background: primary,
-                                display: "inline-block",
-                                boxShadow: darkMode
-                                  ? "0 0 6px rgba(0,229,255,0.8)"
-                                  : "0 0 6px rgba(37,99,235,0.35)",
-                                marginRight: 2,
+                          return (
+                            <button
+                              key={id}
+                              type="button"
+                              role="option"
+                              aria-selected={isActive}
+                              onClick={() => {
+                                setValue("incidentType", label, {
+                                  shouldValidate: true,
+                                  shouldDirty: true,
+                                  shouldTouch: true,
+                                });
+                                setSelectOpen(false);
                               }}
-                            />
-                          )}
-                        </button>
-                      );
-                    })}
+                              onMouseEnter={() => setHoverOpt(id)}
+                              onMouseLeave={() => setHoverOpt("")}
+                              className="w-full flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium transition-colors"
+                              style={{
+                                background: isActive
+                                  ? darkMode
+                                    ? "rgba(0,229,255,0.1)"
+                                    : "rgba(37,99,235,0.08)"
+                                  : isHover
+                                    ? darkMode
+                                      ? "rgba(0,229,255,0.05)"
+                                      : "rgba(37,99,235,0.04)"
+                                    : "transparent",
+                                color: isActive
+                                  ? primary
+                                  : darkMode
+                                    ? "#CBD5E1"
+                                    : "#334155",
+                                fontFamily:
+                                  "var(--font-vazirmatn), IRANSansX, Tahoma, Arial, sans-serif",
+                              }}
+                            >
+                              <span className="flex min-w-0 items-center gap-2.5">
+                                
+                                <span className="truncate">{label.trim()}</span>
+                              </span>
+
+                              {isActive && (
+                                <span
+                                  className="inline-flex shrink-0"
+                                  style={{ color: primary }}
+                                >
+                                  <IconCheck />
+                                </span>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
 
                   <HelperText
@@ -2045,7 +2240,7 @@ const onSubmit = async (data: CrisisReportFormValues) => {
                   })}
                   onFocus={() => setFocusDesc(true)}
                   onBlur={() => setFocusDesc(false)}
-                  placeholder="مثال: کیف پول تراست‌ولت من هک شده و تترها به سرقت رفته..."
+                  placeholder={descPlaceholder}
                   className="w-full px-4 pt-3.5 pb-3 rounded-xl text-[13px] outline-none resize-none transition-all"
                   style={{
                     background: darkMode

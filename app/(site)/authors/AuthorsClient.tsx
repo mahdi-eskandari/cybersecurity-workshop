@@ -687,17 +687,18 @@ const ArticleCard = ({
                   darkMode ? "text-[#71869A]" : "text-[#64748B]"
                 }`}
               >
-                {dateText && <span className="text-[11px]">{dateText}</span>}
+                {dateText && <span style={{fontSize: "0.75rem",}}>{dateText}</span>}
                 {dateText && <span>-</span>}
-                <span className="text-[11px]">{readTime}</span>
+                <span style={{fontSize: "0.75rem",}}>{readTime}</span>
               </div>
             </div>
           </div>
 
           <span
-            className={`flex items-center gap-1 text-xs font-semibold whitespace-nowrap group-hover:gap-1.5 transition-all flex-shrink-0 ${
+            className={`flex items-center gap-1  font-semibold whitespace-nowrap group-hover:gap-1.5 transition-all flex-shrink-0 ${
               darkMode ? "text-[#00E5FF]" : "text-[#1565C0]"
             }`}
+            style={{fontSize: "0.78rem",}}
           >
             بررسی گزارش
             <svg
@@ -1076,8 +1077,13 @@ const SocialBtn = ({
 </h1>
 
             <p
-              className="text-[0.8rem] mt-[10px]"
-              style={{ color: darkMode ? "#475569" : "#64748B" }}
+            className="mx-auto mb-8"
+            style={{
+              color: darkMode ? "#9aa0aa" : "#475569",
+              fontSize: "clamp(0.92rem,2vw,1.0rem)",
+              lineHeight: 1.9,
+              maxWidth: 580,
+            }}
             >
               تیم متخصص پاراهور در تحقیقات سایبری، فارنزیک دیجیتال و پیگیری
               حقوقی
@@ -1195,7 +1201,7 @@ const SocialBtn = ({
 
                 <div
                   className="text-[0.72rem] mt-1"
-                  style={{ color: darkMode ? "#64748B" : "#64748B" }}
+                  style={{ color: darkMode ? "#9aa0aa" : "#64748B" }}
                 >
                   {author.subtitle}
                 </div>
@@ -1227,8 +1233,8 @@ const SocialBtn = ({
             </div>
 
             <p
-              className="text-[0.79rem] leading-[2.05] m-0"
-              style={{ color: darkMode ? "#64748B" : "#475569" }}
+              className="text-[0.82rem] leading-[2.05] m-0"
+              style={{ color: darkMode ? "#9aa0aa" : "#475569" }}
             >
               {author.bio.join(" ")}
             </p>
@@ -1294,7 +1300,9 @@ color: accent
                       {stat.val}
                     </div>
 
-                    <div className="text-[0.64rem] leading-[1.5] text-[#64748B]">
+                    <div className="text-[0.75rem] leading-[1.5] text-[#9aa0aa]"
+                    style={{color: darkMode ? "#94A3B8" : "#475569",}}
+                    >
                       {stat.label}
                     </div>
                   </div>
@@ -1376,7 +1384,7 @@ color: accent
 
                   >
                     <span
-                      className="w-[27px] h-[27px] flex-shrink-0 rounded-[7px] flex items-center justify-center"
+                      className="w-[30px] h-[30px] flex-shrink-0 rounded-[7px] flex items-center justify-center"
                       style={{
                         background: darkMode
                           ? "rgba(167,139,250,0.08)"
@@ -1388,7 +1396,7 @@ color: accent
                     </span>
 
                     <span
-                      className="text-[0.66rem] leading-[1.6]"
+                      className="text-[0.75rem] leading-[1.6]"
                       style={{ color: darkMode ? "#94A3B8" : "#475569" }}
                     >
                       {cert}
@@ -1421,9 +1429,9 @@ color: accent
                   <span
                     key={tag}
                     title={tag}
-                    className="min-w-0 flex items-center justify-center min-h-[30px] px-[7px] py-[5px] rounded-lg text-[0.6rem] leading-[1.3] text-center whitespace-nowrap overflow-hidden text-ellipsis cursor-default transition-all duration-[220ms]"
+                    className="min-w-0 flex items-center justify-center min-h-[34px] px-[7px] py-[5px] rounded-lg text-[0.68rem] leading-[1.3] text-center whitespace-nowrap overflow-hidden text-ellipsis cursor-default transition-all duration-[220ms]"
                     style={{
-                      color: "#64748B",
+                     color: darkMode ? "#94A3B8" : "#475569",
                       background: darkMode
                         ? "rgba(167,139,250,0.035)"
                         : "rgba(124,58,237,0.03)",
@@ -1469,8 +1477,8 @@ color: accent
               <div className="flex items-center gap-[7px] flex-wrap">
                 {(() => {
                   const toggleInactiveBorder = darkMode
-                    ? "rgba(255,255,255,0.06)"
-                    : "rgba(30,58,138,0.1)";
+                    ? "rgba(255, 255, 255, 0.17)"
+                    : "rgba(30, 59, 138, 0.23)";
                   const toggleInactiveBackground = darkMode
                     ? "rgba(255,255,255,0.025)"
                     : "rgba(30,58,138,0.02)";
@@ -1491,7 +1499,7 @@ color: accent
                           color: !showAllPosts
                             ? accent
                             : darkMode
-                              ? "#64748B"
+                              ? "#9aa0aa"
                               : "#64748B",
                         }}
                       >
@@ -1513,7 +1521,7 @@ color: accent
                           color: showAllPosts
                             ? accent
                             : darkMode
-                              ? "#64748B"
+                              ? "#9aa0aa"
                               : "#64748B",
                         }}
                       >
@@ -1525,7 +1533,7 @@ color: accent
 
                 <span
                   className="text-[0.65rem] font-mono mr-[3px]"
-                  style={{ color: darkMode ? "#64748B" : "#94A3B8" }}
+                  style={{ color: darkMode ? "#9aa0aa" : "#94A3B8" }}
                 >
                   {authorPosts.length} ARTICLES
                 </span>

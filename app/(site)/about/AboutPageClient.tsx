@@ -449,7 +449,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
 
   const accent = darkMode ? "#00E5FF" : "#1565C0";
   const textMain = darkMode ? "#E2E8F0" : "#0F172A";
-  const textMuted = darkMode ? "#737c88" : "#475569";
+  const textMuted = darkMode ? "#9aa0aa" : "#475569";
   const cardBg = darkMode
     ? "rgba(255,255,255,0.028)"
     : "#ffff";
@@ -633,7 +633,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
 
                 <div
                   style={{
-                    color: darkMode ? "#697483eb" : "#64748B",
+                    color: darkMode ? "#9aa0aa" : "#64748B",
                     fontSize: "0.75rem",
                     marginTop: 3,
                   }}
@@ -951,9 +951,9 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                     <span
                       style={{
                         // fontFamily: "monospace",
-                        fontSize: "0.58rem",
+                        fontSize: "0.6rem",
                         color: darkMode
-                          ? "rgba(0,229,255,0.35)"
+                          ? "rgba(0, 229, 255, 0.51)"
                           : "#1565C0",
                         letterSpacing: "0.14em",
                         marginBottom: 16,
@@ -1030,9 +1030,9 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                     <p
                       style={{
                         // fontFamily: "monospace",
-                        fontSize: "0.65rem",
+                        fontSize: "0.67rem",
                         color: darkMode
-                          ? "rgba(0,229,255,0.35)"
+                          ? "rgba(0, 229, 255, 0.51)"
                           : "#1565C0",
                         letterSpacing: "0.06em",
                       }}
@@ -1267,7 +1267,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
           >
             <span
               style={{
-                color: darkMode ? "#737c88" : "#475569",
+                color: darkMode ? "#e1e3e7" : "#475569",
                 fontWeight: 600,
               }}
             >
@@ -1413,7 +1413,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
             <p
               className="mt-4 text-xs"
               style={{
-                color: darkMode ? "#768094b1" : "#94A3B8",
+                color: darkMode ? "#9aa0aa" : "#595f68",
               }}
             >
               بدون تعهد مالی • کاملاً محرمانه • پاسخ در کمتر

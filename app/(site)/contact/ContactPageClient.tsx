@@ -360,7 +360,7 @@ const errorRetries = useRef(0);
 
 
 <div className="w-full min-h-[65px] [&>div]:!w-full [&_iframe]:!w-full">
-  <Turnstile
+    <Turnstile
     ref={turnstileRef}
     siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
     style={{ width: "100%" }}
@@ -551,7 +551,17 @@ const isDark = darkMode;
   style: { color: darkMode ? "#00E5FF" : "#1565C0" },
 })}
 </h1>
-          <p className={`mx-auto max-w-[560px] text-[clamp(0.9rem,1.8vw,1.05rem)] leading-[1.9] ${isDark ? "text-[#64748B]" : "text-[#475569]"}`}>برای گزارش بحران سایبری، ارسال سریع مستندات یا مکاتبات رسمی و حقوقی، از طریق مسیرهای زیر با ما در تماس باشید.</p>
+          <p 
+                      className="mx-auto mb-8"
+            style={{
+              color: darkMode ? "#9aa0aa" : "#475569",
+              fontSize: "clamp(0.92rem,2vw,1.0rem)",
+              lineHeight: 1.9,
+              maxWidth: 580,
+            }}
+          >
+            برای گزارش بحران سایبری، ارسال سریع مستندات یا مکاتبات رسمی و حقوقی، از طریق مسیرهای زیر با ما در تماس باشید.
+            </p>
           <div className={`mt-8 flex items-center justify-center gap-5 ${isDark ? "text-[#8292a859]" : "text-[#64748B]"}`}>
           </div>
         </div>
@@ -632,9 +642,9 @@ style={{
 
       <div className="flex flex-1 flex-col p-7">
         <span
-          className="mb-4 block font-mono text-[0.58rem] tracking-[0.14em]"
+          className="mb-4 block font-mono text-[0.6rem] tracking-[0.14em]"
           style={{
-            color: `${ac}${isDark ? "70" : "B0"}`,
+            color: `${ac}${isDark ? "90" : "B0"}`,
             fontFamily: "JetBrains Mono",
           }}
         >
@@ -670,7 +680,7 @@ style={{
 
         <p
           className={`flex-grow text-[0.82rem] leading-[1.75] ${
-            isDark ? "text-[#576376]" : "text-[#64748B]"
+            isDark ? "text-[#9aa0aa]" : "text-[#26282ce3]"
           }`}
         >
           {ch.desc}
@@ -684,8 +694,8 @@ style={{
           }`}
         >
           <span
-            className={`mb-1 block text-[0.65rem] ${
-              isDark ? "text-[#576376]" : "text-[#64748B]"
+            className={`mb-1 block text-[0.7rem] ${
+              isDark ? "text-[#9aa0aa]" : "text-[#26282ce3]"
             }`}
           >
             {ch.valueLabel}
@@ -773,7 +783,63 @@ style={{
             SUPPORT CHANNEL
             </span></div>
             <h2 className={`mb-4 text-[clamp(1.1rem,2.5vw,1.5rem)] font-bold leading-[1.4] ${isDark ? "text-white" : "text-[#0F172A]"}`}>انتقادات و پیشنهادات و همکاری با ما</h2>
-            <p className={`text-[0.85rem] leading-[1.85] ${isDark ? "text-[#475569]" : "text-[#64748B]"}`}>این فرم برای سوالات غیراورژانسی، انتقادات و پیشنهادات، و درخواست همکاری استفاده می‌شود. حادثه سایبری را از طریق خط ویژه بحران گزارش دهید.</p>
+            <p className={`text-[0.85rem] leading-[1.85] ${isDark ? "text-[#9aa0aa]" : "text-[#26282ce3]"}`}>این فرم برای سوالات غیراورژانسی، انتقادات و پیشنهادات، و درخواست همکاری استفاده می‌شود. حادثه سایبری را از طریق خط ویژه بحران گزارش دهید.</p>
+
+
+{/* ─── ENGAGEMENT BLOCK (MEDIUM) ─── */}
+<div className="mt-7 hidden lg:block">
+  <div
+    className={`mb-5 h-px w-full bg-gradient-to-l from-transparent ${
+      isDark ? "via-[#00E5FF]/25" : "via-[#1565C0]/30"
+    } to-transparent`}
+  />
+
+  <h3 className={`mb-2 text-[0.95rem] font-bold leading-[1.7] ${isDark ? "text-white" : "text-[#0F172A]"}`}>
+    صدای شما، مسیر پاراهور را می‌سازد
+  </h3>
+
+  <p className={`mb-4 text-[0.85rem] leading-[1.9] ${isDark ? "text-[#9aa0aa]" : "text-[#26282ce3]"}`}>
+    یک انتقاد، یک ایده یا یک پیشنهاد همکاری، شاید همان چیزی باشد که خدمات ما را برای همه بهتر می‌کند.
+  </p>
+
+  <ul className="space-y-2.5">
+    {[
+      "هر پیام توسط تیم ما خوانده می‌شود",
+      "انتقاد صریح شما برای ما ارزشمند است",
+      "درخواست‌های همکاری جدی بررسی می‌شوند",
+    ].map((t) => (
+      <li key={t} className="flex items-center gap-2.5">
+        <span
+          className={`flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full border p-[3px] ${
+            isDark
+              ? "border-[#00E5FF]/30 bg-[#00E5FF]/[0.08] text-[#00E5FF]"
+              : "border-[#1565C0]/30 bg-[#1565C0]/[0.08] text-[#1565C0]"
+          }`}
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </span>
+        <span className={`text-[0.8rem] font-medium ${isDark ? "text-[#E2E8F0]" : "text-[#0F172A]"}`}>
+          {t}
+        </span>
+      </li>
+    ))}
+  </ul>
+
+  <div
+    className={`mt-5 flex items-center gap-2 rounded-xl border px-3.5 py-2.5 text-[0.75rem] leading-[1.7] ${
+      isDark
+        ? "border-[#00E5FF]/15 bg-[#00E5FF]/[0.04] text-[#9aa0aa]"
+        : "border-[#1565C0]/20 bg-[#1565C0]/[0.05] text-[#26282ce3]"
+    }`}
+  >
+    <span className={`shrink-0 ${isDark ? "text-[#9aa0aa]" : "text-[#1565C0]"}`}>
+      <IconShield />
+    </span>
+    اطلاعات شما محرمانه می‌ماند.
+  </div>
+</div>
 
           </div>
           <div className="contact-form-wrap w-full flex-1"><div className={`contact-form-card relative overflow-hidden rounded-2xl border transition-all duration-300 ${isDark ? "border-[#00E5FF]/25 bg-white/[0.025] backdrop-blur-[10px] " : "border-[#1565C0]/70 bg-white shadow-[0_16px_42px_rgba(15,23,42,0.07)]"}`}>
@@ -894,8 +960,8 @@ style={{
               </h4>
 
               <p
-                className={`text-[0.75rem] leading-[1.75] ${
-                  isDark ? "text-[#576376]" : "text-[#64748B]"
+                className={`text-[0.78rem] leading-[1.75] ${
+                  isDark ? "text-[#9aa0aa]" : "text-[#64748B]"
                 }`}
               >
                 آیت الله کاشانی، بلوار اباذر، نبش خیابان شالی، پلاک 9، طبقه 4، واحد 6
@@ -903,13 +969,13 @@ style={{
               </p>
 
               <div
-                className={`mt-3 flex items-center gap-1.5 text-xs ${
-                  isDark ? "text-[#4b5463]" : "text-[#64748B]"
+                className={`mt-3 flex items-center gap-1.5 text-[0.75rem] ${
+                  isDark ? "text-[#94a9b0ad]" : "text-[#64748B]"
                 }`}
               >
                 <svg
-                  width="10"
-                  height="10"
+                  width="17"
+                  height="17"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke={isDark ? "#00E5FF" : "#1E3A8A"}
