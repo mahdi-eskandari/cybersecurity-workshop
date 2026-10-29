@@ -5789,6 +5789,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Underline from "@tiptap/extension-underline";
 import { Table, TableRow, TableHeader, TableCell } from "@tiptap/extension-table";
+import { SERVICE_KEY_LABELS, SERVICE_KEYS } from "@/lib/serviceKeys";
 import {
   AlignCenter,
   AlignJustify,
@@ -6002,7 +6003,9 @@ type TrackingStep = {
 interface Service {
   id: string;
 
+
   slug: string;
+    key: string;
   title: string;
   trackingTitle: string;
   shortDesc: string;
@@ -6028,6 +6031,7 @@ interface Service {
 
 type ServiceForm = {
   slug: string;
+    key: string;
   title: string;
   trackingTitle: string;
   shortDesc: string;
@@ -7444,6 +7448,8 @@ const normalizeService = (
 
   slug: item?.slug ?? "",
 
+  key: item?.key ?? "",
+
   title: item?.title ?? "",
 
   trackingTitle: item?.trackingTitle ?? "",
@@ -7658,6 +7664,7 @@ export default function ServicesPage() {
 
   defaultValues: {
   slug: "",
+  key: "",
   title: "",
   trackingTitle: "",
   shortDesc: "",
@@ -7810,6 +7817,7 @@ export default function ServicesPage() {
     if (service) {
       reset({
         slug: service.slug,
+        key: service.key ?? "",
         title: service.title,
         trackingTitle: service.trackingTitle ?? "",
         shortDesc:
@@ -7855,6 +7863,7 @@ urgencyContent:
     } else {
       reset({
         slug: "",
+        key: "",
         title: "",
         trackingTitle: "",
         shortDesc: "",
@@ -7917,6 +7926,8 @@ const normalizedData = {
     data.slug
       .trim()
       .toLowerCase(),
+
+  key: data.key,
 
   title:
     data.title.trim(),
@@ -10467,6 +10478,23 @@ className="mx-auto grid w-full gap-4 px-6 py-6 md:px-7"
                       placeholder="فارنزیک دیجیتال"
                       style={inputStyle()}
                     />
+                  </Field>
+
+                                    <Field
+                    label="نوع خدمت (انیمیشن و دپارتمان)"
+                    hint="با تغییر عنوان تغییر نمی‌کند"
+                  >
+                    <select
+                      {...register("key")}
+                      style={inputStyle()}
+                    >
+                      <option value="">— بدون انتخاب (انیمیشن پیش‌فرض) —</option>
+                      {SERVICE_KEYS.map((k) => (
+                        <option key={k} value={k}>
+                          {SERVICE_KEY_LABELS[k]}
+                        </option>
+                      ))}
+                    </select>
                   </Field>
                 </div>
 

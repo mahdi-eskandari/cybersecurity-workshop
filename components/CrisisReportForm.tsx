@@ -1168,7 +1168,7 @@
 
 
 "use client";
-
+import { isIncidentKey } from "@/lib/serviceKeys";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTheme } from "@/components/ThemeProvider";
@@ -1359,19 +1359,19 @@ const IconRecaptcha = ({ darkMode }: { darkMode: boolean }) => {
 
 type Chip = {
   id: string;
-  label: string;
+  display: string;
   icon: React.ReactNode;
 };
 
 const chips: Chip[] = [
-  { id: "consulting", label: "مشاوره", icon: <IconShieldCheck darkMode={false} /> },
-  { id: "crypto-blockchain-tracing", label: "ردیابی رمزارز", icon: <IconCrypto /> },
-  { id: "hidden-identity", label: " کشف هویت", icon: <IconShieldCheck darkMode={false} /> },
-  { id: "post-crisis-pentest", label: "تست نفوذ", icon: <IconHack /> },
-  { id: "digital-forensics", label: "کالبدشکافی دیجیتال", icon: <IconHack /> },
-  { id: "ransomware-negotiation", label: "مقابله با باج‌افزار", icon: <IconExtort /> },
-    { id: "threat-intelligence", label: "هوش تهدیدات", icon: <IconHack /> },
-  { id: "other", label: "سایر", icon: <IconShieldCheck darkMode={false} /> },
+  { id: "consulting", display: "مشاوره", icon: <IconShieldCheck darkMode={false} /> },
+  { id: "identity", display: "مزاحمت سایبری (اخاذی، تهدید، توهین و نشر اکاذیب)", icon: <IconShieldCheck darkMode={false} /> },
+  { id: "crypto", display: "خدمات رمز ارزی", icon: <IconCrypto /> },
+  { id: "pentest", display: "نشت یا سرقت اطلاعات سازمانی", icon: <IconHack /> },
+  { id: "forensics", display: "هک شدن اکانت‌ها و شبکه‌های اجتماعی", icon: <IconHack /> },
+  { id: "ransomware", display: "پاکسازی دستگاه آلوده", icon: <IconExtort /> },
+  { id: "threat-intel", display: "هوش تهدیدات (پیشگیری و اعتبارسنجی)", icon: <IconHack /> },
+  { id: "other", display: "سایر موارد", icon: <IconShieldCheck darkMode={false} /> },
 ];
 
 /* ────────────────────────────────
@@ -1379,9 +1379,10 @@ const chips: Chip[] = [
 ──────────────────────────────── */
 
 type CrisisReportFormValues = {
-  incidentType: string;
+  incidentType: string;   // الان key نگه می‌داره
   description: string;
   contact: string;
+  incidentKey?: string;
   serviceSlug?: string;
   serviceTitle?: string;
 };
@@ -1410,18 +1411,7 @@ const HelperText = ({ message }: { message?: string }) => {
 
 const LAST_INCIDENT_TYPE_COOKIE = "parahoor_last_incident_type";
 
-const VALID_INCIDENT_TYPES = [
-  "پایش دارک‌وب و هوش تهدیدات",
-  "تست نفوذِ پسا-بحران",
-  "مقابله و مذاکره با باج‌افزارها",
-  "فارنزیک و کالبدشکافی دیجیتال",
-  "ردیابی رمزارز و تحلیل بلاک‌چین",
-  "هویت‌سنجی پنهان",
-  "مشاوره",
-] as const;
-
-const isValidIncidentType = (value: string) =>
-  VALID_INCIDENT_TYPES.includes(value as (typeof VALID_INCIDENT_TYPES)[number]);
+const isValidIncidentType = (value: string) => isIncidentKey(value);
 
 const getLastIncidentType = () => {
   if (typeof document === "undefined") {
@@ -1535,67 +1525,25 @@ const CONSULTING_DESC_PLACEHOLDER =
   "هزینه مشاوره بعد از بررسی اولیه توسط کارشناسان تعیین خواهد شد - مشاوره حوادث سایبری که به پاراهور ارجاع میشود رایگان میباشد";
 
 /* پلیس‌هولدر شرح مشکل بر اساس «نوع خدمت» انتخاب‌شده (صفحه‌های غیر از صفحه‌ی خدمت) */
-const PH_CRYPTO = "مثال: تتر من به یه کیف پول ناشناس منتقل شده...";
-const PH_IDENTITY = "مثال: یه حساب ناشناس منو تهدید می‌کنه...";
-const PH_PENTEST = "مثال: بعد از یه حمله می‌خوام امنیت سیستمم بررسی بشه...";
-const PH_FORENSIC = "مثال: سیستمم آلوده شده و می‌خوام علتش بررسی بشه...";
+const PH_CRYPTO = "لطفاً بنویسید سرقت در چه تاریخی رخ داده است؟ ارزها از چه کیفی (مثلاً تراست‌ولت) خارج شده‌اند؟ آیا روی لینکِ خاصی کلیک کردید، کلمات بازیابی را جایی وارد کردید، یا ارزِ ناشناخته‌ای خریدید؟ (نام ارز و شبکه را ذکر کنید).";
+const PH_IDENTITY = "این تهدید یا توهین در چه پلتفرمی (تلگرام، اینستاگرام، واتس‌اپ و...) در حال رخ دادن است؟ آیا فرد ناشناس است؟ چه اطلاعات یا مدارکی از شما در دست دارد که با آن اخاذی می‌کند؟";
+const PH_PENTEST = "چه نوع دیتایی از سازمان شما نشت کرده است؟ (دیتابیس مشتریان، اسناد مالی، سورس‌کد). آیا به کارمندِ داخلی شک دارید یا حمله از بیرونِ زیرساخت رخ داده است؟";
+const PH_FORENSIC = "کدام اکانت شما از دسترس خارج شده است؟ آیا به شماره موبایل یا ایمیلِ اولیه‌ای که با آن ثبت‌نام کرده‌اید هنوز دسترسی دارید؟ هکر بعد از ورود چه اقدامی انجام داده است؟";
 const PH_RANSOM = "مثال: فایل‌های سازمان ما قفل شده و باج خواستن...";
-const PH_THREAT = "مثال: اطلاعات شرکت ما ممکنه تو دارک‌وب باشه...";
+const PH_THREAT = "هدف از اعتبارسنجی را مشخص کنید. (مثلاً: نیاز به بررسی سوابقِ یک شرکت/شریک تجاری، اعتبارسنجی یک ایمیلِ خارجی قبل از واریز وجه، یا بررسی سطحِ امنیتِ هویتِ دیجیتالِ مدیرانِ سازمان).";
 const PH_OTHER =
-  "مثال: مشکلم تو هیچ‌کدوم از دسته‌های بالا نمی‌گنجه، ماجرا رو کوتاه توضیح می‌دم...";
+  "لطفاً با جزئیاتِ کامل بنویسید چه اتفاقی افتاده، از چه تاریخی شروع شده، و در حال حاضر چه خطری اطلاعات یا سرمایه شما را تهدید می‌کند.";
 
-const INCIDENT_DESC_PLACEHOLDERS: Record<string, string> = {
-  "مشاوره": CONSULTING_DESC_PLACEHOLDER,
-  "ردیابی رمزارز": PH_CRYPTO,
-  "کشف هویت": PH_IDENTITY,
-  "تست نفوذ": PH_PENTEST,
-  "کالبدشکافی دیجیتال": PH_FORENSIC,
-  "مقابله با باج‌افزار": PH_RANSOM,
-  "هوش تهدیدات": PH_THREAT,
-  "سایر": PH_OTHER,
-};
 
-/*
- * پلیس‌هولدر مخصوص هر خدمت. تطبیق بر اساس کلمات کلیدی تو اسلاگ یا عنوان خدمت
- * انجام می‌شه. ترتیب مهمه: اولین تطبیق برنده‌ست.
- */
-const SERVICE_DESC_PLACEHOLDERS: { match: RegExp; text: string }[] = [
-  {
-    match: /consult|مشاوره/i,
-    text: CONSULTING_DESC_PLACEHOLDER,
-  },
-  {
-    match: /crypto|blockchain|رمز\s?ارز|بلاک\s?چین|ردیابی/i,
-    text: PH_CRYPTO,
-  },
-  {
-    match: /identity|هویت/i,
-    text: PH_IDENTITY,
-  },
-  {
-    match: /pentest|penetration|نفوذ/i,
-    text: PH_PENTEST,
-  },
-  {
-    match: /forensic|کالبد|فارنزیک/i,
-    text: PH_FORENSIC,
-  },
-  {
-    match: /ransom|باج/i,
-    text: PH_RANSOM,
-  },
-  {
-    match: /threat|intelligence|dark\s?web|دارک|تهدید|پایش/i,
-    text: PH_THREAT,
-  },
-];
-
-const getServiceDescPlaceholder = (slug: string, title: string) => {
-  const haystack = `${slug} ${title}`;
-  const found = SERVICE_DESC_PLACEHOLDERS.find((item) =>
-    item.match.test(haystack)
-  );
-  return found ? found.text : DEFAULT_DESC_PLACEHOLDER;
+const PLACEHOLDER_BY_KEY: Record<string, string> = {
+  consulting: CONSULTING_DESC_PLACEHOLDER,
+  crypto: PH_CRYPTO,
+  identity: PH_IDENTITY,
+  pentest: PH_PENTEST,
+  forensics: PH_FORENSIC,
+  ransomware: PH_RANSOM,
+  "threat-intel": PH_THREAT,
+  other: PH_OTHER,
 };
 
 /* ────────────────────────────────
@@ -1605,28 +1553,22 @@ const getServiceDescPlaceholder = (slug: string, title: string) => {
 export const EmergencyModal = ({
   onClose,
   serviceLabel,
-  defaultIncidentType,
+  serviceKey,
 }: {
   onClose: () => void;
-  /** اسم فارسی خدمت؛ تو گزارش به‌صورت serviceTitle ثبت می‌شه */
   serviceLabel?: string;
-  /** نوع حادثه‌ی پیش‌فرض این خدمت (یکی از چیپ‌ها، مثلاً "تست نفوذ") */
-  defaultIncidentType?: string;
+  /** key ثابت خدمت (service.key) */
+  serviceKey?: string;
 }) => {
   const { darkMode } = useTheme();
   const router = useRouter();
   const pathname = usePathname();
 
-  // اگه تو صفحه‌ی یه خدمت هستیم (/services/<slug>)، سکشن «نوع خدمت» پنهان می‌شه
-  const hideIncidentType = /^\/services\/[^/]+/.test(pathname || "");
+  // اگه تو صفحه‌ی یه خدمت هستیم (/services/<slug>)، اسلاگ خدمت برای ثبت گزارش نگه داشته می‌شه
+  const isServicePage = /^\/services\/[^/]+/.test(pathname || "");
 
-  const serviceSlug = hideIncidentType
+  const serviceSlug = isServicePage
     ? decodeURIComponent((pathname || "").split("/")[2] || "")
-    : "";
-
-  // تو صفحه‌ی خدمت، خود اسم خدمت نوع گزارشه (بدون دیفالت)
-  const resolvedServiceIncident = hideIncidentType
-    ? (serviceLabel || "").trim()
     : "";
 
   const [submitError, setSubmitError] = useState("");
@@ -1687,12 +1629,9 @@ export const EmergencyModal = ({
   const contact = watch("contact");
 
   // پلیس‌هولدر شرح مشکل: تو صفحه‌ی خدمت مخصوص همون خدمت؛ تو بقیه‌ی صفحه‌ها بر اساس نوع خدمت انتخاب‌شده
-  const descPlaceholder = hideIncidentType
-    ? getServiceDescPlaceholder(serviceSlug, serviceLabel || "")
-    : INCIDENT_DESC_PLACEHOLDERS[(selected || "").trim()] ||
-      DEFAULT_DESC_PLACEHOLDER;
+  const descPlaceholder = PLACEHOLDER_BY_KEY[selected] || DEFAULT_DESC_PLACEHOLDER;
 
-  const selectedChip = chips.find((c) => c.label === selected);
+  const selectedChip = chips.find((c) => c.id === selected);
 
   const primary = darkMode ? "#00E5FF" : "#2563EB";
 
@@ -1701,20 +1640,9 @@ export const EmergencyModal = ({
      LOAD LAST INCIDENT TYPE
   ───────────────────────────────── */
 
-  // تو صفحه‌ی خدمت، نوع حادثه خودکار فعال می‌شه (بدون نمایش)
-  useEffect(() => {
-    if (!hideIncidentType) return;
-    setValue("incidentType", resolvedServiceIncident, {
-      shouldValidate: false,
-      shouldDirty: false,
-      shouldTouch: false,
-    });
-  }, [hideIncidentType, resolvedServiceIncident, setValue]);
+
 
   useEffect(() => {
-    // تو صفحه‌ی خدمت، نوع حادثه‌ی قبلی نباید تو فرم بنشینه
-    if (hideIncidentType) return;
-
     const forcedIncidentType = getForceIncidentType();
 
     if (forcedIncidentType) {
@@ -1728,18 +1656,18 @@ export const EmergencyModal = ({
       return;
     }
 
-    const savedIncidentType = getLastIncidentType();
-
-    if (!savedIncidentType) {
+    // فقط توی لیست خدمات (/services) مشاوره پیش‌فرض فعال باشه
+    if (/^\/services\/?$/.test(pathname || "")) {
+      setValue("incidentType", "consulting", {
+        shouldValidate: false,
+        shouldDirty: false,
+        shouldTouch: false,
+      });
       return;
     }
 
-    setValue("incidentType", savedIncidentType, {
-      shouldValidate: false,
-      shouldDirty: false,
-      shouldTouch: false,
-    });
-  }, [setValue, hideIncidentType]);
+    // تو بقیه‌ی صفحه‌ها (از جمله صفحه‌ی هر خدمت) هیچ نوعی از قبل انتخاب نمی‌شه
+  }, [setValue, pathname]);
 
 
 const toPhone = (v: string) => {
@@ -1776,13 +1704,7 @@ const onSubmit = async (data: CrisisReportFormValues) => {
     return;
   }
 
-  // تو صفحه‌ی خدمت، اگه نوع حادثه مشخص نشده، قبل از ارسال پیامک متوقف شو
-  if (hideIncidentType && !resolvedServiceIncident) {
-    setSubmitError(
-      "نوع این خدمت مشخص نیست و گزارش ارسال نشد. لطفاً از صفحه‌ی تماس با ما اقدام کنید."
-    );
-    return;
-  }
+
 
     /* Cloudflare Turnstile */
   if (!turnstileToken) {
@@ -1805,13 +1727,13 @@ const onSubmit = async (data: CrisisReportFormValues) => {
 
     if (!res.ok) throw new Error(result?.message || "ارسال کد ناموفق بود");
 
-    const serviceTitle = hideIncidentType ? serviceLabel || serviceSlug : "";
+    const serviceTitle = isServicePage ? serviceLabel || serviceSlug : "";
 
     setOtpPhone(phone);
     setOtpWait(Number(result?.nextResendIn) || 60);
     setPendingData({
       ...data,
-      incidentType: hideIncidentType ? resolvedServiceIncident : data.incidentType,
+      incidentKey: data.incidentType,
       serviceSlug,
       serviceTitle,
       contact: phone,
@@ -2007,11 +1929,11 @@ const onSubmit = async (data: CrisisReportFormValues) => {
             <input
               type="hidden"
               {...register("incidentType", {
-                required: hideIncidentType ? false : "نوع حادثه را انتخاب کنید",
+                required: "نوع حادثه را انتخاب کنید",
               })}
             />
 
-            {!hideIncidentType && (
+            {(
               <>
                 {/* FIELD 1 – Incident Type Chips */}
                 <div>
@@ -2072,9 +1994,9 @@ const onSubmit = async (data: CrisisReportFormValues) => {
                     >
                       <span className="flex min-w-0 items-center gap-2.5">
                         <span className="truncate">
-                          {selectedChip
-                            ? selectedChip.label.trim()
-                            : "یک خدمت را انتخاب کنید"}
+                        {selectedChip
+                          ? selectedChip.display.trim()
+                          : "یک خدمت را انتخاب کنید"}
                         </span>
                       </span>
 
@@ -2120,8 +2042,8 @@ const onSubmit = async (data: CrisisReportFormValues) => {
   .crisis-select-dark::-webkit-scrollbar-thumb:hover{background:#475569}
 `}</style>
 
-                        {chips.map(({ id, label, icon }) => {
-                          const isActive = selected === label;
+                        {chips.map(({ id, display }) => {
+                          const isActive = selected === id;
                           const isHover = hoverOpt === id;
 
                           return (
@@ -2131,7 +2053,7 @@ const onSubmit = async (data: CrisisReportFormValues) => {
                               role="option"
                               aria-selected={isActive}
                               onClick={() => {
-                                setValue("incidentType", label, {
+                                                                setValue("incidentType", id, {
                                   shouldValidate: true,
                                   shouldDirty: true,
                                   shouldTouch: true,
@@ -2162,7 +2084,7 @@ const onSubmit = async (data: CrisisReportFormValues) => {
                             >
                               <span className="flex min-w-0 items-center gap-2.5">
                                 
-                                <span className="truncate">{label.trim()}</span>
+                                                                <span className="truncate">{display.trim()}</span>
                               </span>
 
                               {isActive && (
@@ -2212,7 +2134,7 @@ const onSubmit = async (data: CrisisReportFormValues) => {
                     fontFamily: "monospace",
                   }}
                 >
-                  {hideIncidentType ? "۱." : "۲."}
+                                    ۲.
                 </span>
 
                 شرح مختصری از مشکل
@@ -2320,7 +2242,7 @@ const onSubmit = async (data: CrisisReportFormValues) => {
                     fontFamily: "monospace",
                   }}
                 >
-                  {hideIncidentType ? "۲." : "۳."}
+                  ۳.
                 </span>
 
                 شماره تماس

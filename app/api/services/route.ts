@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Service from '../../model/Service';
 import { isAdmin } from "@/lib/adminAuth";
+import { normalizeServiceKey } from "@/lib/serviceKeys";
 
 
 function normalizeFaqs(faqs: unknown) {
@@ -68,6 +69,7 @@ export async function POST(request: NextRequest) {
       faqs,
        index,
       follow,
+      key,  
     } = body;
 
     if (!slug?.trim()) {
@@ -177,6 +179,8 @@ export async function POST(request: NextRequest) {
 
     const service = await Service.create({
       slug: normalizedSlug,
+
+       key: normalizeServiceKey(key), 
 
       title: title.trim(),
 

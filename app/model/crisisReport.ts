@@ -71,6 +71,8 @@ const CrisisReportSchema = new Schema(
       enum: ["pending", "reviewing", "consulting", "resolved", "closed"],
       default: "pending",
     },
+
+    incidentKey: { type: String, default: "" },
   },
   {
     timestamps: true,

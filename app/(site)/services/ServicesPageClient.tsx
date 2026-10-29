@@ -656,7 +656,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
                 <p
                   style={{
-                    color: darkMode ? "#64748B" : "#475569",
+                    color: darkMode ? "#8f959e" : "#334155",
                     fontSize: "0.87rem",
                     lineHeight: 1.8,
                     maxWidth: 560,
@@ -674,9 +674,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                 <button
                      onClick={() => {
                        try {
-                         document.cookie = `parahoor_force_incident_type=${encodeURIComponent(
-                           "مشاوره"
-                         )}; path=/; max-age=120; SameSite=Lax`;
+                        document.cookie = `parahoor_force_incident_type=consulting; path=/; max-age=120; SameSite=Lax`;
                        } catch {
                          // خطای Cookie نباید مانع باز شدن مدال شود.
                        }
@@ -987,7 +985,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   key={tag}
   style={{
     fontFamily: "monospace",
-    fontSize:"0.68rem",
+    fontSize:"0.73rem",
     color: darkMode
       ? "rgba(0,229,255,0.4)"
       : "#1565C0",
@@ -999,6 +997,8 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
       : "1px solid #b5d0ed",
     padding: "3px 8px",
     borderRadius: 4,
+    fontWeight: "550",
+    letterSpacing: "0.01em", 
   }}
 >
   {tag}

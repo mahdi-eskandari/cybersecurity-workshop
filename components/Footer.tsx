@@ -262,7 +262,7 @@ export default function Footer() {
 
               <Link href="/" aria-label="پراهور - صفحه اصلی" className="block shrink-0 cursor-pointer w-fit">
   <Image
-    src="/logo/parahoor-wordmark-dark.png"
+    src="/logo/parahoor-wordmark-dark.webp"
     alt="پراهور"
     width={600}
     height={192}
@@ -385,6 +385,23 @@ export default function Footer() {
                     <a
                       href="tel:+982144097162"
                       className="flex w-[65%] items-center gap-2 px-3.5 py-2 bg-[#C62828] text-white text-xs font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors"
+                         style={{
+                background: "#EF4444",
+                color: "#ffffff",
+                border: "1px solid rgba(239,68,68,0.6)",
+                boxShadow: "0 0 15px rgba(239,68,68,0.35)",
+              }}
+                onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = "0 0 22px rgba(239,68,68,0.55)"
+
+
+
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = "0 0 15px rgba(239,68,68,0.35)"
+
+
+              }}
                     >
                       <Phone className="w-3.5 h-3.5" />
                       تماس اضطراری

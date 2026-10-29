@@ -1024,9 +1024,7 @@ const SocialBtn = ({
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 text-xs color: accent/10"
 
                         style={{
-              border: darkMode
-                ? "1px solid rgba(0,229,255,0.2)"
-                : "none",
+border: `1px solid ${accent}40`,
               backgroundColor: `${accent}20`,
 
               
@@ -1037,7 +1035,7 @@ const SocialBtn = ({
             className="data-label"
             style={{
               // color: darkMode ? "#00E5FF" : "#1565C0",
-              color: accent
+              color: accent,
             }}
             >Parahoor // Our Leadership Team</span>
 

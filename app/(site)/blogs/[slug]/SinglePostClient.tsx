@@ -1683,6 +1683,7 @@ export default function App({
 
         {/* CTA Button */}
 <button
+onClick={() => setCrisisOpen(true)}
   type="button"
   className="inline-flex items-center justify-center gap-2 px-14 py-3.5 rounded-xl font-bold transition-all duration-300" 
               style={{ 
@@ -1709,7 +1710,7 @@ export default function App({
                   }} 
 >
   <IconWarning />
-  درخواست بررسی
+ درخواست کمک فوری
 </button>
 
 
@@ -1764,6 +1765,7 @@ export default function App({
                       color: darkMode ? "#00E5FF" : "#1565C0",
                       fontFamily: "monospace",
                       fontSize: "0.8rem",
+                    
                     }}
                   >
                     {tag}

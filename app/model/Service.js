@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
-
+import { SERVICE_KEYS } from "@/lib/serviceKeys";
 const { Schema, model, models } = mongoose;
+
 
 // سطح‌های مجاز
 const LEVELS = [
@@ -29,6 +30,14 @@ const ServiceSchema = new Schema(
         /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
         "slug فقط حروف کوچک انگلیسی و خط تیره",
       ],
+    },
+
+        // کلید ثابت: انیمیشن، دپارتمان و پلیس‌هولدر مدال بر اساس این وصل می‌شن (با تغییر اسم/slug خراب نمی‌شه)
+    key: {
+      type: String,
+      enum: ["", ...SERVICE_KEYS],
+      default: "",
+      trim: true,
     },
 
     title: {

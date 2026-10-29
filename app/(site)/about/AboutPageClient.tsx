@@ -1407,7 +1407,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
               }}
             >
               <IconWarning />
-              ثبت امن گزارش بحران
+             درخواست کمک فوری
             </button>
 
             <p

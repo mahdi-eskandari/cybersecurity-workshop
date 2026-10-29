@@ -4,8 +4,11 @@ import crypto from "crypto";
 import { Types } from "mongoose";
 import { cookies } from "next/headers";
 import { checkVerified, normalizePhone, rateLimit } from "@/lib/otp";
+import { notifyAdminNewReport } from "@/lib/adminSms";
 import CrisisReport from "../../model/crisisReport";
 import ConfidentialNote from "../../model/ConfidentialNote";
+import Service from "../../model/Service";
+import { INCIDENT_LABELS, isIncidentKey } from "@/lib/serviceKeys";
 
 const VALID_INCIDENT_TYPES = [
   "مشاوره",
@@ -28,64 +31,62 @@ const VALID_STATUSES = [
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+       const body = await req.json();
 
-    const incidentType =
-      typeof body?.incidentType === "string"
-        ? body.incidentType.trim()
-        : "";
+    const incidentKey =
+      typeof body?.incidentKey === "string" ? body.incidentKey.trim() : "";
 
     const serviceSlug =
       typeof body?.serviceSlug === "string"
         ? body.serviceSlug.trim().slice(0, 200)
         : "";
 
-    const serviceTitle =
-      typeof body?.serviceTitle === "string"
-        ? body.serviceTitle.trim().slice(0, 200)
-        : "";
-
     const isServiceReport = Boolean(serviceSlug);
 
     const description =
-      typeof body?.description === "string"
-        ? body.description.trim()
-        : "";
+      typeof body?.description === "string" ? body.description.trim() : "";
 
     const contact =
-      typeof body?.contact === "string"
-        ? body.contact.trim()
-        : "";
+      typeof body?.contact === "string" ? body.contact.trim() : "";
 
-    let finalIncidentType = incidentType;
+    let finalIncidentType = "";
+    let finalIncidentKey = "";
+    let serviceTitle = "";
 
     if (isServiceReport) {
-      // گزارش صفحه‌ی خدمت: نوع = اسم خدمت
-      if (!serviceTitle) {
+      // اسم و key خدمت رو از دیتابیس می‌گیریم، نه از کلاینت
+      await connectDB();
+      const svc: any = await Service.findOne({
+        slug: serviceSlug.toLowerCase(),
+      })
+        .select("title key")
+        .lean();
+
+      if (!svc) {
         return NextResponse.json(
-          { message: "نام خدمت مشخص نیست" },
+          { message: "خدمت مشخص‌شده پیدا نشد" },
           { status: 400 }
         );
       }
-      finalIncidentType = serviceTitle;
+
+      serviceTitle = svc.title;
+      finalIncidentType = svc.title;
+      finalIncidentKey = svc.key || "other";
     } else {
-      if (!incidentType) {
+      if (!incidentKey) {
         return NextResponse.json(
           { message: "نوع حادثه را انتخاب کنید" },
           { status: 400 }
         );
       }
-
-      if (
-        !VALID_INCIDENT_TYPES.includes(
-          incidentType as (typeof VALID_INCIDENT_TYPES)[number]
-        )
-      ) {
+      if (!isIncidentKey(incidentKey)) {
         return NextResponse.json(
           { message: "نوع حادثه انتخاب‌شده معتبر نیست" },
           { status: 400 }
         );
       }
+      finalIncidentKey = incidentKey;
+      finalIncidentType = INCIDENT_LABELS[incidentKey];
     }
 
     if (!contact) {
@@ -131,6 +132,7 @@ export async function POST(req: Request) {
 
     const report = await CrisisReport.create({
       trackingCode,
+      incidentKey: finalIncidentKey, 
             incidentType: finalIncidentType,
       serviceSlug: isServiceReport ? serviceSlug : undefined,
       serviceTitle: isServiceReport ? serviceTitle || serviceSlug : undefined,
@@ -138,6 +140,14 @@ export async function POST(req: Request) {
       contact: phone,
       status: "pending",
     });
+
+
+        // پیامک به ادمین (خطاش ثبت گزارش رو خراب نمی‌کنه)
+    // await notifyAdminNewReport({
+    //   trackingCode: report.trackingCode,
+    //   service: finalIncidentType,
+    //   phone,
+    // });
 
         const res = NextResponse.json(
       {

@@ -936,29 +936,18 @@ const CryptoTracingHeroArt = ({
   const fillSoft = c("rgba(0,229,255,0.12)", "rgba(37,99,235,0.1)");
   const solid = c("#00E5FF", "#2563EB");
 
-  const src = { x: 70, y: 110 };
-  const l1 = [
-    { x: 215, y: 50 },
-    { x: 215, y: 110 },
-    { x: 215, y: 170 },
-  ];
-  const mixer = { x: 370, y: 110 };
-  const l2 = [
-    { x: 520, y: 65 },
-    { x: 520, y: 155 },
+  const victim = { x: 80, y: 110 };
+  const scammer = { x: 380, y: 110 };
+  const splits = [
+    { x: 520, y: 48 },
+    { x: 520, y: 110 },
+    { x: 520, y: 172 },
   ];
   const exch = { x: 665, y: 110 };
   const target = { x: 810, y: 110 };
 
-  const edges: [typeof src, typeof src][] = [
-    ...l1.map((n) => [src, n] as [typeof src, typeof src]),
-    ...l1.map((n) => [n, mixer] as [typeof src, typeof src]),
-    ...l2.map((n) => [mixer, n] as [typeof src, typeof src]),
-    ...l2.map((n) => [n, exch] as [typeof src, typeof src]),
-    [exch, target],
-  ];
-
-  const tracePath = `M96 110 L215 50 L370 110 L520 155 L665 110 L786 110`;
+  const upperPath = `M106 110 L350 110 L520 48 L645 110 L786 110`;
+  const lowerPath = `M106 110 L350 110 L520 172 L645 110`;
 
   return (
     <svg
@@ -969,7 +958,7 @@ const CryptoTracingHeroArt = ({
       style={{ opacity: darkMode ? 0.4 : 0.7 }}
     >
       <defs>
-        <filter id="cryptoGlow">
+        <filter id="scamGlow">
           <feGaussianBlur stdDeviation="3" result="blur" />
           <feMerge>
             <feMergeNode in="blur" />
@@ -978,56 +967,118 @@ const CryptoTracingHeroArt = ({
         </filter>
       </defs>
 
-      {/* All transaction edges */}
-      {edges.map(([a, b], i) => (
-        <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={soft} strokeWidth="1.5" />
+      {/* Edges */}
+      <line x1={106} y1={110} x2={180} y2={110} stroke={soft} strokeWidth="1.5" />
+      <line x1={250} y1={110} x2={350} y2={110} stroke={soft} strokeWidth="1.5" />
+      {splits.map((s, i) => (
+        <g key={i}>
+          <line x1={410} y1={110} x2={s.x} y2={s.y} stroke={soft} strokeWidth="1.5" />
+          <line x1={s.x} y1={s.y} x2={exch.x - 20} y2={exch.y} stroke={soft} strokeWidth="1.5" />
+        </g>
       ))}
+      <line x1={exch.x + 20} y1={exch.y} x2={target.x - 12} y2={target.y} stroke={soft} strokeWidth="1.5" />
 
-      {/* Traced path */}
+      {/* Victim wallet (cracked) */}
+      <polygon points={hexPoints(victim.x, victim.y, 26)} fill={fillMid} stroke={strong} strokeWidth="2" filter="url(#scamGlow)" />
+      <circle cx={victim.x} cy={victim.y} r={10} fill="none" stroke={solid} strokeWidth="1.5" />
       <path
-        d={tracePath}
+        d="M72 86 L80 98 L74 106 L83 116 L77 126"
         fill="none"
-        stroke={strong}
+        stroke={solid}
         strokeWidth="1.8"
-        strokeDasharray="6 6"
-        filter="url(#cryptoGlow)"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       >
-        <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="2s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.4;1;0.4" dur="1.6s" repeatCount="indefinite" />
       </path>
-      <circle r={4} fill={solid} filter="url(#cryptoGlow)">
-        <animateMotion dur="4.5s" repeatCount="indefinite" path={tracePath} />
-      </circle>
-
-      {/* Source wallet */}
-      <polygon points={hexPoints(src.x, src.y, 26)} fill={fillMid} stroke={strong} strokeWidth="2" filter="url(#cryptoGlow)" />
-      <circle cx={src.x} cy={src.y} r={10} fill="none" stroke={solid} strokeWidth="1.5" />
-      <line x1={src.x} y1={src.y - 5} x2={src.x} y2={src.y + 5} stroke={solid} strokeWidth="1.5" strokeLinecap="round" />
-
-      {/* Layer 1 */}
-      {l1.map((n, i) => (
-        <circle key={i} cx={n.x} cy={n.y} r={8} fill={i === 0 ? fillMid : fillSoft} stroke={i === 0 ? strong : mid} strokeWidth="1.5" />
-      ))}
-
-      {/* Mixer */}
-      <polygon
-        points={hexPoints(mixer.x, mixer.y, 22)}
-        fill={fillSoft}
-        stroke={strong}
-        strokeWidth="1.5"
-        strokeDasharray="3 3"
-      />
-      {[-7, 0, 7].map((dx, i) => (
-        <circle key={i} cx={mixer.x + dx} cy={mixer.y + (i === 1 ? -4 : 4)} r={2.5} fill={solid}>
-          <animate attributeName="opacity" values="0.3;1;0.3" dur="1.6s" begin={`${i * 0.3}s`} repeatCount="indefinite" />
+      {/* Leaking coins */}
+      {[0, 1].map((i) => (
+        <circle key={i} cx={victim.x - 6 + i * 12} cy={140} r={3.5} fill={fillMid} stroke={strong} strokeWidth="1.2">
+          <animate attributeName="cy" values="136;178" dur="2.2s" begin={`${i * 1.1}s`} repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0;1;0" dur="2.2s" begin={`${i * 1.1}s`} repeatCount="indefinite" />
         </circle>
       ))}
 
-      {/* Layer 2 */}
-      {l2.map((n, i) => (
-        <circle key={i} cx={n.x} cy={n.y} r={8} fill={i === 1 ? fillMid : fillSoft} stroke={i === 1 ? strong : mid} strokeWidth="1.5" />
+      {/* Phishing hook */}
+      <g>
+        <animateTransform
+          attributeName="transform"
+          type="translate"
+          values="0 0; 0 5; 0 0"
+          dur="2.4s"
+          repeatCount="indefinite"
+        />
+        <path
+          d="M215 32 V64 a7 7 0 0 1 -14 0"
+          fill="none"
+          stroke={strong}
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+      </g>
+
+      {/* Fake website window */}
+      <rect x={180} y={80} width={70} height={60} rx={6} fill={fillSoft} stroke={strong} strokeWidth="1.8" />
+      <line x1={180} y1={94} x2={250} y2={94} stroke={mid} strokeWidth="1.2" />
+      {[188, 196, 204].map((x) => (
+        <circle key={x} cx={x} cy={87} r={1.8} fill={mid} />
+      ))}
+      <g filter="url(#scamGlow)">
+        <animate attributeName="opacity" values="1;0.3;1" dur="1.4s" repeatCount="indefinite" />
+        <path d="M215 102 L227 126 L203 126 Z" fill="none" stroke={solid} strokeWidth="1.8" strokeLinejoin="round" />
+        <line x1={215} y1={111} x2={215} y2={118} stroke={solid} strokeWidth="1.8" strokeLinecap="round" />
+        <circle cx={215} cy={122} r={1.2} fill={solid} />
+      </g>
+
+      {/* Scammer (hidden identity) */}
+      <circle
+        cx={scammer.x}
+        cy={86}
+        r={15}
+        fill={fillSoft}
+        stroke={strong}
+        strokeWidth="2"
+        strokeDasharray="4 4"
+        filter="url(#scamGlow)"
+      />
+      <path
+        d="M350 152 C350 128 362 116 380 116 C398 116 410 128 410 152 Z"
+        fill={fillSoft}
+        stroke={strong}
+        strokeWidth="2"
+        strokeDasharray="4 4"
+      />
+      <circle cx={375} cy={86} r={2} fill={solid}>
+        <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
+      </circle>
+      <circle cx={385} cy={86} r={2} fill={solid}>
+        <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
+      </circle>
+
+      {/* Split wallets */}
+      {splits.map((s, i) => (
+        <circle key={i} cx={s.x} cy={s.y} r={9} fill={i === 0 ? fillMid : fillSoft} stroke={i === 0 ? strong : mid} strokeWidth="1.5" />
       ))}
 
-      {/* Exchange */}
+      {/* Stolen funds routes */}
+      <path d={upperPath} fill="none" stroke={strong} strokeWidth="1.8" strokeDasharray="6 6" filter="url(#scamGlow)">
+        <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="2s" repeatCount="indefinite" />
+      </path>
+      <path d={lowerPath} fill="none" stroke={mid} strokeWidth="1.4" strokeDasharray="4 8">
+        <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="2.6s" repeatCount="indefinite" />
+      </path>
+      <circle r={4} fill={solid} filter="url(#scamGlow)">
+        <animateMotion dur="5s" repeatCount="indefinite" path={upperPath} />
+      </circle>
+      <circle r={3.5} fill={solid} filter="url(#scamGlow)">
+        <animateMotion dur="5s" begin="2.5s" repeatCount="indefinite" path={lowerPath} />
+      </circle>
+
+      {/* Exchange + freeze pulse */}
+      <circle cx={exch.x} cy={exch.y} r={26} fill="none" stroke={solid} strokeWidth="1.5">
+        <animate attributeName="r" values="26;50" dur="2.8s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.7;0" dur="2.8s" repeatCount="indefinite" />
+      </circle>
       <rect x={exch.x - 20} y={exch.y - 20} width={40} height={40} rx={6} fill={fillSoft} stroke={strong} strokeWidth="1.8" />
       <line x1={exch.x - 10} y1={exch.y - 5} x2={exch.x + 10} y2={exch.y - 5} stroke={mid} strokeWidth="1.5" strokeLinecap="round" />
       <line x1={exch.x - 10} y1={exch.y + 5} x2={exch.x + 10} y2={exch.y + 5} stroke={mid} strokeWidth="1.5" strokeLinecap="round" />
@@ -1035,31 +1086,21 @@ const CryptoTracingHeroArt = ({
       {/* Target wallet + magnifier */}
       <circle cx={target.x} cy={target.y} r={12} fill={fillMid} stroke={strong} strokeWidth="2" />
       <circle cx={target.x} cy={target.y} r={5} fill={solid} />
-      <circle cx={target.x} cy={target.y} r={26} fill="none" stroke={strong} strokeWidth="2" filter="url(#cryptoGlow)">
+      <circle cx={target.x} cy={target.y} r={26} fill="none" stroke={strong} strokeWidth="2" filter="url(#scamGlow)">
         <animate attributeName="r" values="24;30;24" dur="2.4s" repeatCount="indefinite" />
         <animate attributeName="opacity" values="1;0.35;1" dur="2.4s" repeatCount="indefinite" />
       </circle>
       <line x1={target.x + 19} y1={target.y + 19} x2={target.x + 38} y2={target.y + 38} stroke={strong} strokeWidth="4" strokeLinecap="round" />
 
-      {/* Block chain (bottom) */}
-      <line x1={60} y1={202} x2={840} y2={202} stroke={c("rgba(0,229,255,0.25)", "rgba(37,99,235,0.24)")} strokeWidth="1.5" />
-      {Array.from({ length: 14 }).map((_, i) => {
-        const x = 60 + i * 60;
-        const hot = i === 3 || i === 7 || i === 11;
-        return (
-          <rect
-            key={i}
-            x={x - 7}
-            y={195}
-            width={14}
-            height={14}
-            rx={2}
-            fill={hot ? fillMid : fillSoft}
-            stroke={hot ? strong : mid}
-            strokeWidth="1.5"
-          />
-        );
-      })}
+      {/* Timeline: theft → trace → recovery */}
+      <line x1={60} y1={205} x2={840} y2={205} stroke={c("rgba(0,229,255,0.35)", "rgba(37,99,235,0.32)")} strokeWidth="1.5" />
+      <circle cx={200} cy={205} r={4.5} fill={mid} />
+      <circle cx={450} cy={205} r={5.5} fill="none" stroke={strong} strokeWidth="1.5" />
+      <circle cx={700} cy={205} r={8} fill={fillMid} stroke={strong} strokeWidth="1.5" />
+      <path d="M696 205 L699 208 L705 201" fill="none" stroke={solid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx={60} cy={205} r={3.5} fill={solid} filter="url(#scamGlow)">
+        <animate attributeName="cx" values="60;840;840" keyTimes="0;0.9;1" dur="6s" repeatCount="indefinite" />
+      </circle>
     </svg>
   );
 };
@@ -1705,6 +1746,29 @@ export type SingleServiceInitialData = {
   error: string;
 };
 
+
+
+
+
+
+const HERO_ARTS: Record<string, React.ComponentType<{ darkMode?: boolean }>> = {
+  pentest: PostCrisisPentestHeroArt,
+  ransomware: RansomwareNegotiationHeroArt,
+  forensics: DigitalForensicsHeroArt,
+  crypto: CryptoTracingHeroArt,
+  identity: HiddenIdentityHeroArt,
+  "threat-intel": ThreatIntelHeroArt,
+};
+
+const DEPARTMENTS: Record<string, string> = {
+  pentest: "دپارتمان کشف آسیب‌پذیری",
+  ransomware: "دپارتمان مهندسی معکوس",
+  forensics: "دپارتمان پزشکی قانونی دیجیتال",
+  identity: "دپارتمان کشف هویت",
+  crypto: "دپارتمان ردیابی مالی",
+  "threat-intel": "دپارتمان هوش تهدیدات",
+};
+
 export default function App({
   initialService,
   initialServiceError = "",
@@ -1723,31 +1787,8 @@ export default function App({
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
- 
-const HERO_ARTS: Record<string, React.ComponentType<{ darkMode?: boolean }>> = {
-  "تست نفوذِ پسا-بحران": PostCrisisPentestHeroArt,
-  "مقابله و مذاکره با باج‌افزارها": RansomwareNegotiationHeroArt,
-  "فارنزیک و کالبدشکافی دیجیتال": DigitalForensicsHeroArt,
-  "ردیابی رمزارز و تحلیل بلاک‌چین": CryptoTracingHeroArt,
-  "هویت‌سنجی پنهان": HiddenIdentityHeroArt,
-    "هوش تهدیدات": ThreatIntelHeroArt,
-};
-
-
-const DEPARTMENTS: Record<string, string> = {
-  "تست نفوذِ پسا-بحران": "دپارتمان کشف آسیب‌پذیری",
-  "مقابله و مذاکره با باج‌افزارها": "دپارتمان مهندسی معکوس",
-  "فارنزیک و کالبدشکافی دیجیتال": "دپارتمان پزشکی قانونی دیجیتال",
-  "هویت‌سنجی پنهان": "دپارتمان کشف هویت",
-  "ردیابی رمزارز و تحلیل بلاک‌چین": "دپارتمان ردیابی مالی",
-    "هوش تهدیدات": "دپارتمان هوش تهدیدات",
-};
-
-const department =
-  DEPARTMENTS[service?.title ?? ""] ||
-  service?.categoryLabel ||
-  "دپارتمان ردیابی مالی";
-
+ const department =
+  DEPARTMENTS[service?.key] || service?.categoryLabel || "دپارتمان ردیابی مالی";
 
   return ( 
     
@@ -1838,10 +1879,11 @@ const department =
   </section>
 
      {crisisOpen && (
-        <EmergencyModal
-          onClose={() => setCrisisOpen(false)}
-            serviceLabel={service?.title}
-        />
+<EmergencyModal
+  onClose={() => setCrisisOpen(false)}
+  serviceLabel={service?.title}
+  serviceKey={service?.key}
+/>
       )}
 
        <motion.div
@@ -1929,7 +1971,7 @@ const department =
               }} 
           > 
             <IconWarning /> 
-            درخواست فوری      
+           درخواست کمک فوری   
           </button> 
  
           
@@ -1938,7 +1980,7 @@ const department =
         {/* Blockchain art */} 
         <div className="relative z-10 w-full max-w-4xl mt-10 -mb-4"> 
 {(() => {
-  const HeroArt = HERO_ARTS[service?.title ?? ""] ?? BlockchainHeroArt;
+  const HeroArt = HERO_ARTS[service?.key] ?? BlockchainHeroArt;
   return <HeroArt darkMode={darkMode} />;
 })()}
         </div>  
@@ -1997,7 +2039,7 @@ const department =
           {/* Header */} 
           <div className="text-center mb-14"> 
             <span 
-              style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.65rem", color: darkMode ? "rgba(0,229,255,0.45)" : "#1565C0", letterSpacing: "0.18em", textTransform: "uppercase" }} 
+              style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.7rem", color: darkMode ? "rgba(0,229,255,0.5)" : "#1565C0", letterSpacing: "0.18em", textTransform: "uppercase" }} 
               className="block mb-3" 
             > 
               HOW IT WORK 
@@ -2085,11 +2127,13 @@ const department =
                         <span 
                           style={{ 
                             fontFamily: "monospace", 
-                            fontSize: "0.7rem", 
+                            fontSize: "0.75rem", 
                             color: darkMode 
-                              ? "rgba(0,229,255,0.4)" 
+                              ? "rgba(0,229,255,0.5)" 
                               : "#1565C0", 
                             letterSpacing: "0.12em", 
+                            // fontWeight: "550"
+                            
                           }} 
                         > 
                           STEP {String(index + 1).padStart(2, "0")} 
@@ -2135,7 +2179,7 @@ const department =
                             .map((tag: string, tagIndex: number) => (
                               <span 
                                 key={`${tag}-${tagIndex}`}
-                                className="px-2.5 py-0.5 rounded text-xs" 
+                                className="px-2.5 py-0.5 rounded" 
                                 style={{ 
                                   background: darkMode 
                                     ? "rgba(0,229,255,0.06)" 
@@ -2147,7 +2191,9 @@ const department =
                                     ? "rgba(0,229,255,0.5)" 
                                     : "#1565C0", 
                                   fontFamily: "monospace", 
-                                  fontWeight: 700, 
+                                  fontWeight: 550, 
+                                  fontSize: "0.73rem",
+                                  letterSpacing: "0.03em", 
                                 }} 
                               > 
                                 {tag}

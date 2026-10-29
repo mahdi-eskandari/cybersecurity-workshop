@@ -1270,7 +1270,7 @@ const closeCrisis = () => {
 
               }}
             >
-              گزارش فوری حادثه
+             درخواست کمک فوری
             </button>
 
 <Link
@@ -1722,8 +1722,9 @@ style={{
                       color: darkMode
                         ? "rgba(0,229,255,0.6)"
                         : "#1565C0",
-                      fontSize: "0.72rem",
+                      fontSize: "0.73rem",
                       fontFamily: "monospace",
+                      fontWeight: "550"
                     }}
                   >
                     {service.meta}

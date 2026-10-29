@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
+import { normalizeServiceKey } from "@/lib/serviceKeys";
 
 import connectDB from "@/lib/mongodb";
 import Service from "../../../model/Service";
@@ -119,6 +120,7 @@ export async function PATCH(
 
     const {
       slug,
+       key,  
       title,
       shortDesc,
       icon,
@@ -262,7 +264,9 @@ const oldService = await Service.findById(id).select("slug").lean();
         {
           slug: normalizedSlug,
 
-          title: title.trim(),
+          ...(typeof key === "string" ? { key: normalizeServiceKey(key) } : {}),
+
+          title: title.replace(/[\u200b\u2060\ufeff]/g, "").trim(),
 
           shortDesc: shortDesc.trim(),
 
