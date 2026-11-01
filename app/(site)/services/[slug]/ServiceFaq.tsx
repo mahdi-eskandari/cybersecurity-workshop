@@ -34,11 +34,11 @@ const [openFaq, setOpenFaq] = useState<number | null>(null);
         sectionBorder: "1px solid rgba(0,229,255,0.07)",
         tag: "rgba(0,229,255,0.45)",
         title: "#FFFFFF",
-        text: "#64748B",
+        text: "#6a7a92",
         helpBg: "rgba(0,229,255,0.04)",
         helpBorder: "1px solid rgba(0,229,255,0.12)",
         helpTitle: "#E2E8F0",
-        helpText: "#475569",
+        helpText: "#65758c",
         cardBg: "rgba(255,255,255,0.025)",
         cardBgOpen: "rgba(0,229,255,0.055)",
         cardBorder: "1px solid rgba(0,229,255,0.1)",
@@ -46,7 +46,7 @@ const [openFaq, setOpenFaq] = useState<number | null>(null);
         question: "#CBD5E1",
         questionOpen: "#FFFFFF",
         chevronBg: "rgba(0,229,255,0.07)",
-        answer: "#64748B",
+        answer: "#6b7c94",
         dotGlow: "0 0 8px rgba(0,229,255,0.7)",
       }
     : {
@@ -91,7 +91,7 @@ sectionBorder: "1px solid rgba(21,101,192,0.14)",
             className="block mb-3 font-bold"
             style={{
               fontFamily: "'JetBrains Mono',monospace",
-              fontSize: "0.7rem",
+              fontSize: "13px",
               color: t.tag,
               letterSpacing: "0.18em",
             }}
@@ -102,7 +102,7 @@ sectionBorder: "1px solid rgba(21,101,192,0.14)",
           <h2
             className="font-bold mb-4"
             style={{
-              fontSize: "clamp(1.4rem, 3vw, 2.1rem)",
+              fontSize: "32px",
               color: t.title,
               lineHeight: 1.5,
             }}
@@ -110,7 +110,10 @@ sectionBorder: "1px solid rgba(21,101,192,0.14)",
             پرسش‌های متداول
           </h2>
 
-          <p style={{ color: t.text, fontSize: "0.9rem", lineHeight: 1.9 }}>
+          <p style={{ color: t.text,
+                        fontSize: "15px", 
+                          lineHeight: 2, 
+                          fontWeight: "500" }}>
             پاسخ پرسش‌های رایج درباره ردیابی دارایی دیجیتال، روند بررسی و شیوه
             حفاظت از اطلاعات پرونده.
           </p>
@@ -132,16 +135,17 @@ sectionBorder: "1px solid rgba(21,101,192,0.14)",
               />
               <span
                 className="font-semibold text-sm"
-                style={{ color: t.helpTitle }}
+                style={{ color: t.helpTitle, fontSize: "16px",  }}
               >
                 پاسخ پرسش شما اینجا نیست؟
               </span>
             </div>
 
             <p
+            className="font-semibold"
               style={{
                 color: t.helpText,
-                fontSize: "0.78rem",
+                fontSize: "13px",
                 lineHeight: 1.8,
                 margin: 0,
               }}
@@ -183,10 +187,10 @@ sectionBorder: "1px solid rgba(21,101,192,0.14)",
                   }}
                 >
                   <span
-                    className="font-semibold"
+                    className="font-bold"
                     style={{
                       color: isOpen ? t.questionOpen : t.question,
-                      fontSize: "0.85rem",
+                      fontSize: "14px",
                       transition: "color 0.3s ease",
                     }}
                   >
@@ -233,7 +237,7 @@ sectionBorder: "1px solid rgba(21,101,192,0.14)",
                       className="px-5 pb-5"
                       style={{
                         color: t.answer,
-                        fontSize: "0.78rem",
+                        fontSize: "13px",
                         lineHeight: 1.95,
                         margin: 0,
                         whiteSpace: "pre-line",

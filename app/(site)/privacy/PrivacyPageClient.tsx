@@ -448,9 +448,11 @@ const calloutStrongLight = "text-black";
     <p
       className={`privacy-paragraph ${isDark ? "" : "text-[#334155]"}`}
       style={{
-        fontSize: "clamp(0.88rem,1.7vw,0.97rem)",
+        fontSize: "16px",
         lineHeight: 2,
         marginBottom: 18,
+        fontWeight: "400",
+        
         ...(isDark ? { color: "#94A3B8" } : {})
       }}
     >
@@ -469,8 +471,9 @@ const calloutStrongLight = "text-black";
       id={id}
       className={`font-bold privacy-h2 ${isDark ? "" : "text-black"}`}
       style={{
-        fontSize: "clamp(1.05rem,2.2vw,1.3rem)",
+        fontSize: "40px",
         lineHeight: 1.4,
+        fontWeight: "500",
         marginBottom: 14,
         marginTop: 8,
         ...(isDark ? { color: "#fff" } : {})
@@ -484,7 +487,7 @@ const calloutStrongLight = "text-black";
     <h3
       className={`font-semibold privacy-h3 ${isDark ? "" : "text-black"}`}
       style={{
-        fontSize: "clamp(0.95rem,1.9vw,1.05rem)",
+        fontSize: "24px",
         lineHeight: 1.5,
         marginBottom: 10,
         marginTop: 24,
@@ -588,13 +591,15 @@ const lightColors = {
           isDark ? "" : "border " + lightColors[color].box
         }`}
         style={
+          
           isDark
             ? {
                 background: c.bg,
                 border: `1px solid ${c.border}`,
-                padding: "18px 20px"
+                padding: "18px 20px",
               }
             : { padding: "18px 20px" }
+            
         }
       >
         <div
@@ -623,7 +628,7 @@ const lightColors = {
           <div
             className={`privacy-callout-content ${isDark ? "" : "text-[#334155]"}`}
             style={{
-              fontSize: "0.85rem",
+              fontSize: "15px",
               lineHeight: 1.85,
               ...(isDark ? { color: "#94A3B8" } : {})
             }}
@@ -668,7 +673,7 @@ const lightColors = {
             href="/"
             className={`flex items-center gap-1.5 leading-none transition-colors ${
               isDark
-                ? "text-[#64748B] hover:text-[#00E5FF]"
+                ? "text-[#90a4c1] hover:text-[#00E5FF]"
                 : "text-[#475569] hover:text-[#1565C0]"
             }`}
           >
@@ -767,10 +772,10 @@ const lightColors = {
 <h1
   className="glow-text font-black leading-tight mb-6"
   style={{
-    fontSize: "clamp(2rem, 5vw, 3.5rem)",
+    fontSize: "56px",
     color: darkMode ? "#ffffff" : "#0c1a43",
     lineHeight: "1.3",
-    fontWeight: 900,
+    fontWeight: 500,
     textShadow: darkMode
       ? undefined
       : "0 0 18px rgba(30,58,138,0.10)",
@@ -789,10 +794,11 @@ const lightColors = {
             <p
               className={`mb-8 max-w-2xl privacy-header-description`}
             style={{
-              color: darkMode ? "#9aa0aa" : "#475569",
-              fontSize: "clamp(0.92rem,2vw,1.0rem)",
-              lineHeight: 1.9,
+              color: darkMode ? "#9aa0aa" : "#526075",
+              fontSize: "18px",
+              lineHeight: 1.7,
               maxWidth: 580,
+              fontWeight: "500"
             }}
             >
               حفاظت از هویت و داده‌های حساس شما، خط قرمز تیم عملیاتی پاراهور است.
@@ -818,7 +824,7 @@ const lightColors = {
                   className={isDark ? "" : "text-[#475569]"}
                   style={{
                     fontFamily: "monospace",
-                    fontSize: "0.75rem",
+                    fontSize: "0.82rem",
                     ...(isDark ? { color: "#86909f" } : {}),
                     fontWeight: "550"
                   }}
@@ -830,7 +836,7 @@ const lightColors = {
                   className={isDark ? "" : "text-[#475569]"}
                   style={{
                     fontFamily: "monospace",
-                    fontSize: "0.75rem",
+                    fontSize: "0.82rem",
                     fontWeight: 600,
                     ...(isDark ? { color: "#86909f" } : {}),
                     
@@ -860,7 +866,7 @@ const lightColors = {
                 <span
                   style={{
                     fontFamily: "monospace",
-                    fontSize: "0.75rem",
+                    fontSize: "0.82rem",
                     color: "#22C55E",
                     fontWeight: "550"
                   }}
@@ -1118,7 +1124,7 @@ const lightColors = {
                         className={`privacy-progress-label ${isDark ? "" : "text-[#475569]"}`}
                         style={{
                           fontFamily: "monospace",
-                          fontSize: "0.74rem",
+                          fontSize: "0.85rem",
                           ...(isDark ? { color: "#46556d" } : {}),
                           fontWeight: "550"
                         }}
@@ -1266,7 +1272,7 @@ const lightColors = {
                 <ul
                   className={`space-y-2 mb-5 privacy-list ${isDark ? "" : "text-[#334155]"}`}
                   style={{
-                    fontSize: "0.88rem",
+                    fontSize: "15px",
                     lineHeight: 1.9,
                     ...(isDark ? { color: "#64748B" } : {})
                   }}
@@ -1497,7 +1503,7 @@ const lightColors = {
                     <p
                       className={isDark ? "" : "text-[#475569]"}
                       style={{
-                        fontSize: "0.83rem",
+                        fontSize: "15px",
                         lineHeight: 1.85,
                         ...(isDark ? { color: "#64748B" } : {})
                       }}
@@ -1622,7 +1628,7 @@ const lightColors = {
                       className={isDark ? "" : "text-[#1565C0]"}
                       style={{
                         fontFamily: "monospace",
-                        fontSize: "0.78rem",
+                        fontSize: "0.88rem",
                         letterSpacing: "0.1em",
                         ...(isDark ? { color: "rgba(0,229,255,0.4)" } : {}),
                         fontWeight: "550"
@@ -1679,7 +1685,7 @@ const lightColors = {
                         <span
                           className={`privacy-table-entity ${isDark ? "" : "text-[#334155]"}`}
                           style={{
-                            fontSize: "0.82rem",
+                            fontSize: "14px",
                             ...(isDark ? { color: "#838891" } : {})
                           }}
                         >
@@ -1689,7 +1695,7 @@ const lightColors = {
                         <span
                           style={{
                             color,
-                            fontSize: "0.75rem",
+                            fontSize: "14px",
                             fontWeight: 600
                           }}
                         >
@@ -1860,7 +1866,7 @@ const lightColors = {
                   className={`font-bold mb-3 privacy-contact-title ${isDark ? "" : "text-[#1565C0]"}`}
                   style={{
                     fontSize:
-                      "clamp(0.98rem,2.2vw,1.2rem)",
+                      "24px",
                     lineHeight: 1.45,
                     ...(isDark ? { color: "#fff" } : {color: "black"})
                   }}
@@ -1871,8 +1877,9 @@ const lightColors = {
                 <p
                   className={`mb-6 privacy-contact-description ${isDark ? "" : "text-[#475569]"}`}
                   style={{
-                    fontSize: "0.85rem",
+                    fontSize: "14px",
                     lineHeight: 1.85,
+                    fontWeight: "500",
                     ...(isDark ? { color: "#838891" } : {})
                   }}
                 >

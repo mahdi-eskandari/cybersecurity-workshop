@@ -12,6 +12,10 @@ import { record, retryAfter, countIn, lastAt, MIN } from "@/lib/rateLimit";
 import { claimToken } from "@/lib/tokenGuard";
 
 const HOUR = 60 * 60 * 1000;
+
+// ثانیه → متن خوانا: زیر ۶۰ ثانیه «ثانیه»، بالاتر «دقیقه» (رو به بالا گرد می‌شه)
+const formatWait = (seconds: number) =>
+  seconds < 60 ? `${seconds} ثانیه` : `${Math.ceil(seconds / 60)} دقیقه`;
 // const FREE_RESENDS = 2;
 const GAPS = [60, 120, 300]; // فاصله‌ی لازم بعد از ارسال ۱، ۲ و ۳ (ثانیه)
 const FREE_WINDOW = 10 * MIN;
@@ -65,7 +69,7 @@ export async function POST(req: NextRequest) {
     const gapWait = Math.ceil((lastAt(sendKey) + gapSec * 1000 - Date.now()) / 1000);
     if (gapWait > 0) {
       return NextResponse.json(
-        { message: `لطفاً ${gapWait} ثانیه دیگر دوباره تلاش کنید`, retryAfter: gapWait },
+                { message: `لطفاً ${formatWait(gapWait)} دیگر دوباره تلاش کنید`, retryAfter: gapWait },
         { status: 429 }
       );
     }
@@ -136,9 +140,9 @@ const ok = (nextResendIn: number) => {
 
   // ۵) ساخت کد
   const r = createOtp(phone);
-if ("error" in r) {
+if (r.error === "wait") {
   return NextResponse.json(
-    { message: `لطفاً ${r.seconds} ثانیه دیگر دوباره تلاش کنید`, retryAfter: r.seconds },
+        { message: `لطفاً ${formatWait(r.seconds)} دیگر دوباره تلاش کنید`, retryAfter: r.seconds },
     { status: 429 }
   );
 }

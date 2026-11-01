@@ -27,13 +27,17 @@ export const SERVICE_KEY_LABELS: Record<ServiceKey, string> = {
 /* کلید نوع گزارش (مدال) ← متنی که تو دیتابیس/پنل ذخیره می‌شه */
 export const INCIDENT_LABELS: Record<string, string> = {
   consulting: "مشاوره",
-  identity: "کشف هویت",
   crypto: "ردیابی رمزارز",
-  pentest: "تست نفوذ",
+  identity: "کشف هویت پنهان",
   forensics: "کالبدشکافی دیجیتال",
-  ransomware: "مقابله با باج‌افزار",
+  "device-surveillance": "شک به شنود یا هک شدن دیوایس",
+  "online-fraud": "کلاهبرداری مالی و اینترنتی (فیشینگ، رسیدساز)",
+  pentest: "تست نفوذ",
+  impersonation: "جعل هویت و ساخت اکانت/پیج فیک",
   "threat-intel": "هوش تهدیدات",
-  other: "سایر",
+  other: "سایر موارد",
+  // قدیمی؛ تو مدال نشون داده نمی‌شه ولی کوکی‌های قدیمی خراب نشن
+  ransomware: "مقابله با باج‌افزار",
 };
 
 export const isIncidentKey = (v: string) =>

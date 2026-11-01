@@ -1249,7 +1249,7 @@ export default function App({
             href="/"
             className={`flex items-center gap-1.5 leading-none transition-colors ${
               darkMode
-                ? "text-[#7e8691] hover:text-[#00E5FF]"
+                ? "text-[#90a4c1] hover:text-[#00E5FF]"
                 : "text-[#475569] hover:text-[#1565C0]"
             }`}
           >
@@ -1272,7 +1272,7 @@ export default function App({
             href="/blogs"
             className={`transition-colors ${
               darkMode
-                ? "text-[#7e8691] hover:text-[#00E5FF]"
+                ? "text-[#90a4c1] hover:text-[#00E5FF]"
                 : "text-[#475569] hover:text-[#1565C0]"
             }`}
           >
@@ -1338,7 +1338,7 @@ export default function App({
             className="font-black mb-6 leading-snug h-auto max-w-full whitespace-normal break-words overflow-visible"
             style={{
               fontSize:
-                "clamp(1.55rem,4vw,2.4rem)",
+                "56px",
               color: darkMode
                 ? "#fff"
                 : "black",
@@ -1348,6 +1348,8 @@ export default function App({
                 : "none",
               overflowWrap: "anywhere",
               wordBreak: "normal",
+              fontWeight: "500",
+              
             }}
           >
             {post.title}
@@ -1387,7 +1389,7 @@ export default function App({
               }}
                 className={`flex items-center gap-1.5  ${darkMode
                   ? "text-[#9aa0aa] hover:text-gray-300"
-                  : "text-[#475569]"
+                  : "text-[#475569] hover:text-gray-800"
                 }`}
               >
 
@@ -1653,9 +1655,10 @@ export default function App({
               : "black",
 
             fontSize:
-              "clamp(1.05rem,2.5vw,1.4rem)",
+              "32px",
 
-            lineHeight: 1.45,
+            lineHeight: 1.5,
+            fontWeight: "500"
           }}
         >
           آیا قربانی کلاهبرداری مشابهی شده‌اید؟
@@ -1672,10 +1675,12 @@ export default function App({
                 color: darkMode
               ? "#9aa0aa"
               : "#475569",
-                fontSize: "0.88rem",
-                lineHeight: 1.85,
-                maxWidth: 420,
+                fontSize: "16px",
+                lineHeight: 1.75,
+                fontWeight: "500"
               }}
+
+              
         >
           هر ساعت، ردپاها محو‌تر می‌شوند.
           درخواست بررسی اولیه کاملاً رایگان است.
@@ -1685,7 +1690,7 @@ export default function App({
 <button
 onClick={() => setCrisisOpen(true)}
   type="button"
-  className="inline-flex items-center justify-center gap-2 px-14 py-3.5 rounded-xl font-bold transition-all duration-300" 
+  className="inline-flex items-center justify-center gap-2 px-10 py-3.5 rounded-xl font-bold transition-all duration-300" 
               style={{ 
                 background:  "#EF4444" , 
                 color: "#ffffff", 
@@ -1764,8 +1769,7 @@ onClick={() => setCrisisOpen(true)}
                         : "1px solid rgba(26, 103, 212, 0.43)",
                       color: darkMode ? "#00E5FF" : "#1565C0",
                       fontFamily: "monospace",
-                      fontSize: "0.8rem",
-                    
+                      fontSize: "0.8rem"                    
                     }}
                   >
                     {tag}
@@ -1982,20 +1986,29 @@ onClick={() => setCrisisOpen(true)}
         <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-5 lg:p-6">
           {/* Title */}
           <h3
-            className={`text-base font-bold leading-snug mb-3 break-words line-clamp-2 ${
+            className={`font-bold leading-snug mb-3 break-words line-clamp-2 ${
               darkMode
                 ? "text-[#E6F7FF]"
                 : "text-[#111827] group-hover:text-[#1565C0] transition-colors duration-300"
             }`}
+            style={{
+              fontWeight: "500",
+              fontSize: "18px",
+              lineHeight: 1.5
+            }}
           >
             {related.title}
           </h3>
 
           {/* Excerpt */}
           <p
-            className={`text-[13px] leading-relaxed line-clamp-2 break-words mb-5 flex-1 ${
+            className={`text-[14px]  line-clamp-2 break-words mb-5 flex-1 ${
               darkMode ? "text-[#9DB0C0]" : "text-[#334155]"
             }`}
+            style={{
+              fontWeight: "500",
+              lineHeight: 1.78
+            }}
           >
             {relatedExcerpt}
           </p>
@@ -2091,8 +2104,10 @@ onClick={() => setCrisisOpen(true)}
         .blog-content h1,
         .blog-content h2,
         .blog-content h3,
+        .blog-content h6,
+        .blog-content h5,
         .blog-content h4 {
-          color: ${darkMode ? "#ffffff" : "#1E3A8A"};
+          color: ${darkMode ? "#ffffff" : "#010613"};
           font-weight: 700;
           line-height: 1.5;
           margin-top: 2.1rem;
@@ -2100,24 +2115,33 @@ onClick={() => setCrisisOpen(true)}
         }
 
         .blog-content h1 {
-          font-size: clamp(1.45rem, 3vw, 2rem);
+          font-size: 40px;
+          
         }
 
         .blog-content h2 {
-          font-size: clamp(1.15rem, 2.4vw, 1.4rem);
+          font-size: 30px;
         }
 
         .blog-content h3 {
-          font-size: clamp(1rem, 2vw, 1.15rem);
+          font-size: 25px;
         }
 
         .blog-content h4 {
-          font-size: 1rem;
+          font-size: 20px;
+        }
+
+         .blog-content h5 {
+          font-size: 18px;
+        }
+
+                 .blog-content h6 {
+          font-size: 15px;
         }
 
         .blog-content strong {
           color: ${darkMode ? "#e2e8f0" : "#0F172A"};
-          font-weight: 700;
+          font-weight: 600;
         }
 
         .blog-content em {

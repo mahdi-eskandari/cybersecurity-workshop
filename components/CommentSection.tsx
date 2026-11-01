@@ -390,12 +390,14 @@ setErrors({});
         <span
           style={{
             width: 4,
-            height: 18,
+            height: 22,
             borderRadius: 99,
             background: darkMode ? "rgb(0,229,255)" : "rgb(21,101,192)",
           }}
         />
-        <h3 className="font-bold text-base" style={{ color: darkMode ? "#E2E8F0" : "black" }}>
+        <h3 className="font-bold text-base" style={{ color: darkMode ? "#E2E8F0" : "black",
+          fontSize: "24px"
+         }}>
           نظرات و دیدگاه‌های کاربران
         </h3>
       </div>
@@ -403,7 +405,7 @@ setErrors({});
       {/* کارت فرم با همون ساختار ساده قبلی، ولی با هاورها و رنگ‌ولعاب استایلِ شما */}
      <div
   ref={formCardRef}
-  className={`relative overflow-hidden rounded-2xl border transition-all duration-300 w-full p-6 md:p-8 mb-10 ${
+  className={`relative overflow-hidden rounded-2xl border transition-all duration-300 w-full p-4 min-[410px]:p-6 md:p-8 mb-10 ${
           darkMode
             ? "border-[#00E5FF]/25 bg-white/[0.025] backdrop-blur-[10px]  shadow-[0_18px_42px_rgba(0,0,0,0.38),0_12px_40px_rgba(0,229,255,0.20)] "
             : "border-[#1565C0]/40 bg-white  shadow-[0_0_0_1px_rgba(21,101,192,0.1),0_6px_16px_rgba(21,101,192,0.08)]"
@@ -449,7 +451,7 @@ setErrors({});
   </div>
 )}
 
-        <p className=" mb-6 relative z-10" style={{ color: darkMode ? "#94A3B8" : "#64748B",   fontSize: "0.8rem", }}>
+        <p className=" mb-6 relative z-10" style={{ color: darkMode ? "#94A3B8" : "#64748B",   fontSize: "12px", }}>
           نظر شما پس از بررسی و تایید تیم مدیریت در صفحه نمایش داده خواهد شد.
         </p>
 
@@ -577,7 +579,7 @@ onMouseLeave={(e) => {
           </div>
 
 
-                    <div className="w-full min-h-[65px] [&>div]:!w-full [&_iframe]:!w-full">
+<div className="w-full min-h-[65px] overflow-hidden [&>div]:!w-full [&_iframe]:!w-full">
             <Turnstile
               ref={turnstileRef}
               siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
@@ -624,14 +626,14 @@ onMouseLeave={(e) => {
       {/* ───────────────── لیست نظرات تایید و منتشرشده ───────────────── */}
 
       <div className="flex items-center justify-between mb-5 px-1">
-        <h4 className="font-bold text-sm" style={{ color: darkMode ? "#E2E8F0" : "#0F172A" }}>
+        <h4 className="font-bold" style={{ color: darkMode ? "#E2E8F0" : "#0F172A", fontSize: "14px" }}>
           دیدگاه‌های ثبت‌شده
         </h4>
 
         {comments.length > 0 && (
           <span
-            className={`text-[10px] font-bold px-2.5 py-1 rounded-full  ${
-              darkMode ? "bg-[#00E5FF]/10 text-[#00E5FF]" : "bg-[#1E3A8A]/8 text-[#1E3A8A]"
+            className={`text-[12px] font-bold px-2.5 py-1 rounded-full flex ${
+              darkMode ? "bg-[#00E5FF]/10 text-[#00E5FF]" : "bg-[rgba(21,101,192,0.07)] text-[#1565C0]"
             }`}
           >
             {comments.length} دیدگاه

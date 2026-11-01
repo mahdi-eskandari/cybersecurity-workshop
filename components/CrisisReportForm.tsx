@@ -1365,12 +1365,14 @@ type Chip = {
 
 const chips: Chip[] = [
   { id: "consulting", display: "مشاوره", icon: <IconShieldCheck darkMode={false} /> },
-  { id: "identity", display: "مزاحمت سایبری (اخاذی، تهدید، توهین و نشر اکاذیب)", icon: <IconShieldCheck darkMode={false} /> },
-  { id: "crypto", display: "خدمات رمز ارزی", icon: <IconCrypto /> },
-  { id: "pentest", display: "نشت یا سرقت اطلاعات سازمانی", icon: <IconHack /> },
+  { id: "crypto", display: "سرقت یا کلاهبرداری رمزارز", icon: <IconCrypto /> },
+  { id: "identity", display: "اخاذی، تهدید و جرایم حیثیتی (توهین و نشر اکاذیب)", icon: <IconShieldCheck darkMode={false} /> },
   { id: "forensics", display: "هک شدن اکانت‌ها و شبکه‌های اجتماعی", icon: <IconHack /> },
-  { id: "ransomware", display: "پاکسازی دستگاه آلوده", icon: <IconExtort /> },
-  { id: "threat-intel", display: "هوش تهدیدات (پیشگیری و اعتبارسنجی)", icon: <IconHack /> },
+  { id: "device-surveillance", display: "شک به شنود یا هک شدن دیوایس", icon: <IconHack /> },
+  { id: "online-fraud", display: "کلاهبرداری مالی و اینترنتی (فیشینگ، رسیدساز)", icon: <IconExtort /> },
+  { id: "pentest", display: "نشت یا سرقت اطلاعات سازمانی", icon: <IconHack /> },
+  { id: "impersonation", display: "جعل هویت و ساخت اکانت/پیج فیک", icon: <IconShieldCheck darkMode={false} /> },
+  { id: "threat-intel", display: "درخواست هوش تهدیدات (پیشگیری و اعتبارسنجی)", icon: <IconHack /> },
   { id: "other", display: "سایر موارد", icon: <IconShieldCheck darkMode={false} /> },
 ];
 
@@ -1522,26 +1524,29 @@ const DEFAULT_DESC_PLACEHOLDER =
   "مثال: کیف پول تراست‌ولت من هک شده و تترها به سرقت رفته...";
 
 const CONSULTING_DESC_PLACEHOLDER =
-  "هزینه مشاوره بعد از بررسی اولیه توسط کارشناسان تعیین خواهد شد - مشاوره حوادث سایبری که به پاراهور ارجاع میشود رایگان میباشد";
+  "حق‌المشاوره شما، پس از بررسیِ اولیه و صرفاً بر اساس «سطح تخصص فنی و حقوقی» محاسبه و به شما اعلام می‌گردد. در صورتی که پس از مشاوره، پیگیری پرونده را رسماً به پاراهور بسپارید، مبلغ مشاوره از قرارداد نهایی کسر شده و کاملاً رایگان محاسبه خواهد شد.";
 
-/* پلیس‌هولدر شرح مشکل بر اساس «نوع خدمت» انتخاب‌شده (صفحه‌های غیر از صفحه‌ی خدمت) */
+/* پلیس‌هولدر شرح مشکل بر اساس «نوع خدمت» انتخاب‌شده */
 const PH_CRYPTO = "لطفاً بنویسید سرقت در چه تاریخی رخ داده است؟ ارزها از چه کیفی (مثلاً تراست‌ولت) خارج شده‌اند؟ آیا روی لینکِ خاصی کلیک کردید، کلمات بازیابی را جایی وارد کردید، یا ارزِ ناشناخته‌ای خریدید؟ (نام ارز و شبکه را ذکر کنید).";
 const PH_IDENTITY = "این تهدید یا توهین در چه پلتفرمی (تلگرام، اینستاگرام، واتس‌اپ و...) در حال رخ دادن است؟ آیا فرد ناشناس است؟ چه اطلاعات یا مدارکی از شما در دست دارد که با آن اخاذی می‌کند؟";
-const PH_PENTEST = "چه نوع دیتایی از سازمان شما نشت کرده است؟ (دیتابیس مشتریان، اسناد مالی، سورس‌کد). آیا به کارمندِ داخلی شک دارید یا حمله از بیرونِ زیرساخت رخ داده است؟";
 const PH_FORENSIC = "کدام اکانت شما از دسترس خارج شده است؟ آیا به شماره موبایل یا ایمیلِ اولیه‌ای که با آن ثبت‌نام کرده‌اید هنوز دسترسی دارید؟ هکر بعد از ورود چه اقدامی انجام داده است؟";
-const PH_RANSOM = "مثال: فایل‌های سازمان ما قفل شده و باج خواستن...";
+const PH_DEVICE = "چه نشانه‌هایی باعث این شک شده است؟ (مثلاً خالی شدن غیرعادی باتری، روشن شدن خودکار دوربین، شنیده شدن صدای محیط). آیا اخیراً گوشی/لپ‌تاپ شما به صورت فیزیکی در اختیار فرد دیگری بوده یا روی لینکِ مشکوکی کلیک کرده‌اید؟";
+const PH_FRAUD = "روش کلاهبرداری چگونه بوده است؟ (پیامک جعلیِ ثنا، رسیدساز در سایت دیوار، درگاه بانکیِ فیک). چقدر زمان از انتقالِ وجه گذشته است؟ آیا اطلاعات کارت بانکی خود را جایی وارد کردید؟";
+const PH_PENTEST = "چه نوع دیتایی از سازمان شما نشت کرده است؟ (دیتابیس مشتریان، اسناد مالی، سورس‌کد). آیا به کارمندِ داخلی شک دارید یا حمله از بیرونِ زیرساخت رخ داده است؟";
+const PH_IMPERSONATION = "آیدی، شماره یا لینکِ پلتفرمِ جعلی را بنویسید. این فرد/پیج از چه زمانی فعال شده و دقیقاً چه سوءاستفاده‌ای از نام، برند یا اعتبار شما کرده است؟";
 const PH_THREAT = "هدف از اعتبارسنجی را مشخص کنید. (مثلاً: نیاز به بررسی سوابقِ یک شرکت/شریک تجاری، اعتبارسنجی یک ایمیلِ خارجی قبل از واریز وجه، یا بررسی سطحِ امنیتِ هویتِ دیجیتالِ مدیرانِ سازمان).";
 const PH_OTHER =
   "لطفاً با جزئیاتِ کامل بنویسید چه اتفاقی افتاده، از چه تاریخی شروع شده، و در حال حاضر چه خطری اطلاعات یا سرمایه شما را تهدید می‌کند.";
-
 
 const PLACEHOLDER_BY_KEY: Record<string, string> = {
   consulting: CONSULTING_DESC_PLACEHOLDER,
   crypto: PH_CRYPTO,
   identity: PH_IDENTITY,
-  pentest: PH_PENTEST,
   forensics: PH_FORENSIC,
-  ransomware: PH_RANSOM,
+  "device-surveillance": PH_DEVICE,
+  "online-fraud": PH_FRAUD,
+  pentest: PH_PENTEST,
+  impersonation: PH_IMPERSONATION,
   "threat-intel": PH_THREAT,
   other: PH_OTHER,
 };
@@ -1861,9 +1866,10 @@ const onSubmit = async (data: CrisisReportFormValues) => {
                 <span
                   style={{
                     fontFamily: "monospace",
-                    fontSize: "0.6rem",
+                    fontSize: "0.7rem",
                     color: "rgba(239,68,68,0.7)",
                     letterSpacing: "0.18em",
+                    fontWeight: "550"
                   }}
                 >
                   CRISIS CHANNEL // ENCRYPTED

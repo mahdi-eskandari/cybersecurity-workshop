@@ -503,14 +503,14 @@ const SkillBar = ({
     <div className="mb-[13px]">
       <div className="flex justify-between mb-[6px]">
         <span
-          className={`text-[0.76rem] ${
+          className={`text-[12px] ${
             darkMode ? "text-[#94A3B8]" : "text-[#475569]"
           }`}
         >
           {label}
         </span>
 
-        <span className="text-[0.68rem] font-mono" style={{ color }}>
+        <span className="text-[12px] font-mono" style={{ color }}>
           {pct}٪
         </span>
       </div>
@@ -655,17 +655,26 @@ const ArticleCard = ({
       {/* Content */}
       <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-5 pt-10">
         <h3
-          className={`text-base font-bold leading-snug mb-3 break-words transition-colors line-clamp-2 min-h-[2.85rem] ${
+          className={` font-bold leading-snug mb-3 break-words transition-colors line-clamp-2 min-h-[2.85rem] ${
             darkMode ? "text-[#E6F7FF]" : "group-hover:text-[#1565C0]"
           }`}
+          style={{
+            fontSize: "18px",
+            fontWeight: "500",
+            lineHeight: 1.5
+          }}
         >
           {post.title}
         </h3>
 
 <p
-  className={`text-[13px] leading-relaxed line-clamp-2 break-words mb-5 flex-1 min-h-[2.85rem] ${
+  className={`text-[14px] leading-relaxed line-clamp-2 break-words mb-5 flex-1 min-h-[2.85rem] ${
     darkMode ? "text-[#9DB0C0]" : "text-[#475569]"
   }`}
+  style={{
+    fontWeight: "500",
+    lineHeight: 1.78
+  }}
 >
   { summary }
 </p>
@@ -687,9 +696,9 @@ const ArticleCard = ({
                   darkMode ? "text-[#71869A]" : "text-[#64748B]"
                 }`}
               >
-                {dateText && <span style={{fontSize: "0.75rem",}}>{dateText}</span>}
+                {dateText && <span style={{fontSize: "12.5px",}}>{dateText}</span>}
                 {dateText && <span>-</span>}
-                <span style={{fontSize: "0.75rem",}}>{readTime}</span>
+                <span style={{fontSize: "12.5px",}}>{readTime}</span>
               </div>
             </div>
           </div>
@@ -698,7 +707,7 @@ const ArticleCard = ({
             className={`flex items-center gap-1  font-semibold whitespace-nowrap group-hover:gap-1.5 transition-all flex-shrink-0 ${
               darkMode ? "text-[#00E5FF]" : "text-[#1565C0]"
             }`}
-            style={{fontSize: "0.78rem",}}
+            style={{fontSize: "13px",}}
           >
             بررسی گزارش
             <svg
@@ -947,7 +956,7 @@ const SocialBtn = ({
             href="/"
             className={`flex items-center gap-1.5 leading-none transition-colors ${
               darkMode
-                ? "text-[#64748B] hover:text-[#00E5FF]"
+                ? "text-[#90a4c1] hover:text-[#00E5FF]"
                 : "text-[#475569] hover:text-[#1565C0]"
             }`}
           >
@@ -993,7 +1002,7 @@ const SocialBtn = ({
           MAIN
       ===================================================== */}
 
-      <main className="relative z-[1] pt-[58px] pb-20 px-6 max-[720px]:px-[14px] pt-[110px]">
+      <main className="relative z-[1] pb-20 px-6 max-[720px]:px-[14px] pt-[82px]">
         <div className="max-w-[1180px] mx-auto">
           {/* ===================================================
               TITLE
@@ -1056,10 +1065,10 @@ border: `1px solid ${accent}40`,
 <h1
   className="glow-text font-black leading-tight mb-6"
   style={{
-    fontSize: "clamp(2rem, 5vw, 3.5rem)",
+    fontSize: "56px",
     color: darkMode ? "#ffffff" : "#0c1a43",
     lineHeight: "1.3",
-    fontWeight: 900,
+    fontWeight: 500,
     textShadow: darkMode
       ? undefined
       : "0 0 18px rgba(30,58,138,0.10)",
@@ -1078,9 +1087,10 @@ border: `1px solid ${accent}40`,
             className="mx-auto mb-8"
             style={{
               color: darkMode ? "#9aa0aa" : "#475569",
-              fontSize: "clamp(0.92rem,2vw,1.0rem)",
-              lineHeight: 1.9,
+              fontSize: "18px",
+              lineHeight: 1.78,
               maxWidth: 580,
+              fontWeight: "500"
             }}
             >
               تیم متخصص پاراهور در تحقیقات سایبری، فارنزیک دیجیتال و پیگیری
@@ -1160,7 +1170,7 @@ border: `1px solid ${accent}40`,
   transition={{ duration: 0.5 }}
   viewport={{ once: true, amount: 0.3 }}
 >
-            <div className="flex items-center gap-5 max-[720px]:flex-wrap">
+            <div className="flex items-center gap-5 max-[540px]:flex-wrap">
               <div
                 className="w-[92px] h-[92px] flex-shrink-0 rounded-full p-[3px]"
                 style={{
@@ -1174,38 +1184,38 @@ border: `1px solid ${accent}40`,
                 />
               </div>
 
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-0 max-[540px]:basis-[calc(100%-112px)]">
                 <div
                className="data-label mb-1"
                style={{
                   letterSpacing: "0.1em",
-                  fontSize: "0.63rem",
+                  fontSize: "0.75rem",
                   color: accent
                }}
                 >
                   VERIFIED RESEARCHER
                 </div>
 
-                <h2 className="m-0 text-[1.35rem] font-extrabold">
+                <h2 className="m-0 text-[30px] font-extrabold">
                   {author.name}
                 </h2>
 
                 <div
-                  className="text-[0.8rem] mt-[5px]"
+                  className="text-[13px] mt-[5px]"
                   style={{ color: darkMode ? "#CBD5E1" : "#334155" }}
                 >
                   {author.title}
                 </div>
 
                 <div
-                  className="text-[0.72rem] mt-1"
+                  className="text-[13px] mt-1"
                   style={{ color: darkMode ? "#9aa0aa" : "#64748B" }}
                 >
                   {author.subtitle}
                 </div>
               </div>
 
-              <div className="flex gap-[7px] flex-shrink-0">
+             <div className="flex gap-[7px] flex-shrink-0 max-[540px]:basis-full">
                 <SocialBtn icon={<IconLinkedIn />} title="LinkedIn" />
                 <SocialBtn icon={<IconX />} title="X" />
                 <SocialBtn icon={<IconTelegram />} title="Telegram" />
@@ -1227,11 +1237,11 @@ border: `1px solid ${accent}40`,
                 <IconShield />
               </span>
 
-              <span className="text-[0.82rem] font-extrabold">بیوگرافی</span>
+              <span className="text-[16px] font-extrabold">بیوگرافی</span>
             </div>
 
             <p
-              className="text-[0.82rem] leading-[2.05] m-0"
+              className="text-[15px] leading-[2.05] m-0"
               style={{ color: darkMode ? "#9aa0aa" : "#475569" }}
             >
               {author.bio.join(" ")}
@@ -1264,17 +1274,22 @@ border: `1px solid ${accent}40`,
 
             >
               <div
-  className=" mb-1"
-  style={{
+  className=" mb-1 data-label"
+  style={{     fontSize: "12px",
     letterSpacing: "0.1em",
-    fontSize: "0.63rem",
 color: accent
   }}
 >
   ACTIVITY STATS
 </div>
 
-              <h3 className="m-0 text-base font-extrabold">فعالیت پژوهشی</h3>
+              <h3 className="m-0 text-base font-extrabold"
+              style={{
+                fontWeight: "500",
+                fontSize: "24px",
+                lineHeight: 1.5
+              }}
+              >فعالیت پژوهشی</h3>
 
               <div className="grid grid-cols-3 gap-[9px] mt-5 mb-[27px]">
                 {dynamicStats.map((stat) => (
@@ -1298,7 +1313,7 @@ color: accent
                       {stat.val}
                     </div>
 
-                    <div className="text-[0.75rem] leading-[1.5] text-[#9aa0aa]"
+                    <div className="text-[12px] leading-[1.5] text-[#9aa0aa]"
                     style={{color: darkMode ? "#94A3B8" : "#475569",}}
                     >
                       {stat.label}
@@ -1319,7 +1334,7 @@ color: accent
               <div
                 className="data-label mb-5 mt-5"
                 style={{
-                  fontSize: "0.62rem",
+                  fontSize: "12px",
                   color: accent
                  }}
               >
@@ -1355,14 +1370,20 @@ color: accent
               className="data-label mb-1"
                style={{
                   letterSpacing: "0.1em",
-                  fontSize: "0.63rem",
+                  fontSize: "12px",
                   color: darkMode ? "#A78BFA" : "#7C3AED"
                }}
               >
                 CREDENTIALS
               </div>
 
-              <h3 className="m-0 text-base font-extrabold">
+              <h3 className="m-0 text-base font-extrabold"
+                            style={{
+                fontWeight: "500",
+                fontSize: "24px",
+                lineHeight: 1.5
+              }}
+              >
                 گواهینامه‌ها و تحصیلات
               </h3>
 
@@ -1394,8 +1415,9 @@ color: accent
                     </span>
 
                     <span
-                      className="text-[0.75rem] leading-[1.6]"
-                      style={{ color: darkMode ? "#94A3B8" : "#475569" }}
+                      className="text-[12px] leading-[1.6]"
+                      style={{ color: darkMode ? "#94A3B8" : "#465262",
+                       }}
                     >
                       {cert}
                     </span>
@@ -1416,26 +1438,27 @@ color: accent
                 className="data-label mb-2"
                 style={{ 
                   color: darkMode ? "#A78BFA" : "#7C3AED",
-                  fontSize: "0.62rem"
+                  fontSize: "12px"
                  }}
               >
                 SKILL TAGS
               </div>
 
-              <div className="grid grid-cols-3 gap-[7px]">
+              <div className="grid grid-cols-3 max-[540px]:grid-cols-2 gap-[7px]">
                 {author.tags.map((tag) => (
                   <span
                     key={tag}
                     title={tag}
-                    className="min-w-0 flex items-center justify-center min-h-[34px] px-[7px] py-[5px] rounded-lg text-[0.68rem] leading-[1.3] text-center whitespace-nowrap overflow-hidden text-ellipsis cursor-default transition-all duration-[220ms]"
+                className="min-w-0 flex items-center justify-center min-h-[34px] px-[7px] py-[5px] rounded-lg text-[clamp(0.6rem,2.4vw,0.68rem)] leading-[1.4] text-center break-words cursor-default transition-all duration-[220ms]"
                     style={{
-                     color: darkMode ? "#94A3B8" : "#475569",
+                     color: darkMode ? "#94A3B8" : "#3c4757",
                       background: darkMode
                         ? "rgba(167,139,250,0.035)"
                         : "rgba(124,58,237,0.03)",
                       border: darkMode
                         ? "1px solid rgba(255, 255, 255, 0.06)"
                         : "1px solid rgba(139, 29, 164, 0.17)",
+                        
                     }}
                   >
                     {tag}
@@ -1456,7 +1479,7 @@ color: accent
   transition={{ duration: 0.5 }}
   viewport={{ once: true, amount: 0.3 }}
 >
-            <div className="flex items-end justify-between mb-[17px] gap-[15px] flex-wrap">
+            <div className="flex items-end justify-between mb-[30px] gap-[15px] flex-wrap ">
               <div>
                 <div
                   className="data-label mb-1"
@@ -1467,7 +1490,12 @@ color: accent
                   AUTHOR ARTICLES
                 </div>
 
-                <h2 className="m-0 text-[1.05rem] font-extrabold">
+                <h2 className="m-0 text-[32px] font-extrabold"
+                style={{
+                  fontWeight: "500",
+                  lineHeight: 1.5
+                }}
+                >
                   مقالات و گزارش‌های {author.name}
                 </h2>
               </div>
@@ -1486,7 +1514,7 @@ color: accent
                       <Link
                         href={basePath}
                         scroll={false}
-                        className="flex items-center gap-[6px] h-[34px] px-[11px] rounded-lg font-inherit text-[0.67rem] cursor-pointer transition-all duration-200"
+                        className="flex items-center gap-[6px] h-[34px] px-[11px] rounded-lg font-inherit text-[12px] cursor-pointer transition-all duration-200"
                         style={{
                           border: !showAllPosts
                             ? `1px solid ${accent}44`
@@ -1508,7 +1536,7 @@ color: accent
                       <Link
                         href={allPostsPath}
                         scroll={false}
-                        className="flex items-center gap-[6px] h-[34px] px-[11px] rounded-lg font-inherit text-[0.67rem] cursor-pointer transition-all duration-200"
+                        className="flex items-center gap-[6px] h-[34px] px-[11px] rounded-lg font-inherit text-[12px] cursor-pointer transition-all duration-200"
                         style={{
                           border: showAllPosts
                             ? `1px solid ${accent}44`
@@ -1530,10 +1558,10 @@ color: accent
                 })()}
 
                 <span
-                  className="text-[0.65rem] font-mono mr-[3px]"
+                  className="text-[0.73rem] font-mono mr-[3px]"
                   style={{ color: darkMode ? "#9aa0aa" : "#94A3B8" }}
                 >
-                  {authorPosts.length} ARTICLES
+                  {authorPosts.length} :ARTICLES
                 </span>
               </div>
             </div>

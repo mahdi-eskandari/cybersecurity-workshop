@@ -924,7 +924,7 @@ const [filterH, setFilterH] = useState(0);
             href="/"
             className={`flex items-center gap-1.5 leading-none transition-colors ${
               darkMode
-                ? "text-[#64748B] hover:text-[#00E5FF]"
+                ? "text-[#90a4c1] hover:text-[#00E5FF]"
                 : "text-[#475569] hover:text-[#1565C0]"
             }`}
           >
@@ -972,7 +972,7 @@ const [filterH, setFilterH] = useState(0);
 
       <main>
            <motion.div
-         className={`border-b transition-colors duration-300 pt-10 ${
+         className={`border-b transition-colors duration-300 pt-5 ${
             darkMode
               ? "bg-[#040c1ec8] border-[#1E334A]"
               : "bg-[#F8FAFC] border-[rgba(29,78,216,0.12)] shadow-[0_10px_35px_rgba(30,58,138,0.10)] border-b border-[#0B1C3E]/10"
@@ -1027,10 +1027,10 @@ const [filterH, setFilterH] = useState(0);
 <h1
   className="glow-text font-black leading-tight mb-6"
   style={{
-    fontSize: "clamp(2rem, 5vw, 3.5rem)",
+    fontSize: "56px",
     color: darkMode ? "#ffffff" : "#0c1a43",
-    lineHeight: "1.3",
-    fontWeight: 900,
+    lineHeight: "1.28",
+    fontWeight: 500,
     textShadow: darkMode
       ? undefined
       : "0 0 18px rgba(30,58,138,0.10)",
@@ -1049,9 +1049,10 @@ const [filterH, setFilterH] = useState(0);
             className="mx-auto mb-8"
             style={{
               color: darkMode ? "#9aa0aa" : "#475569",
-              fontSize: "clamp(0.92rem,2vw,1.0rem)",
-              lineHeight: 1.9,
+              fontSize: "16px",
+              lineHeight: 1.75,
               maxWidth: 580,
+              fontWeight: "500"
             }}
             >
               گزارش‌های جرم‌شناسی، هشدارهای امنیتی و اخبار حقوقی توسط تیم متخصصان پاراهور
@@ -1363,11 +1364,14 @@ const [filterH, setFilterH] = useState(0);
               />
 
                 <span
-                  className={`text-sm font-bold uppercase tracking-widest ${
+                  className={` font-bold uppercase tracking-widest ${
                     darkMode
                       ? "text-[#8FA5B8]"
                       : "text-[#475569]"
                   }`}
+                  style={{
+                    fontSize: "18px"
+                  }}
                 >
                   گزارش ویژه
                 </span>
@@ -1457,6 +1461,22 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
 
     )}
 
+
+                        {/* کتگوری روی عکس (فقط موبایل) */}
+                    <span
+                      className={`absolute right-3 top-3 z-10 rounded-full backdrop-blur-sm md:hidden ${
+                        darkMode ? "bg-[#050C1E]/80" : "bg-white/90"
+                      }`}
+                    >
+                      <span
+                        className={`inline-block text-[11px] font-bold px-2.5 py-1 rounded-full ring-1 ring-inset ${
+                          getCategoryBadgeClass(featuredArticle.category, darkMode)
+                        }`}
+                      >
+                        {featuredArticle.category}
+                      </span>
+                    </span>
+
                     {/* سایه‌ی لبه‌ی عکس: پایین عکس در موبایل، لبه‌ی داخلی عکس در دسکتاپ */}
                     <div
                       aria-hidden="true"
@@ -1471,7 +1491,7 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
 
                   <div className="md:col-span-3 min-w-0 p-5 sm:p-8 md:p-10 flex flex-col justify-between transition-all duration-300 dark:hover:bg-cyan-800/5">
                     <div>
-                      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-5">
+                        <div className="hidden md:flex flex-wrap items-center gap-x-3 gap-y-2 mb-5">
                         <span
                           className={`text-[11px] font-bold px-2.5 py-1 rounded-full ring-1 ring-inset ${
                             getCategoryBadgeClass(featuredArticle.category, darkMode)
@@ -1484,22 +1504,32 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
                       </div>
 
                       <h2
-                        className={`text-xl md:text-2xl font-bold leading-snug mb-4 transition-colors ${
+                        className={`text-[18px] md:text-3xl leading-snug mb-4 transition-colors ${
                        darkMode
                          ? "text-[#E6F7FF] group-hover:text-[#00E5FF] transition-colors duration-300"
                          : "text-[#111827] group-hover:text-[#1565C0] transition-colors duration-300"
                         }`}
+                                                style={{
+                          // fontSize: "18px",
+                            fontWeight: "500",
+                          lineHeight: "1.5"
+                        }}
                       >
                         {featuredArticle.title}
 
                       </h2>
 
                       <p
-                        className={`text-sm md:text-base leading-relaxed line-clamp-3 ${
+                        className={`text-[14px] md:text-[18px] leading-relaxed line-clamp-3 ${
                           darkMode
                             ? "text-[#9DB0C0]"
                             : "text-[#475569]"
                         }`}
+                        style={{
+                          // fontSize: "14px",
+                          fontWeight: "500",
+                          lineHeight: "2"
+                        }}
                       >
                         {featuredArticle.excerpt}
                       </p>
@@ -1526,7 +1556,7 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
                         <div className="min-w-0">
                           <div>
                             <span
-                              className={`inline-flex items-center gap-1.5 text-[13px] font-semibold truncate pb-1 transition-all duration-300 ${
+                              className={`inline-flex items-center gap-1.5 text-[14px] font-semibold truncate pb-1 transition-all duration-300 ${
                                 darkMode ? "text-[#9DB0C0] hover:text-white/80" : "text-[#475569]"
                               }`}
                             >
@@ -1538,7 +1568,7 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
                             className={`flex flex-wrap items-center gap-x-2 gap-y-0.5 ${
                               darkMode ? "text-[#9aa0aa]" : "text-[#64748B]"
                             }`}
-                            style={{fontSize: "0.78rem", }}
+                            style={{fontSize: "13px", }}
                           >
                             <span >{featuredArticle.date}</span>
                             <span>·</span>
@@ -2050,6 +2080,12 @@ function ArticleCard({
               ? "text-[#E6F7FF] group-hover:text-[#00E5FF] transition-colors duration-300"
               : "text-[#111827] group-hover:text-[#1565C0] transition-colors duration-300"
           }`}
+
+          style={{
+                fontSize:"18px",
+               lineHeight: 1.5,
+               fontWeight: "500"
+          }}
           
         >
           {article.title}
@@ -2058,9 +2094,15 @@ function ArticleCard({
         {/* Excerpt */}
 
         <p
-            className={`text-[13px] leading-relaxed line-clamp-2 break-words mb-5 flex-1 min-h-[42.25px] ${
-            darkMode ? "text-[#9DB0C0]" : "text-[#475569]"
+            className={`text-[13px] leading-relaxed line-clamp-2 break-words mb-5 flex-1 min-h-[42.25px] 
           }`}
+
+            style={{
+    color: darkMode ? "#7f858d" : "#334155",
+    fontSize:"14px",
+    lineHeight:2,
+    fontWeight: "500"
+  }}
         >
           {article.excerpt}
         </p>
@@ -2086,7 +2128,7 @@ function ArticleCard({
             <div className="min-w-0">
               <div>
                 <span 
-                  className={`inline-flex items-center gap-1.5 text-xs font-semibold truncate pb-1 transition-all duration-300 ${
+                  className={`inline-flex items-center gap-1.5 text-[13px] font-semibold truncate pb-1 transition-all duration-300 ${
                     darkMode ? "text-[#9DB0C0] hover:text-white/80" : "text-[#475569]"
                   }`}
                 >

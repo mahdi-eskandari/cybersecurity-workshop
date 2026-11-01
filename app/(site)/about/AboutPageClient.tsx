@@ -475,7 +475,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
             href="/"
             className={`flex items-center gap-1.5 leading-none transition-colors ${
               darkMode
-                ? "text-[#64748B] hover:text-[#00E5FF]"
+                ? "text-[#90a4c1] hover:text-[#00E5FF]"
                 : "text-[#475569] hover:text-[#1565C0]"
             }`}
           >
@@ -531,7 +531,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         viewport={{ once: true, amount: 0.2 }}
-        className="relative overflow-hidden px-6 pt-24 pb-28 md:px-12 md:pt-32 md:pb-36 text-center pt-20"
+        className="relative overflow-hidden px-6 pt-24 pb-28 md:px-12 md:pt-20 md:pb-36 text-center pt-20"
       >
         <HeroBg darkMode={darkMode} />
 
@@ -579,10 +579,10 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
 <h1
   className="glow-text font-black leading-tight mb-6"
   style={{
-    fontSize: "clamp(2rem, 5vw, 3.5rem)",
+    fontSize: "56px",
     color: darkMode ? "#ffffff" : "#0c1a43",
-    lineHeight: "1.3",
-    fontWeight: 900,
+    lineHeight: "1.28",
+    fontWeight: 500,
     textShadow: darkMode
       ? undefined
       : "0 0 18px rgba(30,58,138,0.10)",
@@ -600,10 +600,11 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
           <p
             className="mx-auto mb-8"
             style={{
-              color: textMuted,
-              fontSize: "clamp(0.92rem,2vw,1.0rem)",
-              lineHeight: 1.9,
+              color: darkMode ? "#9aa0aa" : "#475569",
+              fontSize: "16px",
+              lineHeight: 1.75,
               maxWidth: 580,
+              fontWeight: "500"
             }}
           >
 پاراهور، نخبه‌ترین آژانس خصوصی تحقیقات سایبری و دیجیتال فارنزیک است. مأموریت ما کشف حقیقت در تاریک‌ترین لایه‌های شبکه است. با رهگیری پیچیده رمزارزهای سرقتی، خدمات اوسینت و کالبدشکافی سرورهای هک‌شده، ادله‌ای قطعی و دادگاه‌پسند خلق می‌کنیم.
@@ -633,8 +634,8 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
 
                 <div
                   style={{
-                    color: darkMode ? "#9aa0aa" : "#64748B",
-                    fontSize: "0.75rem",
+                    color: darkMode ? "#9aa0aa" : "#383c42",
+                    fontSize: "0.85rem",
                     marginTop: 3,
                   }}
                 >
@@ -694,8 +695,9 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                 className="font-black mb-6"
                 style={{
                   color: darkMode ? "#fff" : "#0F172A",
-                  fontSize: "clamp(1.4rem,3vw,2rem)",
+                  fontSize: "40px",
                   lineHeight: 1.4,
+                  fontWeight: "500"
                 }}
               >
                 تلفیق هوش سایبری
@@ -711,8 +713,9 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
               <p
                 style={{
                   color: textMuted,
-                  fontSize: "clamp(0.9rem,1.8vw,1rem)",
+                  fontSize: "16px",
                   lineHeight: 1.95,
+                  fontWeight: "500"
                 }}
               >
               آژانس تحقیقاتی پاراهور، حاصل پیوند قدرتمندِ دانشِ عمیقِ فنی و اقتدارِ قاطعِ حقوقی است. این مجموعه توسط
@@ -834,7 +837,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
         className="px-6 py-20 md:px-12"
         style={{
           background: darkMode
-            ? "rgba(6,11,25,0.6)"
+            ? "hsla(224, 61%, 6%, 0.60)"
             : "rgba(236, 236, 236, 0.42)",
           borderTop: darkMode
             ? "1px solid rgba(0,229,255,0.06)"
@@ -844,7 +847,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
             : "1px solid rgba(30,58,138,0.16)",
         }}
       >
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-[1040px] mx-auto">
           <div className="text-center mb-14">
             <div className="inline-flex items-center gap-2 mb-2 justify-center">
               
@@ -882,7 +885,9 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
               className="font-bold"
               style={{
                 color: darkMode ? "#fff" : "#0F172A",
-                fontSize: "clamp(1.3rem,3vw,1.9rem)",
+                fontSize: "40px",
+                fontWeight: "500",
+                lineHeight: "1.5"
               }}
             >
               ارزش‌های بنیادین پاراهور
@@ -951,7 +956,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                     <span
                       style={{
                         // fontFamily: "monospace",
-                        fontSize: "0.6rem",
+                        fontSize: "12px",
                         color: darkMode
                           ? "rgba(0, 229, 255, 0.51)"
                           : "#1565C0",
@@ -995,7 +1000,9 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                           : darkMode
                             ? "#E2E8F0"
                             : "black",
-                        fontSize: "1.05rem",
+                        fontSize: "18px",
+                        fontWeight: "500",
+                        lineHeight: "1.5"
                       }}
                     >
                       {v.title}
@@ -1004,9 +1011,10 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                     <p
                       style={{
                         color: textMuted,
-                        fontSize: "0.85rem",
-                        lineHeight: 1.85,
+                        fontSize: "14px",
+                        lineHeight: 2,
                         flexGrow: 1,
+                        fontWeight: "500"
                       }}
                     >
                       {v.desc}
@@ -1030,7 +1038,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                     <p
                       style={{
                         // fontFamily: "monospace",
-                        fontSize: "0.67rem",
+                        fontSize: "12px",
                         color: darkMode
                           ? "rgba(0, 229, 255, 0.51)"
                           : "#1565C0",
@@ -1093,14 +1101,16 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
               className="font-bold"
               style={{
                 color: darkMode ? "#fff" : "#0F172A",
-                fontSize: "clamp(1.2rem,2.8vw,1.7rem)",
+                fontSize: "40px",
+                fontWeight: "500",
+                lineHeight: "1.33"
               }}
             >
               مسیر ما تاکنون
             </h2>
           </div>
 
-          <div className="relative">
+          <div className="relative" dir="rtl">
             {/* Vertical line */}
             <div
               className="absolute top-0 bottom-0 right-[9px] md:right-[calc(50%-0.5px)]"
@@ -1138,7 +1148,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                 
                 <div
                   key={year}
-                  className={`relative flex items-start gap-4 md:gap-8 ${
+                  className={`relative flex flex-row-reverse items-start gap-4 md:gap-8 ${
                     i % 2 === 0
                       ? "md:flex-row"
                       : "md:flex-row-reverse"
@@ -1164,13 +1174,13 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                       <span
                         style={{
                           // fontFamily: "monospace",
-                          fontSize: "0.68rem",
+                          fontSize: "0.78rem",
                           color: darkMode
                             ? "rgba(0,229,255,0.5)"
                             : "#1565C0",
                           letterSpacing: "0.15em",
                         }}
-                        className="block mb-2"
+                        className="block mb-1"
                       >
                         {year}
                       </span>
@@ -1181,7 +1191,9 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                           color: darkMode
                             ? "#fff"
                             : "black",
-                          fontSize: "0.92rem",
+                          fontSize: "18px",
+                          fontWeight: "500",
+                          lineHeight: 1.77
                         }}
                       >
                         {title}
@@ -1190,8 +1202,9 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                       <p
                         style={{
                           color: textMuted,
-                          fontSize: "0.8rem",
+                          fontSize: "14px",
                           lineHeight: 1.75,
+                          fontWeight: "500"
                         }}
                       >
                         {desc}
@@ -1243,7 +1256,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
             : "1px solid rgba(30,58,138,0.34)",
         }}
       >
-        <div className="max-w-5xl mx-auto flex items-start gap-4">
+        <div className="max-w-[1040px] mx-auto flex items-start gap-4">
           <div
               className="flex-shrink-0 self-center p-2 rounded-lg"
             style={{
@@ -1261,14 +1274,16 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
           <p
             style={{
               color: textMuted,
-              fontSize: "0.83rem",
-              lineHeight: 1.85,
+              fontSize: "15px",
+              lineHeight: 2,
+              fontWeight: "400"
             }}
           >
             <span
               style={{
-                color: darkMode ? "#e1e3e7" : "#475569",
-                fontWeight: 600,
+                color: darkMode ? "#e1e3e7" : "#3b4149",
+                fontWeight: 700,
+                fontSize: "16px"
               }}
             >
               توجه:{" "}
@@ -1363,8 +1378,9 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
               style={{
                 color: darkMode ? "#fff" : "#0F172A",
                 fontSize:
-                  "clamp(1.15rem,2.5vw,1.6rem)",
-                lineHeight: 1.45,
+                  "32px",
+                lineHeight: 1.5,
+                fontWeight: "500"
               }}
             >
               نیاز به بررسی پرونده خود دارید؟
@@ -1374,9 +1390,10 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
               className="mb-8 mx-auto"
               style={{
                 color: textMuted,
-                fontSize: "0.88rem",
-                lineHeight: 1.85,
+                fontSize: "16px",
+                lineHeight: 1.75,
                 maxWidth: 420,
+                fontWeight: "500"
               }}
             >
               تیم فنی پاراهور پرونده شما را بدون هزینه اولیه
@@ -1411,7 +1428,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
             </button>
 
             <p
-              className="mt-4 text-xs"
+              className="mt-4 text-[13px]"
               style={{
                 color: darkMode ? "#9aa0aa" : "#595f68",
               }}

@@ -359,7 +359,7 @@ const errorRetries = useRef(0);
       </div>
 
 
-<div className="w-full min-h-[65px] [&>div]:!w-full [&_iframe]:!w-full">
+<div className="w-full min-h-[65px] overflow-hidden [&>div]:!w-full [&_iframe]:!w-full">
     <Turnstile
     ref={turnstileRef}
     siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
@@ -449,7 +449,7 @@ const isDark = darkMode;
             href="/"
             className={`flex items-center gap-1.5 leading-none transition-colors ${
               isDark
-                ? "text-[#64748B] hover:text-[#00E5FF]"
+                ? "text-[#90a4c1] hover:text-[#00E5FF]"
                 : "text-[#475569] hover:text-[#1565C0]"
             }`}
           >
@@ -492,7 +492,7 @@ const isDark = darkMode;
 
 
       {/* HERO */}
-      <motion.section className="contact-hero relative overflow-hidden px-6 pb-16 pt-20 text-center md:px-12 md:pb-20 md:pt-28" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.65, ease: "easeOut" }}
+      <motion.section className="contact-hero relative overflow-hidden px-6 pb-16 pt-20 text-center md:px-12 md:pb-20 md:pt-23" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.65, ease: "easeOut" }}
        style={{
             background: darkMode
               ? "radial-gradient(ellipse 65% 60% at 50% 50%, rgba(0, 229, 255, 0.06) 0%, transparent 70%)"
@@ -534,10 +534,10 @@ const isDark = darkMode;
 <h1
   className="glow-text font-black leading-tight mb-6"
   style={{
-    fontSize: "clamp(2rem, 5vw, 3.5rem)",
+    fontSize: "56px",
     color: darkMode ? "#ffffff" : "#0c1a43",
-    lineHeight: "1.3",
-    fontWeight: 900,
+    lineHeight: "1.28",
+    fontWeight: 500,
     textShadow: darkMode
       ? undefined
       : "0 0 18px rgba(30,58,138,0.10)",
@@ -555,9 +555,10 @@ const isDark = darkMode;
                       className="mx-auto mb-8"
             style={{
               color: darkMode ? "#9aa0aa" : "#475569",
-              fontSize: "clamp(0.92rem,2vw,1.0rem)",
-              lineHeight: 1.9,
+              fontSize: "16px",
+              lineHeight: 1.75,
               maxWidth: 580,
+              fontWeight: "500"
             }}
           >
             برای گزارش بحران سایبری، ارسال سریع مستندات یا مکاتبات رسمی و حقوقی، از طریق مسیرهای زیر با ما در تماس باشید.
@@ -642,7 +643,7 @@ style={{
 
       <div className="flex flex-1 flex-col p-7">
         <span
-          className="mb-4 block font-mono text-[0.6rem] tracking-[0.14em]"
+          className="mb-4 block font-mono text-[12px] tracking-[0.14em]"
           style={{
             color: `${ac}${isDark ? "90" : "B0"}`,
             fontFamily: "JetBrains Mono",
@@ -668,20 +669,27 @@ style={{
         </div>
 
         <h3
-          className={`mb-2 text-[1.02rem] font-bold transition-colors duration-300 ${
+          className={`mb-2 text-[18px] font-bold transition-colors duration-300 ${
             isDark
               ? "text-[#E2E8F0] group-hover:text-white"
               : crisis
-
           }`}
+          style={{
+            fontWeight: "500",
+            lineHeight: 1.75
+          }}
         >
           {ch.title}
         </h3>
 
         <p
-          className={`flex-grow text-[0.82rem] leading-[1.75] ${
+          className={`flex-grow text-[14px] leading-[1.75] ${
             isDark ? "text-[#9aa0aa]" : "text-[#26282ce3]"
           }`}
+          style={{
+            lineHeight: 2,
+            fontWeight: "500"
+          }}
         >
           {ch.desc}
         </p>
@@ -694,15 +702,18 @@ style={{
           }`}
         >
           <span
-            className={`mb-1 block text-[0.7rem] ${
+            className={`mb-1 block text-[11px] ${
               isDark ? "text-[#9aa0aa]" : "text-[#26282ce3]"
             }`}
+            style={{
+              fontWeight: "400"
+            }}
           >
             {ch.valueLabel}
           </span>
 
           <span
-            className="block text-right font-mono text-[0.88rem] font-semibold"
+            className="block text-right font-mono text-[15px] font-semibold"
             style={{
               color: ac,
               direction: "ltr",
@@ -782,8 +793,13 @@ style={{
               >
             SUPPORT CHANNEL
             </span></div>
-            <h2 className={`mb-4 text-[clamp(1.1rem,2.5vw,1.5rem)] font-bold leading-[1.4] ${isDark ? "text-white" : "text-[#0F172A]"}`}>انتقادات و پیشنهادات و همکاری با ما</h2>
-            <p className={`text-[0.85rem] leading-[1.85] ${isDark ? "text-[#9aa0aa]" : "text-[#26282ce3]"}`}>این فرم برای سوالات غیراورژانسی، انتقادات و پیشنهادات، و درخواست همکاری استفاده می‌شود. حادثه سایبری را از طریق خط ویژه بحران گزارش دهید.</p>
+            <h3 className={`mb-4 text-[33px] font-bold leading-[1.4] ${isDark ? "text-white" : "text-[#0F172A]"}`}>انتقادات و پیشنهادات و همکاری با ما</h3>
+            <p className={`text-[14px] leading-[1.85] ${isDark ? "text-[#9aa0aa]" : "text-[#26282ce3]"}`}
+            style={{
+              fontWeight: "500",
+              lineHeight: 1.77
+            }}
+            >این فرم برای سوالات غیراورژانسی، انتقادات و پیشنهادات، و درخواست همکاری استفاده می‌شود. حادثه سایبری را از طریق خط ویژه بحران گزارش دهید.</p>
 
 
 {/* ─── ENGAGEMENT BLOCK (MEDIUM) ─── */}
@@ -794,11 +810,22 @@ style={{
     } to-transparent`}
   />
 
-  <h3 className={`mb-2 text-[0.95rem] font-bold leading-[1.7] ${isDark ? "text-white" : "text-[#0F172A]"}`}>
+  <h3 className={`mb-2 text-[20px] font-bold leading-[1.7] ${isDark ? "text-white" : "text-[#0F172A]"}`}
+  
+  style={{
+    fontWeight: "500",
+    lineHeight: 1.33
+  }}
+  >
     صدای شما، مسیر پاراهور را می‌سازد
   </h3>
 
-  <p className={`mb-4 text-[0.85rem] leading-[1.9] ${isDark ? "text-[#9aa0aa]" : "text-[#26282ce3]"}`}>
+  <p className={`mb-4 text-[14px] leading-[1.9] ${isDark ? "text-[#9aa0aa]" : "text-[#26282ce3]"}`}
+              style={{
+              fontWeight: "500",
+              lineHeight: 1.77
+            }}
+  >
     یک انتقاد، یک ایده یا یک پیشنهاد همکاری، شاید همان چیزی باشد که خدمات ما را برای همه بهتر می‌کند.
   </p>
 
@@ -815,30 +842,25 @@ style={{
               ? "border-[#00E5FF]/30 bg-[#00E5FF]/[0.08] text-[#00E5FF]"
               : "border-[#1565C0]/30 bg-[#1565C0]/[0.08] text-[#1565C0]"
           }`}
+          
         >
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="20 6 9 17 4 12" />
           </svg>
         </span>
-        <span className={`text-[0.8rem] font-medium ${isDark ? "text-[#E2E8F0]" : "text-[#0F172A]"}`}>
+        <span className={`text-[13px] font-medium ${isDark ? "text-[#E2E8F0]" : "text-[#0F172A]"}`}
+                    style={{
+              fontWeight: "500",
+              lineHeight: 1.5
+            }}
+        >
           {t}
         </span>
       </li>
     ))}
   </ul>
 
-  <div
-    className={`mt-5 flex items-center gap-2 rounded-xl border px-3.5 py-2.5 text-[0.75rem] leading-[1.7] ${
-      isDark
-        ? "border-[#00E5FF]/15 bg-[#00E5FF]/[0.04] text-[#9aa0aa]"
-        : "border-[#1565C0]/20 bg-[#1565C0]/[0.05] text-[#26282ce3]"
-    }`}
-  >
-    <span className={`shrink-0 ${isDark ? "text-[#9aa0aa]" : "text-[#1565C0]"}`}>
-      <IconShield />
-    </span>
-    اطلاعات شما محرمانه می‌ماند.
-  </div>
+  
 </div>
 
           </div>
@@ -850,7 +872,7 @@ style={{
       : "h-[2px] via-[#1565C0]"
   }`}
 />
-            <div className="p-7 md:p-8"><ContactForm isDark={isDark} /></div>
+            <div className="p-5 min-[410px]:p-7 md:p-8"><ContactForm isDark={isDark} /></div>
           </div></div>
         </div></div>
       </motion.section>
@@ -888,8 +910,9 @@ style={{
         className="font-bold"
         style={{
           color: darkMode ? "#fff" : "#0F172A",
-          fontSize: "clamp(1.2rem, 2.5vw, 1.7rem)",
-          lineHeight: 1.4,
+          fontSize: "40px",
+          lineHeight: 1.33,
+          fontWeight: "500"
         }}
       >
        ارتباط حضوری با پاراهور
@@ -944,7 +967,7 @@ style={{
 
             <div>
               <span
-                className={`mb-[5px] block font-mono text-[0.68rem] tracking-[0.14em] ${
+                className={`mb-[5px] block font-mono text-[12px] tracking-[0.14em] ${
                   isDark ? "text-[#00E5FF]/40" : "text-[#1565C0]"
                 }`}
               >
@@ -952,26 +975,38 @@ style={{
               </span>
 
               <h4
-                className={`mb-1.5 text-sm font-bold ${
+                className={`mb-1.5 text-[14px] font-bold ${
                   isDark ? "text-white" : "text-[#0F172A]"
                 }`}
+                            style={{
+              fontWeight: "600",
+              lineHeight: 1.5
+            }}
               >
                آدرس دفتر مرکزی: تهران
               </h4>
 
               <p
-                className={`text-[0.78rem] leading-[1.75] ${
+                className={`text-[0.82rem] leading-[1.75] ${
                   isDark ? "text-[#9aa0aa]" : "text-[#64748B]"
                 }`}
+                            style={{
+              fontWeight: "500",
+              lineHeight: 1.77
+            }}
               >
                 آیت الله کاشانی، بلوار اباذر، نبش خیابان شالی، پلاک 9، طبقه 4، واحد 6
                
               </p>
 
               <div
-                className={`mt-3 flex items-center gap-1.5 text-[0.75rem] ${
+                className={`mt-3 flex items-center gap-1.5 text-[0.8rem] ${
                   isDark ? "text-[#94a9b0ad]" : "text-[#64748B]"
                 }`}
+                            style={{
+              fontWeight: "400",
+              lineHeight: 1.77
+            }}
               >
                 <svg
                   width="17"

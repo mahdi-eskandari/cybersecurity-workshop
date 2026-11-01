@@ -1,5 +1,135 @@
+// import { NextResponse } from "next/server";
+// import connectDB from "@/lib/mongodb";
+// import Media from "../../../model/media";
+
+// type RouteContext = {
+//   params: Promise<{ id: string }>;
+// };
+
+
+
+
+// export async function GET(_request: Request, context: RouteContext) {
+//   try {
+//     await connectDB();
+
+//     const { id } = await context.params;
+
+//     if (!/^[a-f\d]{24}$/i.test(id)) {
+//       return new NextResponse("Not found", { status: 404 });
+//     }
+
+//     const media: any = await Media.findById(id).select("url").lean();
+
+//     if (!media?.url) {
+//       return new NextResponse("Not found", { status: 404 });
+//     }
+
+//     // اگر آدرس معمولی بود، ریدایرکت
+//     const match = /^data:([^;]+);base64,(.+)$/.exec(media.url);
+//     if (!match) {
+//       return NextResponse.redirect(media.url);
+//     }
+
+//     const buffer = Buffer.from(match[2], "base64");
+
+//     return new NextResponse(new Uint8Array(buffer), {
+//       status: 200,
+//       headers: {
+//         "Content-Type": match[1],
+//         "Content-Length": String(buffer.length),
+//         "Cache-Control": "public, max-age=31536000, immutable",
+//       },
+//     });
+//   } catch (error) {
+//     console.error("GET /api/media/:id error:", error);
+//     return new NextResponse("Server error", { status: 500 });
+//   }
+// }
+
+// export async function PATCH(
+//   request: Request,
+//   context: RouteContext
+// ) {
+//   try {
+//     await connectDB();
+
+//     const { id } = await context.params;
+//     const body = await request.json();
+
+//     const media = await Media.findById(id);
+
+//     if (!media) {
+//       return NextResponse.json(
+//         { message: "فایل پیدا نشد" },
+//         { status: 404 }
+//       );
+//     }
+
+//     if (body.alt !== undefined) {
+//       media.alt = String(body.alt).trim();
+//     }
+
+//     const updatedMedia = await media.save();
+
+//     return NextResponse.json({
+//       id: String(updatedMedia._id),
+//       name: updatedMedia.name,
+//       url: updatedMedia.url,
+//       alt: updatedMedia.alt ?? "",
+//       mimeType: updatedMedia.mimeType,
+//       size: updatedMedia.size ?? 0,
+//       width: updatedMedia.width ?? null,
+//       height: updatedMedia.height ?? null,
+//       createdAt: updatedMedia.createdAt,
+//       updatedAt: updatedMedia.updatedAt,
+//     });
+//   } catch (error: any) {
+//     console.error("PATCH /api/media/:id error:", error);
+
+//     return NextResponse.json(
+//       { message: "خطا در ویرایش اطلاعات تصویر" },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+// export async function DELETE(
+//   request: Request,
+//   context: RouteContext
+// ) {
+//   try {
+//     await connectDB();
+
+//     const { id } = await context.params;
+
+//     const deletedMedia = await Media.findByIdAndDelete(id);
+
+//     if (!deletedMedia) {
+//       return NextResponse.json(
+//         { message: "فایل پیدا نشد" },
+//         { status: 404 }
+//       );
+//     }
+
+//     return NextResponse.json({
+//       success: true,
+//       message: "فایل با موفقیت حذف شد",
+//     });
+//   } catch (error) {
+//     console.error("DELETE /api/media/:id error:", error);
+
+//     return NextResponse.json(
+//       { message: "خطا در حذف فایل چندرسانه‌ای" },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
+import { isAdmin } from "@/lib/adminAuth";
 import Media from "../../../model/media";
 
 type RouteContext = {
@@ -31,6 +161,11 @@ export async function GET(_request: Request, context: RouteContext) {
       return NextResponse.redirect(media.url);
     }
 
+    // فقط تصویر سرو می‌شه
+    if (!match[1].startsWith("image/")) {
+      return new NextResponse("Not found", { status: 404 });
+    }
+
     const buffer = Buffer.from(match[2], "base64");
 
     return new NextResponse(new Uint8Array(buffer), {
@@ -39,6 +174,7 @@ export async function GET(_request: Request, context: RouteContext) {
         "Content-Type": match[1],
         "Content-Length": String(buffer.length),
         "Cache-Control": "public, max-age=31536000, immutable",
+        "X-Content-Type-Options": "nosniff",
       },
     });
   } catch (error) {
@@ -52,9 +188,22 @@ export async function PATCH(
   context: RouteContext
 ) {
   try {
-    await connectDB();
+    // دفاع در عمق: علاوه بر middleware، خود route هم ادمین بودن رو چک می‌کنه
+    if (!(await isAdmin())) {
+      return NextResponse.json({ message: "دسترسی غیرمجاز" }, { status: 403 });
+    }
 
     const { id } = await context.params;
+
+    if (!/^[a-f\d]{24}$/i.test(id)) {
+      return NextResponse.json(
+        { message: "شناسه فایل نامعتبر است" },
+        { status: 400 }
+      );
+    }
+
+    await connectDB();
+
     const body = await request.json();
 
     const media = await Media.findById(id);
@@ -99,9 +248,21 @@ export async function DELETE(
   context: RouteContext
 ) {
   try {
-    await connectDB();
+    // دفاع در عمق: علاوه بر middleware، خود route هم ادمین بودن رو چک می‌کنه
+    if (!(await isAdmin())) {
+      return NextResponse.json({ message: "دسترسی غیرمجاز" }, { status: 403 });
+    }
 
     const { id } = await context.params;
+
+    if (!/^[a-f\d]{24}$/i.test(id)) {
+      return NextResponse.json(
+        { message: "شناسه فایل نامعتبر است" },
+        { status: 400 }
+      );
+    }
+
+    await connectDB();
 
     const deletedMedia = await Media.findByIdAndDelete(id);
 

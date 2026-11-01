@@ -432,7 +432,7 @@ const fmt = (s: number) =>
                   <p
                     style={{
                       color: "#94A3B8",
-                      fontSize: "0.68rem",
+                      fontSize: "0.73rem",
                       direction: "ltr",
                       textAlign: "right",
                     }}

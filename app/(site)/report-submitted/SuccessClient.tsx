@@ -373,7 +373,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
 
         
               
-           <div
+            <div
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 text-xs"
 
                         style={{
@@ -382,7 +382,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
                 : "#EBF3FF",
               border: darkMode
                 ? "1px solid rgba(0,229,255,0.2)"
-                : "1px solid rgba(37, 106, 175, 0.1)",
+                : "1px solid #156cef57",
               
             }}
           >
@@ -394,8 +394,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
             }}
             >REPORT SECURED // STATUS: RECEIVED</span>
 
-                        <span className="node-dot pulse-dot" 
-                  style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
+                        <span className="node-dot pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", display: "inline-block",
                     background: darkMode
                 ? "#00E5FF"
                 : "#1565C0",
@@ -421,15 +420,15 @@ className="relative min-h-screen overflow-x-hidden pt-10"
         </h1>
 
         <p
-          className="text-center mb-8"
-          style={{
-            color: darkMode ? "#94A3B8" : "#475569",
-            fontSize: "clamp(0.92rem,1.8vw,1.06rem)",
-            lineHeight: 2,
-            maxWidth: 580,
-            animation:
-              "slide-up-success 0.6s cubic-bezier(0.22,1,0.36,1) 0.2s both",
-          }}
+            className="text-center mb-8"
+            style={{
+              color: darkMode ? "#9aa0aa" : "#475569",
+              fontSize: "clamp(0.92rem,2vw,1.0rem)",
+              lineHeight: 1.9,
+              maxWidth: 580,
+            }}
+
+          
         >
           کارآگاهان ارشد پاراهور گزارش شما را دریافت کردند و اطلاعات
           اولیه تحت بالاترین سطح رمزنگاری ذخیره شد. تا ساعاتی دیگر برای
@@ -457,10 +456,11 @@ className="relative min-h-screen overflow-x-hidden pt-10"
           >
             <span
               style={{
-                color: darkMode ? "#4b5b70" : "#64748B",
+              color: darkMode ? "#9aa0aa" : "#475569",
                 fontFamily: "monospace",
                 fontSize: "0.8rem",
                 letterSpacing: "0.1em",
+                fontWeight: "550"
               }}
             >
              شناسه پرونده:
@@ -538,12 +538,12 @@ className="relative min-h-screen overflow-x-hidden pt-10"
             {timelineSteps.map((step, i) => (
               <div
                 key={i}
-                className="flex items-center"
+                className="flex items-center "
                 style={{ flex: i < timelineSteps.length - 1 ? "1" : "0" }}
               >
-                <div className="flex flex-col items-center gap-2">
+                <div className="flex flex-col items-center gap-2 ">
                   <div
-                    className="flex items-center justify-center w-9 h-9 rounded-full transition-all"
+                    className="flex items-center justify-center w-9 h-9 rounded-full transition-all "
                     style={{
                       background: step.done
                         ? "rgba(16,185,129,0.12)"
@@ -575,7 +575,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
                   </div>
                   <span
                     style={{
-                      fontSize: "0.62rem",
+                      fontSize: "0.7rem",
                       color: step.done
                         ? (darkMode ? "#10B981" : "#047857")
                         : step.active
@@ -584,7 +584,8 @@ className="relative min-h-screen overflow-x-hidden pt-10"
                       fontFamily: "monospace",
                       letterSpacing: "0.05em",
                       textAlign: "center",
-                      width: 70,
+                      width: 90,
+                      fontWeight: "550"
                     }}
                   >
                     {step.label}
@@ -718,8 +719,8 @@ className="relative min-h-screen overflow-x-hidden pt-10"
                       </p>
                       <p
                         style={{
-                          color: "#64748B",
-                          fontSize: "0.74rem",
+              color: darkMode ? "#9aa0aa" : "#475569",
+                          fontSize: "0.75rem",
                           lineHeight: 1.6,
                         }}
                       >
@@ -754,7 +755,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
                 </div>
                 <p
                   style={{
-                    color: darkMode ? "#64748B" : "#64748B",
+              color: darkMode ? "#9aa0aa" : "#475569",
                     fontSize: "0.78rem",
                     lineHeight: 1.6,
                   }}

@@ -315,11 +315,11 @@ const PostCrisisPentestHeroArt = ({
   darkMode?: boolean;
 }) => {
   const c = (dark: string, light: string) => (darkMode ? dark : light);
-  const strong = c("rgba(0,229,255,0.85)", "rgba(37,99,235,0.7)");
-  const mid = c("rgba(0,229,255,0.55)", "rgba(37,99,235,0.5)");
-  const soft = c("rgba(0,229,255,0.3)", "rgba(37,99,235,0.28)");
-  const fillMid = c("rgba(0,229,255,0.28)", "rgba(37,99,235,0.24)");
-  const fillSoft = c("rgba(0,229,255,0.12)", "rgba(37,99,235,0.1)");
+  const strong = c("rgba(0,229,255,1)", "rgba(37,99,235,0.95)");
+  const mid = c("rgba(0,229,255,0.8)", "rgba(37,99,235,0.75)");
+  const soft = c("rgba(0,229,255,0.5)", "rgba(37,99,235,0.45)");
+  const fillMid = c("rgba(0,229,255,0.4)", "rgba(37,99,235,0.35)");
+  const fillSoft = c("rgba(0,229,255,0.2)", "rgba(37,99,235,0.18)");
   const solid = c("#00E5FF", "#2563EB");
 
   const leftNodes = [
@@ -357,7 +357,7 @@ const PostCrisisPentestHeroArt = ({
       viewBox="30 0 840 220"
       preserveAspectRatio="xMidYMid meet"
       className="w-full h-auto"
-      style={{ opacity: darkMode ? 0.4 : 0.7 }}
+      style={{ opacity: darkMode ? 0.7 : 0.95 }}
     >
       <defs>
         <filter id="pentestGlow">
@@ -381,8 +381,8 @@ const PostCrisisPentestHeroArt = ({
           r={r}
           fill="none"
           stroke={c(
-            `rgba(0,229,255,${0.45 - i * 0.1})`,
-            `rgba(37,99,235,${0.42 - i * 0.08})`
+            `rgba(0,229,255,${0.7 - i * 0.1})`,
+            `rgba(37,99,235,${0.65 - i * 0.08})`
           )}
           strokeWidth="1.5"
           strokeDasharray={i === 1 ? "4 4" : undefined}
@@ -391,7 +391,7 @@ const PostCrisisPentestHeroArt = ({
       {/* Expanding pulse ring */}
       <circle cx={450} cy={110} r={50} fill="none" stroke={solid} strokeWidth="1.5">
         <animate attributeName="r" values="50;108" dur="4s" repeatCount="indefinite" />
-        <animate attributeName="opacity" values="0.6;0" dur="4s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.9;0" dur="4s" repeatCount="indefinite" />
       </circle>
       <line x1={450} y1={5} x2={450} y2={18} stroke={mid} strokeWidth="1.5" />
 
@@ -405,7 +405,7 @@ const PostCrisisPentestHeroArt = ({
             y1={leftNodes[a].y}
             x2={leftNodes[b].x}
             y2={leftNodes[b].y}
-            stroke={c("rgba(0,229,255,0.55)", "rgba(37,99,235,0.5)")}
+            stroke={c("rgba(0,229,255,0.8)", "rgba(37,99,235,0.75)")}
             strokeWidth="1.5"
             strokeDasharray={touchesBroken ? "3 4" : undefined}
           />
@@ -418,7 +418,7 @@ const PostCrisisPentestHeroArt = ({
         y1={125}
         x2={418}
         y2={110}
-        stroke={c("rgba(0,229,255,0.65)", "rgba(37,99,235,0.55)")}
+        stroke={c("rgba(0,229,255,0.9)", "rgba(37,99,235,0.8)")}
         strokeWidth="1.5"
         filter="url(#pentestGlow)"
       />
@@ -432,7 +432,7 @@ const PostCrisisPentestHeroArt = ({
               cy={n.y}
               r={13}
               fill="none"
-              stroke={c("rgba(0,229,255,0.75)", "rgba(37,99,235,0.65)")}
+              stroke={c("rgba(0,229,255,1)", "rgba(37,99,235,0.9)")}
               strokeWidth="1.5"
               strokeDasharray="3 3"
             >
@@ -475,8 +475,8 @@ const PostCrisisPentestHeroArt = ({
             cx={n.x}
             cy={n.y}
             r={5.5}
-            fill={c("rgba(0,229,255,0.28)", "rgba(37,99,235,0.24)")}
-            stroke={c("rgba(0,229,255,0.75)", "rgba(37,99,235,0.6)")}
+            fill={c("rgba(0,229,255,0.4)", "rgba(37,99,235,0.35)")}
+            stroke={c("rgba(0,229,255,1)", "rgba(37,99,235,0.85)")}
             strokeWidth="1.5"
           />
         )
@@ -498,7 +498,7 @@ const PostCrisisPentestHeroArt = ({
       {/* Shield */}
       <path
         d={shieldPath}
-        fill={c("rgba(0,229,255,0.16)", "rgba(37,99,235,0.12)")}
+        fill={c("rgba(0,229,255,0.28)", "rgba(37,99,235,0.22)")}
         stroke={strong}
         strokeWidth="2"
         filter="url(#pentestGlow)"
@@ -517,7 +517,7 @@ const PostCrisisPentestHeroArt = ({
         width="20"
         height="16"
         rx="2"
-        fill={c("rgba(0,229,255,0.35)", "rgba(37,99,235,0.28)")}
+        fill={c("rgba(0,229,255,0.5)", "rgba(37,99,235,0.4)")}
         stroke={strong}
         strokeWidth="1.5"
       />
@@ -541,7 +541,7 @@ const PostCrisisPentestHeroArt = ({
           cx={p.x}
           cy={p.y}
           r={4}
-          fill={c("rgba(0,229,255,0.5)", "rgba(37,99,235,0.4)")}
+          fill={c("rgba(0,229,255,0.7)", "rgba(37,99,235,0.6)")}
           stroke={strong}
           strokeWidth="1.5"
         />
@@ -570,13 +570,13 @@ const PostCrisisPentestHeroArt = ({
       ))}
 
       {/* Timeline: crisis → recovery → retest */}
-      <line x1={60} y1={202} x2={840} y2={202} stroke={c("rgba(0,229,255,0.35)", "rgba(37,99,235,0.32)")} strokeWidth="1.5" />
+      <line x1={60} y1={202} x2={840} y2={202} stroke={c("rgba(0,229,255,0.6)", "rgba(37,99,235,0.55)")} strokeWidth="1.5" />
       <line x1={60} y1={202} x2={60} y2={202} stroke={solid} strokeWidth="2" strokeLinecap="round">
         <animate attributeName="x2" values="60;840;840" keyTimes="0;0.9;1" dur="6s" repeatCount="indefinite" />
       </line>
-      <circle cx={200} cy={202} r={4.5} fill={c("rgba(0,229,255,0.7)", "rgba(37,99,235,0.6)")} />
+      <circle cx={200} cy={202} r={4.5} fill={c("rgba(0,229,255,0.95)", "rgba(37,99,235,0.85)")} />
       <circle cx={450} cy={202} r={5.5} fill="none" stroke={strong} strokeWidth="1.5" />
-      <circle cx={700} cy={202} r={8} fill={c("rgba(0,229,255,0.2)", "rgba(37,99,235,0.15)")} stroke={strong} strokeWidth="1.5" />
+      <circle cx={700} cy={202} r={8} fill={c("rgba(0,229,255,0.35)", "rgba(37,99,235,0.3)")} stroke={strong} strokeWidth="1.5" />
       <path d="M696 202 L699 205 L705 198" fill="none" stroke={solid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       <circle cx={60} cy={202} r={3.5} fill={solid} filter="url(#pentestGlow)">
         <animate attributeName="cx" values="60;840;840" keyTimes="0;0.9;1" dur="6s" repeatCount="indefinite" />
@@ -593,11 +593,11 @@ const RansomwareNegotiationHeroArt = ({
   darkMode?: boolean;
 }) => {
   const c = (dark: string, light: string) => (darkMode ? dark : light);
-  const strong = c("rgba(0,229,255,0.85)", "rgba(37,99,235,0.7)");
-  const mid = c("rgba(0,229,255,0.55)", "rgba(37,99,235,0.5)");
-  const soft = c("rgba(0,229,255,0.3)", "rgba(37,99,235,0.28)");
-  const fillMid = c("rgba(0,229,255,0.28)", "rgba(37,99,235,0.24)");
-  const fillSoft = c("rgba(0,229,255,0.12)", "rgba(37,99,235,0.1)");
+  const strong = c("rgba(0,229,255,1)", "rgba(37,99,235,0.95)");
+  const mid = c("rgba(0,229,255,0.8)", "rgba(37,99,235,0.75)");
+  const soft = c("rgba(0,229,255,0.5)", "rgba(37,99,235,0.45)");
+  const fillMid = c("rgba(0,229,255,0.4)", "rgba(37,99,235,0.35)");
+  const fillSoft = c("rgba(0,229,255,0.2)", "rgba(37,99,235,0.18)");
   const solid = c("#00E5FF", "#2563EB");
 
   return (
@@ -606,7 +606,7 @@ const RansomwareNegotiationHeroArt = ({
       viewBox="30 0 840 220"
       preserveAspectRatio="xMidYMid meet"
       className="w-full h-auto"
-      style={{ opacity: darkMode ? 0.4 : 0.7 }}
+      style={{ opacity: darkMode ? 0.7 : 0.95 }}
     >
       <defs>
         <filter id="ransomGlow">
@@ -726,7 +726,7 @@ const RansomwareNegotiationHeroArt = ({
       <line x1={852} y1={110} x2={852} y2={120} stroke={strong} strokeWidth="2.2" strokeLinecap="round" />
 
       {/* Timeline */}
-      <line x1={60} y1={202} x2={840} y2={202} stroke={c("rgba(0,229,255,0.35)", "rgba(37,99,235,0.32)")} strokeWidth="1.5" />
+      <line x1={60} y1={202} x2={840} y2={202} stroke={c("rgba(0,229,255,0.6)", "rgba(37,99,235,0.55)")} strokeWidth="1.5" />
       <circle cx={200} cy={202} r={4.5} fill={mid} />
       <circle cx={450} cy={202} r={5.5} fill="none" stroke={strong} strokeWidth="1.5" />
       <circle cx={700} cy={202} r={8} fill={fillMid} stroke={strong} strokeWidth="1.5" />
@@ -744,11 +744,11 @@ const DigitalForensicsHeroArt = ({
   darkMode?: boolean;
 }) => {
   const c = (dark: string, light: string) => (darkMode ? dark : light);
-  const strong = c("rgba(0,229,255,0.85)", "rgba(37,99,235,0.7)");
-  const mid = c("rgba(0,229,255,0.55)", "rgba(37,99,235,0.5)");
-  const soft = c("rgba(0,229,255,0.3)", "rgba(37,99,235,0.28)");
-  const fillMid = c("rgba(0,229,255,0.28)", "rgba(37,99,235,0.24)");
-  const fillSoft = c("rgba(0,229,255,0.12)", "rgba(37,99,235,0.1)");
+  const strong = c("rgba(0,229,255,1)", "rgba(37,99,235,0.95)");
+  const mid = c("rgba(0,229,255,0.8)", "rgba(37,99,235,0.75)");
+  const soft = c("rgba(0,229,255,0.5)", "rgba(37,99,235,0.45)");
+  const fillMid = c("rgba(0,229,255,0.4)", "rgba(37,99,235,0.35)");
+  const fillSoft = c("rgba(0,229,255,0.2)", "rgba(37,99,235,0.18)");
   const solid = c("#00E5FF", "#2563EB");
 
   const treeNodes = {
@@ -771,7 +771,7 @@ const DigitalForensicsHeroArt = ({
       viewBox="30 0 840 220"
       preserveAspectRatio="xMidYMid meet"
       className="w-full h-auto"
-      style={{ opacity: darkMode ? 0.4 : 0.7 }}
+      style={{ opacity: darkMode ? 0.7 : 0.95 }}
     >
       <defs>
         <filter id="forensicGlow">
@@ -891,7 +891,7 @@ const DigitalForensicsHeroArt = ({
       <rect x={788} y={148} width={14} height={14} rx={2} fill={fillMid} stroke={strong} strokeWidth="1.5" />
 
       {/* Timeline ticks */}
-      <line x1={60} y1={205} x2={840} y2={205} stroke={c("rgba(0,229,255,0.35)", "rgba(37,99,235,0.32)")} strokeWidth="1.5" />
+      <line x1={60} y1={205} x2={840} y2={205} stroke={c("rgba(0,229,255,0.6)", "rgba(37,99,235,0.55)")} strokeWidth="1.5" />
       {Array.from({ length: 20 }).map((_, i) => {
         const x = 60 + i * 40;
         const hot = x === 580;
@@ -929,25 +929,81 @@ const CryptoTracingHeroArt = ({
   darkMode?: boolean;
 }) => {
   const c = (dark: string, light: string) => (darkMode ? dark : light);
-  const strong = c("rgba(0,229,255,0.85)", "rgba(37,99,235,0.7)");
-  const mid = c("rgba(0,229,255,0.55)", "rgba(37,99,235,0.5)");
-  const soft = c("rgba(0,229,255,0.3)", "rgba(37,99,235,0.28)");
-  const fillMid = c("rgba(0,229,255,0.28)", "rgba(37,99,235,0.24)");
-  const fillSoft = c("rgba(0,229,255,0.12)", "rgba(37,99,235,0.1)");
+  const strong = c("rgba(0,229,255,1)", "rgba(37,99,235,0.95)");
+  const mid = c("rgba(0,229,255,0.8)", "rgba(37,99,235,0.75)");
+  const soft = c("rgba(0,229,255,0.5)", "rgba(37,99,235,0.45)");
+  const fillMid = c("rgba(0,229,255,0.4)", "rgba(37,99,235,0.35)");
+  const fillSoft = c("rgba(0,229,255,0.2)", "rgba(37,99,235,0.18)");
   const solid = c("#00E5FF", "#2563EB");
 
-  const victim = { x: 80, y: 110 };
-  const scammer = { x: 380, y: 110 };
-  const splits = [
-    { x: 520, y: 48 },
-    { x: 520, y: 110 },
-    { x: 520, y: 172 },
+  const victim = { x: 90, y: 100 };
+  const hacker = { x: 240, y: 100 };
+  const col1 = [
+    { x: 380, y: 48 },
+    { x: 380, y: 100 },
+    { x: 380, y: 152 },
   ];
-  const exch = { x: 665, y: 110 };
-  const target = { x: 810, y: 110 };
+  const col2 = [
+    { x: 520, y: 48 },
+    { x: 520, y: 100 },
+    { x: 520, y: 152 },
+  ];
+  const exch = { x: 670, y: 100 };
+  const vault = { x: 810, y: 100 };
 
-  const upperPath = `M106 110 L350 110 L520 48 L645 110 L786 110`;
-  const lowerPath = `M106 110 L350 110 L520 172 L645 110`;
+  const hop1 = col1[0];
+  const hop2 = col2[1];
+
+  // مسیر واقعی (ردیابی‌شده)
+  const trueEdges = [
+    [victim, hacker],
+    [hacker, hop1],
+    [hop1, hop2],
+    [hop2, exch],
+    [exch, vault],
+  ];
+  // مسیرهای انحرافی
+  const decoyEdges = [
+    [hacker, col1[1]],
+    [hacker, col1[2]],
+    [col1[0], col2[0]],
+    [col1[1], col2[0]],
+    [col1[1], col2[2]],
+    [col1[2], col2[1]],
+    [col1[2], col2[2]],
+    [col2[0], exch],
+    [col2[2], exch],
+  ];
+
+  const tracePoints = [victim, hacker, hop1, hop2, exch, vault];
+  const tracePath = "M" + tracePoints.map((p) => `${p.x} ${p.y}`).join(" L");
+
+  // زمان‌بندی: ردیابی از T0 شروع و در T1 تمام می‌شود (از چرخه‌ی ۶ ثانیه‌ای)
+  const T0 = 0.08;
+  const T1 = 0.72;
+  const segLens = tracePoints
+    .slice(1)
+    .map((p, i) => Math.hypot(p.x - tracePoints[i].x, p.y - tracePoints[i].y));
+  const totalLen = segLens.reduce((a, b) => a + b, 0);
+  let acc = 0;
+  const reach = segLens.map((l) => {
+    acc += l;
+    return T0 + (T1 - T0) * (acc / totalLen);
+  });
+  // reach: [hacker, hop1, hop2, exch, vault]
+  const f = (n: number) => n.toFixed(3);
+  const glowTimes = (k: number) => `0;${f(k - 0.04)};${f(k)};${f(k + 0.2)};1`;
+  const pulseTimes = (k: number) => `0;${f(k - 0.001)};${f(k)};${f(k + 0.15)};1`;
+
+  const glowRing = (k: number) => (
+    <animate
+      attributeName="opacity"
+      values="0;0;1;0;0"
+      keyTimes={glowTimes(k)}
+      dur="6s"
+      repeatCount="indefinite"
+    />
+  );
 
   return (
     <svg
@@ -955,7 +1011,7 @@ const CryptoTracingHeroArt = ({
       viewBox="30 0 840 220"
       preserveAspectRatio="xMidYMid meet"
       className="w-full h-auto"
-      style={{ opacity: darkMode ? 0.4 : 0.7 }}
+      style={{ opacity: darkMode ? 0.7 : 0.95 }}
     >
       <defs>
         <filter id="scamGlow">
@@ -965,141 +1021,321 @@ const CryptoTracingHeroArt = ({
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
+
+        {/* خطوط داخل گره‌ها دیده نشوند */}
+        <mask id="cryptoEdgeMask" maskUnits="userSpaceOnUse" x="30" y="0" width="840" height="220">
+          <rect x="30" y="0" width="840" height="220" fill="white" />
+          <polygon points={hexPoints(victim.x, victim.y, 29)} fill="black" />
+          <circle cx={hacker.x} cy={hacker.y} r={21} fill="black" />
+          {[...col1, ...col2].map((n, i) => (
+            <circle key={i} cx={n.x} cy={n.y} r={11} fill="black" />
+          ))}
+          <rect x={exch.x - 24} y={exch.y - 24} width={48} height={48} rx={8} fill="black" />
+          <circle cx={vault.x} cy={vault.y} r={25} fill="black" />
+        </mask>
       </defs>
 
-      {/* Edges */}
-      <line x1={106} y1={110} x2={180} y2={110} stroke={soft} strokeWidth="1.5" />
-      <line x1={250} y1={110} x2={350} y2={110} stroke={soft} strokeWidth="1.5" />
-      {splits.map((s, i) => (
-        <g key={i}>
-          <line x1={410} y1={110} x2={s.x} y2={s.y} stroke={soft} strokeWidth="1.5" />
-          <line x1={s.x} y1={s.y} x2={exch.x - 20} y2={exch.y} stroke={soft} strokeWidth="1.5" />
-        </g>
-      ))}
-      <line x1={exch.x + 20} y1={exch.y} x2={target.x - 12} y2={target.y} stroke={soft} strokeWidth="1.5" />
+      {/* ─── Edges + trace ─── */}
+      <g mask="url(#cryptoEdgeMask)">
+        {decoyEdges.map(([a, b], i) => (
+          <line
+            key={`d${i}`}
+            x1={a.x}
+            y1={a.y}
+            x2={b.x}
+            y2={b.y}
+            stroke={soft}
+            strokeWidth="1.3"
+            strokeDasharray="3 5"
+          >
+            <animate attributeName="stroke-dashoffset" from="0" to="-16" dur="1.8s" repeatCount="indefinite" />
+          </line>
+        ))}
+        {trueEdges.map(([a, b], i) => (
+          <line
+            key={`t${i}`}
+            x1={a.x}
+            y1={a.y}
+            x2={b.x}
+            y2={b.y}
+            stroke={mid}
+            strokeWidth="1.5"
+            strokeDasharray="3 5"
+          >
+            <animate attributeName="stroke-dashoffset" from="0" to="-16" dur="1.8s" repeatCount="indefinite" />
+          </line>
+        ))}
 
-      {/* Victim wallet (cracked) */}
-      <polygon points={hexPoints(victim.x, victim.y, 26)} fill={fillMid} stroke={strong} strokeWidth="2" filter="url(#scamGlow)" />
+        {/* مسیر پررنگ ردیابی که کشیده می‌شود */}
+        <path
+          d={tracePath}
+          pathLength={1}
+          fill="none"
+          stroke={strong}
+          strokeWidth="2.4"
+          strokeLinejoin="round"
+          strokeDasharray="1 1"
+          filter="url(#scamGlow)"
+        >
+          <animate
+            attributeName="stroke-dashoffset"
+            values="1;1;0;0"
+            keyTimes={`0;${T0};${T1};1`}
+            dur="6s"
+            repeatCount="indefinite"
+          />
+          <animate
+            attributeName="opacity"
+            values="1;1;0;0"
+            keyTimes="0;0.88;0.97;1"
+            dur="6s"
+            repeatCount="indefinite"
+          />
+        </path>
+      </g>
+
+      {/* ─── Victim wallet ─── */}
+      <polygon
+        points={hexPoints(victim.x, victim.y, 26)}
+        fill={fillMid}
+        stroke={strong}
+        strokeWidth="2"
+        filter="url(#scamGlow)"
+      />
       <circle cx={victim.x} cy={victim.y} r={10} fill="none" stroke={solid} strokeWidth="1.5" />
+      <circle cx={victim.x} cy={victim.y} r={4} fill={solid} />
+
+
+      {/* ─── Hacker (hidden identity) ─── */}
+      <circle
+        cx={hacker.x}
+        cy={hacker.y}
+        r={18}
+        fill={fillSoft}
+        stroke={strong}
+        strokeWidth="1.5"
+        strokeDasharray="4 4"
+      >
+        <animateTransform
+          attributeName="transform"
+          type="rotate"
+          from={`0 ${hacker.x} ${hacker.y}`}
+          to={`360 ${hacker.x} ${hacker.y}`}
+          dur="10s"
+          repeatCount="indefinite"
+        />
+      </circle>
+      <circle
+        cx={hacker.x}
+        cy={hacker.y - 5}
+        r={4.5}
+        fill={fillMid}
+        stroke={strong}
+        strokeWidth="1.5"
+      />
       <path
-        d="M72 86 L80 98 L74 106 L83 116 L77 126"
+        d={`M${hacker.x - 9} ${hacker.y + 9} C${hacker.x - 9} ${hacker.y + 2} ${hacker.x - 4} ${hacker.y} ${hacker.x} ${hacker.y} C${hacker.x + 4} ${hacker.y} ${hacker.x + 9} ${hacker.y + 2} ${hacker.x + 9} ${hacker.y + 9} Z`}
+        fill={fillMid}
+        stroke={strong}
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+
+      {/* ─── Hop wallets (mixer layers) ─── */}
+      {[...col1, ...col2].map((n, i) => {
+        const isTrue = n === hop1 || n === hop2;
+        return (
+          <circle
+            key={i}
+            cx={n.x}
+            cy={n.y}
+            r={7}
+            fill={isTrue ? fillMid : fillSoft}
+            stroke={isTrue ? strong : mid}
+            strokeWidth="1.5"
+          />
+        );
+      })}
+
+      {/* ─── Exchange ─── */}
+      <rect
+        x={exch.x - 20}
+        y={exch.y - 20}
+        width={40}
+        height={40}
+        rx={6}
+        fill={fillSoft}
+        stroke={strong}
+        strokeWidth="1.8"
+      />
+      <path
+        d={`M${exch.x - 13} ${exch.y - 6} L${exch.x} ${exch.y - 15} L${exch.x + 13} ${exch.y - 6} Z`}
         fill="none"
-        stroke={solid}
+        stroke={mid}
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      {[-8, 0, 8].map((dx) => (
+        <line
+          key={dx}
+          x1={exch.x + dx}
+          y1={exch.y - 3}
+          x2={exch.x + dx}
+          y2={exch.y + 9}
+          stroke={mid}
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+      ))}
+      <line
+        x1={exch.x - 13}
+        y1={exch.y + 13}
+        x2={exch.x + 13}
+        y2={exch.y + 13}
+        stroke={mid}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+
+      {/* ─── Vault (frozen funds) ─── */}
+      <circle
+        cx={vault.x}
+        cy={vault.y}
+        r={20}
+        fill={fillSoft}
+        stroke={strong}
+        strokeWidth="2"
+        filter="url(#scamGlow)"
+      />
+      <rect
+        x={vault.x - 8}
+        y={vault.y - 3}
+        width={16}
+        height={12}
+        rx={2.5}
+        fill={fillMid}
+        stroke={strong}
+        strokeWidth="1.5"
+      />
+      <circle cx={vault.x} cy={vault.y + 3} r={1.8} fill={solid} />
+      <path
+        d={`M${vault.x - 5} ${vault.y - 3} V${vault.y - 7} a5 5 0 0 1 10 0 V${vault.y - 3}`}
+        fill="none"
+        stroke={strong}
         strokeWidth="1.8"
         strokeLinecap="round"
-        strokeLinejoin="round"
       >
-        <animate attributeName="opacity" values="0.4;1;0.4" dur="1.6s" repeatCount="indefinite" />
-      </path>
-      {/* Leaking coins */}
-      {[0, 1].map((i) => (
-        <circle key={i} cx={victim.x - 6 + i * 12} cy={140} r={3.5} fill={fillMid} stroke={strong} strokeWidth="1.2">
-          <animate attributeName="cy" values="136;178" dur="2.2s" begin={`${i * 1.1}s`} repeatCount="indefinite" />
-          <animate attributeName="opacity" values="0;1;0" dur="2.2s" begin={`${i * 1.1}s`} repeatCount="indefinite" />
-        </circle>
-      ))}
-
-      {/* Phishing hook */}
-      <g>
         <animateTransform
           attributeName="transform"
           type="translate"
-          values="0 0; 0 5; 0 0"
-          dur="2.4s"
+          values="0 -4;0 -4;0 0;0 0"
+          keyTimes={`0;${f(reach[4] - 0.02)};${f(reach[4] + 0.03)};1`}
+          dur="6s"
           repeatCount="indefinite"
         />
-        <path
-          d="M215 32 V64 a7 7 0 0 1 -14 0"
-          fill="none"
-          stroke={strong}
-          strokeWidth="1.8"
-          strokeLinecap="round"
+      </path>
+
+      {/* ─── Highlight rings when the trace reaches each node ─── */}
+      <circle cx={hacker.x} cy={hacker.y} r={26} fill="none" stroke={solid} strokeWidth="1.5" opacity="0">
+        {glowRing(reach[0])}
+      </circle>
+      <circle cx={hop1.x} cy={hop1.y} r={14} fill="none" stroke={solid} strokeWidth="1.5" opacity="0">
+        {glowRing(reach[1])}
+      </circle>
+      <circle cx={hop2.x} cy={hop2.y} r={14} fill="none" stroke={solid} strokeWidth="1.5" opacity="0">
+        {glowRing(reach[2])}
+      </circle>
+      <rect
+        x={exch.x - 26}
+        y={exch.y - 26}
+        width={52}
+        height={52}
+        rx={10}
+        fill="none"
+        stroke={solid}
+        strokeWidth="1.5"
+        opacity="0"
+      >
+        {glowRing(reach[3])}
+      </rect>
+
+      {/* Freeze pulse at the vault */}
+      <circle cx={vault.x} cy={vault.y} r={20} fill="none" stroke={solid} strokeWidth="1.5" opacity="0">
+        <animate
+          attributeName="r"
+          values="20;20;20;46;46"
+          keyTimes={pulseTimes(reach[4])}
+          dur="6s"
+          repeatCount="indefinite"
         />
+        <animate
+          attributeName="opacity"
+          values="0;0;0.9;0;0"
+          keyTimes={pulseTimes(reach[4])}
+          dur="6s"
+          repeatCount="indefinite"
+        />
+      </circle>
+
+      {/* ─── Tracing lens ─── */}
+      <g filter="url(#scamGlow)" opacity="0">
+        <animateMotion
+          dur="6s"
+          repeatCount="indefinite"
+          path={tracePath}
+          calcMode="linear"
+          keyPoints="0;0;1;1"
+          keyTimes={`0;${T0};${T1};1`}
+        />
+        <animate
+          attributeName="opacity"
+          values="0;0;1;1;0;0"
+          keyTimes={`0;0.05;${T0};${T1};0.78;1`}
+          dur="6s"
+          repeatCount="indefinite"
+        />
+        <circle cx={0} cy={0} r={9} fill={fillSoft} stroke={strong} strokeWidth="2" />
+        <circle cx={0} cy={0} r={2.5} fill={solid} />
+        <line x1={6.5} y1={6.5} x2={13} y2={13} stroke={strong} strokeWidth="3.5" strokeLinecap="round" />
       </g>
 
-      {/* Fake website window */}
-      <rect x={180} y={80} width={70} height={60} rx={6} fill={fillSoft} stroke={strong} strokeWidth="1.8" />
-      <line x1={180} y1={94} x2={250} y2={94} stroke={mid} strokeWidth="1.2" />
-      {[188, 196, 204].map((x) => (
-        <circle key={x} cx={x} cy={87} r={1.8} fill={mid} />
-      ))}
-      <g filter="url(#scamGlow)">
-        <animate attributeName="opacity" values="1;0.3;1" dur="1.4s" repeatCount="indefinite" />
-        <path d="M215 102 L227 126 L203 126 Z" fill="none" stroke={solid} strokeWidth="1.8" strokeLinejoin="round" />
-        <line x1={215} y1={111} x2={215} y2={118} stroke={solid} strokeWidth="1.8" strokeLinecap="round" />
-        <circle cx={215} cy={122} r={1.2} fill={solid} />
-      </g>
-
-      {/* Scammer (hidden identity) */}
-      <circle
-        cx={scammer.x}
-        cy={86}
-        r={15}
-        fill={fillSoft}
-        stroke={strong}
-        strokeWidth="2"
-        strokeDasharray="4 4"
-        filter="url(#scamGlow)"
+      {/* ─── Timeline (synced with the trace) ─── */}
+      <line
+        x1={60}
+        y1={205}
+        x2={840}
+        y2={205}
+        stroke={c("rgba(0,229,255,0.6)", "rgba(37,99,235,0.55)")}
+        strokeWidth="1.5"
       />
-      <path
-        d="M350 152 C350 128 362 116 380 116 C398 116 410 128 410 152 Z"
-        fill={fillSoft}
-        stroke={strong}
-        strokeWidth="2"
-        strokeDasharray="4 4"
-      />
-      <circle cx={375} cy={86} r={2} fill={solid}>
-        <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
-      </circle>
-      <circle cx={385} cy={86} r={2} fill={solid}>
-        <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
-      </circle>
-
-      {/* Split wallets */}
-      {splits.map((s, i) => (
-        <circle key={i} cx={s.x} cy={s.y} r={9} fill={i === 0 ? fillMid : fillSoft} stroke={i === 0 ? strong : mid} strokeWidth="1.5" />
-      ))}
-
-      {/* Stolen funds routes */}
-      <path d={upperPath} fill="none" stroke={strong} strokeWidth="1.8" strokeDasharray="6 6" filter="url(#scamGlow)">
-        <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="2s" repeatCount="indefinite" />
-      </path>
-      <path d={lowerPath} fill="none" stroke={mid} strokeWidth="1.4" strokeDasharray="4 8">
-        <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="2.6s" repeatCount="indefinite" />
-      </path>
-      <circle r={4} fill={solid} filter="url(#scamGlow)">
-        <animateMotion dur="5s" repeatCount="indefinite" path={upperPath} />
-      </circle>
-      <circle r={3.5} fill={solid} filter="url(#scamGlow)">
-        <animateMotion dur="5s" begin="2.5s" repeatCount="indefinite" path={lowerPath} />
-      </circle>
-
-      {/* Exchange + freeze pulse */}
-      <circle cx={exch.x} cy={exch.y} r={26} fill="none" stroke={solid} strokeWidth="1.5">
-        <animate attributeName="r" values="26;50" dur="2.8s" repeatCount="indefinite" />
-        <animate attributeName="opacity" values="0.7;0" dur="2.8s" repeatCount="indefinite" />
-      </circle>
-      <rect x={exch.x - 20} y={exch.y - 20} width={40} height={40} rx={6} fill={fillSoft} stroke={strong} strokeWidth="1.8" />
-      <line x1={exch.x - 10} y1={exch.y - 5} x2={exch.x + 10} y2={exch.y - 5} stroke={mid} strokeWidth="1.5" strokeLinecap="round" />
-      <line x1={exch.x - 10} y1={exch.y + 5} x2={exch.x + 10} y2={exch.y + 5} stroke={mid} strokeWidth="1.5" strokeLinecap="round" />
-
-      {/* Target wallet + magnifier */}
-      <circle cx={target.x} cy={target.y} r={12} fill={fillMid} stroke={strong} strokeWidth="2" />
-      <circle cx={target.x} cy={target.y} r={5} fill={solid} />
-      <circle cx={target.x} cy={target.y} r={26} fill="none" stroke={strong} strokeWidth="2" filter="url(#scamGlow)">
-        <animate attributeName="r" values="24;30;24" dur="2.4s" repeatCount="indefinite" />
-        <animate attributeName="opacity" values="1;0.35;1" dur="2.4s" repeatCount="indefinite" />
-      </circle>
-      <line x1={target.x + 19} y1={target.y + 19} x2={target.x + 38} y2={target.y + 38} stroke={strong} strokeWidth="4" strokeLinecap="round" />
-
-      {/* Timeline: theft → trace → recovery */}
-      <line x1={60} y1={205} x2={840} y2={205} stroke={c("rgba(0,229,255,0.35)", "rgba(37,99,235,0.32)")} strokeWidth="1.5" />
+      <line x1={60} y1={205} x2={60} y2={205} stroke={solid} strokeWidth="2" strokeLinecap="round">
+        <animate
+          attributeName="x2"
+          values="60;60;840;840"
+          keyTimes={`0;${T0};${T1};1`}
+          dur="6s"
+          repeatCount="indefinite"
+        />
+      </line>
       <circle cx={200} cy={205} r={4.5} fill={mid} />
       <circle cx={450} cy={205} r={5.5} fill="none" stroke={strong} strokeWidth="1.5" />
       <circle cx={700} cy={205} r={8} fill={fillMid} stroke={strong} strokeWidth="1.5" />
-      <path d="M696 205 L699 208 L705 201" fill="none" stroke={solid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M696 205 L699 208 L705 201"
+        fill="none"
+        stroke={solid}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
       <circle cx={60} cy={205} r={3.5} fill={solid} filter="url(#scamGlow)">
-        <animate attributeName="cx" values="60;840;840" keyTimes="0;0.9;1" dur="6s" repeatCount="indefinite" />
+        <animate
+          attributeName="cx"
+          values="60;60;840;840"
+          keyTimes={`0;${T0};${T1};1`}
+          dur="6s"
+          repeatCount="indefinite"
+        />
       </circle>
     </svg>
   );
@@ -1113,11 +1349,11 @@ const HiddenIdentityHeroArt = ({
   darkMode?: boolean;
 }) => {
   const c = (dark: string, light: string) => (darkMode ? dark : light);
-  const strong = c("rgba(0,229,255,0.85)", "rgba(37,99,235,0.7)");
-  const mid = c("rgba(0,229,255,0.55)", "rgba(37,99,235,0.5)");
-  const soft = c("rgba(0,229,255,0.3)", "rgba(37,99,235,0.28)");
-  const fillMid = c("rgba(0,229,255,0.28)", "rgba(37,99,235,0.24)");
-  const fillSoft = c("rgba(0,229,255,0.12)", "rgba(37,99,235,0.1)");
+  const strong = c("rgba(0,229,255,1)", "rgba(37,99,235,0.95)");
+  const mid = c("rgba(0,229,255,0.8)", "rgba(37,99,235,0.75)");
+  const soft = c("rgba(0,229,255,0.5)", "rgba(37,99,235,0.45)");
+  const fillMid = c("rgba(0,229,255,0.4)", "rgba(37,99,235,0.35)");
+  const fillSoft = c("rgba(0,229,255,0.2)", "rgba(37,99,235,0.18)");
   const solid = c("#00E5FF", "#2563EB");
 
   const printRings = [
@@ -1140,7 +1376,7 @@ const HiddenIdentityHeroArt = ({
       viewBox="30 0 840 220"
       preserveAspectRatio="xMidYMid meet"
       className="w-full h-auto"
-      style={{ opacity: darkMode ? 0.4 : 0.7 }}
+      style={{ opacity: darkMode ? 0.7 : 0.95 }}
     >
       <defs>
         <filter id="identityGlow">
@@ -1263,10 +1499,10 @@ const HiddenIdentityHeroArt = ({
       <path d="M753 70 L758 75 L767 64" fill="none" stroke={solid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
 
       {/* Timeline */}
-      <line x1={60} y1={202} x2={840} y2={202} stroke={c("rgba(0,229,255,0.35)", "rgba(37,99,235,0.32)")} strokeWidth="1.5" />
-      <circle cx={200} cy={202} r={4.5} fill={c("rgba(0,229,255,0.7)", "rgba(37,99,235,0.6)")} />
+      <line x1={60} y1={202} x2={840} y2={202} stroke={c("rgba(0,229,255,0.6)", "rgba(37,99,235,0.55)")} strokeWidth="1.5" />
+      <circle cx={200} cy={202} r={4.5} fill={c("rgba(0,229,255,0.95)", "rgba(37,99,235,0.85)")} />
       <circle cx={450} cy={202} r={5.5} fill="none" stroke={strong} strokeWidth="1.5" />
-      <circle cx={700} cy={202} r={8} fill={c("rgba(0,229,255,0.2)", "rgba(37,99,235,0.15)")} stroke={strong} strokeWidth="1.5" />
+      <circle cx={700} cy={202} r={8} fill={c("rgba(0,229,255,0.35)", "rgba(37,99,235,0.3)")} stroke={strong} strokeWidth="1.5" />
       <path d="M696 202 L699 205 L705 198" fill="none" stroke={solid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
@@ -1279,11 +1515,11 @@ const ThreatIntelHeroArt = ({
   darkMode?: boolean;
 }) => {
   const c = (dark: string, light: string) => (darkMode ? dark : light);
-  const strong = c("rgba(0,229,255,0.85)", "rgba(37,99,235,0.7)");
-  const mid = c("rgba(0,229,255,0.55)", "rgba(37,99,235,0.5)");
-  const soft = c("rgba(0,229,255,0.3)", "rgba(37,99,235,0.28)");
-  const fillMid = c("rgba(0,229,255,0.28)", "rgba(37,99,235,0.24)");
-  const fillSoft = c("rgba(0,229,255,0.12)", "rgba(37,99,235,0.1)");
+  const strong = c("rgba(0,229,255,1)", "rgba(37,99,235,0.95)");
+  const mid = c("rgba(0,229,255,0.8)", "rgba(37,99,235,0.75)");
+  const soft = c("rgba(0,229,255,0.5)", "rgba(37,99,235,0.45)");
+  const fillMid = c("rgba(0,229,255,0.4)", "rgba(37,99,235,0.35)");
+  const fillSoft = c("rgba(0,229,255,0.2)", "rgba(37,99,235,0.18)");
   const solid = c("#00E5FF", "#2563EB");
 
   // شبکه دارک‌وب (چپ)
@@ -1317,7 +1553,7 @@ const ThreatIntelHeroArt = ({
       viewBox="30 0 840 220"
       preserveAspectRatio="xMidYMid meet"
       className="w-full h-auto"
-      style={{ opacity: darkMode ? 0.4 : 0.7 }}
+      style={{ opacity: darkMode ? 0.7 : 0.95 }}
     >
       <defs>
         <filter id="threatGlow">
@@ -1447,7 +1683,7 @@ const ThreatIntelHeroArt = ({
       {/* Alert shield (right) */}
       <circle cx={700} cy={108} r={34} fill="none" stroke={solid} strokeWidth="1.5">
         <animate attributeName="r" values="34;56" dur="2.8s" repeatCount="indefinite" />
-        <animate attributeName="opacity" values="0.7;0" dur="2.8s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.9;0" dur="2.8s" repeatCount="indefinite" />
       </circle>
       <path d={shieldPath} fill={fillMid} stroke={strong} strokeWidth="2" filter="url(#threatGlow)" />
       <line x1={700} y1={86} x2={700} y2={114} stroke={solid} strokeWidth="3" strokeLinecap="round" />
@@ -1473,7 +1709,7 @@ const ThreatIntelHeroArt = ({
       ))}
 
       {/* Timeline */}
-      <line x1={60} y1={205} x2={840} y2={205} stroke={c("rgba(0,229,255,0.35)", "rgba(37,99,235,0.32)")} strokeWidth="1.5" />
+      <line x1={60} y1={205} x2={840} y2={205} stroke={c("rgba(0,229,255,0.6)", "rgba(37,99,235,0.55)")} strokeWidth="1.5" />
       {Array.from({ length: 20 }).map((_, i) => (
         <line
           key={i}
@@ -1813,7 +2049,7 @@ export default function App({
             href="/"
             className={`flex items-center gap-1.5 leading-none transition-colors ${
               darkMode
-                ? "text-[#64748B] hover:text-[#00E5FF]"
+                ? "text-[#90a4c1] hover:text-[#00E5FF]"
                 : "text-[#475569] hover:text-[#1565C0]"
             }`}
           >
@@ -1836,7 +2072,7 @@ export default function App({
             href="/services"
             className={`transition-colors ${
               darkMode
-                ? "text-[#64748B] hover:text-[#00E5FF]"
+                ? "text-[#90a4c1] hover:text-[#00E5FF]"
                 : "text-[#475569] hover:text-[#1565C0]"
             }`}
           >
@@ -1919,12 +2155,13 @@ export default function App({
           <h1 
             className="font-black leading-snug mb-5" 
             style={{ 
-              fontSize: "clamp(1.8rem, 4.5vw, 3.2rem)", 
+              fontSize: "56px", 
               color: darkMode ? "#fff" : "#0F172A", 
               textShadow: darkMode 
                 ? "0 0 50px rgba(0,229,255,0.15), 0 0 100px rgba(0,229,255,0.05)" 
                 : "0 0 30px rgba(37,99,235,0.06)", 
-              lineHeight: 1.35, 
+              lineHeight: 1.28, 
+              fontWeight: "500"
             }} 
           > 
             {loadingService ? (
@@ -1937,7 +2174,7 @@ export default function App({
           {/* Sub-headline */} 
           <p 
             className="max-w-2xl mx-auto mb-8 leading-relaxed" 
-            style={{ color: darkMode ? "#94A3B8" : "#475569", fontSize: "clamp(0.9rem, 1.8vw, 1.05rem)", fontWeight: 400 }} 
+            style={{ color: darkMode ? "#94A3B8" : "#475569", fontSize: "16px", fontWeight: 500, lineHeight: "1.75" }} 
           > 
             {service?.shortDesc || 
               "مجرمان سایبری فکر می‌کنند تراکنش‌های کریپتو غیرقابل رهگیری است. ما با استفاده از پیشرفته‌ترین ابزارهای آن‌چین (On-chain)، تتر و بیت‌کوینِ سرقتی شما را تا صرافی نهایی ردیابی می‌کنیم."} 
@@ -1946,7 +2183,7 @@ export default function App({
           {/* Primary CTA */} 
           <button 
             onClick={() => setCrisisOpen(true)} 
-            className="inline-flex items-center justify-center gap-2 px-12 py-3.5 rounded-xl font-bold transition-all duration-300 mb-4" 
+            className="inline-flex items-center justify-center gap-2 px-10 py-3.5 rounded-xl font-bold transition-all duration-300 mb-4" 
            style={{ 
                 background: "#EF4444", 
                 color: "#ffffff", 
@@ -2027,7 +2264,7 @@ export default function App({
         </div> 
 </motion.div>
  
-      {/* ─── HOW WE TRACK ─── */} 
+{/* ─── HOW WE TRACK ─── */} 
         <motion.div
         className="px-6 py-20 md:px-12" 
   initial={{ opacity: 0, y: 60 }}
@@ -2048,17 +2285,28 @@ export default function App({
             <h2  
               className="font-bold"  
               style={{ 
-                fontSize: "clamp(1.3rem, 2.8vw, 2rem)", 
-                color: darkMode ? "#fff" : "#0F172A" 
+                fontSize: "42px", 
+                color: darkMode ? "#fff" : "#0F172A",
+                fontWeight: "500",
+                lineHeight: "1.33" 
               }}  
             >  
               {service?.trackingTitle || "مراحل شناسایی و ردیابی"} 
             </h2> 
 
-            <div 
-              className="mt-4 mx-auto" 
-              style={{ height: 2, width: 80, background: darkMode ? "linear-gradient(90deg,transparent,rgba(0,229,255,0.5),transparent)" : "linear-gradient(90deg,transparent,rgba(30, 77, 205, 0.87),transparent)" }} 
-            /> 
+<div
+  className={`w-24 mx-auto mt-4 ${
+    darkMode
+      ? "bg-gradient-to-r from-transparent via-cyan-400 to-transparent"
+      : "bg-gradient-to-r from-transparent via-[#1565C0] to-transparent"
+  }`}
+  style={{
+    height: "1px",
+    minHeight: "1px",
+    maxHeight: "1px",
+    flexShrink: 0,
+  }}
+/>
           </div> 
  
           {/* 3 vertical cards */} 
@@ -2070,7 +2318,8 @@ export default function App({
  
                   {/* Card */} 
                   <div 
-                    className="glass-card p-7 flex items-start gap-6 group transition-all duration-300 border border-cyan-500/30 hover:border-cyan-600 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-900/15 rounded-2xl" 
+                    dir="rtl"
+                    className="glass-card p-5 sm:p-7 flex flex-col sm:flex-row items-start gap-4 sm:gap-6 group transition-all duration-300 border border-cyan-500/30 hover:border-cyan-600 bg-[rgba(255,255,255,0.028)] hover:bg-cyan-900/15 rounded-2xl" 
                     style={{ 
                       textAlign: "right", 
                       background: darkMode ? undefined : "#ebebeb4b", 
@@ -2121,7 +2370,7 @@ export default function App({
                       /> 
                     </div> 
  
-                    <div className="flex-1"> 
+                    <div className="w-full min-w-0 sm:flex-1 text-right"> 
  
                       <div className="flex items-center gap-3 mb-2"> 
                         <span 
@@ -2139,22 +2388,25 @@ export default function App({
                           STEP {String(index + 1).padStart(2, "0")} 
                         </span> 
  
-                        <div 
-                          style={{ 
-                            flex: 1, 
-                            height: 1, 
-                            background: darkMode 
-                              ? "rgba(0,229,255,0.08)" 
-                              : "rgba(90, 128, 226, 0.52)", 
-                          }} 
-                        /> 
+                       <div 
+  style={{ 
+    flex: 1, 
+    height: 0, 
+    borderTop: `1px solid ${
+      darkMode ? "rgba(0, 229, 255, 0.17)" : "rgba(90, 128, 226, 0.52)"
+    }`, 
+  }} 
+/> 
                       </div> 
  
                       <h3 
                         className="font-bold mb-2" 
                         style={{ 
+                          
                           color: darkMode ? "#fff" : undefined, 
-                          fontSize: "1.05rem", 
+                          fontSize: "18px", 
+                          lineHeight: "1.5",
+                          fontWeight: "500"
                         }} 
                       > 
                         {step?.title || ""} 
@@ -2163,8 +2415,9 @@ export default function App({
                       <p 
                         style={{ 
                           color: darkMode ? "#64748B" : "#475569", 
-                          fontSize: "0.85rem", 
-                          lineHeight: 1.8, 
+                          fontSize: "14px", 
+                          lineHeight: 2, 
+                          fontWeight: "500"
                         }} 
                       > 
                         {step?.description || ""} 

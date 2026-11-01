@@ -1149,7 +1149,7 @@ const closeCrisis = () => {
       <>
        <div
             dir="rtl"
-      className={`min-h-screen transition-colors duration-300 pt-[65px] cyber-grid-bg ${
+      className={`min-h-screen transition-colors duration-300 pt-[75px] cyber-grid-bg ${
         darkMode
           ? "bg-[#0A1128] text-[#E6F7FF]"
           : "bg-white text-[#0F172A]"
@@ -1217,10 +1217,10 @@ const closeCrisis = () => {
 <h1
   className="glow-text font-black leading-tight mb-6"
   style={{
-    fontSize: "clamp(2rem, 5vw, 3.5rem)",
+    fontSize: "56px",
     color: darkMode ? "#ffffff" : "#0c1a43",
     lineHeight: "1.3",
-    fontWeight: 900,
+    fontWeight: 500,
     textShadow: darkMode
       ? undefined
       : "0 0 18px rgba(30,58,138,0.10)",
@@ -1239,9 +1239,10 @@ const closeCrisis = () => {
             className="mx-auto mb-8"
             style={{
               color: darkMode ? "#9aa0aa" : "#475569",
-              fontSize: "clamp(0.92rem,2vw,1.0rem)",
-              lineHeight: 1.9,
+              fontSize: "18px",
+              lineHeight: 1.6,
               maxWidth: 580,
+              fontWeight: "500"
             }}
           >
             پاراهور؛ آژانس خصوصی تحقیقات سایبری و فارنزیک. ما شواهد را کشف،
@@ -1341,8 +1342,10 @@ style={{
             <h2
               className="font-bold"
               style={{
-                fontSize: "clamp(1.4rem, 3vw, 2rem)",
+                fontSize: "40px",
                 color: darkMode ? "#ffffff" : "#0F172A",
+                fontWeight: "500",
+                lineHeight: 1.5
               }}
             >
               مسیر بررسی پرونده شما
@@ -1468,6 +1471,9 @@ style={{
                     }`}
                     style={{
                       color: darkMode ? "#ffffff" : "black",
+                      fontSize: "18px",
+                      fontWeight: "500",
+                      lineHeight: 1.77
                     }}
                   >
                     {step.title}
@@ -1478,8 +1484,9 @@ style={{
                       color: darkMode
                         ? "#8e939a"
                         : "#334155",
-                      fontSize:"0.82rem",
+                      fontSize:"14px",
                       lineHeight: 1.7,
+                      fontWeight: "500"
                     }}
                   >
                     {step.text}
@@ -1539,8 +1546,10 @@ style={{
             <h2
               className="font-bold"
               style={{
-                fontSize: "clamp(1.4rem, 3vw, 2rem)",
+                fontSize: "40px",
                 color: darkMode ? "#ffffff" : "#0F172A",
+                  fontWeight: "500",
+                lineHeight: 1.5
               }}
             >
               حوزه‌های تخصصی پاراهور
@@ -1674,7 +1683,9 @@ style={{
                       }`}
                       style={{
                         color: darkMode ? "#ffffff" : "black",
-                        fontSize: "1rem",
+                        fontSize: "18px",
+                        fontWeight: "500",
+                        lineHeight: 1.5
                       }}
                     >
                       {service.title}
@@ -1685,8 +1696,9 @@ style={{
                         color: darkMode
                           ? "#8e939a"
                           : "#334155",
-                        fontSize:"0.82rem" ,
+                        fontSize:"14px" ,
                         lineHeight: 1.75,
+                        fontWeight: "500"
                       }}
                     >
                       {service.text}
@@ -1722,7 +1734,7 @@ style={{
                       color: darkMode
                         ? "rgba(0,229,255,0.6)"
                         : "#1565C0",
-                      fontSize: "0.73rem",
+                      fontSize: "0.82rem",
                       fontFamily: "monospace",
                       fontWeight: "550"
                     }}
@@ -1773,9 +1785,14 @@ style={{
         >Successful Projects</span>
 
         <h2
-          className={`text-[clamp(1.4rem,3vw,2rem)] font-bold ${
+          className={` font-bold ${
             darkMode ? "text-white" : "text-[#0F172A]"
           }`}
+          style={{
+            fontSize: "40px",
+                 fontWeight: "500",
+                lineHeight: 1.5
+          }}
         >
           نمونه‌کارهای موفق
         </h2>
@@ -1831,7 +1848,7 @@ className={`w-12 h-12 flex items-center justify-center rounded-xl ${
 
           {/* Category */}
           <span
-            className={`text-[0.72rem] font-semibold ${
+            className={`text-[0.75rem] font-semibold ${
               darkMode ? "text-cyan-400/60" : "text-[#1565C0]"
             }`}
           >
@@ -1845,6 +1862,11 @@ className={`w-12 h-12 flex items-center justify-center rounded-xl ${
                 ? "text-white"
                 : "text-[#0F172A] "
             }`}
+            style={{ 
+              fontSize: "18px",
+              fontWeight: "500",
+              lineHeight: "1.5"
+            }}
           >
             {item.title}
           </h3>
@@ -1866,9 +1888,12 @@ className={`w-12 h-12 flex items-center justify-center rounded-xl ${
             </span>
 
             <strong
-              className={`text-[0.84rem] leading-[1.7] ${
+              className={`text-[14px] leading-[1.7] ${
                 darkMode ? "text-cyan-400" : "text-[#1565C0]"
               }`}
+              style={{
+                fontWeight: "500"
+              }}
             >
               {item.result}
             </strong>
@@ -1876,9 +1901,12 @@ className={`w-12 h-12 flex items-center justify-center rounded-xl ${
 
           {/* Description */}
           <p
-            className={`mb-6 text-[0.8rem] leading-[1.85] ${
+            className={`mb-6 text-[14px] leading-[1.79] ${
               darkMode ? "text-[#9aa0aa]" : "text-[#334155]"
             }`}
+            style={{
+              fontWeight: "500"
+            }}
           >
             {item.description}
           </p>
@@ -1937,9 +1965,12 @@ className={`w-12 h-12 flex items-center justify-center rounded-xl ${
 }}
         >LATEST POSTS</span>
             <h2
-              className="text-2xl md:text-3xl font-black"
+              className="font-black"
               style={{
                 color: darkMode ? "#fff" : "#0F172A",
+                fontSize: "40px",
+                  fontWeight: "500",
+                lineHeight: 1.5
               }}
             >
              آخرین مطالب
@@ -2082,20 +2113,29 @@ className={`w-12 h-12 flex items-center justify-center rounded-xl ${
                       <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-5 lg:p-6">
                         {/* Title */}
                         <h3
-                          className={`text-base font-bold leading-snug mb-3 break-words line-clamp-2 ${
+                          className={` font-bold leading-snug mb-3 break-words line-clamp-2 ${
                             darkMode
                               ? "text-[#E6F7FF] group-hover:text-[#00E5FF] transition-colors duration-300"
                               : "text-[#111827] group-hover:text-[#1565C0] transition-colors duration-300"
                           }`}
+                          style={{
+                            fontSize: "18px",
+                            fontWeight: "500",
+                            lineHeight: 1.5
+                          }}
                         >
                           {post.title}
                         </h3>
 
                         {/* Excerpt */}
                         <p
-                          className={`text-[13px] leading-relaxed line-clamp-2 break-words mb-5 flex-1 min-h-[2.85rem] ${
+                          className={`text-[14px] leading-relaxed line-clamp-2 break-words mb-5 flex-1 min-h-[2.85rem] ${
                             darkMode ? "text-[#9aa0aa]" : "text-[#334155]"
                           }`}
+                          style={{
+                            fontWeight: "500",
+                            lineHeight: 1.77
+                          }}
                         >
                           {summary}
                         </p>
@@ -2119,7 +2159,7 @@ className={`w-12 h-12 flex items-center justify-center rounded-xl ${
                       
                          <div className="min-w-0">
                       <span 
-                        className={`inline-flex items-center gap-1.5 text-xs font-semibold truncate pb-1 transition-all duration-300 ${
+                        className={`inline-flex items-center gap-1.5 text-[13px] font-semibold truncate pb-1 transition-all duration-300 ${
                           darkMode ? "text-[#9DB0C0] hover:text-white/80" : "text-[#475569]"
                         }`}
                       >

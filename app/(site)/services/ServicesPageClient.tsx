@@ -380,7 +380,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
             href="/"
             className={`flex items-center gap-1.5 leading-none transition-colors ${
               darkMode
-                ? "text-[#64748B] hover:text-[#00E5FF]"
+                ? "text-[#90a4c1] hover:text-[#00E5FF]"
                 : "text-[#475569] hover:text-[#1565C0]"
             }`}
           >
@@ -427,7 +427,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
       {/* <section className="relative px-6 pt-20 pb-16 md:px-12 md:pt-28 md:pb-20 text-center overflow-hidden"> */}
         <motion.div
-        className="relative px-6 pt-20 pb-16 md:px-12 md:pt-28 md:pb-20 text-center overflow-hidden"
+        className="relative px-6 pt-20 pb-16 md:px-12 md:pt-20 md:pb-20 text-center overflow-hidden"
     initial={{ opacity: 0, y: 30 }}
   whileInView={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.5 }}
@@ -480,10 +480,10 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 <h1
   className="glow-text font-black leading-tight mb-6"
   style={{
-    fontSize: "clamp(2rem, 5vw, 3.5rem)",
+    fontSize: "56px",
     color: darkMode ? "#ffffff" : "#0c1a43",
-    lineHeight: "1.3",
-    fontWeight: 900,
+    lineHeight: "1.28",
+    fontWeight: 500,
     textShadow: darkMode
       ? undefined
       : "0 0 18px rgba(30,58,138,0.10)",
@@ -502,9 +502,10 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
             className="mx-auto mb-8"
             style={{
               color: darkMode ? "#9aa0aa" : "#475569",
-              fontSize: "clamp(0.92rem,2vw,1.0rem)",
-              lineHeight: 1.9,
+              fontSize: "16px",
+              lineHeight: 1.75,
               maxWidth: 580,
+              fontWeight: "500"
             }}
           >
             از ردیابی پیچیده‌ترین جریان‌های مالی تا مشاوره‌های دقیق فنی برای
@@ -647,8 +648,9 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                   className="font-bold mb-2"
                   style={{
                     color: darkMode ? "#fff" : "#0F172A",
-                    fontSize: "clamp(1rem, 2.2vw, 1.35rem)",
+                    fontSize: "24px",
                     lineHeight: 1.4,
+                    fontWeight: "500"
                   }}
                 >
                   نیاز به مشاوره فنی و امکان‌سنجی دارید؟
@@ -657,9 +659,10 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                 <p
                   style={{
                     color: darkMode ? "#8f959e" : "#334155",
-                    fontSize: "0.87rem",
-                    lineHeight: 1.8,
+                    fontSize: "14px",
+                    lineHeight: 2,
                     maxWidth: 560,
+                    fontWeight: "500"
                   }}
                 >
                   پیش از هر اقدام حقوقی یا فنی، می‌توانید با کارآگاهان ما جلسه
@@ -812,7 +815,9 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
               className="font-bold"
               style={{
                 color: darkMode ? "#fff" : "#0F172A",
-                fontSize: "clamp(1.2rem, 2.5vw, 1.7rem)",
+                fontSize: "32px",
+                fontWeight: "500",
+                lineHeight: "1.5"
               }}
             >
               عملیات فارنزیک و کارآگاهی
@@ -821,6 +826,9 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
             <p
               className="mt-2 text-sm"
               style={{
+                fontSize: "14px",
+                fontWeight: "500",
+                lineHeight: "2",
                 color: darkMode ? "#8f959e" : "#334155",
                 maxWidth: 480,
               }}
@@ -839,10 +847,10 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
               const isHovered = hoveredCard === s.id;
 
               return (
-                
-                <div
-                  key={s.id}
-                  className="relative flex flex-col overflow-hidden rounded-2xl transition-all duration-300 cursor-default"
+                <Link
+                href={`/services/${s.slug}`}
+                 key={s.id}
+                  className="relative flex flex-col overflow-hidden rounded-2xl transition-all duration-300 cursor-pointer"
                   style={{
                     background: darkMode
                       ? isHovered
@@ -878,6 +886,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                   onMouseEnter={() => setHoveredCard(s.id)}
                   onMouseLeave={() => setHoveredCard(null)}
                 >
+
                   {/* Top accent line on hover */}
 
                   <div
@@ -956,7 +965,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
       : isHovered
         ? "#000000"
         : "#000000",
-    fontSize:"1rem",
+    fontSize:"18px",
     lineHeight: 1.5,
     transition: "color 0.3s",
   }}
@@ -966,15 +975,17 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
 {/* Description */}
 <p
+className="leading-relaxed line-clamp-2 break-words"
   style={{
     color: darkMode ? "#7f858d" : "#334155",
-    fontSize:"0.86rem",
-    lineHeight:1.95,
+    fontSize:"14px",
+    lineHeight:2,
     flexGrow: 1,
     letterSpacing:"-0.01em",
+    fontWeight: "500"
   }}
 >
-  {s.shortDesc.length > 80 ? s.shortDesc.slice(0,80) + "..." : s.shortDesc}
+  {s.shortDesc}
 </p>
 
                     {/* Tags */}
@@ -1025,8 +1036,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
                     {/* CTA Link */}
 
-                    <Link
-                      href={`/services/${s.slug}`}
+                    <span
                       className="flex items-center justify-between group"
                       style={{
                         color: darkMode
@@ -1053,9 +1063,11 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
                       >
                         <IconArrow />
                       </span>
-                    </Link>
+                    </span>
                   </div>
-                </div>
+
+                </Link>
+                
               );
             })}
           </div>
