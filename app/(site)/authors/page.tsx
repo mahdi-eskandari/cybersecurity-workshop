@@ -99,9 +99,11 @@ export async function generateMetadata({
 function AuthorsJsonLd({
   title,
   description,
+  authorsList,
 }: {
   title: string;
   description: string;
+  authorsList: { name: string; url: string }[];
 }) {
   const canonical = `${SITE_URL}${BASE_PATH}`;
 
@@ -121,6 +123,26 @@ function AuthorsJsonLd({
           "@type": "WebSite",
           "@id": `${SITE_URL}/#website`,
         },
+
+        about: { "@id": `${SITE_URL}/#organization` },
+        mainEntity: { "@id": `${canonical}#authors` },
+      },
+
+      {
+        "@type": "ItemList",
+        "@id": `${canonical}#authors`,
+        numberOfItems: authorsList.length,
+        itemListElement: authorsList.map((a, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          item: {
+            "@type": "Person",
+            "@id": `${a.url}#person`,
+            name: a.name,
+            url: a.url,
+            worksFor: { "@id": `${SITE_URL}/#organization` },
+          },
+        })),
       },
 
       buildOrganizationSchema(),
@@ -157,6 +179,11 @@ export default async function AuthorsPage({
   );
   const slugMap = Object.fromEntries(authorSeos.map((x) => [x.id, x.seo.slug]));
 
+  const authorsList = authors.map((a) => ({
+  name: a.name,
+  url: `${SITE_URL}${BASE_PATH}/${slugMap[a.id]}`,
+}));
+
   const [posts, seo, adjacent] = await Promise.all([
     getPosts(),
     getPageSeo("authors"),
@@ -189,10 +216,11 @@ export default async function AuthorsPage({
       {prevUrl && <link rel="prev" href={prevUrl} />}
       {nextUrl && <link rel="next" href={nextUrl} />}
 
-      <AuthorsJsonLd
-        title={seo.metaTitle}
-        description={seo.metaDescription}
-      />
+<AuthorsJsonLd
+  title={seo.metaTitle}
+  description={seo.metaDescription}
+  authorsList={authorsList}
+/>
 
       <AuthorsClient
         posts={posts}

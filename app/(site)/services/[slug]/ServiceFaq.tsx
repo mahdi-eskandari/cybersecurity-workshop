@@ -41,8 +41,8 @@ const [openFaq, setOpenFaq] = useState<number | null>(null);
         helpText: "#65758c",
         cardBg: "rgba(255,255,255,0.025)",
         cardBgOpen: "rgba(0,229,255,0.055)",
-        cardBorder: "1px solid rgba(0,229,255,0.1)",
-        cardBorderOpen: "1px solid rgba(0,229,255,0.28)",
+        cardBorder: "1px solid rgba(27, 225, 247, 0.2)",
+        cardBorderOpen: "1px solid rgba(0, 229, 255, 0.41)",
         question: "#CBD5E1",
         questionOpen: "#FFFFFF",
         chevronBg: "rgba(0,229,255,0.07)",
@@ -61,8 +61,8 @@ sectionBorder: "1px solid rgba(21,101,192,0.14)",
         helpText: "#475569",
         cardBg: "#FFFFFF",
         cardBgOpen: "rgba(21,101,192,0.055)",
-        cardBorder: "1px solid rgba(21,101,192,0.14)",
-        cardBorderOpen: "1px solid rgba(21,101,192,0.4)",
+        cardBorder: "1px solid rgba(21, 101, 192, 0.27)",
+        cardBorderOpen: "1px solid rgba(21, 101, 192, 0.7)",
         question: "#334155",
         questionOpen: "#0F172A",
         chevronBg: "rgba(21,101,192,0.08)",
@@ -84,16 +84,16 @@ sectionBorder: "1px solid rgba(21,101,192,0.14)",
   transition={{ duration: 0.7 }}
   viewport={{ once: true, amount: 0.2 }}
 >
-      <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-[0.75fr_1.25fr] gap-10 lg:gap-16">
+      <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-[0.75fr_1.25fr] gap-10 lg:gap-16 ">
         {/* ───── متن ثابت ───── */}
-        <div>
+        <div className="lg:mt-4">
           <span
-            className="block mb-3 font-bold"
+            className="block mb-3"
             style={{
-              fontFamily: "'JetBrains Mono',monospace",
-              fontSize: "13px",
+              fontFamily: "'JetBrains Mono'",
+              fontSize: "16px",
               color: t.tag,
-              letterSpacing: "0.18em",
+              letterSpacing: "0.06em",
             }}
           >
             پاسخ‌های شفاف و کوتاه
@@ -119,10 +119,10 @@ sectionBorder: "1px solid rgba(21,101,192,0.14)",
           </p>
 
           <div
-            className="mt-7 p-4 rounded-xl"
+            className="mt-7 p-4 rounded-xl lg:mt-5"
             style={{ background: t.helpBg, border: t.helpBorder }}
           >
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-2 ">
               <span
                 style={{
                   width: 7,

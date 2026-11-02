@@ -2143,7 +2143,7 @@ export default function App({
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 text-xs font-semibold" 
             style={{ 
               background: darkMode ? "rgba(0,229,255,0.07)" : "#EBF3FF", 
-              border: darkMode ? "1px solid rgba(0,229,255,0.2)" : "1px solid rgba(93, 126, 218, 0.08)", 
+              border: darkMode ? "1px solid rgba(0,229,255,0.2)" : "1px solid rgba(43, 86, 205, 0.32)", 
               color: darkMode ? "#00E5FF" : "#1565C0" 
             }} 
           > 
@@ -2375,13 +2375,13 @@ export default function App({
                       <div className="flex items-center gap-3 mb-2"> 
                         <span 
                           style={{ 
-                            fontFamily: "monospace", 
-                            fontSize: "0.75rem", 
+                           fontFamily: '"JetBrains Mono Variable"',
+                            fontWeight: "500", 
                             color: darkMode 
                               ? "rgba(0,229,255,0.5)" 
                               : "#1565C0", 
-                            letterSpacing: "0.12em", 
-                            // fontWeight: "550"
+                            letterSpacing: "0.05em", 
+                            fontSize: "13px"
                             
                           }} 
                         > 
@@ -2443,10 +2443,12 @@ export default function App({
                                   color: darkMode 
                                     ? "rgba(0,229,255,0.5)" 
                                     : "#1565C0", 
-                                  fontFamily: "monospace", 
-                                  fontWeight: 550, 
-                                  fontSize: "0.73rem",
-                                  letterSpacing: "0.03em", 
+                                  fontFamily: '"JetBrains Mono Variable"', 
+                                  fontWeight: 500, 
+                                  fontSize:"0.73rem",
+                                  letterSpacing: "0.1em", 
+
+
                                 }} 
                               > 
                                 {tag}

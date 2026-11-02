@@ -561,7 +561,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
           >
 
             <span 
-            className="data-label"
+            className="data-label-t"
             style={{
               color: darkMode ? "#00E5FF" : "#1565C0",
             }}

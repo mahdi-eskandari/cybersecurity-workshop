@@ -21,12 +21,13 @@ export function ThemeProvider({
 }) {
   const [darkMode, setDarkMode] = useState(initialDark);
 
-  const toggleDarkMode = () => {
-    const next = !darkMode;
-    setDarkMode(next);
-    document.documentElement.classList.toggle("dark", next);
-    document.cookie = `theme=${next ? "dark" : "light"}; path=/; max-age=31536000; samesite=lax`;
-  };
+const toggleDarkMode = () => {
+  const next = !darkMode;
+  setDarkMode(next);
+  document.documentElement.classList.toggle("dark", next);
+  document.documentElement.setAttribute("data-theme", next ? "dark" : "light");
+  document.cookie = `theme=${next ? "dark" : "light"}; path=/; max-age=31536000; samesite=lax`;
+};
 
   return (
     <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>

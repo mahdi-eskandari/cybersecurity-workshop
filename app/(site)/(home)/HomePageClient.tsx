@@ -1198,9 +1198,9 @@ const closeCrisis = () => {
           >
 
             <span 
-            className="data-label"
+            className="data-label-t"
             style={{
-              color: darkMode ? "#00E5FF" : "#1565C0",
+              color: darkMode ? "#00E5FF " : "#1565C0",
             }}
             >PARAHOOR // SYSTEM ONLINE</span>
 
@@ -1455,9 +1455,12 @@ style={{
                     className="step-number block mb-2"
                     style={
                       
+                      
                       darkMode
                         ? {color: "#13a0af"}
                         : { color: "#1565C0" }
+
+                        
                     }
                   >
                     {step.step}
@@ -1668,7 +1671,7 @@ style={{
                       className="data-label block mb-1.5"
                       style={
                         darkMode
-                          ? undefined
+                          ? {fontSize: "12px"}
                           : { color: "#1565C0" }
                       }
                     >
@@ -1734,9 +1737,10 @@ style={{
                       color: darkMode
                         ? "rgba(0,229,255,0.6)"
                         : "#1565C0",
-                      fontSize: "0.82rem",
-                      fontFamily: "monospace",
-                      fontWeight: "550"
+                      fontSize: "13.5px",
+                      fontFamily: '"JetBrains Mono Variable"', 
+                      fontWeight: "500",
+                      letterSpacing: "0.05em", 
                     }}
                   >
                     {service.meta}

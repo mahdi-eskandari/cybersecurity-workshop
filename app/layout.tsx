@@ -105,6 +105,13 @@ const vazirmatn = localFont({
 });
 
 
+const jetbrainsMono = localFont({
+  src: "./fonts/jetbrains-mono/jetbrains-mono-latin-wght-normal.woff2",
+  weight: "100 800",
+  variable: "--font-mono",
+  display: "swap",
+});
+
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://parahoor.com"),
@@ -149,7 +156,8 @@ export default async function SiteLayout({
     <html
       lang="fa"
       dir="rtl"
-      className={`${isDark ? "dark" : ""} ${vazirmatn.variable} ${poppins.variable}`}
+      data-theme={isDark ? "dark" : "light"}
+      className={`${isDark ? "dark" : ""} ${vazirmatn.variable}  ${jetbrainsMono.variable} ${poppins.variable}`}
       suppressHydrationWarning
     >
       {siteRobots || googleVerification ? (

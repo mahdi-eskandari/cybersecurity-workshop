@@ -459,7 +459,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
           >
 
             <span 
-            className="data-label"
+            className="data-label-t"
             style={{
               color: darkMode ? "#00E5FF" : "#1565C0",
             }}
@@ -995,7 +995,7 @@ className="leading-relaxed line-clamp-2 break-words"
                         <span
   key={tag}
   style={{
-    fontFamily: "monospace",
+    fontFamily: '"JetBrains Mono Variable"',
     fontSize:"0.73rem",
     color: darkMode
       ? "rgba(0,229,255,0.4)"
@@ -1009,7 +1009,7 @@ className="leading-relaxed line-clamp-2 break-words"
     padding: "3px 8px",
     borderRadius: 4,
     fontWeight: "550",
-    letterSpacing: "0.01em", 
+    letterSpacing: "0.05em", 
   }}
 >
   {tag}

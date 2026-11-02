@@ -1041,7 +1041,7 @@ border: `1px solid ${accent}40`,
           >
 
             <span 
-            className="data-label"
+            className="data-label-t"
             style={{
               // color: darkMode ? "#00E5FF" : "#1565C0",
               color: accent,

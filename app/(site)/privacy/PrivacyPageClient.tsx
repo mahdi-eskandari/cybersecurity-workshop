@@ -823,7 +823,7 @@ const lightColors = {
                 <span
                   className={isDark ? "" : "text-[#475569]"}
                   style={{
-                    fontFamily: "monospace",
+                    fontFamily: "'JetBrains Mono'",
                     fontSize: "0.82rem",
                     ...(isDark ? { color: "#86909f" } : {}),
                     fontWeight: "550"
@@ -835,7 +835,7 @@ const lightColors = {
                 <span
                   className={isDark ? "" : "text-[#475569]"}
                   style={{
-                    fontFamily: "monospace",
+                    fontFamily: "'JetBrains Mono'",
                     fontSize: "0.82rem",
                     fontWeight: 600,
                     ...(isDark ? { color: "#86909f" } : {}),
@@ -865,7 +865,7 @@ const lightColors = {
 
                 <span
                   style={{
-                    fontFamily: "monospace",
+                    fontFamily: "'JetBrains Mono'",
                     fontSize: "0.82rem",
                     color: "#22C55E",
                     fontWeight: "550"
@@ -895,41 +895,66 @@ const lightColors = {
   viewport={{ once: true, amount: 0.2 }}
 >
                 <button
-                className={`lg:hidden w-full flex items-center justify-between px-4 py-3 rounded-xl mb-2 text-sm font-semibold privacy-toc-mobile mt-5 ${
-                  isDark
-                    ? ""
-                    : "bg-white text-[#1565C0] border border-[rgba(21,101,192,0.25)] shadow-[0_8px_24px_rgba(21,101,192,0.09)] transition-all duration-200 hover:bg-[#1565C0] hover:text-white hover:shadow-[0_13px_30px_rgba(21,101,192,0.25)]"
-                }`}
-                style={
-                  isDark
-                    ? {
-                        background: "rgba(0,229,255,0.07)",
-                        border: "1px solid rgba(0,229,255,0.18)",
-                        color: "#00E5FF"
-                      }
-                    : undefined
-                }
-                onClick={() => setTocOpen(!tocOpen)}
-              >
-                فهرست مطالب
+  className={`lg:hidden w-full flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-lg mb-1 text-[13px] font-semibold privacy-toc-mobile mt-2 ${
+    isDark
+      ? ""
+      : "bg-white text-[#1565C0] border border-[rgba(21,101,192,0.25)] shadow-[0_3px_10px_rgba(21,101,192,0.08)] transition-colors duration-200 active:bg-[rgba(21,101,192,0.06)]"
+  }`}
+  style={
+    isDark
+      ? {
+          background: "rgba(0,229,255,0.07)",
+          border: "1px solid rgba(0,229,255,0.18)",
+          color: "#00E5FF"
+        }
+      : undefined
+  }
+  onClick={() => setTocOpen(!tocOpen)}
+  aria-expanded={tocOpen}
+>
+  <span className="flex items-center gap-2">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <line x1="3" y1="18" x2="15" y2="18" />
+    </svg>
+    فهرست مطالب
+  </span>
 
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  style={{
-                    transform: tocOpen ? "rotate(180deg)" : "none",
-                    transition: "transform 0.2s"
-                  }}
-                >
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
-              </button>
+  <span className="flex items-center gap-2">
+    <span
+      className="text-[11px] opacity-70 truncate max-w-[140px]"
+    >
+      {sections.find((s) => s.id === activeSection)?.label}
+    </span>
+
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      style={{
+        transform: tocOpen ? "rotate(180deg)" : "none",
+        transition: "transform 0.2s"
+      }}
+    >
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  </span>
+</button>
 
               <div className={`lg:block ${tocOpen ? "block" : "hidden"} mt-2`}>
                 <div
