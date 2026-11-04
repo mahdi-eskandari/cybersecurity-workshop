@@ -61,7 +61,7 @@ const RadarGraphic = ({ darkMode }: { darkMode: boolean }) => {
   const sweepX = 160 + 130 * Math.cos(sweepAngle - Math.PI / 2);
   const sweepY = 160 + 130 * Math.sin(sweepAngle - Math.PI / 2);
 
-  const accent = darkMode ? "0,229,255" : "30,58,138";
+  const accent = darkMode ? "0,229,255" : "21,101,192";
 
   return (
     <svg
@@ -119,7 +119,7 @@ const RadarGraphic = ({ darkMode }: { darkMode: boolean }) => {
       />
 
       {/* Center dot */}
-      <circle cx="160" cy="160" r="5" fill={darkMode ? "#00E5FF" : "#1E3A8A"} opacity="0.9" />
+      <circle cx="160" cy="160" r="5" fill={darkMode ? "#00E5FF" : "#1565C0"} opacity="0.9" />
       <circle cx="160" cy="160" r="10" fill="none" stroke={`rgba(${accent},0.3)`} strokeWidth="1" />
 
       {/* Ghost / faded blip nodes — "lost" targets */}
@@ -147,7 +147,7 @@ const RadarGraphic = ({ darkMode }: { darkMode: boolean }) => {
 
       {/* 404 text stamped inside radar */}
       <text x="160" y="170" textAnchor="middle" dominantBaseline="middle"
-        fontFamily="'JetBrains Mono', monospace"
+                style={{ fontFamily: "var(--font-mono), 'JetBrains Mono', monospace" }}
         fontSize="38" fontWeight="800" letterSpacing="-2"
         fill={`rgba(${accent},${darkMode ? 0.18 : 0.22})`}>
         404
@@ -158,7 +158,7 @@ const RadarGraphic = ({ darkMode }: { darkMode: boolean }) => {
 
 /* ─── BACKGROUND GRID with broken nodes ─── */
 const BrokenGridBg = ({ darkMode }: { darkMode: boolean }) => {
-  const accent = darkMode ? "0,229,255" : "30,58,138";
+  const accent = darkMode ? "0,229,255" : "21,101,192";
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -217,9 +217,9 @@ export default function App() {
 
   const isGlitch = glitchTick % 5 === 0;
 
-  const accent = darkMode ? "0,229,255" : "30,58,138";
-  const accentHex = darkMode ? "#00E5FF" : "#1E3A8A";
-  const accentBright = darkMode ? "#00E5FF" : "#1D4ED8";
+  const accent = darkMode ? "0,229,255" : "21,101,192";
+  const accentHex = darkMode ? "#00E5FF" : "#1565C0";
+  const accentBright = darkMode ? "#00E5FF" : "#1565C0";
 
   return (
     <div className="min-h-screen flex flex-col"
@@ -231,7 +231,6 @@ export default function App() {
       }}>
 
       {/* Background */}
-      <BrokenGridBg darkMode={darkMode} />
 
 
 
@@ -246,7 +245,7 @@ export default function App() {
             color: darkMode ? "rgba(239,68,68,0.8)" : "#B91C1C",
           }}>
           <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#EF4444", display: "inline-block", boxShadow: "0 0 6px rgba(239,68,68,0.9)" }} />
-          <span style={{ fontFamily: "monospace", fontSize: "0.6rem", letterSpacing: "0.18em" }}>
+          <span style={{ fontFamily: '"JetBrains Mono Variable"', fontSize: "11px", letterSpacing: "0.18em" }}>
             ERROR 404 // NODE UNREACHABLE
           </span>
         </div>
@@ -271,8 +270,8 @@ export default function App() {
                 ? `0 0 40px rgba(239,68,68,0.2), 3px 0 0 rgba(${accent},0.15)`
                 : darkMode
                   ? "0 0 60px rgba(0,229,255,0.25), 0 0 120px rgba(0,229,255,0.1)"
-                  : "0 0 40px rgba(30,58,138,0.12)",
-              fontFamily: "'JetBrains Mono', monospace",
+                  : "0 0 40px rgba(21,101,192,0.12)",
+              fontFamily: "var(--font-mono), 'JetBrains Mono', monospace",
               letterSpacing: "-0.04em",
               transition: "all 0.08s ease",
               display: "block",
@@ -326,21 +325,21 @@ export default function App() {
             style={{
               background: "transparent",
               color: accentBright,
-              border: darkMode ? "1px solid rgba(0,229,255,0.4)" : "1px solid rgba(30,58,138,0.4)",
+              border: darkMode ? "1px solid rgba(0,229,255,0.4)" : "1px solid rgba(21,101,192,0.4)",
               boxShadow: darkMode
                 ? "0 0 16px rgba(0,229,255,0.07), inset 0 0 16px rgba(0,229,255,0.03)"
-                : "0 4px 16px rgba(30,58,138,0.06)",
+                : "0 4px 16px rgba(21,101,192,0.06)",
                  fontFamily: "var(--font-vazirmatn), sans-serif",
               fontSize: "0.95rem",
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.background = darkMode ? "rgba(0,229,255,0.09)" : "rgba(30,58,138,0.07)";
-              (e.currentTarget as HTMLElement).style.boxShadow = darkMode ? "0 0 28px rgba(0,229,255,0.18)" : "0 8px 22px rgba(30,58,138,0.14)";
+              (e.currentTarget as HTMLElement).style.background = darkMode ? "rgba(0,229,255,0.09)" : "rgba(21,101,192,0.07)";
+              (e.currentTarget as HTMLElement).style.boxShadow = darkMode ? "0 0 28px rgba(0,229,255,0.18)" : "0 8px 22px rgba(21,101,192,0.14)";
               (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
             }}
             onMouseLeave={(e) => {
               (e.currentTarget as HTMLElement).style.background = "transparent";
-              (e.currentTarget as HTMLElement).style.boxShadow = darkMode ? "0 0 16px rgba(0,229,255,0.07)" : "0 4px 16px rgba(30,58,138,0.06)";
+              (e.currentTarget as HTMLElement).style.boxShadow = darkMode ? "0 0 16px rgba(0,229,255,0.07)" : "0 4px 16px rgba(21,101,192,0.06)";
               (e.currentTarget as HTMLElement).style.transform = "none";
             }}>
             <IconHome />
@@ -387,7 +386,7 @@ export default function App() {
           ].map(({ label, href }) => (
             <Link key={href} href={href}
               className="flex items-center gap-1.5 text-xs transition-colors"
-              style={{ color: darkMode ? "#747e8c" : "#64748B", fontFamily: "monospace" }}
+              style={{ color: darkMode ? "#747e8c" : "#64748B", fontSize: "14px" }}
               onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = accentBright)}
               onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = darkMode ? "#747e8c" : "#64748B")}>
               <span style={{ opacity: 0.4 }}>//</span>
@@ -400,15 +399,18 @@ export default function App() {
         <div className="mt-12 px-5 py-3 rounded-xl"
           style={{
             background: darkMode ? "rgba(6,11,28,0.8)" : "#F8FAFC",
-            border: darkMode ? "1px solid rgba(0,229,255,0.08)" : "1px solid rgba(30,58,138,0.10)",
-            fontFamily: "monospace",
-            fontSize: "0.68rem",
+            border: darkMode ? "1px solid rgba(0,229,255,0.08)" : "1px solid rgba(21,101,192,0.10)",
+            fontFamily: '"JetBrains Mono Variable"',
+            fontSize: "12px",
             color: darkMode ? "#1E293B" : "#94A3B8",
           }}>
-          <span style={{ color: darkMode ? "rgba(0,229,255,0.3)" : "rgba(30,58,138,0.45)" }}>$</span>{" "}
+          <span style={{ color: darkMode ? "rgba(0,229,255,0.3)" : "rgba(21,101,192,0.45)" }}>$</span>{" "}
           <span style={{ color: darkMode ? "rgba(239,68,68,0.4)" : "rgba(185,28,28,0.55)" }}>ERROR</span>{" "}
+           <span style={{ color: darkMode ? "#74767b" : "rgba(185,28,28,0.55)" }}>
+
           parahoor.io/[path] — 404 Not Found{" "}
-          <span style={{ color: darkMode ? "rgba(0,229,255,0.25)" : "rgba(30,58,138,0.35)" }}>// trace: null // node: disconnected</span>
+           </span>
+          <span style={{ color: darkMode ? "rgba(0,229,255,0.25)" : "rgba(21,101,192,0.35)" }}>// trace: null // node: disconnected</span>
         </div>
       </main>
 

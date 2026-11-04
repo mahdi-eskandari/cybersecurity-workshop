@@ -1088,7 +1088,11 @@ const navItems = NAV_ITEMS.map((item) => ({
         {/* سمت راست: همبرگر منو در موبایل + لوگو و برند */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <button
-             className="min-[840px]:hidden p-1.5 -mr-1 text-slate-300 hover:text-cyan-400 transition-colors"
+                         className={`min-[840px]:hidden p-1.5 -mr-1 transition-colors ${
+              darkMode
+                ? "text-slate-300 hover:text-cyan-400"
+                : "text-slate-600 hover:text-[#1565C0]"
+            }`}
             onClick={() => setMenuOpen(true)}
             aria-label="باز کردن منو"
           >
@@ -1619,21 +1623,39 @@ const navItems = NAV_ITEMS.map((item) => ({
 
           {/* پایین منو: دکمه‌ی تماس اورژانسی (در موبایل جای دیگری نیست) */}
           <div className="mt-auto pt-6" style={itemAnim(navItems.length + 1)}>
-            <Link
-              href="/contact"
+            <a
+              
+              href="tel:+982144097162"
               onClick={() => setMenuOpen(false)}
               className="flex w-full items-center justify-center rounded-2xl bg-[#C62828] px-5 py-4 text-base font-bold text-white shadow-lg shadow-red-900/20 transition-colors hover:bg-[#B71C1C]"
+              style={{
+                background: "#EF4444",
+                color: "#ffffff",
+                border: "1px solid rgba(239,68,68,0.6)",
+                boxShadow: "0 0 15px rgba(239,68,68,0.35)",
+              }}
+                onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = "0 0 22px rgba(239,68,68,0.55)"
+
+
+
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = "0 0 15px rgba(239,68,68,0.35)"
+
+
+              }}
             >
               تماس اورژانسی
-            </Link>
+            </a>
 
-            <span
-              className={`mt-5 block text-center font-mono text-[10px] tracking-wider ${
+            {/* <span
+              className={`mt-5 block text-center font-mono text-[12px] tracking-wider ${
                 darkMode ? "text-cyan-400/50" : "text-[#1565C0]/50"
               }`}
             >
               // CYBER FORENSICS
-            </span>
+            </span> */}
           </div>
         </div>
       </div>

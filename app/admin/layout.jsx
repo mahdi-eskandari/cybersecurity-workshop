@@ -10,7 +10,7 @@ export default function AdminLayout({ children }) {
   return (
     <div
       dir="rtl"
-      className="admin-panel"
+      className="admin-panel selection:bg-[rgba(21,101,192,0.22)] selection:text-[#0D47A1]"
     >
       <AdminSidebar open={sidebarOpen} />
 

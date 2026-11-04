@@ -1865,7 +1865,7 @@ const onSubmit = async (data: CrisisReportFormValues) => {
 
                 <span
                   style={{
-                    fontFamily: "monospace",
+                    fontFamily: '"JetBrains Mono Variable"', 
                     fontSize: "0.7rem",
                     color: "rgba(239,68,68,0.7)",
                     letterSpacing: "0.18em",
@@ -2158,7 +2158,7 @@ const onSubmit = async (data: CrisisReportFormValues) => {
 
               <div className="relative">
                 <textarea
-                  rows={3}
+                  rows={4}
                   {...register("description", {
                     maxLength: {
                       value: 2000,

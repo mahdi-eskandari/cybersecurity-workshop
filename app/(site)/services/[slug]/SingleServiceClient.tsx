@@ -2276,8 +2276,8 @@ export default function App({
           {/* Header */} 
           <div className="text-center mb-14"> 
             <span 
-              style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: "0.7rem", color: darkMode ? "rgba(0,229,255,0.5)" : "#1565C0", letterSpacing: "0.18em", textTransform: "uppercase" }} 
-              className="block mb-3" 
+              style={{ fontFamily: "'JetBrains Mono',monospace", color: darkMode ? "rgba(0,229,255,0.5)" : "#1565C0", letterSpacing: "0.18em", textTransform: "uppercase" }} 
+              className="block mb-3 data-label" 
             > 
               HOW IT WORK 
             </span> 

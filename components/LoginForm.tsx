@@ -748,7 +748,7 @@ function Screen({ children }: { children: React.ReactNode }) {
   return (
     <div
       dir="rtl"
-      className="min-h-screen bg-slate-100 flex flex-col items-center justify-center relative px-4"
+            className="min-h-screen bg-slate-100 flex flex-col items-center justify-center relative px-4 selection:bg-[rgba(21,101,192,0.22)] selection:text-[#0D47A1]"
       style={{ fontFamily: "var(--font-vazirmatn), sans-serif" }}
     >
       {/* Subtle dot watermark */}

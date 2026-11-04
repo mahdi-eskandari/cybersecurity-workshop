@@ -37,7 +37,7 @@ const SocialBtn = ({
       title={title}
       aria-label={title}
       target={href.startsWith("http") ? "_blank" : undefined}
-      rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+            rel={href.startsWith("http") ? "noopener noreferrer nofollow" : undefined}
       style={
         {
           "--accent": color,

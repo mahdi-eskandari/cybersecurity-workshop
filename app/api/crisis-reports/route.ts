@@ -142,12 +142,11 @@ export async function POST(req: Request) {
     });
 
 
-        // پیامک به ادمین (خطاش ثبت گزارش رو خراب نمی‌کنه)
-    // await notifyAdminNewReport({
-    //   trackingCode: report.trackingCode,
-    //   service: finalIncidentType,
-    //   phone,
-    // });
+    await notifyAdminNewReport({
+      trackingCode: report.trackingCode,
+      service: finalIncidentType,
+      phone,
+    });
 
         const res = NextResponse.json(
       {
