@@ -83,23 +83,13 @@ export function clearOtp(phone: string) {
 
 export function checkOtp(phone: string, code: string) {
   const e = store.get(phone);
-  if (!e) {
-    console.log("OTP check: هیچ کدی برای این شماره نیست");
-    return false;
-  }
-  if (Date.now() > e.exp) {
-    console.log("OTP check: منقضی شده");
-    store.delete(phone);
-    return false;
-  }
-  if (e.attempts >= MAX_ATTEMPTS) {
-    console.log("OTP check: تلاش‌ها از حد گذشته");
+  if (!e) return false;
+  if (Date.now() > e.exp || e.attempts >= MAX_ATTEMPTS) {
     store.delete(phone);
     return false;
   }
   e.attempts++;
   const ok = safeEqual(e.hash, hmac(phone + code));
-  if (!ok) console.log("OTP check: کد اشتباه، تلاش", e.attempts);
   if (ok) store.delete(phone);
   return ok;
 }
@@ -137,11 +127,10 @@ export function rateLimit(key: string, max: number, windowMs: number) {
   const now = Date.now();
   const b = buckets.get(key);
   if (!b || now > b.reset) {
+    if (buckets.size > 20_000) sweep();
     buckets.set(key, { n: 1, reset: now + windowMs });
-    console.log("RL", key, 1, "/", max);
     return true;
   }
   b.n++;
-  console.log("RL", key, b.n, "/", max);
   return b.n <= max;
 }

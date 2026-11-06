@@ -7,10 +7,11 @@ export async function isAdmin(): Promise<boolean> {
     const secret = process.env.JWT_SECRET;
     if (!token || !secret) return false;
 
-    const { payload } = await jwtVerify(
-      token,
-      new TextEncoder().encode(secret)
-    );
+const { payload } = await jwtVerify(
+  token,
+  new TextEncoder().encode(secret),
+  { algorithms: ["HS256"], requiredClaims: ["exp"] }
+);
     return payload.role === "admin";
   } catch {
     return false;

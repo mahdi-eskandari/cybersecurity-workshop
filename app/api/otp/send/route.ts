@@ -10,6 +10,7 @@ import {
 } from "@/lib/otp";
 import { record, retryAfter, countIn, lastAt, MIN } from "@/lib/rateLimit";
 import { claimToken } from "@/lib/tokenGuard";
+import { getIp } from "@/lib/ip";
 
 const HOUR = 60 * 60 * 1000;
 
@@ -28,10 +29,7 @@ const RESEND_GAP_SEC = 60;
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
 
-  const ip =
-    req.headers.get("cf-connecting-ip") ??
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    "unknown";
+const ip = getIp(req);
 
   // ۱) محدودیت IP
   if (!rateLimit(`ip:${ip}`, 15, HOUR)) {

@@ -3,6 +3,7 @@ import { checkOtp, normalizePhone, signVerified } from "@/lib/otp";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { claimToken } from "@/lib/tokenGuard";
 import { record, retryAfter, MIN, HOUR } from "@/lib/rateLimit"; // مسیر را با اسم واقعی فایلت عوض کن
+import { getIp } from "@/lib/ip";
 
 const FAIL_WINDOW = 15 * MIN;
 const CAPTCHA_AFTER = 2; // بعد از ۲ اشتباه، کپچا لازم است
@@ -12,10 +13,7 @@ const IP_FAIL_LIMIT = 20;
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
 
-  const ip =
-    req.headers.get("cf-connecting-ip") ??
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    "unknown";
+const ip = getIp(req);
 
   const phone = normalizePhone(String(body?.phone ?? ""));
   const code = String(body?.code ?? "");
@@ -47,6 +45,15 @@ export async function POST(req: NextRequest) {
   // بعد از ۲ اشتباه، کپچا الزامی است
   if (retryAfter(`vfail:${phone}`, CAPTCHA_AFTER, FAIL_WINDOW) > 0) {
     const token = body?.turnstileToken;
+
+    // توکن باید رشته‌ی معقول باشد
+    if (typeof token !== "string" || token.length === 0 || token.length > 2048) {
+      return NextResponse.json(
+        { message: "تایید امنیتی لازم است", captchaRequired: true },
+        { status: 403 }
+      );
+    }
+
     let ok = false;
     try {
       ok = await verifyTurnstile(token, ip === "unknown" ? null : ip);
@@ -54,7 +61,8 @@ export async function POST(req: NextRequest) {
       console.error("Turnstile error:", err);
       return NextResponse.json({ message: "خطای پیکربندی سرور" }, { status: 500 });
     }
-    if (!ok || !claimToken(String(token))) {
+    if (!ok || !claimToken(token)) {
+      record(`vfail-ip:${ip}`, HOUR);   // ← جدید: سقف برای توکن‌های الکی
       return NextResponse.json(
         { message: "تایید امنیتی لازم است", captchaRequired: true },
         { status: 403 }

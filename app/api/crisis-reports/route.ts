@@ -9,6 +9,7 @@ import CrisisReport from "../../model/crisisReport";
 import ConfidentialNote from "../../model/ConfidentialNote";
 import Service from "../../model/Service";
 import { INCIDENT_LABELS, isIncidentKey } from "@/lib/serviceKeys";
+import { isAdmin } from "@/lib/adminAuth";
 
 const VALID_INCIDENT_TYPES = [
   "مشاوره",
@@ -31,6 +32,7 @@ const VALID_STATUSES = [
 
 export async function POST(req: Request) {
   try {
+
        const body = await req.json();
 
     const incidentKey =
@@ -58,6 +60,7 @@ export async function POST(req: Request) {
       await connectDB();
       const svc: any = await Service.findOne({
         slug: serviceSlug.toLowerCase(),
+        status: "published",
       })
         .select("title key")
         .lean();
@@ -185,6 +188,9 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
+        if (!(await isAdmin())) {
+      return NextResponse.json({ message: "دسترسی غیرمجاز" }, { status: 403 });
+    }
     await connectDB();
 
     const reports = await CrisisReport.find({})
@@ -276,6 +282,9 @@ export async function PATCH(req: Request) {
 
 export async function DELETE(request: Request) {
   try {
+        if (!(await isAdmin())) {
+      return NextResponse.json({ message: "دسترسی غیرمجاز" }, { status: 403 });
+    }
     await connectDB();
 
     const body = await request.json().catch(() => ({}));

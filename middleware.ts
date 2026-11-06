@@ -27,12 +27,17 @@ const publicAdminApiRoutes = [
   "/api/admin/seo/pages",
 ];
 
-function isPublicAdminApi(pathname: string): boolean {
-  return publicAdminApiRoutes.some(
-    (route) =>
-      pathname === route ||
-      pathname.startsWith(`${route}/`)
+function isPublicAdminApi(pathname: string, method: string): boolean {
+  const match = publicAdminApiRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
   );
+  if (!match) return false;
+
+  // مسیرهای SEO فقط برای «خواندن» عمومی‌اند
+  if (pathname.startsWith("/api/admin/seo/")) {
+    return method === "GET" || method === "HEAD";
+  }
+  return true;
 }
 
 function isAdminPage(pathname: string): boolean {
@@ -165,10 +170,10 @@ async function handleSeo(
   }
 
   try {
-    const resolverUrl = new URL(
-      "/api/admin/seo/redirect",
-      request.url
-    );
+const resolverUrl = new URL(
+  "/api/admin/seo/redirect",
+  process.env.INTERNAL_BASE_URL ?? "http://127.0.0.1:3000"
+);
 
     resolverUrl.searchParams.set("path", pathname);
 
@@ -224,12 +229,18 @@ async function handleSeo(
         return null;
       }
 
-      const redirectUrl = new URL(
-        targetPath.startsWith("/")
-          ? targetPath
-          : `/${targetPath}`,
-        request.url
-      );
+const safeTarget = targetPath.startsWith("/")
+  ? targetPath
+  : `/${targetPath}`;
+
+if (safeTarget.startsWith("//") || safeTarget.includes("\\")) {
+  return null;
+}
+
+const redirectUrl = new URL(safeTarget, request.url);
+if (redirectUrl.origin !== request.nextUrl.origin) {
+  return null;
+}
 
       const rawStatus = Number(
         data.redirect.statusCode
@@ -407,7 +418,7 @@ export async function middleware(
    * ---------------------------------------------------------
    */
 
-  if (isPublicAdminApi(pathname)) {
+  if (isPublicAdminApi(pathname, request.method)) {
     return addSecurityHeaders(
       NextResponse.next(),
       true
@@ -520,11 +531,12 @@ const isProtectedAPI =
         jwtSecret
       );
 
-    const { payload } =
-      await jwtVerify<AuthTokenPayload>(
-        token,
-        secret
-      );
+const { payload } =
+  await jwtVerify<AuthTokenPayload>(
+    token,
+    secret,
+    { algorithms: ["HS256"], requiredClaims: ["exp"] }
+  );
 
     /*
      * -------------------------------------------------------
