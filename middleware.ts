@@ -213,55 +213,90 @@ const resolverUrl = new URL(
     }
 
 
-    if (data?.redirect?.toPath) {
-      const targetPath = String(
-        data.redirect.toPath
-      );
+if (data?.redirect?.toPath) {
+  const targetPath = String(data.redirect.toPath).trim();
 
-      const currentPath = cleanPath(pathname);
-      const normalizedTarget =
-        cleanPath(targetPath);
+  // ---- مقصد خارجی (http/https) ----
+  if (/^https?:\/\//i.test(targetPath)) {
+    try {
+      const externalUrl = new URL(targetPath);
 
-      // هیچ‌وقت به خودش redirect نکن
+      // فقط http و https
       if (
-        currentPath === normalizedTarget
+        externalUrl.protocol !== "http:" &&
+        externalUrl.protocol !== "https:"
       ) {
         return null;
       }
 
-const safeTarget = targetPath.startsWith("/")
-  ? targetPath
-  : `/${targetPath}`;
-
-if (safeTarget.startsWith("//") || safeTarget.includes("\\")) {
-  return null;
-}
-
-const redirectUrl = new URL(safeTarget, request.url);
-if (redirectUrl.origin !== request.nextUrl.origin) {
-  return null;
-}
-
-      const rawStatus = Number(
-        data.redirect.statusCode
-      );
-
+      const rawStatus = Number(data.redirect.statusCode);
       const statusCode = [301, 302, 307, 308].includes(rawStatus)
         ? rawStatus
         : 301;
 
-const redirectResponse = NextResponse.redirect(
-  redirectUrl,
-  statusCode
-);
+      const redirectResponse = NextResponse.redirect(
+        externalUrl,
+        statusCode
+      );
 
-redirectResponse.headers.set(
-  "Cache-Control",
-  "no-store, must-revalidate"
-);
+      redirectResponse.headers.set(
+        "Cache-Control",
+        "no-store, must-revalidate"
+      );
 
-return redirectResponse;
+      return redirectResponse;
+    } catch {
+      return null;
     }
+  }
+
+  // ---- مقصد داخلی ----
+  const currentPath = cleanPath(pathname);
+  const normalizedTarget = cleanPath(targetPath);
+
+  // هیچ‌وقت به خودش redirect نکن
+  if (currentPath === normalizedTarget) {
+    return null;
+  }
+
+  // فقط مسیر داخلی امن
+  const safeTarget = targetPath.startsWith("/")
+    ? targetPath
+    : `/${targetPath}`;
+
+  // جلوگیری از //evil.com و path عجیب
+  if (
+    safeTarget.startsWith("//") ||
+    safeTarget.includes("\\") ||
+    safeTarget.includes("://")
+  ) {
+    return null;
+  }
+
+  const redirectUrl = new URL(safeTarget, request.url);
+
+  // فقط همان دامنه
+  if (redirectUrl.origin !== request.nextUrl.origin) {
+    return null;
+  }
+
+  const rawStatus = Number(data.redirect.statusCode);
+  const statusCode = [301, 302, 307, 308].includes(rawStatus)
+    ? rawStatus
+    : 301;
+
+  const redirectResponse = NextResponse.redirect(
+    redirectUrl,
+    statusCode
+  );
+
+  redirectResponse.headers.set(
+    "Cache-Control",
+    "no-store, must-revalidate"
+  );
+
+  return redirectResponse;
+}
 
     // --------------------------------------------------
     // Current Page

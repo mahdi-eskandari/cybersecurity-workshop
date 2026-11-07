@@ -16,18 +16,24 @@ export async function GET() {
     if (!(await isAdmin())) {
       // غیرادمین: فقط تصاویر شاخص مطالب منتشرشده
       const used = (
-        (await Post.find({ status: "published" }).distinct("featuredImage")) as (string | null)[]
+        (await Post.find({ status: "published" }).distinct(
+          "featuredImage"
+        )) as (string | null)[]
       ).filter((v): v is string => Boolean(v));
 
       const ids = used
-        .map((v) => v.replace("/api/media/", ""))
+        .map((v) => String(v).replace("/api/media/", ""))
         .filter((v) => /^[a-f\d]{24}$/i.test(v));
 
-      filter = { $or: [{ _id: { $in: ids } }, { url: { $in: used } }] };
+      // هم با _id و هم با url کامل (data URL) مچ می‌شود
+      filter = {
+        $or: [{ _id: { $in: ids } }, { url: { $in: used } }],
+      };
     }
 
     const media = await Media.find(filter).sort({ createdAt: -1 }).lean();
 
+    // url همان data URL ذخیره‌شده است تا کارت‌های وبلاگ مثل قبل کار کنند
     const normalizedMedia = media.map((item: any) => ({
       id: String(item._id),
       name: item.name,
@@ -53,7 +59,6 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    // دفاع در عمق: علاوه بر middleware
     if (!(await isAdmin())) {
       return NextResponse.json({ message: "دسترسی غیرمجاز" }, { status: 403 });
     }
@@ -65,20 +70,28 @@ export async function POST(request: Request) {
     const altValue = formData.get("alt");
 
     if (!(file instanceof File)) {
-      return NextResponse.json({ message: "فایل تصویر ارسال نشده است" }, { status: 400 });
+      return NextResponse.json(
+        { message: "فایل تصویر ارسال نشده است" },
+        { status: 400 }
+      );
     }
 
     if (!file.type.startsWith("image/")) {
-      return NextResponse.json({ message: "فقط فایل تصویری مجاز است" }, { status: 400 });
+      return NextResponse.json(
+        { message: "فقط فایل تصویری مجاز است" },
+        { status: 400 }
+      );
     }
 
     if (file.size > MAX_UPLOAD) {
-      return NextResponse.json({ message: "حجم تصویر زیاد است (حداکثر ۱۰ مگابایت)" }, { status: 400 });
+      return NextResponse.json(
+        { message: "حجم تصویر زیاد است (حداکثر ۱۰ مگابایت)" },
+        { status: 400 }
+      );
     }
 
     const originalBuffer = Buffer.from(await file.arrayBuffer());
 
-    // تبدیل تصویر به WebP
     const image = sharp(originalBuffer);
     const metadata = await image.metadata();
     const webpBuffer = await image.webp({ quality: 82 }).toBuffer();
@@ -122,9 +135,15 @@ export async function POST(request: Request) {
     console.error("POST /api/media error:", error);
 
     if (error?.name === "ValidationError") {
-      return NextResponse.json({ message: "اطلاعات فایل معتبر نیست" }, { status: 400 });
+      return NextResponse.json(
+        { message: "اطلاعات فایل معتبر نیست" },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json({ message: "خطا در ذخیره تصویر" }, { status: 500 });
+    return NextResponse.json(
+      { message: "خطا در ذخیره تصویر" },
+      { status: 500 }
+    );
   }
 }

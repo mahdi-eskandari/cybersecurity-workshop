@@ -6,6 +6,7 @@ import Feedback, {
 import { verifyTurnstile } from "@/lib/turnstile";
 import { claimToken } from "@/lib/tokenGuard";
 import { getIp, retryAfter, record, MIN, HOUR } from "@/lib/rateLimit";
+import { isAdmin } from "@/lib/adminAuth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -32,6 +33,14 @@ async function connectDatabase() {
 
 export async function GET(request: Request) {
   try {
+
+if (!(await isAdmin())) {
+  return NextResponse.json(
+    { message: "دسترسی غیرمجاز" },
+    { status: 403 }
+  );
+}
+
     await connectDatabase();
 
     const { searchParams } =
@@ -286,6 +295,15 @@ for (const l of LIMITS) record(`feedback:${l.id}:${ip}`, l.windowMs);
 
 export async function PATCH(request: Request) {
   try {
+
+
+if (!(await isAdmin())) {
+  return NextResponse.json(
+    { message: "دسترسی غیرمجاز" },
+    { status: 403 }
+  );
+}
+
     const body = await request.json();
 
     const id =
@@ -386,6 +404,15 @@ export async function PATCH(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+
+if (!(await isAdmin())) {
+  return NextResponse.json(
+    { message: "دسترسی غیرمجاز" },
+    { status: 403 }
+  );
+}
+
+
     const body = await request.json();
 
     const id =

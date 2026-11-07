@@ -498,11 +498,15 @@ function getMediaUrl(
   featuredImage: string | null | undefined,
   mediaItems: MediaItem[]
 ) {
+  if (!featuredImage) return "";
+
   const media = findMedia(featuredImage, mediaItems);
 
+  // مثل صفحه اصلی: اول از لیست media، وگرنه خود featuredImage
   if (media?.url) return media.url;
-  if (featuredImage?.startsWith("/api/media/")) return featuredImage;
-  return "";
+  if (featuredImage.startsWith("/api/media/")) return featuredImage;
+  if (featuredImage.startsWith("data:")) return featuredImage;
+  return media?.url || featuredImage || "";
 }
 
 function getMediaAlt(

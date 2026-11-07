@@ -102,7 +102,9 @@ export async function generateMetadata({
     ...base,
     alternates: {
       ...base.alternates,
-      canonical: pagination.canonical,
+            canonical: match.seo.canonical?.trim()
+        ? base.alternates?.canonical
+        : pagination.canonical,
     },
   };
 }
@@ -128,10 +130,10 @@ export default async function AuthorPage({
   );
   const slugMap = Object.fromEntries(authorSeos.map((x) => [x.id, x.seo.slug]));
 
-  const [posts, adjacent] = await Promise.all([
+  const [posts, adjacent, authorsSeo] = await Promise.all([
     getPosts(),
     getAdjacentPageLinks(toPageKey(match.identity)),
-    getPageSeo("authors"), // ← H1 اصلی از پنل
+    getPageSeo("authors"),
   ]);
 
   const showAllPosts = query.view === "all";
@@ -167,9 +169,10 @@ export default async function AuthorPage({
   authorSlug={match.identity}
   showAllPosts={showAllPosts}
   currentPage={currentPage}
-  seoH1={match.seo.h1Title}
+    seoH1={authorsSeo.h1Title}
   slugMap={slugMap}
-  basePath={basePath}
+    basePath={basePath}
+  lockCanonical={Boolean(match.seo.canonical?.trim())}
 />
     </>
   );

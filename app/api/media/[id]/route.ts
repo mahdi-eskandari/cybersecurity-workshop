@@ -1,17 +1,13 @@
-
-
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { isAdmin } from "@/lib/adminAuth";
 import Media from "../../../model/media";
 import Post from "../../../model/blog";
+import { isMediaPublic } from "@/lib/mediaAccess";
 
 type RouteContext = {
   params: Promise<{ id: string }>;
 };
-
-
-
 
 export async function GET(_request: Request, context: RouteContext) {
   try {
@@ -29,26 +25,38 @@ export async function GET(_request: Request, context: RouteContext) {
       return new NextResponse("Not found", { status: 404 });
     }
 
+    const admin = await isAdmin();
 
-        const admin = await isAdmin();
     if (!admin) {
-      const ref = new RegExp(`${id}$`);
-      const [inPublished, inUnpublished] = await Promise.all([
-        Post.exists({ status: "published", featuredImage: ref }),
-        Post.exists({ status: { $ne: "published" }, featuredImage: ref }),
-      ]);
-      if (inUnpublished && !inPublished) {
+      let allowed = false;
+      try {
+        allowed = await isMediaPublic(id, media.url);
+      } catch {
+        allowed = false;
+      }
+
+      if (!allowed) {
+        const ref = new RegExp(id);
+        const inPublished = await Post.exists({
+          status: "published",
+          $or: [
+            { featuredImage: ref },
+            { content: { $regex: ref } },
+          ],
+        });
+        allowed = Boolean(inPublished);
+      }
+
+      if (!allowed) {
         return new NextResponse("Not found", { status: 404 });
       }
     }
 
-    // اگر آدرس معمولی بود، ریدایرکت
     const match = /^data:([^;]+);base64,(.+)$/.exec(media.url);
     if (!match) {
       return NextResponse.redirect(media.url);
     }
 
-    // فقط تصویر سرو می‌شه
     if (!match[1].startsWith("image/")) {
       return new NextResponse("Not found", { status: 404 });
     }
@@ -60,7 +68,7 @@ export async function GET(_request: Request, context: RouteContext) {
       headers: {
         "Content-Type": match[1],
         "Content-Length": String(buffer.length),
-                "Cache-Control": admin
+        "Cache-Control": admin
           ? "private, no-store"
           : "public, max-age=31536000, immutable",
         "X-Content-Type-Options": "nosniff",
@@ -72,12 +80,8 @@ export async function GET(_request: Request, context: RouteContext) {
   }
 }
 
-export async function PATCH(
-  request: Request,
-  context: RouteContext
-) {
+export async function PATCH(request: Request, context: RouteContext) {
   try {
-    // دفاع در عمق: علاوه بر middleware، خود route هم ادمین بودن رو چک می‌کنه
     if (!(await isAdmin())) {
       return NextResponse.json({ message: "دسترسی غیرمجاز" }, { status: 403 });
     }
@@ -94,14 +98,10 @@ export async function PATCH(
     await connectDB();
 
     const body = await request.json();
-
     const media = await Media.findById(id);
 
     if (!media) {
-      return NextResponse.json(
-        { message: "فایل پیدا نشد" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "فایل پیدا نشد" }, { status: 404 });
     }
 
     if (body.alt !== undefined) {
@@ -124,7 +124,6 @@ export async function PATCH(
     });
   } catch (error: any) {
     console.error("PATCH /api/media/:id error:", error);
-
     return NextResponse.json(
       { message: "خطا در ویرایش اطلاعات تصویر" },
       { status: 500 }
@@ -132,12 +131,8 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(
-  request: Request,
-  context: RouteContext
-) {
+export async function DELETE(request: Request, context: RouteContext) {
   try {
-    // دفاع در عمق: علاوه بر middleware، خود route هم ادمین بودن رو چک می‌کنه
     if (!(await isAdmin())) {
       return NextResponse.json({ message: "دسترسی غیرمجاز" }, { status: 403 });
     }
@@ -156,10 +151,7 @@ export async function DELETE(
     const deletedMedia = await Media.findByIdAndDelete(id);
 
     if (!deletedMedia) {
-      return NextResponse.json(
-        { message: "فایل پیدا نشد" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "فایل پیدا نشد" }, { status: 404 });
     }
 
     return NextResponse.json({
@@ -168,7 +160,6 @@ export async function DELETE(
     });
   } catch (error) {
     console.error("DELETE /api/media/:id error:", error);
-
     return NextResponse.json(
       { message: "خطا در حذف فایل چندرسانه‌ای" },
       { status: 500 }

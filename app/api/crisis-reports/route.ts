@@ -1,3 +1,5 @@
+
+
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import crypto from "crypto";
@@ -60,7 +62,7 @@ export async function POST(req: Request) {
       await connectDB();
       const svc: any = await Service.findOne({
         slug: serviceSlug.toLowerCase(),
-        status: "published",
+        status: "active",
       })
         .select("title key")
         .lean();
@@ -215,6 +217,10 @@ export async function GET() {
 
 export async function PATCH(req: Request) {
   try {
+    if (!(await isAdmin())) {
+      return NextResponse.json({ message: "دسترسی غیرمجاز" }, { status: 403 });
+    }
+
     const body = await req.json();
 
     const id = String(body?.id || "").trim();

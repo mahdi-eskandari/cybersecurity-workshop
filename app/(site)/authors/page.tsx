@@ -7,6 +7,7 @@ import {
   buildPaginationLinks,
   SITE_URL,
   type PageKey,
+  getPageMetadata,
 } from "@/lib/seo";
 import {
   buildOrganizationSchema,
@@ -75,7 +76,8 @@ export async function generateMetadata({
     Math.ceil(authorPosts.length / POSTS_PER_PAGE)
   );
 
-  const base = getStaticPageMetadata("authors");
+  const base = await getPageMetadata("authors");
+    const seoData = await getPageSeo("authors");
   const pagination = buildPaginationLinks({
     basePath: BASE_PATH,
     showAllPosts,
@@ -87,7 +89,9 @@ export async function generateMetadata({
     ...base,
     alternates: {
       ...base.alternates,
-      canonical: pagination.canonical,
+            canonical: seoData.canonical?.trim()
+        ? base.alternates?.canonical
+        : pagination.canonical,
     },
   };
 }
@@ -229,7 +233,8 @@ export default async function AuthorsPage({
         currentPage={currentPage}
         seoH1={seo.h1Title}
         slugMap={slugMap}
-        basePath={BASE_PATH}
+                basePath={BASE_PATH}
+        lockCanonical={Boolean(seo.canonical?.trim())}
       />
     </>
   );

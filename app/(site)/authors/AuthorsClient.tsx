@@ -797,7 +797,8 @@ export default function AuthorsClient({
   postsError = "",
   seoH1,
   slugMap,
-  basePath: basePathProp,
+    basePath: basePathProp,
+  lockCanonical = false,
 }: {
   posts: Post[];
   authorSlug: string;
@@ -806,7 +807,8 @@ export default function AuthorsClient({
   postsError?: string;
   seoH1?: string;
   slugMap?: Record<string, string>;
-  basePath?: string;
+   basePath?: string;
+  lockCanonical?: boolean;
 }) {
   const { darkMode } = useTheme();
     const blueBright = darkMode ? "#00E5FF" : "#1D4ED8";
@@ -866,7 +868,7 @@ const author = authors[activeAuthorIndex];
   // Pagination uses client-side navigation with ?view=all&page=N,
   // so the server-generated canonical may otherwise remain stale.
   useEffect(() => {
-    if (typeof window === "undefined") return;
+       if (typeof window === "undefined" || lockCanonical) return;
 
     const canonicalPath = showAllPosts
       ? `${basePath}?view=all&page=${safePage}`
@@ -887,7 +889,7 @@ const author = authors[activeAuthorIndex];
     if (link.href !== canonicalUrl) {
       link.href = canonicalUrl;
     }
-  }, [basePath, safePage, showAllPosts]);
+  }, [basePath, safePage, showAllPosts, lockCanonical]);
 
   const displayedPosts = showAllPosts
     ? authorPosts.slice((safePage - 1) * postsPerPage, safePage * postsPerPage)
