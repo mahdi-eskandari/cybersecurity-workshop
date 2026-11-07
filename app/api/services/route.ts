@@ -47,6 +47,14 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+
+    if (!(await isAdmin())) {
+      return NextResponse.json(
+        { success: false, message: "دسترسی غیرمجاز" },
+        { status: 403 }
+      );
+    }
+
     await connectDB();
 
     const body = await request.json();

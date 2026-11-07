@@ -105,9 +105,9 @@ export const authors: Author[] = [
     ],
   },
   {
-    id: "alireza-tabatabaei-hashemi",
+    id: "sara-heydarzade",
     name: "سارا محمدزاده",
-    authorKey: "علیرضا طباطبایی هاشمی",
+    authorKey: "سارا محمدزاده",
     title: "وکیل پایه یک دادگستری",
     subtitle: "معاون فنی اسبق پلیس فتا فراجا | بیش از پانزده سال سابقه تخصصی | بیش از چهار سال سابقه مستمر",
     photo:

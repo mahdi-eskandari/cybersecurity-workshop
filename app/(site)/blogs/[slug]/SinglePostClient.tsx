@@ -1382,7 +1382,7 @@ export default function App({
 
             {post.author && (
               <Link
-              href={post.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/alireza-tabatabaei-hashemi"}
+              href={post.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/sara-heydarzade"}
               style={{
                   
                 fontSize: "0.78rem",

@@ -2105,9 +2105,9 @@ export default function App({
               className="inline-block h-1 w-1 shrink-0 rounded-full"
               style={{ background: darkMode ? "#00E5FF" : "#1565C0" }}
             />
-            <span className="truncate">
-              {service?.categoryLabel || "خدمات"}
-            </span>
+<span className="truncate">
+  {service?.title || "خدمات"}
+</span>
           </span>
         </li>
       </ol>

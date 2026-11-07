@@ -44,7 +44,7 @@ const parsePage = (value?: string) => {
 // در AuthorsClient) و هیچ ربطی به روت/اسلاگ ندارد.
 const AUTHOR_IDENTITIES = [
   "mohammadreza-yousefi",
-  "alireza-tabatabaei-hashemi",
+  "sara-heydarzade",
 ] as const;
 
 type AuthorIdentity = (typeof AUTHOR_IDENTITIES)[number];

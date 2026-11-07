@@ -99,13 +99,13 @@ export const SEO_DEFAULTS = {
     follow: true,
   },
 
-  "author-alireza-tabatabaei-hashemi": {
-    pageName: "علیرضا طباطبایی هاشمی",
-    h1Title: "علیرضا طباطبایی هاشمی",
-    slug: "alireza-tabatabaei-hashemi",
-    metaTitle: "علیرضا طباطبایی هاشمی",
+  "author-sara-heydarzade": {
+    pageName: "سارا محمدزاده",
+    h1Title: "سارا محمدزاده",
+    slug: "sara-heydarzade",
+    metaTitle: "سارا محمدزاده",
     metaDescription:
-      "پروفایل علیرضا طباطبایی هاشمی، متخصص تحقیقات دیجیتال و جرائم سایبری در پاراهور.",
+      "پروفایل سارا  محمدزاده، متخصص تحقیقات دیجیتال و جرائم سایبری در پاراهور.",
     index: true,
     follow: true,
   },
@@ -443,7 +443,7 @@ const PAGE_ORDER: PageKey[] = [
   "privacy",
   "authors",
   "author-mohammadreza-yousefi",
-  "author-alireza-tabatabaei-hashemi",
+  "author-sara-heydarzade",
 ];
 
 export async function getAdjacentPageLinks(pageKey: PageKey) {

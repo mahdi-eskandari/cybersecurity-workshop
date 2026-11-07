@@ -22,7 +22,7 @@ export async function GET() {
   const pageKeys: PageKey[] = [
     "authors",
     "author-mohammadreza-yousefi",
-    "author-alireza-tabatabaei-hashemi",
+    "author-sara-heydarzade",
   ];
 
   const pages = await Promise.all(

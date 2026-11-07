@@ -1370,7 +1370,7 @@ const chips: Chip[] = [
   { id: "forensics", display: "هک شدن اکانت‌ها و شبکه‌های اجتماعی", icon: <IconHack /> },
   { id: "device-surveillance", display: "شک به شنود یا هک شدن دیوایس", icon: <IconHack /> },
   { id: "online-fraud", display: "کلاهبرداری مالی و اینترنتی (فیشینگ، رسیدساز)", icon: <IconExtort /> },
-  { id: "pentest", display: "نشت یا سرقت اطلاعات سازمانی", icon: <IconHack /> },
+  { id: "pentest", display: "سایت من در معرض خطر هست", icon: <IconHack /> },
   { id: "impersonation", display: "جعل هویت و ساخت اکانت/پیج فیک", icon: <IconShieldCheck darkMode={false} /> },
   { id: "threat-intel", display: "درخواست هوش تهدیدات (پیشگیری و اعتبارسنجی)", icon: <IconHack /> },
   { id: "other", display: "سایر موارد", icon: <IconShieldCheck darkMode={false} /> },
@@ -1647,7 +1647,7 @@ export const EmergencyModal = ({
 
 
 
-  useEffect(() => {
+   useEffect(() => {
     const forcedIncidentType = getForceIncidentType();
 
     if (forcedIncidentType) {
@@ -1661,6 +1661,16 @@ export const EmergencyModal = ({
       return;
     }
 
+    // توی صفحه‌ی هر خدمت: همون خدمت از قبل انتخاب بشه
+    if (serviceKey && chips.some((c) => c.id === serviceKey)) {
+      setValue("incidentType", serviceKey, {
+        shouldValidate: false,
+        shouldDirty: false,
+        shouldTouch: false,
+      });
+      return;
+    }
+
     // فقط توی لیست خدمات (/services) مشاوره پیش‌فرض فعال باشه
     if (/^\/services\/?$/.test(pathname || "")) {
       setValue("incidentType", "consulting", {
@@ -1671,8 +1681,8 @@ export const EmergencyModal = ({
       return;
     }
 
-    // تو بقیه‌ی صفحه‌ها (از جمله صفحه‌ی هر خدمت) هیچ نوعی از قبل انتخاب نمی‌شه
-  }, [setValue, pathname]);
+    // تو بقیه‌ی صفحه‌ها هیچ نوعی از قبل انتخاب نمی‌شه
+  }, [setValue, pathname, serviceKey]);
 
 
 const toPhone = (v: string) => {

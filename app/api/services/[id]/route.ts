@@ -102,6 +102,14 @@ export async function PATCH(
   { params }: RouteContext
 ) {
   try {
+
+
+        if (!(await isAdmin())) {
+      return NextResponse.json(
+        { success: false, message: "دسترسی غیرمجاز" },
+        { status: 403 }
+      );
+    }
     const { id } = await params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -393,6 +401,14 @@ export async function DELETE(
   { params }: RouteContext
 ) {
   try {
+
+    if (!(await isAdmin())) {
+      return NextResponse.json(
+        { success: false, message: "دسترسی غیرمجاز" },
+        { status: 403 }
+      );
+    }
+
     const { id } = await params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {

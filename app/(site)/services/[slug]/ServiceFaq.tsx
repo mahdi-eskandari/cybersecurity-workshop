@@ -70,6 +70,46 @@ sectionBorder: "1px solid rgba(21,101,192,0.14)",
         dotGlow: "none",
       };
 
+
+        const helpBox = (
+    <div
+      className="p-4 rounded-xl"
+      style={{ background: t.helpBg, border: t.helpBorder }}
+    >
+      <div className="flex items-center gap-2 mb-2">
+        <span
+          style={{
+            width: 7,
+            height: 7,
+            borderRadius: "50%",
+            background: accent,
+            boxShadow: t.dotGlow,
+            flexShrink: 0,
+          }}
+        />
+        <span
+          className="font-semibold text-sm"
+          style={{ color: t.helpTitle, fontSize: "16px" }}
+        >
+          پاسخ پرسش شما اینجا نیست؟
+        </span>
+      </div>
+
+      <p
+        className="font-semibold"
+        style={{
+          color: t.helpText,
+          fontSize: "13px",
+          lineHeight: 1.8,
+          margin: 0,
+        }}
+      >
+        جزئیات پرونده را محرمانه ارسال کنید تا کارشناس پاراهور امکان
+        پیگیری را بررسی کند.
+      </p>
+    </div>
+  );
+
   return (
     <motion.section
   id="faq"
@@ -118,42 +158,7 @@ sectionBorder: "1px solid rgba(21,101,192,0.14)",
             حفاظت از اطلاعات پرونده.
           </p>
 
-          <div
-            className="mt-7 p-4 rounded-xl lg:mt-5"
-            style={{ background: t.helpBg, border: t.helpBorder }}
-          >
-            <div className="flex items-center gap-2 mb-2 ">
-              <span
-                style={{
-                  width: 7,
-                  height: 7,
-                  borderRadius: "50%",
-                  background: accent,
-                  boxShadow: t.dotGlow,
-                  flexShrink: 0,
-                }}
-              />
-              <span
-                className="font-semibold text-sm"
-                style={{ color: t.helpTitle, fontSize: "16px",  }}
-              >
-                پاسخ پرسش شما اینجا نیست؟
-              </span>
-            </div>
-
-            <p
-            className="font-semibold"
-              style={{
-                color: t.helpText,
-                fontSize: "13px",
-                lineHeight: 1.8,
-                margin: 0,
-              }}
-            >
-              جزئیات پرونده را محرمانه ارسال کنید تا کارشناس پاراهور امکان
-              پیگیری را بررسی کند.
-            </p>
-          </div>
+          <div className="hidden lg:block lg:mt-5">{helpBox}</div>
         </div>
 
         {/* ───── لیست سوالات ───── */}
@@ -251,6 +256,8 @@ sectionBorder: "1px solid rgba(21,101,192,0.14)",
             );
           })}
         </div>
+
+        <div className="lg:hidden">{helpBox}</div>
       </div>
     </motion.section>
   );
