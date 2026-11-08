@@ -492,7 +492,7 @@ const isDark = darkMode;
 
 
       {/* HERO */}
-      <motion.section className="contact-hero relative overflow-hidden px-6 pb-16 pt-20 text-center md:px-12 md:pb-20 md:pt-23" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.65, ease: "easeOut" }}
+<motion.section className="contact-hero relative overflow-hidden px-6 pb-16 pt-14 text-center md:px-12 md:pb-20 md:pt-20 md:pt-23" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.65, ease: "easeOut" }}
        style={{
             background: darkMode
               ? "radial-gradient(ellipse 65% 60% at 50% 50%, rgba(0, 229, 255, 0.06) 0%, transparent 70%)"

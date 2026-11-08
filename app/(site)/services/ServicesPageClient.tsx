@@ -427,7 +427,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
       {/* <section className="relative px-6 pt-20 pb-16 md:px-12 md:pt-28 md:pb-20 text-center overflow-hidden"> */}
         <motion.div
-        className="relative px-6 pt-20 pb-16 md:px-12 md:pt-20 md:pb-20 text-center overflow-hidden"
+        className="relative px-6 pt-14 pb-16 md:px-12 md:pt-20 md:pb-20 text-center overflow-hidden"
     initial={{ opacity: 0, y: 30 }}
   whileInView={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.5 }}

@@ -1164,7 +1164,7 @@ const closeCrisis = () => {
 
 
       <motion.div
-        className="relative flex flex-col items-center justify-center text-center px-6 pt-24 pb-0 md:pt-32 md:pb-16"
+        className="relative flex flex-col items-center justify-center text-center px-6 pt-10 pb-0 md:pt-32 md:pb-16"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}

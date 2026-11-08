@@ -531,7 +531,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         viewport={{ once: true, amount: 0.2 }}
-        className="relative overflow-hidden px-6 pt-24 pb-28 md:px-12 md:pt-20 md:pb-36 text-center pt-20"
+        className="relative overflow-hidden px-6 pt-14 pb-28 md:px-12 md:pt-20 md:pb-36 text-center"
       >
         <HeroBg darkMode={darkMode} />
 

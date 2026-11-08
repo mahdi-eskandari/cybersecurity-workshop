@@ -125,12 +125,12 @@ function CommentItem({
   darkMode: boolean;
   onReply: (comment: ApprovedComment) => void;
 }) {
-  const ac = darkMode ? "#00E5FF" : "#1565C0";
+  const ac = darkMode ? "#00E5FF" : "#126bd2";
   const replies = flattenReplies(node);
 
   const nameColor = darkMode ? "#E2E8F0" : "#0F172A";
-  const textColor = darkMode ? "#CBD5E1" : "#334155";
-  const mutedColor = darkMode ? "#64748B" : "#94A3B8";
+  const textColor = darkMode ? "#CBD5E1" : "#445368";
+  const mutedColor = darkMode ? "#7d8b9e" : "#444c56";
   const lineColor = darkMode ? "rgba(255,255,255,0.07)" : "rgba(21,101,192,0.14)";
 
   const Avatar = ({ name, size }: { name: string; size: number }) => (
@@ -153,13 +153,13 @@ function CommentItem({
     <button
       type="button"
       onClick={() => onReply(target)}
-      className="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-bold transition-opacity hover:opacity-70"
+      className="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[12px] font-bold transition-opacity hover:opacity-70"
       style={{
         color: ac,
         background: darkMode ? "rgba(0,229,255,0.08)" : "rgba(21,101,192,0.07)",
       }}
     >
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="9 14 4 9 9 4" />
         <path d="M20 20v-7a4 4 0 0 0-4-4H4" />
       </svg>
@@ -185,11 +185,15 @@ function CommentItem({
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-2">
           <div className="flex min-w-0 flex-wrap items-baseline gap-x-2">
-            <span className="truncate text-[13px] font-bold" style={{ color: nameColor }}>
+            <span className="truncate text-[14px] font-bold" style={{ color: nameColor }}>
               {item.name || "کاربر مهمان"}
             </span>
             {toName && (
-              <span className="text-[10.5px]" style={{ color: ac }}>
+              <span className="text-[12px]" style={{ 
+                color: ac,
+                fontSize:"12px",
+              lineHeight: 1.5,
+               }}>
                 ↪ {toName}
               </span>
             )}
@@ -197,7 +201,7 @@ function CommentItem({
 
           {/* سمت چپ: زمان + پاسخ */}
           <div className="flex flex-shrink-0 items-center gap-2.5">
-            <span className="text-[10.5px]" style={{ color: mutedColor }}>
+            <span className="text-[11px]" style={{ color: mutedColor }}>
               {formatRelativeTime(item.createdAt)}
             </span>
             <ReplyBtn target={item} />
@@ -206,7 +210,11 @@ function CommentItem({
 
         <p
           className={`mt-1 whitespace-pre-line break-words leading-[1.9] ${textSize}`}
-          style={{ color: textColor }}
+          style={{ 
+            color: textColor,
+              fontSize:"13px",
+              fontWeight: "500"
+           }}
         >
           {item.comment}
         </p>
@@ -216,9 +224,10 @@ function CommentItem({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25 }}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      viewport={{ once: true, amount: 0.2 }}
       className={`rounded-2xl border px-4 py-3.5 ${
         darkMode
           ? "border-white/[0.08] bg-white/[0.03]"
@@ -386,26 +395,38 @@ setErrors({});
 
 
       {/* هدر بخش نظرات */}
-      <div className="flex items-center gap-2 mb-6 px-1">
-        <span
-          style={{
-            width: 4,
-            height: 22,
-            borderRadius: 99,
-            background: darkMode ? "rgb(0,229,255)" : "rgb(21,101,192)",
-          }}
-        />
+      <motion.div
+        className="flex items-center gap-2 mb-6 px-1"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true, amount: 0.2 }}
+      >
+ <div
+                style={{
+                  width: 4,
+                  height: 22,
+                  background: darkMode
+                    ? "linear-gradient(180deg,#00E5FF,rgba(0,229,255,0.2))"
+                    : "linear-gradient(180deg,#1565C0,rgba(35, 89, 238, 0.25))",
+                  borderRadius: 2,
+                }}
+              />
         <h3 className="font-bold text-base" style={{ color: darkMode ? "#E2E8F0" : "black",
           fontSize: "24px"
          }}>
           نظرات و دیدگاه‌های کاربران
         </h3>
-      </div>
+      </motion.div>
 
       {/* کارت فرم با همون ساختار ساده قبلی، ولی با هاورها و رنگ‌ولعاب استایلِ شما */}
-     <div
+         <motion.div
   ref={formCardRef}
-  className={`relative overflow-hidden rounded-2xl border transition-all duration-300 w-full p-4 min-[410px]:p-6 md:p-8 mb-10 ${
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+  viewport={{ once: true, amount: 0.2 }}
+  className={`relative overflow-hidden rounded-2xl border transition-colors duration-300 w-full p-4 min-[410px]:p-6 md:p-8 mb-10 ${
           darkMode
             ? "border-[#00E5FF]/25 bg-white/[0.025] backdrop-blur-[10px]  shadow-[0_18px_42px_rgba(0,0,0,0.38),0_12px_40px_rgba(0,229,255,0.20)] "
             : "border-[#1565C0]/40 bg-white  shadow-[0_0_0_1px_rgba(21,101,192,0.1),0_6px_16px_rgba(21,101,192,0.08)]"
@@ -621,12 +642,17 @@ onMouseLeave={(e) => {
     : "ارسال دیدگاه"}
 </button>
         </form>
-      </div>
-
+      </motion.div>
       {/* ───────────────── لیست نظرات تایید و منتشرشده ───────────────── */}
 
-      <div className="flex items-center justify-between mb-5 px-1">
-        <h4 className="font-bold" style={{ color: darkMode ? "#E2E8F0" : "#0F172A", fontSize: "14px" }}>
+            <motion.div
+        className="flex items-center justify-between mb-5 px-1"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true, amount: 0.2 }}
+      >
+        <h4 className="font-bold" style={{ color: darkMode ? "#E2E8F0" : "#0F172A", fontSize: "18px" }}>
           دیدگاه‌های ثبت‌شده
         </h4>
 
@@ -639,11 +665,14 @@ onMouseLeave={(e) => {
             {comments.length} دیدگاه
           </span>
         )}
-      </div>
-
+      </motion.div>
       {/* حالت خالی */}
       {comments.length === 0 && (
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true, amount: 0.2 }}
           className={`flex flex-col items-center justify-center gap-3 rounded-2xl border py-12 px-6 text-center ${
             darkMode ? "border-white/[0.06] bg-white/[0.015]" : "border-slate-200 bg-slate-50/60"
           }`}
@@ -655,7 +684,7 @@ onMouseLeave={(e) => {
           <p  style={{ color: darkMode ? "#8e96a1" : "#94A3B8", fontSize: "0.8rem", }}>
             اولین نفری باشید که نظر خود را می‌نویسد.
           </p>
-        </div>
+        </motion.div>
       )}
 
 

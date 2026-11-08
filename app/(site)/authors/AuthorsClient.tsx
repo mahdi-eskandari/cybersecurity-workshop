@@ -1004,7 +1004,7 @@ const SocialBtn = ({
           MAIN
       ===================================================== */}
 
-      <main className="relative z-[1] pb-20 px-6 max-[720px]:px-[14px] pt-[82px]">
+      <main className="relative z-[1] pb-20 px-6 max-[720px]:px-[14px] pt-[59px] md:pt-[82px]">
         <div className="max-w-[1180px] mx-auto">
           {/* ===================================================
               TITLE
@@ -1018,26 +1018,12 @@ const SocialBtn = ({
   viewport={{ once: true, amount: 0.2 }}
 >
 
-              
-           {/* <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 text-xs"
-            style={{
-              background: "rgba(0,229,255,0.07)",
-              border: "1px solid rgba(0,229,255,0.2)",
-              color: "#00E5FF",
-            }}
-          >
-            <span className="node-dot pulse-dot" style={{ width: 6, height: 6, borderRadius: "50%", background: "#00E5FF", display: "inline-block" }} />
-            <span className="data-label">PARAHOOR / EXPERTS</span>
-          </div> */}
-
            <div
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 text-xs color: accent/10"
 
-                        style={{
-border: `1px solid ${accent}40`,
+              style={{
+              border: `1px solid ${accent}40`,
               backgroundColor: `${accent}20`,
-
               
             }}
           >

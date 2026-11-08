@@ -987,7 +987,7 @@ const [filterH, setFilterH] = useState(0);
   viewport={{ once: true, amount: 0.2 }}
 >
 
-          <div className="max-w-4xl mx-auto px-6 py-16 text-center"
+          <div className="max-w-4xl mx-auto px-6 pt-9 pb-16 md:pt-16 text-center"
           style={{
             background: darkMode
               ? "radial-gradient(ellipse 65% 60% at 50% 50%, rgba(0,229,255,0.065) 0%, transparent 70%)"

@@ -7,6 +7,7 @@ import { useTheme } from "../../../../components/ThemeProvider";
 import {EmergencyModal} from "../../.../../../../components/CrisisReportForm"
 import CommentSection from "@/components/CommentSection";
 import type { ApprovedComment } from "@/components/CommentSection";
+import { motion } from "framer-motion";
 
 
 /* ─────────────────────────────────────────────────────────────
@@ -1315,7 +1316,13 @@ export default function App({
 
       {/* ───────────────── ARTICLE HEADER ───────────────── */}
 
-      <header className="px-6 pt-14 pb-10 md:px-12 md:pt-20">
+              <motion.header
+        className="px-6 pt-14 pb-10 md:px-12 md:pt-20"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="max-w-4xl mx-auto">
 
 
@@ -1467,11 +1474,20 @@ export default function App({
             </div>
           </div>
         </div>
-      </header>
+     </motion.header>
 
             {/* ─── FEATURED IMAGE ─── */}
-      <div className="px-6 pb-12 md:px-12">
+      <motion.div
+        className="px-6 pb-12 md:px-12"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="max-w-6xl mx-auto">
+
+
+          
           <div className="relative overflow-hidden rounded-2xl"
             style={{ height: "clamp(200px,40vw,380px)", border: darkMode ? "1px solid rgba(0,229,255,0.12)" : "1px solid rgba(42, 108, 188, 0.33)" }}>
             <HeroImage />
@@ -1483,10 +1499,16 @@ export default function App({
             نمودار ردیابی جریان تراکنش‌ها — پرونده MySol // REF-48291
           </p> */}
         </div>
-      </div>
+      </motion.div>
       {/* ───────────────── ARTICLE CONTENT ───────────────── */}
 
-      <article className="px-6 pb-6 md:px-12">
+            <motion.article
+        className="px-6 pb-6 md:px-12"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true, amount: "some" }}
+      >
         <div
           className="max-w-4xl mx-auto"
           style={{
@@ -1504,7 +1526,7 @@ export default function App({
             }}
           />
         </div>
-      </article>
+      </motion.article>
 
       {/* ───────────────── TAGS ─────────────────
 
@@ -1558,9 +1580,18 @@ export default function App({
 
       {/* ───────────────── CTA ───────────────── */}
 
-<div className="px-6 py-10 md:px-12">
+
+
+<motion.div
+  className="px-6 py-10 md:px-12"
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+  viewport={{ once: true, amount: 0.2 }}
+>
   <div
   className={`max-w-3xl mx-auto rounded-2xl`}
+  
       style={{
         boxShadow: darkMode
           ? "0 18px 60px rgba(0, 229, 255, 0), 0 0 70px rgba(0,229,255,0.05)"
@@ -1723,7 +1754,7 @@ onClick={() => setCrisisOpen(true)}
       </div>
     </div>
   </div>
-</div>
+</motion.div>
 
       {crisisOpen && (
         <EmergencyModal
@@ -1735,7 +1766,12 @@ onClick={() => setCrisisOpen(true)}
 
       <div className="px-6 pb-14 md:px-12">
         <div className="max-w-4xl mx-auto">
-          <div
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true, amount: 0.2 }}
             className="flex flex-col gap-5 pt-7 md:flex-row md:items-center md:justify-between"
             style={{
               borderTop: darkMode
@@ -1830,40 +1866,49 @@ onClick={() => setCrisisOpen(true)}
                 )}
               </button>
             </div>
-          </div>
+          </motion.div>
 
 
           {/* ───────────── RELATED POSTS ───────────── */}
 
           {relatedPosts.length > 0 && (
             <div className="mt-12">
-              <div className="flex justify-between items-center gap-2 mb-5 px-1">
+              <motion.div
+                className="flex justify-between items-center gap-2 mb-5 px-1"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true, amount: 0.2 }}
+              >
 <div className="flex items-center gap-2">
-  <span
-    style={{
-      display: "block",
-      flexShrink: 0,
-      width: 4,
-      height: 18,
-      borderRadius: 99,
-      background: darkMode ? "#00E5FF" : "#1565C0",
-    }}
-  />
+              <div
+                style={{
+                  width: 4,
+                  height: 22,
+                  background: darkMode
+                    ? "linear-gradient(180deg,#00E5FF,rgba(0,229,255,0.2))"
+                    : "linear-gradient(180deg,#1565C0,rgba(35, 89, 238, 0.25))",
+                  borderRadius: 2,
+                }}
+              />
+  
 
                 <h3
-                  className="font-bold text-sm"
+                  className="font-bold"
                   style={{
+                    fontSize: "24px",
                     color: darkMode
                       ? "#E2E8F0"
                       : "#0F172A",
                   }}
+                  
                 >
                   گزارش‌های مرتبط
                 </h3>
                 </div>
 
                 
-              </div>
+              </motion.div>
 
 
 
@@ -1875,7 +1920,7 @@ onClick={() => setCrisisOpen(true)}
 
 
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-  {relatedPosts.map((related) => {
+    {relatedPosts.map((related, index) => {
     const relatedImage = getMediaUrl(related.featuredImage, mediaItems);
     const relatedCategory = getCategoryLabel(related.categoryId);
     const relatedExcerpt =
@@ -1885,8 +1930,15 @@ onClick={() => setCrisisOpen(true)}
         .trim() || "";
 
     return (
+      <motion.div
+        key={related._id}
+        className="h-full"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: index * 0.1 }}
+        viewport={{ once: true, amount: 0.2 }}
+      >
       <Link href={`/blogs/${related.slug || related._id}`}>
-
       <article
            className={`group flex h-full flex-col rounded-2xl overflow-hidden transition-all duration-200 ${
              darkMode
@@ -2070,6 +2122,7 @@ onClick={() => setCrisisOpen(true)}
         </div>
       </article>
       </Link>
+      </motion.div>
     );
   })}
 
