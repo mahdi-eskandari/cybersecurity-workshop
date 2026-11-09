@@ -2122,9 +2122,9 @@ export default function App({
 />
       )}
 
-       <motion.div
-        className="relative flex flex-col items-center text-center px-6 pt-20 pb-10 md:pt-28 md:pb-14 overflow-hidden" 
-    initial={{ opacity: 0, y: 30 }}
+      <motion.div
+  className="relative flex flex-col items-center text-center px-6 pt-12 pb-10 md:pt-20 md:pb-14 overflow-hidden"
+  initial={{ opacity: 0, y: 30 }}
   whileInView={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.5 }}
   viewport={{ once: true, amount: 0.2 }}
