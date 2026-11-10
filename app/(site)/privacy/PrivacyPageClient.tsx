@@ -469,7 +469,7 @@ const calloutStrongLight = "text-black";
   }) => (
     <h2
       id={id}
-      className={`font-bold privacy-h2 ${isDark ? "" : "text-black"}`}
+      className={` privacy-h2 ${isDark ? "" : "text-black"}`}
       style={{
         fontSize: "40px",
         lineHeight: 1.4,

@@ -1672,7 +1672,7 @@ style={{
                       style={
                         darkMode
                           ? {fontSize: "12px"}
-                          : { color: "#1565C0" }
+                          : { color: "#1565C0", fontSize: "12px" }
                       }
                     >
                       {service.label}

@@ -1411,10 +1411,12 @@ const navItems = NAV_ITEMS.map((item) => ({
               className="flex items-center gap-3"
             >
               <Image
-                src={ "/logo/parahoor-wordmark-dark.webp" }
+                 src={ darkMode ? "/logo/parahoor-wordmark-dark.webp"
+                   : "/logo/parahoor-logo-light.webp"
+                }
                 alt="پراهور"
-    width={600}
-    height={192}
+                width={600}
+                height={192}
                                 className="block h-12 w-auto object-contain"
                 style={{
                   filter: darkMode
