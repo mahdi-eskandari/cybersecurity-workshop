@@ -41,7 +41,7 @@ export function buildOrganizationSchema() {
     name: "پاراهور",
     url: `${SITE_URL}/`,
     email: "info@parahoor.com",
-    logo: `${SITE_URL}/logo.jpg`,
+    logo: `${SITE_URL}/logo/logo.webp`,
     sameAs: ["https://t.me/mahdi_eskandari_84"],
   };
 }
@@ -59,7 +59,7 @@ export function buildLocalBusinessSchema() {
     url: `${SITE_URL}/`,
     // telephone: "+98-XXX-XXXXXXX", // ← اضافه کن
     email: "info@parahoor.com",
-    image: `${SITE_URL}/logo.jpg`,
+    image: `${SITE_URL}/logo/logo.webp`,
     address: {
       "@type": "PostalAddress",
       streetAddress:
@@ -120,7 +120,7 @@ export function buildArticleSchema(post: {
   publishedAt?: string;
   updatedAt?: string;
 }) {
-  const image = toAbsoluteImageUrl(post.imageUrl) ?? `${SITE_URL}/logo.jpg`;
+  const image = toAbsoluteImageUrl(post.imageUrl) ?? `${SITE_URL}/logo/logo.webp`;
 
   return {
     "@type": "Article",
@@ -137,7 +137,7 @@ export function buildArticleSchema(post: {
       name: "پاراهور",
       logo: {
         "@type": "ImageObject",
-        url: `${SITE_URL}/logo.jpg`,
+        url: `${SITE_URL}/logo/logo.webp`,
       },
     },
     datePublished: post.publishedAt,

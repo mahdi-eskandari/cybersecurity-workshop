@@ -8,7 +8,7 @@ export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 
-const DEFAULT_OG_IMAGE = `${SITE_URL}/logo.jpg`;
+const DEFAULT_OG_IMAGE = `${SITE_URL}/logo/logo.webp`;
 
 export const SEO_DEFAULTS = {
   home: {
