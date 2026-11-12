@@ -1184,7 +1184,11 @@ const SocialBtn = ({
                   VERIFIED RESEARCHER
                 </div>
 
-                <h2 className="m-0 text-[30px] font-extrabold">
+                <h2 className="m-0 text-[32px] font-extrabold"
+                style={{
+                    fontWeight: "500",
+                  lineHeight: 1.5
+                }}>
                   {author.name}
                 </h2>
 

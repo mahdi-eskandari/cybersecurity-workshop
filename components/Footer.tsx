@@ -289,7 +289,7 @@ export default function Footer() {
                   color: darkMode ? "#818fa0" : "#CBD5E1",
                 }}
                   >
-                    021-44097162
+                    026-32209950
                   </span>
                 </div>
                 <div className="flex items-center gap-2.5 text-sm text-[#818fa0]"
@@ -307,7 +307,7 @@ export default function Footer() {
                 }}
                 >
                   <MapPin className="w-4 h-4 flex-shrink-0" />
-                  <span>تهران، آیت الله کاشانی، بلوار اباذر، نبش خیابان شالی، پلاک 9، طبقه 4، واحد 6</span>
+                  <span>کرج، بلوار بلال، میدان توحید، ساختمان بانک کشاورزی، پلاک چهارم طبقه اول واحد اول</span>
                 </div>
                 <div>
 <div className="flex items-center gap-2">
@@ -383,7 +383,7 @@ export default function Footer() {
                       در صورت حادثه فوری، ۲۴/۷ در دسترسیم
                     </p>
                     <a
-                      href="tel:+982144097162"
+                      href="tel:+982632209950"
                       className="flex w-[65%] items-center gap-2 px-3.5 py-2 bg-[#C62828] text-white text-xs font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors"
                          style={{
                 background: "#EF4444",

@@ -211,6 +211,7 @@ const [turnstileToken, setTurnstileToken] = useState("");
 const turnstileRef = useRef<TurnstileInstance>(null);
 const errorRetries = useRef(0);
 
+
   const {
     register,
     handleSubmit,
@@ -425,7 +426,7 @@ const isDark = darkMode;
   };
 
   const channels: ContactChannel[] = [
-{ icon: <IconPhone color={themeRed} />, iconColor: themeRed, badge: "CRISIS HOTLINE", title: "خط ویژه بحران", desc: "پاسخگویی فوری به بحران های سایبری", value: "021-44097162", valueLabel: "شماره تماس", urgent: true, accentColor: themeRed, href: "tel:+982144097162", actionLabel: "تماس اورژانسی" },
+{ icon: <IconPhone color={themeRed} />, iconColor: themeRed, badge: "CRISIS HOTLINE", title: "خط ویژه بحران", desc: "پاسخگویی فوری به بحران های سایبری", value: "026-32209950", valueLabel: "شماره تماس", urgent: true, accentColor: themeRed, href: "tel:+982632209950", actionLabel: "تماس اورژانسی" },
 { icon: <TelegramIcon color={themeBlue} />, iconColor: themeBlue, badge: "SECURE CHAT", title: "پشتیبانی امن تلگرام", desc: "ارسال سریع مستندات", value: "Parahoor_Support", valueLabel: "آیدی تلگرام", urgent: false, accentColor: themeBlue, hoverColor: themeBlue, href: "https://t.me/Parahoor_Support", actionLabel: "باز کردن تلگرام" },
 { icon: <IconLockMail color={themeBlue} />, iconColor: themeBlue, badge: "OFFICIAL EMAIL", title: "ایمیل سازمانی", desc: "برای مکاتبات رسمی و حقوقی", value: "info@parahoor.com", valueLabel: "آدرس ایمیل", urgent: false, accentColor: themeBlue, hoverColor: themeBlue, href: "https://mail.google.com/mail/?view=cm&fs=1&to=info@parahoor.com.com&su=" + encodeURIComponent("تماس از سایت پاراهور"), actionLabel: "ارسال ایمیل" },  ];
 
@@ -725,18 +726,9 @@ style={{
 
         {ch.href ? (
   <a
-  onClick={(e) => {
-  if (
-    ch.href?.startsWith("tel:") &&
-    !/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
-  ) {
-    e.preventDefault();
-    navigator.clipboard?.writeText(ch.value);
-  }
-}}
-    href={ch.href}
-    target={ch.href.startsWith("http") ? "_blank" : undefined}
-    rel={ch.href.startsWith("http") ? "noopener noreferrer" : undefined}
+   href={ch.href}
+  target={ch.href.startsWith("http") ? "_blank" : undefined}
+  rel={ch.href.startsWith("http") ? "noopener noreferrer" : undefined}
     className={`w-full rounded-xl border py-2.5 text-center text-sm font-semibold transition-all duration-300 ${
       isDark
         ? crisis
@@ -746,7 +738,7 @@ style={{
         ? "border-[#991B1B]/40 bg-[#991B1B]/[0.09] text-[#991B1B] hover:bg-[#991B1B] hover:text-white hover:shadow-[0_8px_18px_rgba(153,27,27,0.28)]"
         : "border-[#1565C0]/40 bg-[#1565C0]/[0.09] text-[#1565C0] hover:bg-[#1565C0] hover:text-white hover:shadow-[0_8px_18px_rgba(21,101,192,0.28)]"
     }`}
-    style={{ borderColor: isDark ? `${ac}30` : undefined }}
+  style={{ borderColor: isDark ? `${ac}30` : undefined }}
   >
     {ch.actionLabel}
   </a>
@@ -927,15 +919,15 @@ style={{
           : "border-[#1565C0]/20 bg-white shadow-[0_16px_38px_rgba(15,23,42,0.06)]"
       }`}
     >
-      <a
-        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("آیت الله کاشانی، بلوار اباذر، نبش خیابان شالی، پلاک 9، طبقه چهارم، واحد 6")}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="باز کردن موقعیت دفتر مرکزی پاراهور در نقشه"
-        className="absolute inset-0 z-10 block cursor-pointer"
-      >
-        <DarkMap lightMode={!isDark} />
-      </a>
+<a
+  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("کرج، بلوار بلال، میدان توحید، ساختمان بانک کشاورزی، پلاک چهارم طبقه اول واحد اول")}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="باز کردن موقعیت دفتر مرکزی پاراهور در نقشه"
+  className="absolute inset-0 z-10 block cursor-pointer"
+>
+  <DarkMap lightMode={!isDark} />
+</a>
 
       <div className="contact-map-info absolute right-5 top-5 z-20 max-w-[300px] max-md:left-3 max-md:right-3 max-md:top-3 max-md:max-w-none">
         <div
@@ -983,7 +975,7 @@ style={{
               lineHeight: 1.5
             }}
               >
-               آدرس دفتر مرکزی: تهران
+               آدرس دفتر مرکزی: کرج
               </h4>
 
               <p
@@ -995,8 +987,7 @@ style={{
               lineHeight: 1.77
             }}
               >
-                آیت الله کاشانی، بلوار اباذر، نبش خیابان شالی، پلاک 9، طبقه 4، واحد 6
-               
+بلوار بلال، میدان توحید، ساختمان بانک کشاورزی، پلاک چهارم طبقه اول واحد اول               
               </p>
 
               <div
@@ -1030,9 +1021,9 @@ style={{
 
       {/* Open in Maps */}
       <a
-        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("آیت الله کاشانی، بلوار اباذر، نبش خیابان شالی، پلاک 9، طبقه چهارم، واحد 6")}`}
-        target="_blank"
-        rel="noopener noreferrer"
+  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("کرج، بلوار بلال، میدان توحید، ساختمان بانک کشاورزی، پلاک چهارم طبقه اول واحد اول")}`}
+  target="_blank"
+  rel="noopener noreferrer"
         className={`contact-map-open group absolute bottom-4 right-4 z-20 inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-bold transition-all duration-300 ${
           isDark
             ? "border-[#00E5FF]/20 bg-[#060B1C]/90 text-[#00E5FF] shadow-[0_10px_26px_rgba(0,229,255,0.08)] hover:bg-[#00E5FF]/12 hover:shadow-[0_10px_24px_rgba(0,229,255,0.11)]"

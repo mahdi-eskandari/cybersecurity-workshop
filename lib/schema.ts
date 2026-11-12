@@ -63,9 +63,9 @@ export function buildLocalBusinessSchema() {
     address: {
       "@type": "PostalAddress",
       streetAddress:
-        "بلوار اباذر، نبش خیابان شالی، پلاک ۹، طبقه چهارم، واحد ۶",
-      addressLocality: "تهران",
-      addressRegion: "تهران",
+        "بلوار بلال، میدان توحید، ساختمان بانک کشاورزی، پلاک چهارم طبقه اول واحد اول",
+      addressLocality: "کرج",
+      addressRegion: "کرج",
       addressCountry: "IR",
     },
   };
