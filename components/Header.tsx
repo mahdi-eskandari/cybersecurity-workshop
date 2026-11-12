@@ -1114,14 +1114,19 @@ const navItems = NAV_ITEMS.map((item) => ({
 <Link href="/" aria-label="پراهور - صفحه اصلی" className="block shrink-0 cursor-pointer">
   <Image
 
-    src={ darkMode ? "/logo/parahoor-wordmark-dark.webp"
-      : "/logo/parahoor-logo-light.webp"
+    src={ darkMode ? "/logo/parahoor-logo-white.png"
+      : "/logo/parahoor-logo-black.png"
     }
     alt="پراهور"
     width={600}
     height={192}
     priority
     className="block h-10 w-auto sm:h-12 object-contain"
+                    style={{
+                  filter: darkMode
+                    ? "drop-shadow(0 0 8px rgba(34, 211, 238, 0.3))"
+                    : "none",
+                }}
   />
 </Link>
           </div>
@@ -1411,8 +1416,8 @@ const navItems = NAV_ITEMS.map((item) => ({
               className="flex items-center gap-3"
             >
               <Image
-                 src={ darkMode ? "/logo/parahoor-wordmark-dark.webp"
-                   : "/logo/parahoor-logo-light.webp"
+                 src={ darkMode ? "/logo/parahoor-logo-white.png"
+                   : "/logo/parahoor-logo-black.png"
                 }
                 alt="پراهور"
                 width={600}

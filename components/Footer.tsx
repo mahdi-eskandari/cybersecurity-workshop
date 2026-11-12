@@ -262,11 +262,16 @@ export default function Footer() {
 
               <Link href="/" aria-label="پراهور - صفحه اصلی" className="block shrink-0 cursor-pointer w-fit">
   <Image
-    src="/logo/parahoor-wordmark-dark.webp"
+    src="/logo/parahoor-logo-white.png"
     alt="پراهور"
     width={600}
     height={192}
     className="block h-16 w-auto sm:h-20 object-contain"
+                        style={{
+                  filter: darkMode
+                    ? "drop-shadow(0 0 8px rgba(34, 211, 238, 0.3))"
+                    : "none",
+                }}
   />
 </Link>
               </div>
