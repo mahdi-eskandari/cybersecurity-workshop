@@ -111,14 +111,11 @@ const BLOGS_PATH = "/blogs";
 
 
 function buildBlogsUrl(category: string, page: number, basePath: string) {
-
-  if (category === "all") {
-    return page <= 1 ? basePath : `${basePath}?page=${page}`;
-  }
-  const params = new URLSearchParams();
-  params.set("category", category);
-  params.set("page", String(page));
-  return `${basePath}?${params.toString()}`;
+  const base =
+    category === "all"
+      ? basePath
+      : `${basePath}/category/${encodeURIComponent(category)}`;
+  return page <= 1 ? base : `${base}?page=${page}`;
 }
 
 
@@ -878,7 +875,7 @@ const [filterH, setFilterH] = useState(0);
     setCurrentPage(normalizedPage);
     setIsBareRoute(false);
 
-    const nextUrl = buildBlogsUrl(nextCategory, normalizedPage, pathname);
+    const nextUrl = buildBlogsUrl(nextCategory, normalizedPage, BLOGS_PATH);
     router.replace(nextUrl, { scroll: false });
   };
 

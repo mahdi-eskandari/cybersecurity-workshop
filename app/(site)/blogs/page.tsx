@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { permanentRedirect } from "next/navigation";
 import type { Metadata } from "next";
 import BlogPageClient, { type BlogPageInitialData } from "./BlogPageClient";
 import {
@@ -296,6 +297,16 @@ export default async function Page({
   searchParams: Promise<BlogsSearchParams>;
 }) {
   const { page: pageParam, category: categoryParam } = await searchParams;
+
+  if (categoryParam && categoryParam !== "all") {
+    const pageNum = Math.floor(Number(pageParam || "1"));
+    permanentRedirect(
+      `/blogs/category/${encodeURIComponent(categoryParam)}${
+        pageNum > 1 ? `?page=${pageNum}` : ""
+      }`
+    );
+  }
+
   const pageSeo = await getPageSeo("blogs");
   const h1Title = pageSeo.h1Title;
   const baseUrl = await getBaseUrl();
