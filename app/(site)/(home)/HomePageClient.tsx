@@ -1217,7 +1217,7 @@ const closeCrisis = () => {
 <h1
   className="glow-text font-black leading-tight mb-6"
   style={{
-    fontSize: "56px",
+        fontSize: "clamp(44px, 9vw, 56px)",
     color: darkMode ? "#ffffff" : "#0c1a43",
     lineHeight: "1.3",
     fontWeight: 500,
@@ -1245,8 +1245,7 @@ const closeCrisis = () => {
               fontWeight: "500"
             }}
           >
-            پاراهور؛ آژانس جرم شناسی دیجیتال. ما شواهد را کشف،
-            جریان‌های مالی را ردیابی و هویت‌های پنهان را آشکار می‌کنیم.
+          پاراهور، آژانس تحقیقات سایبری و جرم شناسی دیجیتال؛ ما بحران‌ها را مهار می‌کنیم، ردپای مهاجمان و دارایی‌های سرقت‌شده را ردیابی می‌کنیم و زیرساخت شما را در برابر تهدیدهای بعدی ایمن می‌سازیم.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center w-[80%] mx-auto">

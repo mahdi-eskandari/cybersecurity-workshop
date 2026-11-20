@@ -78,33 +78,12 @@ const IconInstagram = () => (
 
 
 const F_SERVICES = [
-  {
-    title: "ردیابی رمزارز و تحلیل بلاک‌چین",
-    href: "/services",
-  },
-  {
-    title: "کشف هویت پنهان",
-    match: "هویت سنجی پنهان",
-    href: "/services",
-  },
-  {
-    title: "تست نفوذ",
-    href: "/services",
-  },
-  {
-    title: "کالبدشکافی دیجیتال",
-    match: "فارنزیک و کالبدشکافی دیجیتال",
-    href: "/services",
-  },
-  {
-    title: "مقابله با باج‌افزارها",
-    match: "مقابله و مذاکره با باج افزارها",
-    href: "/services",
-  },
-  {
-    title: "هوش تهدیدات",
-    href: "/services",
-  },
+  { title: "کشف هویت سایبری", href: "/services" },
+  { title: "رهگیری رمزارز", href: "/services" },
+  { title: "هوش تهدید", href: "/services" },
+  { title: "تست نفوذ", href: "/services" },
+  { title: "کالبدشکافی دیجیتال", href: "/services" },
+  { title: "مقابله با باج‌افزار", href: "/services" },
 ];
 
 const COMPANY_LINKS = [
@@ -121,7 +100,7 @@ const COMPANY_LINKS = [
     href: "/privacy",
   },
      {
-    title: "مدیران",
+    title: "راهبران",
     href: "/authors",
   },
 ];
@@ -177,7 +156,8 @@ export default function Footer() {
   const { darkMode } = useTheme();
     const [crisisOpen, setCrisisOpen] = useState(false);
 
-      const [serviceSlugs, setServiceSlugs] = useState<Record<string, string>>({});
+      const [footerServices, setFooterServices] = useState<{ title: string; href: string }[]>([]);
+      const [topCategories, setTopCategories] = useState<{ title: string; href: string }[]>([]);
 
   useEffect(() => {
     let alive = true;
@@ -193,14 +173,23 @@ export default function Footer() {
           ? data.data
           : [];
 
-        const map: Record<string, string> = {};
-        for (const s of list) {
-          if (!s?.slug) continue;
-          if (s.status && s.status !== "active") continue;
-          if (s.title) map[norm(String(s.title))] = String(s.slug);
-          if (s.trackingTitle) map[norm(String(s.trackingTitle))] = String(s.slug);
-        }
-        setServiceSlugs(map);
+        const items = list
+          .filter(
+            (s: any) =>
+              s?.slug &&
+              s?.showInFooter &&
+              (!s.status || s.status === "active")
+          )
+          .sort(
+            (a: any, b: any) =>
+              (Number(a.footerOrder) || 0) - (Number(b.footerOrder) || 0)
+          )
+          .map((s: any) => ({
+            title: String(s.footerTitle?.trim() || s.title),
+            href: `/services/${s.slug}`,
+          }));
+
+        setFooterServices(items);
 
       })
       .catch(() => {});
@@ -211,30 +200,65 @@ export default function Footer() {
   }, []);
 
 
-    const findSlug = (text: string) => {
-    const key = norm(text);
-    if (serviceSlugs[key]) return serviceSlugs[key];
 
-    const found = Object.keys(serviceSlugs).find((k) => k.includes(key));
-    return found ? serviceSlugs[found] : undefined;
+  useEffect(() => {
+  let alive = true;
+
+  Promise.all([
+    fetch("/api/posts?topCategories=3").then((r) => (r.ok ? r.json() : [])),
+    fetch("/api/categories").then((r) => (r.ok ? r.json() : [])),
+  ])
+    .then(([top, cats]) => {
+      if (!alive || !Array.isArray(top)) return;
+
+      const catList = Array.isArray(cats)
+        ? cats
+        : Array.isArray(cats?.data)
+        ? cats.data
+        : [];
+
+      const links = top
+        .map((t: { categoryId: string }) => {
+          const cat = catList.find((c: any) =>
+            [c?.id, c?._id, c?.slug].some(
+              (v) => v != null && String(v) === String(t.categoryId)
+            )
+          );
+          const title = cat?.label ?? cat?.title ?? cat?.name;
+          return title
+            ? {
+                title: String(title),
+                href: `/blogs?category=${encodeURIComponent(t.categoryId)}`,
+              }
+            : null;
+        })
+        .filter((l: any): l is { title: string; href: string } => l !== null);
+
+      setTopCategories(links);
+    })
+    .catch(() => {});
+
+  return () => {
+    alive = false;
   };
+}, []);
+
+
+
 
   const footerMenus = [
     {
       title: "خدمات",
-            links: F_SERVICES.map((l) => {
-                        const slug = findSlug(l.match ?? l.title);
-        return { ...l, href: slug ? `/services/${slug}` : l.href };
-      }),
+      links: footerServices.length > 0 ? footerServices : F_SERVICES,
     },
     {
-      title: "ستون پاراهور",
+      title: "پاراهور",
       links: COMPANY_LINKS,
     },
-    {
-      title: "وبلاگ",
-      links: BLOG_LINKS,
-    },
+{
+  title: "وبلاگ",
+  links: topCategories.length > 0 ? topCategories : BLOG_LINKS,
+},
   ];
 
   return (
@@ -385,7 +409,7 @@ export default function Footer() {
                       اورژانس سایبری
                     </p>
                     <p className="text-xs text-white/50 mb-3">
-                      در صورت حادثه فوری، ۲۴/۷ در دسترسیم
+                     فقط برای حوادث زنده استفاده کنید
                     </p>
                     <a
                       href="tel:+982632209950"
@@ -458,7 +482,7 @@ export default function Footer() {
                 color: darkMode ? "#818fa0" : "#CBD5E1",
               }}
             >
-             پژوهشگران ارشد جرائم رایانه‎ای – وکلای پایه یک دادگستری
+             پژوهشگران ارشد جرائم رایانه ‎ای – وکلای پایه یک دادگستری
             </p>
           </div>
         </div>

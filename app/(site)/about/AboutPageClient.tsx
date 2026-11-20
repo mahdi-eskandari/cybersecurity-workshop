@@ -441,7 +441,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
       icon: <IconTerminal darkMode={darkMode} />,
       badge: "SCIENTIFIC PRECISION",
       title: "دقت علمی",
-      desc: "گزارش‌های ما بر پایه تحلیل دقیق گره‌های بلاک‌چین و لاگ‌های سرور است، نه حدس و گمان.",
+      desc: "گزارش‌های ما بر پایه تحلیل دقیق شواهد دیجیتال است، نه حدس و گمان.",
       detail:
         "آنالیز آن‌چین • لاگ‌آنالیز • زنجیره حضانت",
     },
@@ -579,7 +579,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
 <h1
   className="glow-text font-black leading-tight mb-6"
   style={{
-    fontSize: "56px",
+      fontSize: "clamp(44px, 9vw, 56px)",
     color: darkMode ? "#ffffff" : "#0c1a43",
     lineHeight: "1.28",
     fontWeight: 500,
@@ -607,8 +607,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
               fontWeight: "500"
             }}
           >
-پاراهور، نخبه‌ترین آژانس جرم شناسی دیجیتال است. مأموریت ما کشف حقیقت در تاریک‌ترین لایه‌های شبکه است. با رهگیری پیچیده رمزارزهای سرقتی، خدمات اوسینت و کالبدشکافی سرورهای هک‌شده، ادله‌ای قطعی برای ارائه به دادگاه خلق می‌کنیم.
-          </p>
+پاراهور یک آژانس تخصصی تحقیقات سایبری است که با تکیه بر روش‌های پیشرفته فنی، لایه‌های پنهان تهدیدها و جرایم دیجیتال را آشکار می‌کند. مأموریت ما گردآوری دقیق شواهد و ارائه تحلیل‌های شفاف فنی برای تصمیم‌گیری و اقدام مؤثر است.          </p>
 
           <div className="flex flex-wrap justify-center gap-8 mt-10">
             {[
@@ -729,7 +728,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                     fontWeight: 600,
                   }}
                 >
-                  <a href="/authors/sara-heydarzade">محمدرضا یوسفی</a>
+                  <a href="/authors/sara-mohammadzadeh">محمدرضا یوسفی</a>
              
                 </span>{" "}
              در رأس تیم فنی، و با همراهی سرکار خانم
@@ -740,7 +739,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                     fontWeight: 600,
                   }}
                 >
-                  <a href="/authors/sara-heydarzade">سارا محمدزاده</a>
+                  <a href="/authors/sara-mohammadzadeh">سارا محمدزاده</a>
              
                 </span>{" "}
                  به عنوان وکیل مجموعه، این دو رکن را هم‌زمان به کار می‌گیرد؛ تیم فنی ابعاد پنهان سایبری را رمزگشایی می‌کند و بخش حقوقی، اسناد را پایش و بررسی میکند و برای ارائه به مراجع قضایی آماده میکند.
@@ -1139,7 +1138,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                 {
                   year: "۱۴۰۳",
                   title: "اولین پرونده بزرگ",
-                  desc: "موفقیت در ردیابی ۸۰۰,۰۰۰ تتر سرقت‌شده در شبکه ترون و ارائه گزارش قضایی.",
+                  desc: "موفقیت در ردیابی ۸۰,۰۰۰ تتر سرقت‌شده در شبکه ترون و ارائه گزارش فنی به محاکم.",
                 },
                 {
                   year: "۱۴۰۴",
@@ -1149,7 +1148,7 @@ export default function AboutPageClient({ h1Title = "ما تاریکی‌های 
                 {
                   year: "۱۴۰۵",
                   title: "بیش از ۳۰۰ پرونده موفق",
-                  desc: "ردیابی بیش از ۴.۵ میلیون دلار دارایی دیجیتال و ارائه ادله به مراجع قضایی.",
+                  desc: "کشف هویت بیش از چند صد نفر از مجرمان سایبری و ارائه گزارش به محاکم.",
                 },
               ].map(({ year, title, desc }, i) => (
                 

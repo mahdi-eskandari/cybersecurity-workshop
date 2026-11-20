@@ -1028,7 +1028,7 @@ const [filterH, setFilterH] = useState(0);
 <h1
   className="glow-text font-black leading-tight mb-6"
   style={{
-    fontSize: "56px",
+      fontSize: "clamp(44px, 9vw, 56px)",
     color: darkMode ? "#ffffff" : "#0c1a43",
     lineHeight: "1.28",
     fontWeight: 500,
@@ -1056,7 +1056,7 @@ const [filterH, setFilterH] = useState(0);
               fontWeight: "500"
             }}
             >
-              گزارش‌های جرم‌شناسی، هشدارهای امنیتی و اخبار حقوقی توسط تیم متخصصان پاراهور
+در وبلاگ پاراهور، از تحلیل حملات واقعی، شگردهای کلاهبرداری و ردیابی رمزارزها تا راهکارهای عملی مقابله با باج‌افزارها و ایمن‌سازی فضای دیجیتال می‌نویسیم؛ تا همیشه یک قدم جلوتر از مهاجمان باشید.
             </p>
 
             {/* Search bar */}

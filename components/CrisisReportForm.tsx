@@ -413,7 +413,11 @@ export const EmergencyModal = ({
 
   const [submitError, setSubmitError] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
-  const turnstileRef = useRef<TurnstileInstance>(null);
+   const turnstileRef = useRef<TurnstileInstance>(null);
+  const errorRetries = useRef(0);
+  const turnstileBoxRef = useRef<HTMLDivElement>(null);
+  const [tsScale, setTsScale] = useState(1);
+  
   const [focusDesc, setFocusDesc] = useState(false);
   const [focusContact, setFocusContact] = useState(false);
   const [otpOpen, setOtpOpen] = useState(false);
@@ -425,6 +429,20 @@ export const EmergencyModal = ({
   const [selectOpen, setSelectOpen] = useState(false);
   const [hoverOpt, setHoverOpt] = useState("");
   const selectRef = useRef<HTMLDivElement>(null);
+
+
+
+    useEffect(() => {
+    const el = turnstileBoxRef.current;
+    if (!el) return;
+
+    const update = () => setTsScale(Math.min(1, el.clientWidth / 300));
+    update();
+
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [otpOpen]);
 
   useEffect(() => {
     if (!selectOpen) return;
@@ -1228,22 +1246,44 @@ const onSubmit = async (data: CrisisReportFormValues) => {
             className="px-6 pb-6 mt-1"
           >
             {/* Cloudflare Turnstile captcha */}
-            <div className="mb-4" style={{ minHeight: 65 }}>
-              <Turnstile
-                ref={turnstileRef}
-                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
-                options={{
-                  theme: darkMode ? "dark" : "light",
-                  size: "flexible",
-                  language: "fa",
+            <div
+              ref={turnstileBoxRef}
+              dir="ltr"
+              className="mb-4 w-full"
+              style={{ height: 65 * tsScale }}
+            >
+              <div
+                className="[&>div]:!w-full [&_iframe]:!w-full"
+                style={{
+                  width: tsScale < 1 ? 300 : "100%",
+                  transform: `scale(${tsScale})`,
+                  transformOrigin: "top left",
                 }}
-                onSuccess={(token: string) => {
-                  setTurnstileToken(token);
-                  setSubmitError("");
-                }}
-                onExpire={() => setTurnstileToken("")}
-                onError={() => setTurnstileToken("")}
-              />
+              >
+                <Turnstile
+                  ref={turnstileRef}
+                  siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                  style={{ width: "100%" }}
+                  options={{
+                    theme: darkMode ? "dark" : "light",
+                    size: "flexible",
+                    language: "fa",
+                  }}
+                  onSuccess={(token: string) => {
+                    errorRetries.current = 0;
+                    setTurnstileToken(token);
+                    setSubmitError("");
+                  }}
+                  onExpire={() => setTurnstileToken("")}
+                  onError={() => {
+                    setTurnstileToken("");
+                    if (errorRetries.current < 2) {
+                      errorRetries.current += 1;
+                      setTimeout(() => turnstileRef.current?.reset(), 1500);
+                    }
+                  }}
+                />
+              </div>
             </div>
 
             <button
@@ -1271,7 +1311,7 @@ const onSubmit = async (data: CrisisReportFormValues) => {
                     : "0 8px 28px rgba(239,68,68,0.16)"
                   : "none",
 
-                fontSize: "0.98rem",
+                                fontSize: "clamp(0.86rem, 3.8vw, 0.98rem)",
 
                 fontFamily:
                   "var(--font-vazirmatn), IRANSansX, Tahoma, Arial, sans-serif",

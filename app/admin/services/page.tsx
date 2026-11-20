@@ -226,6 +226,9 @@ type TrackingStep = {
 };
 
 interface Service {
+  showInFooter: boolean;
+  footerTitle: string;
+  footerOrder: number;
   id: string;
 
 
@@ -255,6 +258,9 @@ interface Service {
 }
 
 type ServiceForm = {
+  showInFooter: boolean;
+  footerTitle: string;
+  footerOrder: number;
   slug: string;
     key: string;
   title: string;
@@ -1667,6 +1673,9 @@ function RichTextPreview({
 const normalizeService = (
   item: any
 ): Service => ({
+  showInFooter: item?.showInFooter ?? false,
+  footerTitle: item?.footerTitle ?? "",
+  footerOrder: Number(item?.footerOrder) || 0,
   id: String(
     item?._id ?? item?.id ?? ""
   ),
@@ -1893,7 +1902,10 @@ export default function ServicesPage() {
   title: "",
   trackingTitle: "",
   shortDesc: "",
-  icon: DEFAULT_SERVICE_ICON,
+    icon: DEFAULT_SERVICE_ICON,
+  showInFooter: false,
+  footerTitle: "",
+  footerOrder: 0,
   tags: "",
 
   level: "intermediate",
@@ -2042,7 +2054,10 @@ export default function ServicesPage() {
     if (service) {
       reset({
         slug: service.slug,
-        key: service.key ?? "",
+                key: service.key ?? "",
+        showInFooter: service.showInFooter,
+        footerTitle: service.footerTitle,
+        footerOrder: service.footerOrder,
         title: service.title,
         trackingTitle: service.trackingTitle ?? "",
         shortDesc:
@@ -2087,6 +2102,9 @@ urgencyContent:
       });
     } else {
       reset({
+                showInFooter: false,
+        footerTitle: "",
+        footerOrder: 0,
         slug: "",
         key: "",
         title: "",
@@ -2152,7 +2170,13 @@ const normalizedData = {
       .trim()
       .toLowerCase(),
 
-  key: data.key,
+   key: data.key,
+
+  showInFooter: Boolean(data.showInFooter),
+
+  footerTitle: (data.footerTitle ?? "").trim(),
+
+  footerOrder: Number(data.footerOrder) || 0,
 
   title:
     data.title.trim(),
@@ -4933,6 +4957,69 @@ className="mx-auto grid w-full gap-4 px-6 py-6 md:px-7"
                     )}
                   </div>
                 </Field>
+
+
+
+                                {/* FOOTER */}
+
+                <div
+                  style={{
+                    background: "rgba(15,23,42,0.05)",
+                    border: "1px solid rgba(21,101,192,0.17)",
+                    borderRadius: 12,
+                    padding: 16,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 14,
+                  }}
+                >
+                  <span
+                    style={{
+                      color: "#1565C0",
+                      fontSize: "0.65rem",
+                      fontFamily: "monospace",
+                      letterSpacing: "0.12em",
+                    }}
+                  >
+                    FOOTER
+                  </span>
+
+                  <SeoToggle
+                    checked={!!watch("showInFooter")}
+                    onChange={(value) =>
+                      setValue("showInFooter", value, { shouldDirty: true })
+                    }
+                    title="نمایش در فوتر سایت"
+                    description="این خدمت در ستون «خدمات» فوتر نمایش داده می‌شود"
+                  />
+
+                  <div
+                    className="service-title-grid"
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1.4fr 1fr",
+                      gap: 10,
+                    }}
+                  >
+                    <Field label="نام در فوتر" hint="اختیاری">
+                      <input
+                        {...register("footerTitle")}
+                        placeholder="مثلاً: رهگیری رمزارز"
+                        style={inputStyle()}
+                      />
+                    </Field>
+
+                    <Field label="ترتیب" hint="عدد کمتر = بالاتر">
+                      <input
+                        type="number"
+                        {...register("footerOrder", { valueAsNumber: true })}
+                        placeholder="1"
+                        dir="ltr"
+                        style={{ ...inputStyle(), textAlign: "left" }}
+                      />
+                    </Field>
+                  </div>
+                </div>
 
                 {/* RICH TEXT CONTENT */}
 

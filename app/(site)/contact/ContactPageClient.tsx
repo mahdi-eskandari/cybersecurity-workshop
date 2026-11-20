@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import { useTheme } from "@/components/ThemeProvider";
 import { siTelegram } from "simple-icons";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import Link from "next/link";
 import { renderHighlightedTitle } from "@/lib/highlightTitle";
@@ -210,7 +210,20 @@ const ContactForm = ({ isDark }: { isDark: boolean }) => {
 const [turnstileToken, setTurnstileToken] = useState("");
 const turnstileRef = useRef<TurnstileInstance>(null);
 const errorRetries = useRef(0);
+const turnstileBoxRef = useRef<HTMLDivElement>(null);
+const [tsScale, setTsScale] = useState(1);
 
+useEffect(() => {
+  const el = turnstileBoxRef.current;
+  if (!el) return;
+
+  const update = () => setTsScale(Math.min(1, el.clientWidth / 300));
+  update();
+
+  const ro = new ResizeObserver(update);
+  ro.observe(el);
+  return () => ro.disconnect();
+}, [sent]);
 
   const {
     register,
@@ -360,30 +373,44 @@ const errorRetries = useRef(0);
       </div>
 
 
-<div className="w-full min-h-[65px] overflow-hidden [&>div]:!w-full [&_iframe]:!w-full">
+<div
+  ref={turnstileBoxRef}
+  dir="ltr"
+  className="w-full"
+  style={{ height: 65 * tsScale }}
+>
+  <div
+    className="[&>div]:!w-full [&_iframe]:!w-full"
+    style={{
+      width: tsScale < 1 ? 300 : "100%",
+      transform: `scale(${tsScale})`,
+      transformOrigin: "top left",
+    }}
+  >
     <Turnstile
-    ref={turnstileRef}
-    siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
-    style={{ width: "100%" }}
-    options={{
-      theme: isDark ? "dark" : "light",
-      size: "flexible",
-      language: "fa",
-    }}
-    onSuccess={(t: string) => {
-      errorRetries.current = 0;
-      setTurnstileToken(t);
-      setSubmitError("");
-    }}
-    onExpire={() => setTurnstileToken("")}
-    onError={() => {
-      setTurnstileToken("");
-      if (errorRetries.current < 2) {
-        errorRetries.current += 1;
-        setTimeout(() => turnstileRef.current?.reset(), 1500);
-      }
-    }}
-  />
+      ref={turnstileRef}
+      siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+      style={{ width: "100%" }}
+      options={{
+        theme: isDark ? "dark" : "light",
+        size: "flexible",
+        language: "fa",
+      }}
+      onSuccess={(t: string) => {
+        errorRetries.current = 0;
+        setTurnstileToken(t);
+        setSubmitError("");
+      }}
+      onExpire={() => setTurnstileToken("")}
+      onError={() => {
+        setTurnstileToken("");
+        if (errorRetries.current < 2) {
+          errorRetries.current += 1;
+          setTimeout(() => turnstileRef.current?.reset(), 1500);
+        }
+      }}
+    />
+  </div>
 </div>
 
 
@@ -535,7 +562,7 @@ const isDark = darkMode;
 <h1
   className="glow-text font-black leading-tight mb-6"
   style={{
-    fontSize: "56px",
+    fontSize: "clamp(44px, 9vw, 56px)",
     color: darkMode ? "#ffffff" : "#0c1a43",
     lineHeight: "1.28",
     fontWeight: 500,

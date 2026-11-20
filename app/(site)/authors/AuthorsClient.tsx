@@ -164,8 +164,8 @@ const IconCert = () => (
 
 const IconNews = () => (
   <svg
-    width="15"
-    height="15"
+    width="18"
+    height="18"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -922,6 +922,9 @@ const SocialBtn = ({
 <Link
   href={href}
   title={title}
+  aria-label={title}
+target={href.startsWith("http") ? "_blank" : undefined}
+rel={href.startsWith("http") ? "noopener noreferrer nofollow" : undefined}
   style={{
     "--accent": accent,
   } as React.CSSProperties}
@@ -1053,7 +1056,7 @@ const SocialBtn = ({
 <h1
   className="glow-text font-black leading-tight mb-6"
   style={{
-    fontSize: "56px",
+        fontSize: "clamp(44px, 9vw, 56px)",
     color: darkMode ? "#ffffff" : "#0c1a43",
     lineHeight: "1.3",
     fontWeight: 500,
@@ -1207,12 +1210,32 @@ const SocialBtn = ({
                 </div>
               </div>
 
-             <div className="flex gap-[7px] flex-shrink-0 max-[540px]:basis-full">
+             {/* <div className="flex gap-[7px] flex-shrink-0 max-[540px]:basis-full">
                 <SocialBtn icon={<IconLinkedIn />} title="LinkedIn" />
                 <SocialBtn icon={<IconX />} title="X" />
                 <SocialBtn icon={<IconTelegram />} title="Telegram" />
                 <SocialBtn icon={<IconMail />} title="Email" />
-              </div>
+              </div> */}
+<div className="flex gap-[7px] flex-shrink-0 max-[540px]:basis-full">
+  {author.telegram && (
+    <SocialBtn
+      icon={<IconTelegram />}
+      title="Telegram"
+      href={author.telegram}
+    />
+  )}
+{author.email && (
+  <SocialBtn
+    icon={<IconMail />}
+    title="Email"
+    href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+      author.email
+    )}&su=${encodeURIComponent("تماس از سایت پاراهور")}`}
+  />
+)}
+</div>
+
+
             </div>
 
             <div
@@ -1575,13 +1598,13 @@ color: accent
 
             {!postsError && authorPosts.length === 0 && (
               <div
-                className="min-h-[160px] rounded-2xl flex flex-col items-center justify-center text-[0.78rem] text-center p-5"
+                className="min-h-[160px] rounded-2xl flex flex-col items-center justify-center text-[14px] text-center p-5"
                 style={{
-                  background: darkMode ? "#111C3D" : "#FFFFFF",
+                  background: darkMode ? "#111c3daf" : "#f2f2f2",
                   border: darkMode
                     ? "1px solid rgba(255,255,255,0.06)"
                     : "1px solid rgba(30,58,138,0.1)",
-                  color: darkMode ? "#475569" : "#94A3B8",
+                  color: darkMode ? "#8a98ad" : "#5a5f66",
                 }}
               >
                 <IconNews />

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef , useEffect } from "react";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -270,6 +270,22 @@ export default function CommentSection({ postId, darkMode, initialComments }: Co
     const [turnstileToken, setTurnstileToken] = useState("");
 const turnstileRef = useRef<TurnstileInstance>(null);
 const errorRetries = useRef(0);
+
+
+const turnstileBoxRef = useRef<HTMLDivElement>(null);
+const [tsScale, setTsScale] = useState(1);
+
+useEffect(() => {
+  const el = turnstileBoxRef.current;
+  if (!el) return;
+
+  const update = () => setTsScale(Math.min(1, el.clientWidth / 300));
+  update();
+
+  const ro = new ResizeObserver(update);
+  ro.observe(el);
+  return () => ro.disconnect();
+}, []);
   const [isHov, setIsHov] = useState(false);
 
 const [replyToComment, setReplyToComment] =
@@ -285,15 +301,19 @@ const formCardRef = useRef<HTMLDivElement>(null);
 const [comments] = useState<ApprovedComment[]>(initialComments);
 const commentTree = buildCommentTree(comments);
 
-console.log(
-  "COMMENTS DEBUG:",
-  comments.map((c) => ({
-    id: c._id,
-    name: c.name,
-    parentCommentId: c.parentCommentId,
-    parentName: c.parentName,
-  }))
-);
+
+
+
+
+// console.log(
+//   "COMMENTS DEBUG:",
+//   comments.map((c) => ({
+//     id: c._id,
+//     name: c.name,
+//     parentCommentId: c.parentCommentId,
+//     parentName: c.parentName,
+//   }))
+// );
 
 const handleReply = (target: ApprovedComment) => {
   setReplyToComment(target);
@@ -388,7 +408,7 @@ setErrors({});
 
   return (
         <div
-      className="mt-20 w-full max-w-4xl mx-auto px-4 sm:px-0"
+            className="mt-20 w-full max-w-4xl mx-auto px-0"
       onMouseEnter={() => setIsHov(true)}
       onMouseLeave={() => setIsHov(false)}
     >
@@ -426,7 +446,7 @@ setErrors({});
   whileInView={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.5 }}
   viewport={{ once: true, amount: 0.2 }}
-  className={`relative overflow-hidden rounded-2xl border transition-colors duration-300 w-full p-4 min-[410px]:p-6 md:p-8 mb-10 ${
+  className={`relative overflow-hidden rounded-2xl border transition-colors duration-300 w-full p-3 min-[410px]:p-5 md:p-8 mb-10 ${
           darkMode
             ? "border-[#00E5FF]/25 bg-white/[0.025] backdrop-blur-[10px]  shadow-[0_18px_42px_rgba(0,0,0,0.38),0_12px_40px_rgba(0,229,255,0.20)] "
             : "border-[#1565C0]/40 bg-white  shadow-[0_0_0_1px_rgba(21,101,192,0.1),0_6px_16px_rgba(21,101,192,0.08)]"
@@ -600,31 +620,45 @@ onMouseLeave={(e) => {
           </div>
 
 
-<div className="w-full min-h-[65px] overflow-hidden [&>div]:!w-full [&_iframe]:!w-full">
-            <Turnstile
-              ref={turnstileRef}
-              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
-              style={{ width: "100%" }}
-              options={{
-                theme: darkMode ? "dark" : "light",
-                size: "flexible",
-                language: "fa",
-              }}
-              onSuccess={(t: string) => {
-                errorRetries.current = 0;
-                setTurnstileToken(t);
-                setServerMessage(null);
-              }}
-              onExpire={() => setTurnstileToken("")}
-              onError={() => {
-                setTurnstileToken("");
-                if (errorRetries.current < 2) {
-                  errorRetries.current += 1;
-                  setTimeout(() => turnstileRef.current?.reset(), 1500);
-                }
-              }}
-            />
-          </div>
+<div
+  ref={turnstileBoxRef}
+  dir="ltr"
+  className="w-full"
+  style={{ height: 65 * tsScale }}
+>
+  <div
+    className="[&>div]:!w-full [&_iframe]:!w-full"
+    style={{
+      width: tsScale < 1 ? 300 : "100%",
+      transform: `scale(${tsScale})`,
+      transformOrigin: "top left",
+    }}
+  >
+    <Turnstile
+      ref={turnstileRef}
+      siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+      style={{ width: "100%" }}
+      options={{
+        theme: darkMode ? "dark" : "light",
+        size: "flexible",
+        language: "fa",
+      }}
+      onSuccess={(t: string) => {
+        errorRetries.current = 0;
+        setTurnstileToken(t);
+        setServerMessage(null);
+      }}
+      onExpire={() => setTurnstileToken("")}
+      onError={() => {
+        setTurnstileToken("");
+        if (errorRetries.current < 2) {
+          errorRetries.current += 1;
+          setTimeout(() => turnstileRef.current?.reset(), 1500);
+        }
+      }}
+    />
+  </div>
+</div>
 
           <button
   type="submit"

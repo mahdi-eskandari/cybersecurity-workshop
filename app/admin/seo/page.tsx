@@ -50,7 +50,7 @@ const PAGE_OPTIONS = [
     label: "محمدرضا یوسفی",
   },
   {
-    value: "author-sara-heydarzade",
+    value: "author-sara-mohammadzadeh",
     label: "سارا محمدزاده",
   },
 ];
@@ -143,11 +143,11 @@ const DEFAULT_PAGES: Record<string, SeoPage> = {
     follow: true,
   },
 
-  "author-sara-heydarzade": {
-    pageKey: "author-sara-heydarzade",
+  "author-sara-mohammadzadeh": {
+    pageKey: "author-sara-mohammadzadeh",
     pageName: "سارا محمدزاده",
     h1Title: "سارا محمدزاده",
-    slug: "sara-heydarzade",
+    slug: "sara-mohammadzadeh",
     metaTitle: "سارا محمدزاده | پاراهور",
     metaDescription: "معرفی سارا  محمدزاده، وکیل پایه یک دادگستری در پاراهور.",
     index: true,

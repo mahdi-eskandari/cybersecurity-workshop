@@ -5,9 +5,27 @@ import connectDB from "@/lib/mongodb";
 import Post from "../../model/blog";
 import { isAdmin } from "@/lib/adminAuth";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     await connectDB();
+
+    // شمارش دسته‌های پرپست: /api/posts?topCategories=3
+    const { searchParams } = new URL(request.url);
+    const topCategories = Number(searchParams.get("topCategories"));
+
+    if (Number.isInteger(topCategories) && topCategories > 0) {
+      // عمداً فقط published، حتی اگه ادمین لاگین باشه
+      const result = await Post.aggregate([
+        { $match: { status: "published" } },
+        { $group: { _id: "$categoryId", count: { $sum: 1 } } },
+        { $sort: { count: -1, _id: 1 } },
+        { $limit: Math.min(topCategories, 10) },
+      ]);
+
+      return NextResponse.json(
+        result.map((r) => ({ categoryId: r._id, count: r.count }))
+      );
+    }
 
     const filter = (await isAdmin()) ? {} : { status: "published" };
 

@@ -55,10 +55,10 @@ const ALLOWED_PAGES = [
     defaultSlug: "mohammadreza-yousefi",
   },
   {
-    pageKey: "author-sara-heydarzade",
+    pageKey: "author-sara-mohammadzadeh",
     pageName: "سارا محمدزاده",
     defaultH1: "سارا محمدزاده",
-    defaultSlug: "sara-heydarzade",
+    defaultSlug: "sara-mohammadzadeh",
   },
 ] as const;
 

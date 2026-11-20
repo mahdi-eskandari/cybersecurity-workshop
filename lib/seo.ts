@@ -99,10 +99,10 @@ export const SEO_DEFAULTS = {
     follow: true,
   },
 
-  "author-sara-heydarzade": {
+  "author-sara-mohammadzadeh": {
     pageName: "سارا محمدزاده",
     h1Title: "سارا محمدزاده",
-    slug: "sara-heydarzade",
+    slug: "sara-mohammadzadeh",
     metaTitle: "سارا محمدزاده",
     metaDescription:
       "پروفایل سارا  محمدزاده، متخصص تحقیقات دیجیتال و جرائم سایبری در پاراهور.",
@@ -443,7 +443,7 @@ const PAGE_ORDER: PageKey[] = [
   "privacy",
   "authors",
   "author-mohammadreza-yousefi",
-  "author-sara-heydarzade",
+  "author-sara-mohammadzadeh",
 ];
 
 export async function getAdjacentPageLinks(pageKey: PageKey) {

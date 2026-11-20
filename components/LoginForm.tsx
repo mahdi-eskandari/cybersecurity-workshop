@@ -81,7 +81,7 @@ function OTPInput({
 
   return (
     <div
-      className="flex gap-2 justify-center"
+      className="flex gap-1.5 sm:gap-2 justify-center"
       dir="ltr"
       onPaste={handlePaste}
     >
@@ -97,7 +97,7 @@ function OTPInput({
           value={digit}
           onChange={(e) => handleChange(i, e.target.value)}
           onKeyDown={(e) => handleKeyDown(i, e)}
-          className={`w-10 h-12 text-center text-base font-bold rounded-lg border-2 bg-white caret-transparent
+          className={`w-9 h-11 sm:w-10 sm:h-12 text-center text-sm sm:text-base font-bold rounded-lg border-2 bg-white caret-transparent
             focus:outline-none transition-all duration-150
             ${
               error
@@ -584,7 +584,7 @@ body: JSON.stringify({
 
           <div className="pt-1">
 
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl px-5 pt-4 pb-5">
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl px-3 sm:px-5 pt-4 pb-5">
 
               {/* OTP header */}
 

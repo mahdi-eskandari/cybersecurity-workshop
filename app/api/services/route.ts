@@ -78,6 +78,9 @@ export async function POST(request: NextRequest) {
        index,
       follow,
       key,  
+      showInFooter,
+       footerTitle,
+        footerOrder
     } = body;
 
     if (!slug?.trim()) {
@@ -256,6 +259,13 @@ export async function POST(request: NextRequest) {
 
             index: typeof index === "boolean" ? index : true,
       follow: typeof follow === "boolean" ? follow : true,
+
+      showInFooter: typeof showInFooter === "boolean" ? showInFooter : false,
+
+      footerTitle:
+        typeof footerTitle === "string" ? footerTitle.trim() : "",
+
+      footerOrder: Number(footerOrder) || 0,
     });
 
     return NextResponse.json(

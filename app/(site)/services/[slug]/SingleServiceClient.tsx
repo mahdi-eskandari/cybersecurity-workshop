@@ -2155,7 +2155,7 @@ export default function App({
           <h1 
             className="font-black leading-snug mb-5" 
             style={{ 
-              fontSize: "56px", 
+    fontSize: "clamp(48px, 9vw, 56px)",
               color: darkMode ? "#fff" : "#0F172A", 
               textShadow: darkMode 
                 ? "0 0 50px rgba(0,229,255,0.15), 0 0 100px rgba(0,229,255,0.05)" 

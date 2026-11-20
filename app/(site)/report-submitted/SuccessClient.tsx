@@ -667,7 +667,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
               <div className="space-y-4">
                 {[
                   {
-                    text: "خود را با فرد مشکوک یا کلاهبردار قطع نکنید",
+                    text: "ارتباط خود را با فرد مشکوک یا کلاهبردار قطع نکنید",
                     icon: "🚫",
                     note: "ارتباط را در حد معمول حفظ کرده و از هرگونه اقدام یا واکنش غیرعادی پرهیز کنید.",
                   },
@@ -802,51 +802,7 @@ className="relative min-h-screen overflow-x-hidden pt-10"
             بازگشت به پایگاه اصلی
           </Link>
 
-<Link
-  href="/blogs?category=solved-cases&page=1"
-  className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl font-bold text-sm transition-all duration-300"
-  style={{
-    background: darkMode ? `${primary}14` : "transparent",
-    color: darkMode ? primary : "#1565C0",
-    border: `1px solid ${primary}61`,
-    boxShadow: "none",
-    fontSize: "0.95rem",
-    transform: "none",
-  }}
-  onMouseEnter={(e) => {
-    const el = e.currentTarget as HTMLElement;
-    if (darkMode) {
-      el.style.background = `${primary}26`;
-      el.style.borderColor = `${primary}99`;
-      el.style.boxShadow = `0 0 30px ${primary}4d, inset 0 0 24px ${primary}1a`;
-      el.style.transform = "translateY(-2px)";
-    } else {
-      el.style.background = "#0D47A1";
-      el.style.borderColor = "#0D47A1";
-      el.style.boxShadow = "0 10px 24px rgba(15,23,42,0.12)";
-      el.style.transform = "translateY(-2px)";
-      el.style.color = "white";
-    }
-  }}
-  onMouseLeave={(e) => {
-    const el = e.currentTarget as HTMLElement;
-    if (darkMode) {
-      el.style.background = `${primary}14`;
-      el.style.borderColor = `${primary}61`;
-      el.style.boxShadow = "none";
-      el.style.transform = "none";
-    } else {
-      el.style.background = "transparent";
-      el.style.borderColor = "#0D47A1";
-      el.style.boxShadow = "none";
-      el.style.transform = "none";
-      el.style.color = "#1565C0";
-    }
-  }}
->
-  <IconTimelineBook />
-  مطالعه پرونده‌های حل‌شده
-</Link>
+
         </div>
 
 

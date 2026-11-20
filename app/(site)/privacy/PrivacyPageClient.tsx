@@ -772,7 +772,7 @@ const lightColors = {
 <h1
   className="glow-text font-black leading-tight mb-6"
   style={{
-    fontSize: "56px",
+    fontSize: "clamp(40px, 9vw, 56px)",
     color: darkMode ? "#ffffff" : "#0c1a43",
     lineHeight: "1.3",
     fontWeight: 500,

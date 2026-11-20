@@ -351,13 +351,14 @@ const fmt = (s: number) =>
               <span
                 style={{
                   fontFamily: "monospace",
-                  fontSize: "0.6rem",
+                  fontSize: "0.65rem",
                   color: darkMode ? "rgba(0,229,255,0.7)" : "rgba(37,99,235,0.8)",
                   letterSpacing: "0.18em",
+                  fontWeight: "550"
                 }}
               >
                 OTP VERIFICATION // SMS
-              </span>
+              </span>y
             </div>
 
             <h2
@@ -391,10 +392,9 @@ const fmt = (s: number) =>
         </div>
 
         {/* ── بدنه ── */}
-        <div className="px-6 pt-5 pb-6">
+       <div className="px-4 sm:px-6 pt-5 pb-6">
           {/* کارت داخلی مثل تصویر */}
-          <div
-            className="px-5 pt-4 pb-4"
+<div className="px-3 sm:px-5 pt-4 pb-4"
             style={{
               background: darkMode ? "rgba(255,255,255,0.02)" : "#F8FAFC",
               border: darkMode
@@ -471,7 +471,7 @@ const fmt = (s: number) =>
             </div>
 
             {/* خانه‌های کد */}
-            <div className="flex justify-center gap-2" dir="ltr">
+            <div className="flex justify-center gap-1.5 sm:gap-2 w-full" dir="ltr">
               {digits.map((d, i) => {
                 const focused = focusIndex === i;
 
@@ -497,11 +497,14 @@ const fmt = (s: number) =>
                     onBlur={() => setFocusIndex(null)}
                     className="text-center font-bold outline-none transition-all"
                     style={{
-                      width: 46,
-                      height: 50,
-                      flexShrink: 0,
-                      borderRadius: 12,
-                      fontSize: "1.1rem",
+width: "100%",
+maxWidth: 46,
+minWidth: 0,
+aspectRatio: "46 / 50",
+flex: "1 1 0",
+borderRadius: 12,
+fontSize: "1.1rem",
+padding: 0,
                       fontFamily: FONT,
                       color: darkMode ? "#E2E8F0" : "#0F1B3D",
                       caretColor: primary,

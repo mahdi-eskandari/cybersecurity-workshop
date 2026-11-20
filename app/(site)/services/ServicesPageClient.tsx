@@ -480,7 +480,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 <h1
   className="glow-text font-black leading-tight mb-6"
   style={{
-    fontSize: "56px",
+    fontSize: "clamp(44px, 9vw, 56px)",
     color: darkMode ? "#ffffff" : "#0c1a43",
     lineHeight: "1.28",
     fontWeight: 500,
@@ -508,8 +508,7 @@ const [hoveredCard, setHoveredCard] = useState<string | null>(null);
               fontWeight: "500"
             }}
           >
-            از ردیابی پیچیده‌ترین جریان‌های مالی تا مشاوره‌های دقیق فنی برای
-            پرونده‌های سایبری شما.
+در پاراهور، کنار شما هستیم تا پیش از حادثه با مشاوره تخصصی و ارزیابی دقیق ایمن بمانید و پس از وقوع بحران، با ردیابی دارایی‌ها، کشف هویت مهاجمان و گردآوری شواهد فنی، مسیر درست اقدام را پیدا کنید.
           </p>
 
           {/* Scan rule */}

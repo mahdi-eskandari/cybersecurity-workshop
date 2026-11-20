@@ -24,6 +24,9 @@ export async function notifyAdminNewReport(info: ReportInfo) {
     return;
   }
 
+
+
+console.log("ADMIN SMS recipients:", recipients, "apiKey:", !!apiKey, "pattern:", !!patternCode);
   await Promise.allSettled(
     recipients.map(async (recipient) => {
       try {

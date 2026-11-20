@@ -1344,8 +1344,7 @@ export default function App({
           <h1
             className="font-black mb-6 leading-snug h-auto max-w-full whitespace-normal break-words overflow-visible"
             style={{
-              fontSize:
-                "56px",
+    fontSize: "clamp(52px, 9vw, 56px)",
               color: darkMode
                 ? "#fff"
                 : "black",
@@ -1389,7 +1388,7 @@ export default function App({
 
             {post.author && (
               <Link
-              href={post.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/sara-heydarzade"}
+              href={post.author === "محمدرضا یوسفی" ? "/authors/mohammadreza-yousefi" : "/authors/sara-mohammadzadeh"}
               style={{
                   
                 fontSize: "0.78rem",
