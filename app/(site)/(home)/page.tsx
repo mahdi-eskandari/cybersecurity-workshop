@@ -7,6 +7,7 @@ import HomePageClient, {
   type HomePageInitialData,
 } from "./HomePageClient";
 
+
 import {
   getPageMetadata,
   getPageSeo,
@@ -18,6 +19,9 @@ import {
   buildOrganizationSchema,
   buildBreadcrumbSchema,
 } from "../../../lib/schema"
+import connectDB from "@/lib/mongodb";
+import PostModel from "../../model/blog";
+import MediaModel from "../../model/media";
 
 type Post = {
   _id: string;
@@ -38,98 +42,175 @@ type Post = {
   excerpt?: string;
 };
 
-function getOrigin(requestHeaders: Headers) {
-  const forwardedProto = requestHeaders
-    .get("x-forwarded-proto")
-    ?.split(",")[0]
-    ?.trim();
+// function getOrigin(requestHeaders: Headers) {
+//   const forwardedProto = requestHeaders
+//     .get("x-forwarded-proto")
+//     ?.split(",")[0]
+//     ?.trim();
 
-  const forwardedHost = requestHeaders
-    .get("x-forwarded-host")
-    ?.split(",")[0]
-    ?.trim();
+//   const forwardedHost = requestHeaders
+//     .get("x-forwarded-host")
+//     ?.split(",")[0]
+//     ?.trim();
 
-  const host =
-    forwardedHost || requestHeaders.get("host");
+//   const host =
+//     forwardedHost || requestHeaders.get("host");
 
-  if (host) {
-    return `${forwardedProto || "https"}://${host}`;
-  }
+//   if (host) {
+//     return `${forwardedProto || "https"}://${host}`;
+//   }
 
-  return (
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    "http://localhost:3000"
-  );
+//   return (
+//     process.env.NEXT_PUBLIC_SITE_URL ||
+//     "http://localhost:3000"
+//   );
+// }
+
+// async function getInitialData(
+//   seo: Awaited<ReturnType<typeof getPageSeo>>
+// ): Promise<HomePageInitialData> {
+//   const requestHeaders = await headers();
+
+//   const origin = getOrigin(requestHeaders);
+
+//   const cookie =
+//     requestHeaders.get("cookie") || "";
+
+//   const fetchJson = async (path: string) => {
+//     const response = await fetch(
+//       `${origin}${path}`,
+//       {
+//         headers: cookie
+//           ? { cookie }
+//           : undefined,
+//         cache: "no-store",
+//       }
+//     );
+
+//     if (!response.ok) {
+//       throw new Error(
+//         `Failed to fetch ${path}: ${response.status}`
+//       );
+//     }
+
+//     return response.json();
+//   };
+
+//   const [postsResult, mediaResult] =
+//     await Promise.allSettled([
+//       fetchJson("/api/posts"),
+//       fetchJson("/api/media"),
+//     ]);
+
+//   const postsPayload =
+//     postsResult.status === "fulfilled"
+//       ? postsResult.value
+//       : [];
+
+//   const mediaPayload =
+//     mediaResult.status === "fulfilled"
+//       ? mediaResult.value
+//       : [];
+
+//   const posts = Array.isArray(postsPayload)
+//     ? postsPayload
+//     : Array.isArray(postsPayload?.posts)
+//       ? postsPayload.posts
+//       : [];
+
+//   const media = Array.isArray(mediaPayload)
+//     ? mediaPayload
+//     : Array.isArray(mediaPayload?.media)
+//       ? mediaPayload.media
+//       : [];
+
+//   return {
+//     posts: posts as Post[],
+//     media,
+
+//     seo: {
+//       h1Title:
+//         seo.h1Title ||
+//         "هیچ مجرمی در دنیای دیجیتال بی‌ردپا نیست.",
+//     },
+//   };
+// }
+
+
+function stripHtml(html = "") {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<[^>]*>/g, "")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function makeExcerpt(content = "", max = 170) {
+  const text = stripHtml(content);
+  return text.length > max ? `${text.slice(0, max).trimEnd()}…` : text;
 }
 
 async function getInitialData(
   seo: Awaited<ReturnType<typeof getPageSeo>>
 ): Promise<HomePageInitialData> {
-  const requestHeaders = await headers();
+  const h1Title =
+    seo.h1Title || "هیچ مجرمی در دنیای دیجیتال بی‌ردپا نیست.";
 
-  const origin = getOrigin(requestHeaders);
+  try {
+    await connectDB();
 
-  const cookie =
-    requestHeaders.get("cookie") || "";
+    // فقط ۳ پست جدیدِ منتشرشده، مستقیم از دیتابیس
+    const latest = await PostModel.find({ status: "published" })
+      .sort({ createdAt: -1 })
+      .limit(3)
+      .select(
+        "title slug content categoryId featuredImage featuredImageAlt readingTime createdAt"
+      )
+      .lean();
 
-  const fetchJson = async (path: string) => {
-    const response = await fetch(
-      `${origin}${path}`,
-      {
-        headers: cookie
-          ? { cookie }
-          : undefined,
-        cache: "no-store",
-      }
-    );
+    const posts: Post[] = latest.map((p: any) => ({
+      _id: String(p._id),
+      title: p.title,
+      slug: p.slug,
+      status: "published",
+      categoryId: p.categoryId,
+      featuredImage: p.featuredImage ?? undefined,
+      featuredImageAlt: p.featuredImageAlt ?? undefined,
+      readingTime: String(p.readingTime ?? 0),
+      createdAt: new Date(p.createdAt).toISOString(),
+      content: "", // متن کامل به کلاینت نمی‌ره
+      excerpt: makeExcerpt(p.content), // کلاینت از همین استفاده می‌کنه
+    }));
 
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch ${path}: ${response.status}`
-      );
-    }
+    // فقط تصویر همین ۳ پست، نه همه‌ی رسانه‌ها
+    const ids = posts
+      .map((p) => String(p.featuredImage || "").replace("/api/media/", ""))
+      .filter((v) => /^[a-f\d]{24}$/i.test(v));
 
-    return response.json();
-  };
-
-  const [postsResult, mediaResult] =
-    await Promise.allSettled([
-      fetchJson("/api/posts"),
-      fetchJson("/api/media"),
-    ]);
-
-  const postsPayload =
-    postsResult.status === "fulfilled"
-      ? postsResult.value
+    const mediaDocs = ids.length
+      ? await MediaModel.find({ _id: { $in: ids } })
+          .select("url alt")
+          .lean()
       : [];
 
-  const mediaPayload =
-    mediaResult.status === "fulfilled"
-      ? mediaResult.value
-      : [];
+    const media = mediaDocs.map((m: any) => ({
+      id: String(m._id),
+      url: m.url,
+      alt: m.alt ?? "",
+    }));
 
-  const posts = Array.isArray(postsPayload)
-    ? postsPayload
-    : Array.isArray(postsPayload?.posts)
-      ? postsPayload.posts
-      : [];
-
-  const media = Array.isArray(mediaPayload)
-    ? mediaPayload
-    : Array.isArray(mediaPayload?.media)
-      ? mediaPayload.media
-      : [];
-
-  return {
-    posts: posts as Post[],
-    media,
-
-    seo: {
-      h1Title:
-        seo.h1Title ||
-        "هیچ مجرمی در دنیای دیجیتال بی‌ردپا نیست.",
-    },
-  };
+    return { posts, media, seo: { h1Title } };
+  } catch (error) {
+    console.error("HomePage data error:", error);
+    return { posts: [], media: [], seo: { h1Title } };
+  }
 }
 
 export async function generateMetadata(): Promise<Metadata> {

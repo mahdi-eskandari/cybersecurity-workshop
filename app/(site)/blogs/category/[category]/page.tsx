@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import BlogPageClient, { type BlogPageInitialData } from "../../BlogPageClient";
-import { SITE_URL } from "@/lib/seo";
+import { SITE_URL, getPageSeo } from "@/lib/seo";
 import { buildOrganizationSchema, buildBreadcrumbSchema } from "@/lib/schema";
 
 export const dynamic = "force-dynamic";
@@ -69,7 +69,6 @@ async function loadData(rawCategory: string) {
 
   const publishedPosts = rawPosts.filter((p) => p?.status === "published");
   const categoryPosts = publishedPosts.filter((p) => p.categoryId === id);
-  if (categoryPosts.length === 0) return null;
 
   const mediaItems = Array.isArray(mediaData)
     ? mediaData
@@ -120,6 +119,8 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
   if (!data) notFound();
 
+  const pageSeo = await getPageSeo("blogs");
+
   const { current, categories, publishedPosts, mediaItems, totalPages } = data;
   const currentPage = safePage(page, totalPages);
 
@@ -130,7 +131,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     blogs: publishedPosts,
     mediaItems,
     categories,
-    seo: { h1Title: `مقالات ${current.label}` },
+    seo: { h1Title: pageSeo.h1Title },
     initialPage: currentPage,
     initialCategory: current.id,
     isBare: false,

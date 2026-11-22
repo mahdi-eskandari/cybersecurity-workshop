@@ -1245,7 +1245,7 @@ const closeCrisis = () => {
               fontWeight: "500"
             }}
           >
-          پاراهور، آژانس تحقیقات سایبری و جرم شناسی دیجیتال؛ ما بحران‌ها را مهار می‌کنیم، ردپای مهاجمان و دارایی‌های سرقت‌شده را ردیابی می‌کنیم و زیرساخت شما را در برابر تهدیدهای بعدی ایمن می‌سازیم.
+          پاراهور، آژانس تحقیقات سایبری و جرم شناسی دیجیتال؛ ما بحران‌ها را مهار می‌کنیم، ردپای مهاجمان و دارایی‌های سرقت‌شده را ردیابی می‌کنیم و زیرساخت شما را در برابر تهدیدات ایمن می‌سازیم.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center w-[80%] mx-auto">
@@ -1949,6 +1949,7 @@ className={`w-12 h-12 flex items-center justify-center rounded-xl ${
 
 
       {/* ─── آخرین گزارش‌های میدانی ─────────────────────────────────────── */}
+      {(loading || latestBlogPosts.length > 0) && (
       <motion.div
         className="py-20 px-6 md:px-12"
        
@@ -2211,7 +2212,7 @@ className={`w-12 h-12 flex items-center justify-center rounded-xl ${
           </div>
         </div>
       </motion.div>
-
+)}
 
 
 

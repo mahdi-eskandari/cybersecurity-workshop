@@ -894,7 +894,8 @@ const [filterH, setFilterH] = useState(0);
     setIsBareRoute(false);
 
     const nextUrl = buildBlogsUrl(nextCategory, normalizedPage, BLOGS_PATH);
-    router.replace(nextUrl, { scroll: false });
+    // فقط URL عوض می‌شه؛ بدون ناوبری Next و بدون فچ دوباره‌ی سرور
+    window.history.replaceState(null, "", nextUrl);
   };
 
 

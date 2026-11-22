@@ -8,7 +8,6 @@ if (!cached) {
   cached = (global as any).mongoose = { conn: null, promise: null };
 }
 
-// const MONGODB_URI = "mongodb+srv://mhdieskndari_db_user:f0ksF68nuW7I1Ape@cluster1.lcozciy.mongodb.net/cybersecurity?retryWrites=true&w=majority"
 const MONGODB_URI = process.env.MONGODB_URI
 
 async function dbConnect() {
