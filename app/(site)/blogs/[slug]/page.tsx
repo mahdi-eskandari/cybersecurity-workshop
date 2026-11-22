@@ -127,6 +127,26 @@ async function fetchApprovedComments(
 }
 
 
+// دسته‌بندی‌ها را سمت سرور می‌گیرد تا همراه HTML اولیه برسند.
+// خطا را می‌بلعد؛ کلاینت در این حالت فقط دسته‌های ثابت را دارد.
+async function fetchCategories(baseUrl: string): Promise<unknown[]> {
+  try {
+    const { response, data } = await fetchServerJson(`${baseUrl}/api/categories`);
+
+    if (!response.ok) return [];
+
+    return Array.isArray(data)
+      ? data
+      : Array.isArray(data?.categories)
+      ? data.categories
+      : [];
+  } catch (error) {
+    console.error("GET categories error:", error);
+    return [];
+  }
+}
+
+
 function toAbsoluteUrl(url: string | null | undefined) {
   if (!url) return undefined;
   if (/^https?:\/\//i.test(url)) return url;
@@ -207,6 +227,7 @@ export default async function Page({
   let currentPost: BlogPost | null = null;
   let mediaItems: MediaItem[] = [];
   let initialComments: ApprovedComment[] = [];
+  let initialCategories: unknown[] = [];
 
   try {
     const { response: postsResponse, data: postsData } =
@@ -243,12 +264,14 @@ export default async function Page({
 
     // media و comments مستقل از هم هستن، پس با هم موازی می‌گیریمشون.
     // comments فقط وقتی معنی داره که پستی پیدا شده باشه.
-    const [mediaResult, commentsResult] = await Promise.allSettled([
-      fetchServerJson(`${baseUrl}/api/media`),
-      currentPost
-        ? fetchApprovedComments(baseUrl, currentPost._id)
-        : Promise.resolve([] as ApprovedComment[]),
-    ]);
+    const [mediaResult, commentsResult, categoriesResult] =
+      await Promise.allSettled([
+        fetchServerJson(`${baseUrl}/api/media`),
+        currentPost
+          ? fetchApprovedComments(baseUrl, currentPost._id)
+          : Promise.resolve([] as ApprovedComment[]),
+        fetchCategories(baseUrl),
+      ]);
 
     if (mediaResult.status === "fulfilled") {
       const { response: mediaResponse, data: mediaData } = mediaResult.value;
@@ -266,6 +289,9 @@ export default async function Page({
 
     initialComments =
       commentsResult.status === "fulfilled" ? commentsResult.value : [];
+
+    initialCategories =
+      categoriesResult.status === "fulfilled" ? categoriesResult.value : [];
   } catch (error) {
     console.error("GET single blog error:", error);
 
@@ -297,6 +323,7 @@ return (
       initialAllPosts={publishedPosts}
       initialMediaItems={mediaItems}
       initialComments={initialComments}
+      initialCategories={initialCategories}
     />
   </div>
 );

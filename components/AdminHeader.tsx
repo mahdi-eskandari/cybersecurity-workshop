@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-
+import { createPortal } from "react-dom";
 type AdminHeaderProps = {
   onMenuClick: () => void;
   title?: string;
@@ -233,47 +233,49 @@ export default function AdminHeader({
 
         {/* Profile popup */}
 
-        {showProfile && (
-          <div
-            style={{
-              position: "absolute",
-              top: 44,
-              left: 0,
-              zIndex: 50,
-              minWidth: 170,
-              padding: "12px 14px",
-              borderRadius: 10,
-              border: "1px solid rgba(30,58,138,0.16)",
-              background: "#F6F9FD",
-              boxShadow: "0 18px 45px rgba(15,23,42,0.18)",
-              direction: "rtl",
-            }}
-          >
-            <div
-              style={{
-                fontSize: "0.68rem",
-                fontWeight: 700,
-                color: "#64748B",
-                marginBottom: 6,
-              }}
-            >
-              نام کاربری
-            </div>
+{showProfile && typeof document !== "undefined" &&
+  createPortal(
+    <div
+      style={{
+        position: "fixed",
+        top: (profileRef.current?.getBoundingClientRect().top ?? 0) + 44,
+        left: profileRef.current?.getBoundingClientRect().left ?? 0,
+        zIndex: 9999,
+        minWidth: 170,
+        padding: "12px 14px",
+        borderRadius: 10,
+        border: "1px solid rgba(30,58,138,0.16)",
+        background: "#ffffff",
+        boxShadow: "0 18px 45px rgba(15,23,42,0.18)",
+        direction: "rtl",
+      }}
+    >
+      <div
+        style={{
+          fontSize: "0.68rem",
+          fontWeight: 700,
+          color: "#64748B",
+          marginBottom: 6,
+        }}
+      >
+        نام کاربری
+      </div>
 
-            <div
-              style={{
-                fontSize: "0.78rem",
-                fontWeight: 800,
-                color: "#0F172A",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {username || "در حال دریافت..."}
-            </div>
-          </div>
-        )}
+      <div
+        style={{
+          fontSize: "0.78rem",
+          fontWeight: 800,
+          color: "#0F172A",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        }}
+      >
+        {username || "در حال دریافت..."}
+      </div>
+    </div>,
+    document.body
+  )}
       </div>
     </header>
   );

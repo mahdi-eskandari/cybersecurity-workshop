@@ -6201,6 +6201,15 @@ className="mx-auto grid w-full gap-4 px-6 py-6 md:px-7"
 
         /* ───────── TABLE ───────── */
 
+        
+        .service-rich-editor .ProseMirror table,
+        .service-rich-editor .ProseMirror table *,
+        .service-rich-preview .ProseMirror table,
+        .service-rich-preview .ProseMirror table * {
+          font-family: var(--font-vazirmatn), Vazirmatn, sans-serif;
+        }
+
+
         .service-rich-editor .ProseMirror .tableWrapper,
         .service-rich-preview .ProseMirror .tableWrapper {
           overflow-x: auto;

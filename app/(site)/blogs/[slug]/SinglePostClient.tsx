@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Clock, ChevronLeft } from "lucide-react";
 import { useTheme } from "../../../../components/ThemeProvider";
@@ -8,6 +8,7 @@ import {EmergencyModal} from "../../.../../../../components/CrisisReportForm"
 import CommentSection from "@/components/CommentSection";
 import type { ApprovedComment } from "@/components/CommentSection";
 import { motion } from "framer-motion";
+import { getNewCategoryColors, setCategoryOrder } from "@/lib/categoryColors";
 
 
 /* ─────────────────────────────────────────────────────────────
@@ -294,28 +295,40 @@ const ArticleThumb = ({
 
 const CATEGORY_FALLBACK = "بدون دسته‌بندی";
 
-const BLOG_CATEGORIES = [
-  {
-    id: "forensic-reports",
-    label: "گزارش‌های جرم‌شناسی",
-  },
-  {
-    id: "legal-news",
-    label: "اخبار حقوقی",
-  },
-  {
-    id: "solved-cases",
-    label: "پرونده‌های حل‌شده",
-  },
-  {
-    id: "security-alerts",
-    label: "هشدارهای امنیتی",
-  },
-  {
-    id: "security-education",
-    label: "آموزش امنیت و تهدیدات سایبری",
-  },
+type CategoryItem = { id: string; slug: string; label: string };
+
+// فقط دسته‌های ثابت؛ بقیه از /api/categories می‌آیند
+const DEFAULT_CATEGORIES: CategoryItem[] = [
+  { id: "forensic-reports", slug: "forensic-reports", label: "گزارش‌های جرم‌شناسی" },
+  { id: "legal-news", slug: "legal-news", label: "اخبار حقوقی" },
+  { id: "solved-cases", slug: "solved-cases", label: "پرونده‌های حل‌شده" },
+  { id: "security-alerts", slug: "security-alerts", label: "هشدارهای امنیتی" },
 ];
+
+const CATEGORY_ID_ALIASES: Record<string, string> = {
+  solved: "solved-cases",
+  security: "security-education",
+  fraud: "security-alerts",
+};
+
+function mergeCategories(apiList: unknown): CategoryItem[] {
+  const merged: CategoryItem[] = [...DEFAULT_CATEGORIES];
+  if (!Array.isArray(apiList)) return merged;
+
+  for (const raw of apiList as any[]) {
+    const id = String(raw?.id ?? raw?._id ?? raw?.slug ?? "").trim();
+    const slug = String(raw?.slug ?? raw?.id ?? raw?._id ?? "").trim();
+    const label = String(raw?.label ?? raw?.name ?? "").trim();
+    if (!id || !label) continue;
+
+    const exists = merged.some(
+      (c) => c.id === id || c.slug === slug || c.label === label
+    );
+    if (!exists) merged.push({ id, slug, label });
+  }
+
+  return merged;
+}
 
 /* ─────────────────────────────────────────────────────────────
    HELPERS
@@ -331,7 +344,9 @@ function normalizePost(post: RawBlogPost): BlogPost | null {
     title: String(post.title || ""),
     slug: String(post.slug || ""),
     author: String(post.author || ""),
-    categoryId: String(post.categoryId || ""),
+        categoryId:
+      CATEGORY_ID_ALIASES[String(post.categoryId || "")] ??
+      String(post.categoryId || ""),
     tags: Array.isArray(post.tags) ? post.tags.map(String) : [],
     status: post.status === "published" ? "published" : "draft",
     postType: post.postType === "special" ? "special" : "normal",
@@ -347,14 +362,20 @@ function normalizePost(post: RawBlogPost): BlogPost | null {
   };
 }
 
-function getCategoryLabel(categoryId?: string) {
+function getCategoryLabel(categoryId: string | undefined, categories: CategoryItem[]) {
   if (!categoryId) return CATEGORY_FALLBACK;
 
-  return (
-    BLOG_CATEGORIES.find(
-      (category) => category.id === categoryId
-    )?.label || CATEGORY_FALLBACK
+  const normalizedId = CATEGORY_ID_ALIASES[categoryId] ?? categoryId;
+
+  const found = categories.find(
+    (c) =>
+      c.id === normalizedId ||
+      c.slug === normalizedId ||
+      c.id === categoryId ||
+      c.slug === categoryId
   );
+
+  return found?.label || CATEGORY_FALLBACK;
 }
 
 function findMedia(
@@ -455,6 +476,15 @@ function getCategoryBadgeStyle(
   category: string,
   darkMode: boolean
 ): React.CSSProperties {
+  const custom = getNewCategoryColors(category, darkMode);
+  if (custom) {
+    return {
+      background: custom.background,
+      border: `1px solid ${custom.border}`,
+      color: custom.color,
+    };
+  }
+
   if (darkMode) {
     const styles: Record<string, React.CSSProperties> = {
       "گزارش‌های جرم‌شناسی": {
@@ -1028,12 +1058,14 @@ export default function App({
   initialAllPosts,
   initialMediaItems,
   initialComments,
+  initialCategories = [],
   initialError = false,
 }: {
   initialPost: BlogPost | null;
   initialAllPosts: BlogPost[];
   initialMediaItems: MediaItem[];
   initialComments: ApprovedComment[];
+  initialCategories?: unknown[];
   initialError?: boolean;
 }) {
   const { darkMode } = useTheme();
@@ -1048,6 +1080,12 @@ export default function App({
   const [allPosts, setAllPosts] = useState<BlogPost[]>(initialAllPosts);
   const [mediaItems, setMediaItems] = useState<MediaItem[]>(initialMediaItems);
   const [crisisOpen, setCrisisOpen] = useState(false);
+
+
+    const [categories] = useState<CategoryItem[]>(() =>
+    mergeCategories(initialCategories)
+  );
+  setCategoryOrder(categories.map((c) => c.label));
 
   const loadPost = async () => {
     try {
@@ -1134,8 +1172,8 @@ export default function App({
   };
 
   const category = useMemo(() => {
-    return getCategoryLabel(post?.categoryId);
-  }, [post?.categoryId]);
+    return getCategoryLabel(post?.categoryId, categories);
+  }, [post?.categoryId, categories]);
 
   const featuredImageUrl = useMemo(() => {
     return getMediaUrl(
@@ -1229,6 +1267,9 @@ export default function App({
   if (!post) {
     return null;
   }
+
+
+  console.log("CATEGORY DEBUG", { categoryId: post.categoryId, category, categories });
 
   return (
    <div
@@ -1489,7 +1530,16 @@ export default function App({
           
           <div className="relative overflow-hidden rounded-2xl"
             style={{ height: "clamp(200px,40vw,380px)", border: darkMode ? "1px solid rgba(0,229,255,0.12)" : "1px solid rgba(42, 108, 188, 0.33)" }}>
-            <HeroImage />
+                        {featuredImageUrl ? (
+              <img
+                src={featuredImageUrl}
+                alt={featuredImageAlt}
+                className="block w-full h-full object-cover"
+                loading="eager"
+              />
+            ) : (
+              <HeroImage />
+            )}
             {/* Overlay vignette */}
             <div className="absolute inset-0 pointer-events-none"
               style={{ background: "linear-gradient(to bottom, transparent 60%, rgba(10, 17, 40, 0.47) 100%)" }} />
@@ -1921,7 +1971,7 @@ onClick={() => setCrisisOpen(true)}
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
     {relatedPosts.map((related, index) => {
     const relatedImage = getMediaUrl(related.featuredImage, mediaItems);
-    const relatedCategory = getCategoryLabel(related.categoryId);
+        const relatedCategory = getCategoryLabel(related.categoryId, categories);
     const relatedExcerpt =
       related.content
         ?.replace(/<[^>]*>/g, "")
@@ -2290,37 +2340,78 @@ onClick={() => setCrisisOpen(true)}
           margin: 2.5rem 0;
         }
 
+            /* ───────── TABLE ───────── */
+
         .blog-content table {
+          display: block;
           width: 100%;
-          border-collapse: collapse;
+          max-width: 100%;
+          overflow-x: auto;
           margin: 2rem 0;
-          overflow: hidden;
-          border: 1px solid
-            ${darkMode
-              ? "rgba(0,229,255,0.1)"
-              : "rgba(30,58,138,0.14)"};
+          direction: rtl;
+          border-collapse: separate;
+          border-spacing: 0;
+          border: 1px solid ${darkMode ? "rgba(0,229,255,0.22)" : "rgba(21,101,192,0.17)"};
           border-radius: 0.75rem;
         }
 
-        .blog-content th,
-        .blog-content td {
-          padding: 0.75rem;
-          border-bottom: 1px solid
-            ${darkMode
-              ? "rgba(255,255,255,0.04)"
-              : "#E2E8F0"};
+        .blog-content table tbody {
+          display: table;
+          width: 100%;
+          min-width: 420px;
+          table-layout: fixed;
+          border-collapse: separate;
+          border-spacing: 0;
+        }
+
+        .blog-content td,
+        .blog-content th {
+          position: relative;
+          min-width: 80px;
+          padding: 10px 14px;
+          vertical-align: top;
           text-align: right;
+          box-sizing: border-box;
+          line-height: 1.9;
+          color: ${darkMode ? "#94a3b8" : "#475569"};
+          border-bottom: 1px solid ${darkMode ? "rgba(0,229,255,0.16)" : "rgba(30,58,138,0.12)"};
+          border-left: 1px solid ${darkMode ? "rgba(0,229,255,0.16)" : "rgba(30,58,138,0.12)"};
+        }
+
+        .blog-content td:last-child,
+        .blog-content th:last-child {
+          border-left: 0;
+        }
+
+        .blog-content tr:last-child td,
+        .blog-content tr:last-child th {
+          border-bottom: 0;
         }
 
         .blog-content th {
-          color: ${darkMode ? "#e2e8f0" : "#0F172A"};
-          background: ${darkMode
-            ? "rgba(0,229,255,0.04)"
-            : "rgba(30,58,138,0.05)"};
+          font-weight: 800;
+          font-size: 0.92rem;
+          color: ${darkMode ? "#ffffff" : "#0F172A"};
+          background: ${darkMode ? "rgba(0,229,255,0.1)" : "rgba(21,101,192,0.09)"};
         }
 
-        .blog-content td {
-          color: ${darkMode ? "#94a3b8" : "#475569"};
+        .blog-content tbody tr:nth-child(even) td:not([style*="background"]) {
+          background: ${darkMode ? "rgba(255,255,255,0.025)" : "rgba(30,58,138,0.025)"};
+        }
+
+        .blog-content td p,
+        .blog-content th p {
+          margin: 0;
+          color: inherit;
+        }
+
+        .blog-content td[style*="background"],
+        .blog-content th[style*="background"] {
+          color: #0F172A;
+        }
+
+        .blog-content table * {
+          font-family: inherit !important;
         }
       `}</style>
     </div>

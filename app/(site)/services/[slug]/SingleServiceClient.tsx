@@ -5,6 +5,7 @@ import StarterKit from "@tiptap/starter-kit";
 import { Mark, Extension, Node, mergeAttributes } from "@tiptap/core"; 
 import LinkExtension from "@tiptap/extension-link"; 
 import Underline from "@tiptap/extension-underline"; 
+import { Table, TableRow, TableHeader, TableCell } from "@tiptap/extension-table";
 import { useTheme } from "../../.../../../../components/ThemeProvider" 
 import Link from "next/link"; 
 import {EmergencyModal} from "../../.../../../../components/CrisisReportForm" 
@@ -1786,6 +1787,28 @@ const ServiceParagraphStyle = Extension.create({
   },
 });
 
+
+const cellAttrs = {
+  backgroundColor: {
+    default: null,
+    parseHTML: (el: HTMLElement) => el.style.backgroundColor || null,
+    renderHTML: (attrs: Record<string, any>) =>
+      attrs.backgroundColor ? { style: `background-color: ${attrs.backgroundColor}` } : {},
+  },
+};
+
+const ServiceTableCell = TableCell.extend({
+  addAttributes() {
+    return { ...this.parent?.(), ...cellAttrs };
+  },
+});
+
+const ServiceTableHeader = TableHeader.extend({
+  addAttributes() {
+    return { ...this.parent?.(), ...cellAttrs };
+  },
+});
+
 const sanitizeSvg = (svg: string) => svg
   .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
   .replace(/\son\w+\s*=\s*(['"]).*?\1/gi, "")
@@ -1903,7 +1926,11 @@ const RichTextDisplay = ({
       InsertMark,
       DeleteMark,
       MoreNode,
-      Underline, 
+      Table.configure({ resizable: false, HTMLAttributes: { class: "service-table" } }),
+      TableRow,
+      ServiceTableHeader,
+      ServiceTableCell,
+      Underline,
       LinkExtension.configure({ 
         openOnClick: true, 
         autolink: true, 
@@ -1967,7 +1994,7 @@ const hasTiptapContent = (value: any) =>
             : false; 
         } 
  
-        return ["bulletList", "orderedList", "blockquote", "horizontalRule"].includes( 
+        return ["bulletList", "orderedList", "blockquote", "horizontalRule", "table", "codeBlock"].includes(
           node?.type 
         ); 
       }) 
@@ -2279,7 +2306,7 @@ export default function App({
               style={{ fontFamily: "'JetBrains Mono',monospace", color: darkMode ? "rgba(0,229,255,0.5)" : "#1565C0", letterSpacing: "0.18em", textTransform: "uppercase" }} 
               className="block mb-3 data-label" 
             > 
-              HOW IT WORK 
+              HOW IT WORKS
             </span> 
 
             <h2  
@@ -2594,12 +2621,80 @@ export default function App({
           border-top: 1px solid ${darkMode ? "rgba(0,229,255,.15)" : "rgba(37,99,235,.15)"}; 
           margin: 18px 0; 
         } 
- 
-        .service-urgency-content .ProseMirror a { 
-          color: ${darkMode ? "#00E5FF" : "#2563EB"}; 
-          text-decoration: underline; 
-          text-underline-offset: 3px; 
-        } 
+
+
+        /* ───────── TABLE ───────── */
+
+        .service-urgency-content .ProseMirror table {
+          display: block;
+          width: 100%;
+          max-width: 100%;
+          overflow-x: auto;
+          margin: 1.2rem 0;
+          direction: rtl;
+          border-collapse: separate;
+          border-spacing: 0;
+          border: 1px solid ${darkMode ? "rgba(0,229,255,0.22)" : "rgba(21,101,192,0.17)"};
+          border-radius: 0.75rem;
+        }
+
+        .service-urgency-content .ProseMirror table tbody {
+          display: table;
+          width: 100%;
+          min-width: 420px;
+          table-layout: fixed;
+          border-collapse: separate;
+          border-spacing: 0;
+        }
+
+        .service-urgency-content .ProseMirror td,
+        .service-urgency-content .ProseMirror th {
+          position: relative;
+          min-width: 80px;
+          padding: 10px 14px;
+          vertical-align: top;
+          text-align: right;
+          box-sizing: border-box;
+          line-height: 1.9;
+          border-bottom: 1px solid ${darkMode ? "rgba(0,229,255,0.16)" : "rgba(30,58,138,0.12)"};
+          border-left: 1px solid ${darkMode ? "rgba(0,229,255,0.16)" : "rgba(30,58,138,0.12)"};
+        }
+
+        .service-urgency-content .ProseMirror td:last-child,
+        .service-urgency-content .ProseMirror th:last-child {
+          border-left: 0;
+        }
+
+        .service-urgency-content .ProseMirror tr:last-child td,
+        .service-urgency-content .ProseMirror tr:last-child th {
+          border-bottom: 0;
+        }
+
+        .service-urgency-content .ProseMirror th {
+          font-weight: 800;
+          font-size: 0.92rem;
+          color: ${darkMode ? "#ffffff" : "#0F172A"};
+          background: ${darkMode ? "rgba(0,229,255,0.1)" : "rgba(21,101,192,0.09)"};
+        }
+
+        .service-urgency-content .ProseMirror tbody tr:nth-child(even) td:not([style*="background"]) {
+          background: ${darkMode ? "rgba(255,255,255,0.025)" : "rgba(30,58,138,0.025)"};
+        }
+
+        .service-urgency-content .ProseMirror td p,
+        .service-urgency-content .ProseMirror th p {
+          margin: 0;
+          color: inherit;
+        }
+
+        .service-urgency-content .ProseMirror td[style*="background"],
+        .service-urgency-content .ProseMirror th[style*="background"] {
+          color: #0F172A;
+        }
+
+        .service-urgency-content .ProseMirror table * {
+          font-family: inherit !important;
+        }
       `}</style> 
     </div> 
   ); 

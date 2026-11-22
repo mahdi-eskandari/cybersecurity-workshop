@@ -15,7 +15,7 @@ import { useTheme } from "../../../components/ThemeProvider";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import Link from "next/link";
 import { renderHighlightedTitle } from "@/lib/highlightTitle";
-
+import { getNewCategoryColors, setCategoryOrder } from "@/lib/categoryColors";
 
 
 const IconChevronLeft = () => (
@@ -567,6 +567,22 @@ function getCategoryBadgeClass(category: string, darkMode: boolean): string {
   return badges[category] || (darkMode ? "text-[#54B8FF] bg-[#09263D] ring-[#164B70]" : "text-[#1565C0] bg-[#EBF3FF] ring-blue-100");
 }
 
+
+function getCategoryBadgeInlineStyle(
+  category: string,
+  darkMode: boolean
+): React.CSSProperties | undefined {
+  const custom = getNewCategoryColors(category, darkMode);
+  if (!custom) return undefined;
+
+  return {
+    color: custom.color,
+    backgroundColor: custom.background,
+    boxShadow: `inset 0 0 0 1px ${custom.border}`,
+  };
+}
+
+
 export type BlogPageInitialData = {
   blogs: BlogPost[];
   mediaItems: MediaItem[];
@@ -683,10 +699,12 @@ export default function BlogPageClient({ initialData }: { initialData: BlogPageI
   const hasServerCategories = !!initialData.categories?.length;
 
   const [blogCategories, setBlogCategories] = useState(
+    
     hasServerCategories
       ? dedupeCategories(initialData.categories!)
       : BLOG_CATEGORIES
   );
+    setCategoryOrder(blogCategories.map((c) => c.label));
 
 
 
@@ -1473,6 +1491,7 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
                         className={`inline-block text-[11px] font-bold px-2.5 py-1 rounded-full ring-1 ring-inset ${
                           getCategoryBadgeClass(featuredArticle.category, darkMode)
                         }`}
+                        style={getCategoryBadgeInlineStyle(featuredArticle.category, darkMode)}
                       >
                         {featuredArticle.category}
                       </span>
@@ -1497,6 +1516,7 @@ className="w-full h-full transition-transform duration-500 ease-out group-hover:
                           className={`text-[11px] font-bold px-2.5 py-1 rounded-full ring-1 ring-inset ${
                             getCategoryBadgeClass(featuredArticle.category, darkMode)
                           }`}
+                          style={getCategoryBadgeInlineStyle(featuredArticle.category, darkMode)}
                         >
                           {featuredArticle.category}
                         </span>
@@ -2061,6 +2081,7 @@ function ArticleCard({
             article.category,
             darkMode
           )}`}
+          style={getCategoryBadgeInlineStyle(article.category, darkMode)}
         >
           {article.category}
         </span>
