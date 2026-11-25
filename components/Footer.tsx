@@ -107,9 +107,9 @@ const COMPANY_LINKS = [
 ];
 
 const BLOG_LINKS = [
-  { title: "هشدارها", href: "/blogs?category=هشدارها" }, // یا هر slug واقعی که داری
-  { title: "آموزش سایبری", href: "/blogs?category=آموزش-سایبری" },
-  { title: "خانواده و کودکان", href: "/blogs?category=خانواده-و-کودکان" },
+  { title: "هشدارها", href: "/blogs" },
+  { title: "آموزش سایبری", href: "/blogs" },
+  { title: "خانواده و کودکان", href: "/blogs" },
 ];
 
 const PulseDot = ({
@@ -288,6 +288,7 @@ const footerMenus = [
         <li key={link.title}>
           <Link
             href={link.href}
+            prefetch={false}
             className="text-[13px] transition-colors"
             style={{
               color: darkMode ? "#818fa0" : "#CBD5E1",

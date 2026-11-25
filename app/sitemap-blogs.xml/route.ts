@@ -17,9 +17,10 @@ function escapeXml(value: string) {
 export async function GET() {
   await connectDB();
 
-  const posts = await Blog.find({
-    status: "published",
-  })
+const posts = await Blog.find({
+  status: "published",
+  index: { $ne: false },
+})
     .select("slug updatedAt")
     .lean()
     .exec();

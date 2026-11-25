@@ -109,14 +109,11 @@ const navRef = useRef<HTMLElement>(null);
   useEffect(() => {
     let cancelled = false;
 
-    fetch("/api/admin/seo/pages", { cache: "no-store" })
-      .then((res) => res.json())
-      .then((data) => {
-        if (!cancelled && data?.success) {
-          setSlugs(data.pages || {});
-        }
-      })
-      .catch(() => {});
+cachedJson<any>("/api/admin/seo/pages", 5 * 60_000)
+  .then((data) => {
+    if (!cancelled && data?.success) setSlugs(data.pages || {});
+  })
+  .catch(() => {});
 
     return () => {
       cancelled = true;
@@ -485,6 +482,7 @@ const megaCols = STATIC_SERVICES.length > 6 ? 3 : 2;
       <Link
         key={service.slug}
         href={serviceHref}
+         prefetch={false}
         onClick={closeMegaNow}
         aria-current={isCurrent ? "page" : undefined}
         className={`group block px-2 py-1.5 text-[13px] font-medium transition-colors duration-300 ${
@@ -654,6 +652,7 @@ const megaCols = STATIC_SERVICES.length > 6 ? 3 : 2;
       <Link
         key={service.slug}
         href={serviceHref}
+         prefetch={false}
         onClick={() => setMenuOpen(false)}
         className={`rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
           darkMode

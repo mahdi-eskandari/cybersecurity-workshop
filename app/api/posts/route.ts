@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Post from "../../model/blog";
 import { isAdmin } from "@/lib/adminAuth";
+import { clearPostsLiteCache } from "@/lib/publicPosts";
 
 export async function GET(request: Request) {
   try {
@@ -164,6 +165,7 @@ export async function POST(request: Request) {
             index: typeof index === "boolean" ? index : true,
       follow: typeof follow === "boolean" ? follow : true,
     });
+    clearPostsLiteCache();
 
     return NextResponse.json(post, { status: 201 });
   } catch (error: any) {

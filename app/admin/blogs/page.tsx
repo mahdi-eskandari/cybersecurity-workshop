@@ -1390,7 +1390,7 @@ const editor = useEditor({
     if (selection && selection.from === selection.to) {
       const nodeAt = editor.state.doc.nodeAt(selection.from);
       if (nodeAt?.type.name === "serviceImage") {
-        editor.chain().focus().setNodeSelection(selection.from).updateAttributes("serviceImage", { src: item.url, alt: item.alt, title: item.name }).run();
+        editor.chain().focus().setNodeSelection(selection.from).updateAttributes("serviceImage", { src: `/api/media/${item.id}`, alt: item.alt, title: item.name }).run();
         mediaSelectionRef.current = null;
         setMediaLibraryOpen(false);
         return;
@@ -1398,7 +1398,7 @@ const editor = useEditor({
     }
     editor.chain().focus();
     if (selection) editor.commands.setTextSelection(selection);
-    (editor.commands as any).setServiceImage({ src: item.url, alt: item.alt, title: item.name, width: 100 });
+    (editor.commands as any).setServiceImage({ src: `/api/media/${item.id}`, alt: item.alt, title: item.name, width: 100 });
     mediaSelectionRef.current = null;
     setMediaLibraryOpen(false);
   };
@@ -1563,9 +1563,7 @@ const editor = useEditor({
       postType: record.postType,
       categoryId: record.categoryId,
       wordCount,
-      featuredImage: featuredMediaId
-        ? mediaItems.find((item) => item.id === featuredMediaId)?.url ?? null
-        : null,
+featuredImage: featuredMediaId ? `/api/media/${featuredMediaId}` : null,
       featuredImageAlt: featuredAlt.trim() || null,
     };
 
@@ -1636,7 +1634,13 @@ if (!response.ok) {
     setCreatedAt(post.createdAt);
     setUpdatedAt(post.updatedAt);
     setPublished(post.status === "published");
-    const matchingMedia = post.featuredImage ? mediaItems.find((item) => item.url === post.featuredImage) : undefined;
+    const matchingMedia = post.featuredImage
+  ? mediaItems.find(
+      (item) =>
+        item.url === post.featuredImage ||
+        `/api/media/${item.id}` === post.featuredImage
+    )
+  : undefined;
     setFeaturedMediaId(matchingMedia?.id ?? null);
     setFeaturedAlt(post.featuredImageAlt ?? matchingMedia?.alt ?? "");
     setCoverUploaded(Boolean(post.featuredImage));

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import BlogPageClient, { type BlogPageInitialData } from "../../BlogPageClient";
-import { getPageSeo, SITE_URL } from "@/lib/seo";
+
 import { buildOrganizationSchema, buildBreadcrumbSchema } from "@/lib/schema";
 import { getPublishedPostsLite, getCategoriesList } from "@/lib/publicPosts";
+import { getPageSeo, SITE_URL, getSocialDefaults } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -73,12 +74,32 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 
   const currentPage = safePage(page, data.totalPages);
   const label = data.current.label;
+  const title = `${label} | وبلاگ پاراهور`;
+  const description = `مقالات و گزارش‌های دسته «${label}» در وبلاگ پاراهور.`;
+  const url = categoryUrl(data.current.id, currentPage);
+  const social = await getSocialDefaults();
 
   return {
-    title: { absolute: `${label} | وبلاگ پاراهور` },
-    description: `مقالات و گزارش‌های دسته «${label}» در وبلاگ پاراهور.`,
-    alternates: { canonical: categoryUrl(data.current.id, currentPage) },
+    title: { absolute: title },
+    description,
+    alternates: { canonical: url },
     robots: { index: true, follow: true },
+    openGraph: {
+      type: "website",
+      locale: "fa_IR",
+      siteName: social.siteName,
+      title,
+      description,
+      url,
+      images: [{ url: social.image, alt: social.imageAlt || label }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: social.twitterSite,
+      title,
+      description,
+      images: [social.image],
+    },
   };
 }
 

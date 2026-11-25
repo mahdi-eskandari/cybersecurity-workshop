@@ -17,9 +17,10 @@ function escapeXml(value: string) {
 export async function GET() {
   await connectDB();
 
-  const services = await Service.find({
-    status: "active",
-  })
+const services = await Service.find({
+  status: "active",
+  index: { $ne: false },
+})
     .select("slug updatedAt")
     .lean()
     .exec();

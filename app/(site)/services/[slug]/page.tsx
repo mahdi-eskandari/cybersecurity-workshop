@@ -1,66 +1,36 @@
-
-
-import { headers } from "next/headers";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import SingleServiceClient from "./SingleServiceClient";
 import { SITE_URL } from "@/lib/seo";
 import {
   buildOrganizationSchema,
   buildBreadcrumbSchema,
 } from "@/lib/schema";
+import connectDB from "@/lib/mongodb";
+import Service from "@/app/model/Service";
 
 export const dynamic = "force-dynamic";
 
-async function fetchService(baseUrl: string, slug: string) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000);
-
+const getService = cache(async (rawSlug: string) => {
+  let s = rawSlug;
   try {
-    const response = await fetch(
-      `${baseUrl}/api/services/${encodeURIComponent(slug)}`,
-      {
-        method: "GET",
-        cache: "no-store",
-        signal: controller.signal,
-      }
-    );
+    s = decodeURIComponent(rawSlug);
+  } catch {}
+  s = s.trim().toLowerCase();
+  if (!s) return null;
 
-    if (response.status === 404) {
-      return { service: null, error: "", notFound: true };
-    }
-
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-    const result = await response.json();
-    const foundService =
-      result?.data?.slug ? result.data :
-      result?.service?.slug ? result.service :
-      result?.slug ? result : null;
-
-    if (!foundService) {
-      return { service: null, error: "خدمت موردنظر پیدا نشد.", notFound: true };
-    }
-
-    return { service: foundService, error: "", notFound: false };
-  } catch (error) {
-    console.error("GET /api/services/[slug]:", error);
-    return {
-      service: null,
-      error: "دریافت اطلاعات خدمت با خطا مواجه شد.",
-      notFound: false,
-    };
-  } finally {
-    clearTimeout(timeout);
-  }
-}
+  await connectDB();
+  const doc = await Service.findOne({ slug: s, status: "active" }).lean();
+  // ObjectId و Date باید به آبجکت ساده تبدیل بشن تا به کلاینت‌کامپوننت برسن
+  return doc ? JSON.parse(JSON.stringify(doc)) : null;
+});
 
 function ServiceJsonLd({ service }: { service: any }) {
   const name = service.title || service.name || "";
   const url = `${SITE_URL}/services/${service.slug}`;
   const description =
     service.metaDescription ||
-    service.shortDescription ||
-    service.description ||
+    service.shortDesc ||
     "";
 
   const jsonLd = {
@@ -104,18 +74,19 @@ export default async function Page({
   const slugValue = resolvedParams?.slug;
   const slug = Array.isArray(slugValue) ? slugValue[0] : slugValue;
 
-  if (!slug) {
-    notFound();
+  if (!slug) notFound();
+
+  let service: any = null;
+  let failed = false;
+
+  try {
+    service = await getService(String(slug));
+  } catch (error) {
+    console.error("GET service page error:", error);
+    failed = true;
   }
 
-  const requestHeaders = await headers();
-  const host =
-    requestHeaders.get("x-forwarded-host") ||
-    requestHeaders.get("host");
-  const protocol =
-    requestHeaders.get("x-forwarded-proto") || "http";
-
-  if (!host) {
+  if (failed) {
     return (
       <SingleServiceClient
         initialService={null}
@@ -124,22 +95,12 @@ export default async function Page({
     );
   }
 
-  const { service, error, notFound: isNotFound } = await fetchService(
-    `${protocol}://${host}`,
-    String(slug)
-  );
-
-  if (isNotFound) {
-    notFound();
-  }
+  if (!service) notFound();
 
   return (
-  <>
-    {service && <ServiceJsonLd service={service} />}
-    <SingleServiceClient
-      initialService={service}
-      initialServiceError={error}
-    />
-  </>
-);
+    <>
+      <ServiceJsonLd service={service} />
+      <SingleServiceClient initialService={service} initialServiceError="" />
+    </>
+  );
 }
