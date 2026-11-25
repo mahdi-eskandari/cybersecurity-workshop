@@ -10,6 +10,7 @@ import {
 } from "lucide-react"
 import Image from "next/image";
 import { useState, useEffect, type CSSProperties, type ReactNode } from "react";
+import { cachedJson } from "@/lib/clientCache";
 
 /* =========================================================
    SOCIAL BUTTON
@@ -78,12 +79,12 @@ const IconInstagram = () => (
 
 
 const F_SERVICES = [
-  { title: "کشف هویت سایبری", href: "/services" },
-  { title: "رهگیری رمزارز", href: "/services" },
-  { title: "هوش تهدید", href: "/services" },
-  { title: "تست نفوذ", href: "/services" },
-  { title: "کالبدشکافی دیجیتال", href: "/services" },
-  { title: "مقابله با باج‌افزار", href: "/services" },
+  { title: "کشف هویت", href: "/services/identity-discovery" },
+  { title: "رهگیری رمزارزها", href: "/services/crypto-tracking" },
+  { title: "هوش تهدید سایبری", href: "/services/cyber-threat-intelligence" },
+  { title: "تست نفوذ", href: "/services/penetration-testing" }, // "نس" احتمالاً تست نفوذ بود
+  { title: "کالبدشکافی دیجیتال", href: "/services/digital-forensics" },
+  { title: "مقابله با باج‌افزار", href: "/services/ransomware-response" },
 ];
 
 const COMPANY_LINKS = [
@@ -106,18 +107,9 @@ const COMPANY_LINKS = [
 ];
 
 const BLOG_LINKS = [
-  {
-    title: "درباره ما",
-    href: "/blogs",
-  },
-  {
-    title: "آموزش",
-    href: "/blogs",
-  },
-  {
-    title: "گزارش رادار",
-    href: "/blogs",
-  },
+  { title: "هشدارها", href: "/blogs?category=هشدارها" }, // یا هر slug واقعی که داری
+  { title: "آموزش سایبری", href: "/blogs?category=آموزش-سایبری" },
+  { title: "خانواده و کودکان", href: "/blogs?category=خانواده-و-کودکان" },
 ];
 
 const PulseDot = ({
@@ -156,125 +148,27 @@ export default function Footer() {
   const { darkMode } = useTheme();
     const [crisisOpen, setCrisisOpen] = useState(false);
 
-      const [footerServices, setFooterServices] = useState<{ title: string; href: string }[]>([]);
-      const [topCategories, setTopCategories] = useState<{ title: string; href: string }[]>([]);
-
-const [servicesLoaded, setServicesLoaded] = useState(false);
-const [categoriesLoaded, setCategoriesLoaded] = useState(false);
-
-  useEffect(() => {
-    let alive = true;
-
-    fetch("/api/services")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (!alive || !data) return;
-
-        const list = Array.isArray(data)
-          ? data
-          : Array.isArray(data?.data)
-          ? data.data
-          : [];
-
-        const items = list
-          .filter(
-            (s: any) =>
-              s?.slug &&
-              s?.showInFooter &&
-              (!s.status || s.status === "active")
-          )
-          .sort(
-            (a: any, b: any) =>
-              (Number(a.footerOrder) || 0) - (Number(b.footerOrder) || 0)
-          )
-          .map((s: any) => ({
-            title: String(s.footerTitle?.trim() || s.title),
-            href: `/services/${s.slug}`,
-          }));
-
-        setFooterServices(items);
-
-      })
-      .catch(() => {})
-      .finally(() => {
-        if (alive) setServicesLoaded(true);
-      });
-
-    return () => {
-      alive = false;
-    };
-  }, []);
-
-
-
-  useEffect(() => {
-  let alive = true;
-
-  Promise.all([
-    fetch("/api/posts?topCategories=3").then((r) => (r.ok ? r.json() : [])),
-    fetch("/api/categories").then((r) => (r.ok ? r.json() : [])),
-  ])
-    .then(([top, cats]) => {
-      if (!alive || !Array.isArray(top)) return;
-
-      const catList = Array.isArray(cats)
-        ? cats
-        : Array.isArray(cats?.data)
-        ? cats.data
-        : [];
-
-      const links = top
-        .map((t: { categoryId: string }) => {
-          const cat = catList.find((c: any) =>
-            [c?.id, c?._id, c?.slug].some(
-              (v) => v != null && String(v) === String(t.categoryId)
-            )
-          );
-          const title = cat?.label ?? cat?.title ?? cat?.name;
-          return title
-            ? {
-                title: String(title),
-                href: `/blogs?category=${encodeURIComponent(t.categoryId)}`,
-              }
-            : null;
-        })
-        .filter((l: any): l is { title: string; href: string } => l !== null);
-
-      setTopCategories(links);
-    })
-    .catch(() => {})
-    .finally(() => {
-      if (alive) setCategoriesLoaded(true);
-    });
-
-  return () => {
-    alive = false;
-  };
-}, []);
 
 
 
 
-  const footerMenus = [
-    {
-      title: "خدمات",
-      links: footerServices.length > 0 ? footerServices : F_SERVICES,
-      loading: !servicesLoaded,
-           skeletonCount: 6,
-    },
-    {
-      title: "پاراهور",
-      links: COMPANY_LINKS,
-      loading: false,
-      skeletonCount: 4,
-    },
-    {
-      title: "وبلاگ",
-      links: topCategories.length > 0 ? topCategories : BLOG_LINKS,
-      loading: !categoriesLoaded,
-      skeletonCount: 3,
-    },
-  ];
+
+
+
+const footerMenus = [
+  {
+    title: "خدمات",
+    links: F_SERVICES,
+  },
+  {
+    title: "پاراهور",
+    links: COMPANY_LINKS,
+  },
+  {
+    title: "وبلاگ",
+    links: BLOG_LINKS,
+  },
+];
 
   return (
     <div
@@ -376,104 +270,78 @@ const [categoriesLoaded, setCategoriesLoaded] = useState(false);
             </div>
 
             {/* ۳ ستون منو */}
-            {footerMenus.map(({ title, links, loading, skeletonCount }, index) => (
-              <div key={title} className="md:col-span-1">
-                <h4
-                  className="text-[14px] font-semibold mb-5"
-                  style={{
-                    color: darkMode
-                      ? "rgba(255,255,255,0.7)"
-                      : "#FFFFFF",
-                  }}
-                >
-                  {title}
-                </h4>
+{footerMenus.map(({ title, links }, index) => (
+  <div key={title} className="md:col-span-1">
+    <h4
+      className="text-[14px] font-semibold mb-5"
+      style={{
+        color: darkMode
+          ? "rgba(255,255,255,0.7)"
+          : "#FFFFFF",
+      }}
+    >
+      {title}
+    </h4>
 
-                <ul className="space-y-3">
-                  {loading
-? Array.from({ length: skeletonCount }).map((_, i) => (
-    <li key={i}>
-      <span
-        aria-hidden="true"
-        className="inline-block text-[13px] animate-pulse align-top"
-        style={{ width: `${55 + ((i * 13) % 35)}%` }}
-      >
-        <span
-          className="block rounded"
+    <ul className="space-y-3">
+      {links.map((link) => (
+        <li key={link.title}>
+          <Link
+            href={link.href}
+            className="text-[13px] transition-colors"
+            style={{
+              color: darkMode ? "#818fa0" : "#CBD5E1",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = darkMode
+                ? "#00E5FF"
+                : "#0EA5E9";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = darkMode
+                ? "#818fa0"
+                : "#CBD5E1";
+            }}
+          >
+            {link.title}
+          </Link>
+        </li>
+      ))}
+    </ul>
+
+    {index === footerMenus.length - 1 && (
+      <div className="ml-60 mt-8 bg-[#C62828]/20 border border-[#C62828]/35 rounded-xl p-4 w-[250px]">
+        <p className="text-xs font-semibold text-red-300 mb-1.5">
+          اورژانس سایبری
+        </p>
+        <p className="text-xs text-white/50 mb-3">
+          فقط برای حوادث زنده استفاده کنید
+        </p>
+        <a
+          href="tel:+982632209950"
+          className="flex w-[65%] items-center gap-2 px-3.5 py-2 bg-[#C62828] text-white text-xs font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors"
           style={{
-            height: "1em",
-            marginTop: "0.25em",
-            background: darkMode
-              ? "rgba(255,255,255,0.06)"
-              : "rgba(255,255,255,0.14)",
+            background: "#EF4444",
+            color: "#ffffff",
+            border: "1px solid rgba(239,68,68,0.6)",
+            boxShadow: "0 0 15px rgba(239,68,68,0.35)",
           }}
-        />
-        {/* یک کاراکتر نامرئی تا ارتفاع خط دقیقاً مثل متن واقعی بشه */}
-        <span className="invisible absolute">‌</span>
-      </span>
-    </li>
-  ))
-                    : links.map((link) => (
-                        <li key={link.title}>
-                          <Link
-                            href={link.href}
-                            className="text-[13px] transition-colors"
-                            style={{
-                              color: darkMode ? "#818fa0" : "#CBD5E1",
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.color = darkMode
-                                ? "#00E5FF"
-                                : "#0EA5E9";
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.color = darkMode
-                                ? "#818fa0"
-                                : "#CBD5E1";
-                            }}
-                          >
-                            {link.title}
-                          </Link>
-                        </li>
-                      ))}
-                </ul>
-
-                {index === footerMenus.length - 1 && (
-                 <div className="ml-60 mt-8 bg-[#C62828]/20 border border-[#C62828]/35 rounded-xl p-4 w-[250px]">
-                    <p className="text-xs font-semibold text-red-300 mb-1.5">
-                      اورژانس سایبری
-                    </p>
-                    <p className="text-xs text-white/50 mb-3">
-                     فقط برای حوادث زنده استفاده کنید
-                    </p>
-                    <a
-                      href="tel:+982632209950"
-                      className="flex w-[65%] items-center gap-2 px-3.5 py-2 bg-[#C62828] text-white text-xs font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors"
-                         style={{
-                background: "#EF4444",
-                color: "#ffffff",
-                border: "1px solid rgba(239,68,68,0.6)",
-                boxShadow: "0 0 15px rgba(239,68,68,0.35)",
-              }}
-                onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = "0 0 22px rgba(239,68,68,0.55)"
-
-
-
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = "0 0 15px rgba(239,68,68,0.35)"
-
-
-              }}
-                    >
-                      <Phone className="w-3.5 h-3.5" />
-                      تماس اضطراری
-                    </a>
-                  </div>
-                )}
-              </div>
-            ))}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.boxShadow =
+              "0 0 22px rgba(239,68,68,0.55)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.boxShadow =
+              "0 0 15px rgba(239,68,68,0.35)";
+          }}
+        >
+          <Phone className="w-3.5 h-3.5" />
+          تماس اضطراری
+        </a>
+      </div>
+    )}
+  </div>
+))}
              {/* <div>
               <div className="bg-[#C62828]/20 border border-[#C62828]/35 rounded-xl p-4 w-[300px]">
                 <p className="text-xs font-semibold text-red-300 mb-1.5">

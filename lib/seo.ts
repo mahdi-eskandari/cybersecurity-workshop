@@ -3,12 +3,44 @@ import connectDB from "./mongodb";
 import PageSeo from "../app/model/PageSeo";
 import { getSiteSeo } from "./siteSeo";
 
-export const SITE_URL =
-//   process.env.NEXT_PUBLIC_SITE_URL || "https://parahoor.com";
-  process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.NODE_ENV === "production"
+    ? "https://parahoor.com"
+    : "http://localhost:3000")
+).replace(/\/+$/, "");
 
 
 const DEFAULT_OG_IMAGE = `${SITE_URL}/logo/logo.webp`;
+
+
+const absoluteUrl = (v: string) =>
+  /^https?:\/\//i.test(v)
+    ? v
+    : new URL(v.startsWith("/") ? v : `/${v}`, SITE_URL).toString();
+
+// اگه عنوان خودش «پاراهور» داره، template ریشه دوباره اضافه‌اش نکنه
+export function brandTitle(t: string): Metadata["title"] {
+  return t.includes("پاراهور") ? { absolute: t } : t;
+}
+
+// تنظیمات پنل «سئو سراسری»: عکس پیش‌فرض، نام سایت، توییتر
+export async function getSocialDefaults() {
+  let image = DEFAULT_OG_IMAGE;
+  let imageAlt = "";
+  let siteName = "پاراهور";
+  let twitterSite: string | undefined;
+
+  try {
+    const s = await getSiteSeo();
+    if (s.defaultOgImage) image = absoluteUrl(s.defaultOgImage);
+    if (s.defaultOgImageAlt) imageAlt = s.defaultOgImageAlt;
+    if (s.siteName) siteName = s.siteName;
+    if (s.twitterHandle) twitterSite = `@${s.twitterHandle}`;
+  } catch {}
+
+  return { image, imageAlt, siteName, twitterSite };
+}
 
 export const SEO_DEFAULTS = {
   home: {
@@ -226,7 +258,10 @@ async function applyGlobalRobots(index: boolean, follow: boolean) {
 export async function getPageMetadata(
   pageKey: PageKey
 ): Promise<Metadata> {
-  const seo = await getPageSeo(pageKey);
+  const [seo, social] = await Promise.all([
+    getPageSeo(pageKey),
+    getSocialDefaults(),
+  ]);
 
   const canonicalUrl = resolveCanonicalUrl(
     pageKey,
@@ -236,40 +271,28 @@ export async function getPageMetadata(
 
   const robots = await applyGlobalRobots(seo.index, seo.follow);
 
-
   return {
-  title: seo.metaTitle,
-  description: seo.metaDescription,
-  robots,            // ← به‌جای { index: seo.index, follow: seo.follow }
-  alternates: { canonical: canonicalUrl },
+    title: brandTitle(seo.metaTitle),
+    description: seo.metaDescription,
+    robots,
+    alternates: { canonical: canonicalUrl },
 
     openGraph: {
       type: "website",
       locale: "fa_IR",
-      siteName: "پاراهور",
-
+      siteName: social.siteName,
       title: seo.metaTitle,
-
       description: seo.metaDescription,
-
       url: canonicalUrl,
-
-      images: [
-        {
-          url: DEFAULT_OG_IMAGE,
-          alt: seo.pageName,
-        },
-      ],
+      images: [{ url: social.image, alt: social.imageAlt || seo.pageName }],
     },
 
     twitter: {
       card: "summary_large_image",
-
+      site: social.twitterSite,
       title: seo.metaTitle,
-
       description: seo.metaDescription,
-
-      images: [DEFAULT_OG_IMAGE],
+      images: [social.image],
     },
   };
 }
@@ -287,7 +310,7 @@ export function getStaticPageMetadata(pageKey: PageKey): Metadata {
   const canonicalUrl = new URL(pathname, SITE_URL).toString();
 
   return {
-    title: defaultSeo.metaTitle,
+    title: brandTitle(defaultSeo.metaTitle),
 
     description: defaultSeo.metaDescription,
 

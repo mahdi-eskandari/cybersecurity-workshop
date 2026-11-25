@@ -102,9 +102,6 @@ const ServiceSchema = new Schema(
     },
 
 
-    showInFooter: { type: Boolean, default: false },
-footerTitle: { type: String, default: "", trim: true },
-footerOrder: { type: Number, default: 0 },
 
     // سه مرحله شناسایی
     trackingSteps: {

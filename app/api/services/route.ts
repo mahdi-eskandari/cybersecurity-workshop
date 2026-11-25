@@ -16,31 +16,33 @@ function normalizeFaqs(faqs: unknown) {
     .filter((item) => item.question && item.answer);
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     await connectDB();
 
-    const filter = (await isAdmin()) ? {} : { status: "active" };
+    const menuOnly =
+      new URL(request.url).searchParams.get("fields") === "menu";
+    const admin = await isAdmin();
 
-    const services = await Service.find(filter)
-      .sort({ createdAt: -1 })
-      .lean();
-
-    return NextResponse.json({
-      success: true,
-      data: services,
+    const query = Service.find(admin ? {} : { status: "active" }).sort({
+      createdAt: -1,
     });
-  } catch (error) {
-    console.error("GET /api/services:", error);
+
+if (menuOnly) query.select("slug title status");
+
+    const services = await query.lean();
 
     return NextResponse.json(
-      {
-        success: false,
-        message: "خطا در دریافت خدمات",
-      },
-      {
-        status: 500,
-      }
+      { success: true, data: services },
+      admin
+        ? undefined
+        : { headers: { "Cache-Control": "public, max-age=30, stale-while-revalidate=120" } }
+    );
+  } catch (error) {
+    console.error("GET /api/services:", error);
+    return NextResponse.json(
+      { success: false, message: "خطا در دریافت خدمات" },
+      { status: 500 }
     );
   }
 }
@@ -78,9 +80,6 @@ export async function POST(request: NextRequest) {
        index,
       follow,
       key,  
-      showInFooter,
-       footerTitle,
-        footerOrder
     } = body;
 
     if (!slug?.trim()) {
@@ -259,13 +258,6 @@ export async function POST(request: NextRequest) {
 
             index: typeof index === "boolean" ? index : true,
       follow: typeof follow === "boolean" ? follow : true,
-
-      showInFooter: typeof showInFooter === "boolean" ? showInFooter : false,
-
-      footerTitle:
-        typeof footerTitle === "string" ? footerTitle.trim() : "",
-
-      footerOrder: Number(footerOrder) || 0,
     });
 
     return NextResponse.json(

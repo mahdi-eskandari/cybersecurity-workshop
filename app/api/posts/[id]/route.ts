@@ -7,6 +7,7 @@ import { isAdmin } from "@/lib/adminAuth";
 import Post from "../../../model/blog";
 import SeoRedirect from "../../../model/SeoRedirect";
 import PageSeo from "../../../model/PageSeo";
+import { clearPostsLiteCache } from "@/lib/publicPosts";
 
 export async function PATCH(
   request: Request,
@@ -41,15 +42,13 @@ export async function PATCH(
     const body = rawBody as Record<string, any>;
 
     // کلیدهای خطرناک (عملگرهای mongo و فیلدهای سیستمی) حذف می‌شن
-    const safeBody = Object.fromEntries(
-      Object.entries(body).filter(
-        ([key]) =>
-          !key.startsWith("$") &&
-          !key.includes(".") &&
-          key !== "_id" &&
-          key !== "__v"
-      )
-    );
+const BLOCKED = new Set(["_id", "__v", "id", "createdAt", "updatedAt", "authorId"]);
+
+const safeBody = Object.fromEntries(
+  Object.entries(body).filter(
+    ([key]) => !key.startsWith("$") && !key.includes(".") && !BLOCKED.has(key)
+  )
+);
 
     if (
       body.postType !== undefined &&
@@ -97,7 +96,7 @@ if (oldPost && newSlug && oldPost.slug !== newSlug) {
     { upsert: true }
   );
 }
-
+clearPostsLiteCache();
     return NextResponse.json(post);
   } catch (error: any) {
   console.error("PATCH /api/posts/[id] error:", error);
@@ -156,6 +155,7 @@ export async function DELETE(
       );
     }
 
+    clearPostsLiteCache();
     return NextResponse.json(post);
   } catch (error) {
     console.error("DELETE /api/posts/[id] error:", error);

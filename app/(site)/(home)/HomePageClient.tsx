@@ -1275,6 +1275,7 @@ const closeCrisis = () => {
 
 <Link
   href="/services"
+  prefetch={false}
   className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-semibold transition-all duration-300 px-[60px]"
   style={{
     background: darkMode

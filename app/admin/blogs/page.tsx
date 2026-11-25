@@ -1545,7 +1545,11 @@ const editor = useEditor({
     if (!editingPostId || !mediaItems.length) return;
     const post = posts.find((item) => item.id === editingPostId);
     if (!post?.featuredImage) return;
-    const matchingMedia = mediaItems.find((item) => item.url === post.featuredImage);
+    const matchingMedia = mediaItems.find(
+  (item) =>
+    item.url === post.featuredImage ||
+    `/api/media/${item.id}` === post.featuredImage
+)
     if (matchingMedia) {
       setFeaturedMediaId(matchingMedia.id);
       setFeaturedAlt(post.featuredImageAlt ?? matchingMedia.alt ?? "");
@@ -1661,7 +1665,7 @@ if (!response.ok) {
       metaDescription: values?.metaDescription?.trim() || metaDesc.trim(),
             index: indexFlag,
       follow: followFlag,
-      featuredImage: featuredMediaId ? mediaItems.find((item) => item.id === featuredMediaId)?.url ?? null : null,
+      featuredImage: featuredMediaId ? `/api/media/${featuredMediaId}` : null,
       featuredImageAlt: featuredAlt.trim() || null,
     };
 

@@ -1,9 +1,9 @@
-import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import BlogPageClient, { type BlogPageInitialData } from "../../BlogPageClient";
-import { SITE_URL, getPageSeo } from "@/lib/seo";
+import { getPageSeo, SITE_URL } from "@/lib/seo";
 import { buildOrganizationSchema, buildBreadcrumbSchema } from "@/lib/schema";
+import { getPublishedPostsLite, getCategoriesList } from "@/lib/publicPosts";
 
 export const dynamic = "force-dynamic";
 
@@ -24,63 +24,33 @@ type Props = {
   searchParams: Promise<{ page?: string }>;
 };
 
-async function getJson(url: string): Promise<any> {
+async function loadData(rawCategory: string) {
   try {
-    const res = await fetch(url, { cache: "no-store" });
-    if (!res.ok) return null;
-    return await res.json();
-  } catch {
+    const [catList, publishedPosts] = await Promise.all([
+      getCategoriesList().catch(() => [] as CategoryItem[]),
+      getPublishedPostsLite(),
+    ]);
+
+    const categories = catList.length ? catList : FALLBACK_CATEGORIES;
+
+    let id = rawCategory;
+    try {
+      id = decodeURIComponent(rawCategory);
+    } catch {}
+
+    const current = categories.find((c) => c.id === id);
+    if (!current) return null;
+
+    const categoryPosts = publishedPosts.filter((p) => p.categoryId === id);
+    if (categoryPosts.length === 0) return null;
+
+    const totalPages = Math.max(1, Math.ceil(categoryPosts.length / PER_PAGE));
+
+    return { current, categories, publishedPosts, mediaItems: [], totalPages };
+  } catch (error) {
+    console.error("category page error:", error);
     return null;
   }
-}
-
-async function loadData(rawCategory: string) {
-  const h = await headers();
-  const host = h.get("host");
-  if (!host) return null;
-  const baseUrl = `${h.get("x-forwarded-proto") || "http"}://${host}`;
-
-  const [catData, postsData, mediaData] = await Promise.all([
-    getJson(`${baseUrl}/api/categories`),
-    getJson(`${baseUrl}/api/posts`),
-    getJson(`${baseUrl}/api/media`),
-  ]);
-
-  const categories: CategoryItem[] =
-    Array.isArray(catData) && catData.length
-      ? catData
-          .map((c: any) => ({ id: String(c.id), label: String(c.label) }))
-          .filter((c) => c.id && c.label)
-      : FALLBACK_CATEGORIES;
-
-  let id = rawCategory;
-  try {
-    id = decodeURIComponent(rawCategory);
-  } catch {}
-
-  const current = categories.find((c) => c.id === id);
-  if (!current) return null;
-
-  const rawPosts: any[] = Array.isArray(postsData)
-    ? postsData
-    : Array.isArray(postsData?.posts)
-    ? postsData.posts
-    : [];
-
-  const publishedPosts = rawPosts.filter((p) => p?.status === "published");
-  const categoryPosts = publishedPosts.filter((p) => p.categoryId === id);
-
-  const mediaItems = Array.isArray(mediaData)
-    ? mediaData
-    : Array.isArray(mediaData?.media)
-    ? mediaData.media
-    : Array.isArray(mediaData?.items)
-    ? mediaData.items
-    : [];
-
-  const totalPages = Math.max(1, Math.ceil(categoryPosts.length / PER_PAGE));
-
-  return { current, categories, publishedPosts, mediaItems, totalPages };
 }
 
 function safePage(param: string | undefined, totalPages: number) {

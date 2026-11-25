@@ -9,6 +9,9 @@ import {
   NextResponse,
 } from "next/server";
 
+const SEO_TTL = 20_000;
+const seoCache = new Map<string, { at: number; data: any }>();
+
 interface AuthTokenPayload extends JWTPayload {
   userId: string;
   email: string;
@@ -177,22 +180,26 @@ const resolverUrl = new URL(
 
     resolverUrl.searchParams.set("path", pathname);
 
-    const response = await fetch(resolverUrl, {
-      method: "GET",
-      headers: {
-        "x-seo-resolver": "1",
-      },
-      cache: "no-store",
-      next: {
-        revalidate: 0,
-      },
-    });
+let data: any;
+const cached = seoCache.get(pathname);
 
-    if (!response.ok) {
-      return null;
-    }
+if (cached && Date.now() - cached.at < SEO_TTL) {
+  data = cached.data;
+} else {
+  const response = await fetch(resolverUrl, {
+    method: "GET",
+    headers: { "x-seo-resolver": "1" },
+    cache: "no-store",
+    signal: AbortSignal.timeout(4000),
+  });
 
-    const data = await response.json();
+  if (!response.ok) return null;
+
+  data = await response.json();
+
+  if (seoCache.size > 500) seoCache.clear();
+  seoCache.set(pathname, { at: Date.now(), data });
+}
 
     // --------------------------------------------------
     // Redirect
@@ -669,12 +676,7 @@ const { payload } =
 
 export const config = {
   matcher: [
-    "/admin/:path*",
-    "/api/admin/:path*",
-    "/api/crisis-reports/:path*",
-
-    // مسیرهای عمومی سایت برای SEO
-    "/:path*",
+    "/((?!_next/static|_next/image|.*\\.(?:ico|png|jpg|jpeg|webp|svg|gif|css|js|map|txt|xml|woff|woff2|ttf|json)$).*)",
   ],
 };
 

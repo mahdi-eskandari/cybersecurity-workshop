@@ -15,37 +15,19 @@ import {
 } from "@/lib/schema";
 import AuthorsClient from "./AuthorsClient";
 import { type Post, getAuthorPosts, POSTS_PER_PAGE, authors } from "./authorsData";
+import { getPublishedPostsLite } from "@/lib/publicPosts";
+
+
+
+
 const AUTHOR_ID = "mohammadreza-yousefi";
 const BASE_PATH = "/authors";
 
 async function getPosts(): Promise<Post[]> {
   try {
-    const h = await headers();
-    const host = h.get("host");
-
-    if (!host) {
-      return [];
-    }
-
-    const protocol = h.get("x-forwarded-proto") ?? "http";
-    const response = await fetch(`${protocol}://${host}/api/posts`, {
-      method: "GET",
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      throw new Error("خطا در دریافت پست‌ها");
-    }
-
-    const data: unknown = await response.json();
-
-    if (!Array.isArray(data)) {
-      throw new Error("فرمت اطلاعات پست‌ها صحیح نیست");
-    }
-
-    return data as Post[];
+    return (await getPublishedPostsLite()) as unknown as Post[];
   } catch (error) {
-    console.error("GET /api/posts error:", error);
+    console.error("authors posts error:", error);
     return [];
   }
 }

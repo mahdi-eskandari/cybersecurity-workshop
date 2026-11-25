@@ -10,6 +10,9 @@ import {
   ChevronDown,
 } from "lucide-react";
 import Image from "next/image";
+import { cachedJson } from "@/lib/clientCache";
+
+
 
 const IconMoon = () => (
   <svg
@@ -49,6 +52,16 @@ const NAV_ITEMS = [
   { pageKey: "contact", label: "تماس با ما" },
 ] as const;
 
+
+const STATIC_SERVICES = [
+  { title: "کشف هویت", slug: "identity-discovery" },
+  { title: "رهگیری رمزارزها", slug: "crypto-tracking" },
+  { title: "هوش تهدید سایبری", slug: "cyber-threat-intelligence" },
+  { title: "تست نفوذ", slug: "penetration-testing" },
+  { title: "کالبدشکافی دیجیتال", slug: "digital-forensics" },
+  { title: "مقابله با باج‌افزار", slug: "ransomware-response" },
+];
+
 const DEFAULT_SLUGS: Record<string, string> = {
   home: "",
   authors: "authors",
@@ -62,18 +75,6 @@ const DEFAULT_SLUGS: Record<string, string> = {
 // ---------------------------------------------------------
 // مگامنوی خدمات
 // ---------------------------------------------------------
-
-type ServiceItem = {
-  _id: string;
-  slug: string;
-  title: string;
-  shortDesc?: string;
-  icon?: string;
-  categoryLabel?: string;
-  status?: string;
-};
-
-type ServicesState = "idle" | "loading" | "ready" | "error";
 
 function normalizePath(pathname: string) {
   const path = pathname.split("?")[0].split("#")[0];
@@ -94,8 +95,7 @@ export default function Header() {
 
   // مگامنوی خدمات
   const [megaOpen, setMegaOpen] = useState(false);
-  const [services, setServices] = useState<ServiceItem[]>([]);
-  const [servicesState, setServicesState] = useState<ServicesState>("idle");
+ 
     const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 const navRef = useRef<HTMLElement>(null);
   // آکاردئون خدمات در منوی موبایل
@@ -147,26 +147,7 @@ const navRef = useRef<HTMLElement>(null);
   // مگامنو: گرفتن خدمات (فقط بار اول که منو باز می‌شه)
   // ---------------------------------------------------------
 
-  const loadServices = useCallback(() => {
-    if (servicesState === "loading" || servicesState === "ready") return;
 
-    setServicesState("loading");
-
-    fetch("/api/services", { cache: "no-store" })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data?.success && Array.isArray(data.data)) {
-          setServices(
-            // ادمین همه‌ی وضعیت‌ها رو می‌گیره؛ تو منو فقط خدمات فعال
-            (data.data as ServiceItem[]).filter((s) => s.status === "active")
-          );
-          setServicesState("ready");
-        } else {
-          setServicesState("error");
-        }
-      })
-      .catch(() => setServicesState("error"));
-  }, [servicesState]);
 
   const clearCloseTimer = () => {
     if (closeTimer.current) {
@@ -178,7 +159,6 @@ const navRef = useRef<HTMLElement>(null);
   const openMega = () => {
     clearCloseTimer();
     setMegaOpen(true);
-    loadServices();
   };
 
   // کمی تأخیر تا اگه موس موقع حرکت از لینک به پنل یه لحظه بیرون رفت، منو نپره
@@ -257,7 +237,7 @@ const navItems = NAV_ITEMS.map((item) => ({
     navItems.find((item) => item.pageKey === "services")?.href ?? "/services";
 
   // تعداد ستون‌های مگامنو: با خدمات زیاد، سه ستون
-  const megaCols = services.length > 6 ? 3 : 2;
+const megaCols = STATIC_SERVICES.length > 6 ? 3 : 2;
 
   return (
     <div className="min-h-full cyber-grid-bg text-gray-600 dark:text-[#]">
@@ -339,6 +319,7 @@ const navItems = NAV_ITEMS.map((item) => ({
               <Link
                 key={item.label}
                 href={item.href}
+                prefetch={isServices ? false : undefined}
                 onMouseEnter={isServices ? openMega : closeMegaNow}
                 onFocus={isServices ? openMega : undefined}
                 onClick={isServices ? closeMegaNow : undefined}
@@ -490,89 +471,51 @@ const navItems = NAV_ITEMS.map((item) => ({
               
             </div>
 
-            {servicesState === "loading" || servicesState === "idle" ? (
-              <div
-                className="py-6 text-center text-sm"
-                style={{ color: darkMode ? "#94A3B8" : "#64748B" }}
-              >
-                در حال دریافت خدمات...
-              </div>
-            ) : servicesState === "error" ? (
-              <div
-                className="flex flex-col items-center gap-3 py-6 text-center text-sm"
-                style={{ color: darkMode ? "#94A3B8" : "#64748B" }}
-              >
-                دریافت خدمات انجام نشد.
-                <button
-                  type="button"
-                  onClick={() => {
-                    setServicesState("idle");
-                    setTimeout(loadServices, 0);
-                  }}
-                  className={`rounded-lg border px-4 py-1.5 text-xs font-semibold transition-colors ${
-                    darkMode
-                      ? "border-cyan-400/30 text-cyan-300 hover:bg-cyan-500/10"
-                      : "border-[#1565C0]/30 text-[#1565C0] hover:bg-[#1565C0]/5"
-                  }`}
-                >
-                  تلاش دوباره
-                </button>
-              </div>
-            ) : services.length === 0 ? (
-              <div
-                className="py-6 text-center text-sm"
-                style={{ color: darkMode ? "#94A3B8" : "#64748B" }}
-              >
-                فعلاً خدمتی ثبت نشده است.
-              </div>
-            ) : (
-              <div
-                className="grid gap-x-4 gap-y-1"
-                style={{
-                  gridTemplateColumns: `repeat(${megaCols}, minmax(0, 1fr))`,
-                }}
-              >
-                {services.map((service) => {
-                  const serviceHref = `${servicesHref}/${service.slug}`;
-                  const isCurrent = currentPath === serviceHref;
+<div
+  className="grid gap-x-4 gap-y-1"
+  style={{
+    gridTemplateColumns: `repeat(${megaCols}, minmax(0, 1fr))`,
+  }}
+>
+  {STATIC_SERVICES.map((service) => {
+    const serviceHref = `${servicesHref}/${service.slug}`;
+    const isCurrent = currentPath === serviceHref;
 
-                  return (
-                    <Link
-                      key={service._id}
-                      href={serviceHref}
-                      onClick={closeMegaNow}
-                      aria-current={isCurrent ? "page" : undefined}
-                      className={`group block px-2 py-1.5 text-[13px] font-medium transition-colors duration-300 ${
-                        darkMode
-                          ? isCurrent
-                            ? "text-cyan-300"
-                            : "text-slate-300 hover:text-cyan-300"
-                          : isCurrent
-                            ? "text-[#1565C0]"
-                            : "text-slate-600 hover:text-[#1565C0]"
-                      }`}
-                    >
-                      <span className="relative inline-block">
-                        {service.title}
-
-                        <span
-                          aria-hidden="true"
-                          className={`absolute bottom-0 right-0 h-[1.5px] rounded-full transition-all duration-500 ease-out ${
-                            darkMode
-                              ? "bg-[#00E5FF] shadow-[0_0_6px_rgba(0,229,255,0.6)]"
-                              : "bg-[#1565C0]"
-                          } ${
-                            isCurrent
-                              ? "w-full opacity-100"
-                              : "w-0 opacity-0 group-hover:w-full group-hover:opacity-100"
-                          }`}
-                        />
-                      </span>
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
+    return (
+      <Link
+        key={service.slug}
+        href={serviceHref}
+        onClick={closeMegaNow}
+        aria-current={isCurrent ? "page" : undefined}
+        className={`group block px-2 py-1.5 text-[13px] font-medium transition-colors duration-300 ${
+          darkMode
+            ? isCurrent
+              ? "text-cyan-300"
+              : "text-slate-300 hover:text-cyan-300"
+            : isCurrent
+              ? "text-[#1565C0]"
+              : "text-slate-600 hover:text-[#1565C0]"
+        }`}
+      >
+        <span className="relative inline-block">
+          {service.title}
+          <span
+            aria-hidden="true"
+            className={`absolute bottom-0 right-0 h-[1.5px] rounded-full transition-all duration-500 ease-out ${
+              darkMode
+                ? "bg-[#00E5FF] shadow-[0_0_6px_rgba(0,229,255,0.6)]"
+                : "bg-[#1565C0]"
+            } ${
+              isCurrent
+                ? "w-full opacity-100"
+                : "w-0 opacity-0 group-hover:w-full group-hover:opacity-100"
+            }`}
+          />
+        </span>
+      </Link>
+    );
+  })}
+</div>
           </div>
         </div>
       </nav>
@@ -663,7 +606,6 @@ const navItems = NAV_ITEMS.map((item) => ({
                       onClick={() => {
                         const next = !mobileServicesOpen;
                         setMobileServicesOpen(next);
-                        if (next) loadServices();
                       }}
                       className={itemClass}
                     >
@@ -704,76 +646,40 @@ const navItems = NAV_ITEMS.map((item) => ({
                               : "border-[#1565C0]/10 bg-white/60"
                           }`}
                         >
-                          {servicesState === "loading" || servicesState === "idle" ? (
-                            <div
-                              className="py-4 text-center text-sm"
-                              style={{ color: darkMode ? "#94A3B8" : "#64748B" }}
-                            >
-                              در حال دریافت خدمات...
-                            </div>
-                          ) : servicesState === "error" ? (
-                            <div
-                              className="flex flex-col items-center gap-3 py-4 text-center text-sm"
-                              style={{ color: darkMode ? "#94A3B8" : "#64748B" }}
-                            >
-                              دریافت خدمات انجام نشد.
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setServicesState("idle");
-                                  setTimeout(loadServices, 0);
-                                }}
-                                className={`rounded-lg border px-4 py-1.5 text-xs font-semibold ${
-                                  darkMode
-                                    ? "border-cyan-400/30 text-cyan-300"
-                                    : "border-[#1565C0]/30 text-[#1565C0]"
-                                }`}
-                              >
-                                تلاش دوباره
-                              </button>
-                            </div>
-                          ) : services.length === 0 ? (
-                            <div
-                              className="py-4 text-center text-sm"
-                              style={{ color: darkMode ? "#94A3B8" : "#64748B" }}
-                            >
-                              فعلاً خدمتی ثبت نشده است.
-                            </div>
-                          ) : (
-                            <>
-                              {services.map((service) => {
-                                const serviceHref = `${servicesHref}/${service.slug}`;
-                                const isCurrent = currentPath === serviceHref;
-                                return (
-                                  <Link
-                                    key={service._id}
-                                    href={serviceHref}
-                                    onClick={() => setMenuOpen(false)}
-                                    className={`rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
-                                      darkMode
-                                        ? isCurrent
-                                          ? "bg-cyan-500/10 text-cyan-300"
-                                          : "text-slate-300 hover:bg-cyan-500/10 hover:text-cyan-300"
-                                        : isCurrent
-                                          ? "bg-[#1565C0]/10 text-[#1565C0]"
-                                          : "text-slate-600 hover:bg-[#1565C0]/5 hover:text-[#1565C0]"
-                                    }`}
-                                  >
-                                    {service.title}
-                                  </Link>
-                                );
-                              })}
-                              <Link
-                                href={item.href}
-                                onClick={() => setMenuOpen(false)}
-                                className={`mt-1 rounded-xl px-4 py-3 text-center text-xs font-bold ${
-                                  darkMode ? "text-cyan-300" : "text-[#1565C0]"
-                                }`}
-                              >
-                                مشاهدهٔ همهٔ خدمات
-                              </Link>
-                            </>
-                          )}
+<>
+  {STATIC_SERVICES.map((service) => {
+    const serviceHref = `${servicesHref}/${service.slug}`;
+    const isCurrent = currentPath === serviceHref;
+    return (
+      <Link
+        key={service.slug}
+        href={serviceHref}
+        onClick={() => setMenuOpen(false)}
+        className={`rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
+          darkMode
+            ? isCurrent
+              ? "bg-cyan-500/10 text-cyan-300"
+              : "text-slate-300 hover:bg-cyan-500/10 hover:text-cyan-300"
+            : isCurrent
+              ? "bg-[#1565C0]/10 text-[#1565C0]"
+              : "text-slate-600 hover:bg-[#1565C0]/5 hover:text-[#1565C0]"
+        }`}
+      >
+        {service.title}
+      </Link>
+    );
+  })}
+  <Link
+    href={item.href}
+    prefetch={false}
+    onClick={() => setMenuOpen(false)}
+    className={`mt-1 rounded-xl px-4 py-3 text-center text-xs font-bold ${
+      darkMode ? "text-cyan-300" : "text-[#1565C0]"
+    }`}
+  >
+    مشاهدهٔ همهٔ خدمات
+  </Link>
+</>
                         </div>
                       </div>
                     </div>

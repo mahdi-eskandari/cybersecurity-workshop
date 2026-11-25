@@ -1,20 +1,11 @@
 import type { Metadata } from "next";
+import connectDB from "@/lib/mongodb";
+import Service from "@/app/model/Service";
+import { SITE_URL, getSocialDefaults } from "@/lib/seo";
 
 type Props = {
   children: React.ReactNode;
   params: Promise<{ slug: string }>;
-};
-
-type Service = {
-  slug?: string;
-  title?: string;
-  shortDesc?: string;
-  metaTitle?: string;
-  metaDescription?: string;
-  featuredImage?: string | null;
-  featuredImageAlt?: string | null;
-    index?: boolean;   // اضافه شد
-  follow?: boolean;  // اضافه شد
 };
 
 export async function generateMetadata({
@@ -22,54 +13,35 @@ export async function generateMetadata({
 }: Props): Promise<Metadata> {
   const { slug } = await params;
 
-const baseUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  let decoded = slug;
+  try {
+    decoded = decodeURIComponent(slug);
+  } catch {}
 
   try {
-    const response = await fetch(
-      `${baseUrl}/api/services/${encodeURIComponent(slug)}`,
-      {
-        cache: "no-store",
-      }
-    );
+    await connectDB();
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch service");
-    }
-
-    const result = await response.json();
-    // console.log("METADATA API RESULT:", result);
-
-    const service: Service | null =
-      result?.data?.slug
-        ? result.data
-        : result?.service?.slug
-          ? result.service
-          : result?.slug
-            ? result
-            : null;
-
-            // console.log("METADATA SERVICE:", service);
+    const service: any = await Service.findOne({
+      slug: decoded.trim().toLowerCase(),
+      status: "active",
+    })
+      .select("slug title shortDesc metaTitle metaDescription index follow")
+      .lean();
 
     if (!service) {
       return {
-        title: "خدمت پیدا نشد | پاراهور",
+        title: { absolute: "خدمت پیدا نشد | پاراهور" },
         description: "خدمت موردنظر در خدمات پاراهور پیدا نشد.",
-        robots: {
-          index: false,
-          follow: true,
-        },
+        robots: { index: false, follow: true },
       };
     }
 
-const rawTitle =
-  service.metaTitle?.trim() ||
-  service.title?.trim() ||
-  "خدمات پاراهور";
-  
-  const title = rawTitle.includes("| پاراهور")
-  ? rawTitle
-  : `${rawTitle} | پاراهور`;
+    const rawTitle =
+      service.metaTitle?.trim() || service.title?.trim() || "خدمات پاراهور";
+
+    const title = rawTitle.includes("پاراهور")
+      ? rawTitle
+      : `${rawTitle} | پاراهور`;
 
     const description =
       service.metaDescription?.trim() ||
@@ -78,65 +50,44 @@ const rawTitle =
         service.title || "خدمات تخصصی پاراهور"
       } در حوزه تحقیقات سایبری، فارنزیک دیجیتال و امنیت اطلاعات.`;
 
-    const canonicalUrl = `${baseUrl}/services/${
-      service.slug || slug
-    }`;
+    const canonicalUrl = `${SITE_URL}/services/${service.slug || decoded}`;
+    const social = await getSocialDefaults();
 
-    const imageUrl = service.featuredImage
-      ? service.featuredImage.startsWith("http")
-        ? service.featuredImage
-        : `${baseUrl}${service.featuredImage}`
-      : `${baseUrl}/logo.jpg`;
-// console.log("FINAL METADATA TITLE:", title);
     return {
-      title,
+      title: { absolute: title },
       description,
-
-      alternates: {
-        canonical: canonicalUrl,
+      alternates: { canonical: canonicalUrl },
+      robots: {
+        index: service.index ?? true,
+        follow: service.follow ?? true,
       },
-
-robots: {
-  index: service.index ?? true,
-  follow: service.follow ?? true,
-},
-
       openGraph: {
         type: "website",
         locale: "fa_IR",
-        siteName: "پاراهور",
+        siteName: social.siteName,
         title,
         description,
         url: canonicalUrl,
         images: [
-          {
-            url: imageUrl,
-            alt:
-              service.featuredImageAlt ||
-              service.title ||
-              "پاراهور",
-          },
+          { url: social.image, alt: social.imageAlt || service.title || "پاراهور" },
         ],
       },
-
       twitter: {
         card: "summary_large_image",
+        site: social.twitterSite,
         title,
         description,
-        images: [imageUrl],
+        images: [social.image],
       },
     };
-  } catch(error) {
-      // console.error("SERVICE METADATA ERROR:", error);
+  } catch (error) {
+    console.error("SERVICE METADATA ERROR:", error);
 
     return {
-      title: "پاراهور | خدمات تحقیقات سایبری و فارنزیک",
+      title: { absolute: "پاراهور | خدمات تحقیقات سایبری و فارنزیک" },
       description:
         "خدمات تخصصی پاراهور در حوزه تحقیقات سایبری، فارنزیک دیجیتال و تحلیل شواهد دیجیتال.",
-      robots: {
-        index: false,
-        follow: true,
-      },
+      robots: { index: false, follow: true },
     };
   }
 }

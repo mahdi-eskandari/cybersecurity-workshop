@@ -149,9 +149,7 @@ export async function PATCH(
       faqs,
       follow,
       index,
-      showInFooter,
-       footerTitle,
-        footerOrder
+
     } = body;
 
     /* ───────── Validation ───────── */
@@ -324,17 +322,7 @@ const oldService = await Service.findById(id).select("slug").lean();
           ...(Array.isArray(faqs) ? { faqs: normalizeFaqs(faqs) } : {}),
 
           index: typeof index === "boolean" ? index : true,
-follow: typeof follow === "boolean" ? follow : true,
-
-          ...(typeof showInFooter === "boolean" ? { showInFooter } : {}),
-
-          ...(typeof footerTitle === "string"
-            ? { footerTitle: footerTitle.trim() }
-            : {}),
-
-          ...(footerOrder !== undefined
-            ? { footerOrder: Number(footerOrder) || 0 }
-            : {}),
+         follow: typeof follow === "boolean" ? follow : true,
         },
         {
           new: true,

@@ -1,7 +1,6 @@
 
 
 
-import { headers } from "next/headers";
 import ServicesPageClient, {
   type ServicesPageInitialData,
 } from "./ServicesPageClient";
@@ -14,6 +13,10 @@ import {
   buildOrganizationSchema,
   buildBreadcrumbSchema,
 } from "@/lib/schema";
+
+import { cache } from "react";
+import connectDB from "@/lib/mongodb";
+import Service from "@/app/model/Service";
 
 type RawService = {
   _id?: string;
@@ -33,10 +36,10 @@ type RawService = {
   metaDescription?: string;
 };
 
-type ApiResponse<T> = {
-  success?: boolean;
-  data?: T;
-};
+// type ApiResponse<T> = {
+//   success?: boolean;
+//   data?: T;
+// };
 
 type Service = ServicesPageInitialData["services"][number];
 
@@ -72,23 +75,23 @@ function buildServicesPaginationLinks({
   };
 }
 
-async function fetchJson<T>(url: string, cookie: string) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000);
+// async function fetchJson<T>(url: string, cookie: string) {
+//   const controller = new AbortController();
+//   const timeout = setTimeout(() => controller.abort(), 8000);
 
-  try {
-    const response = await fetch(url, {
-      cache: "no-store",
-      headers: cookie ? { cookie } : undefined,
-      signal: controller.signal,
-    });
+//   try {
+//     const response = await fetch(url, {
+//       cache: "no-store",
+//       headers: cookie ? { cookie } : undefined,
+//       signal: controller.signal,
+//     });
 
-    if (!response.ok) throw new Error(`Request failed: ${response.status}`);
-    return (await response.json()) as T;
-  } finally {
-    clearTimeout(timeout);
-  }
-}
+//     if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+//     return (await response.json()) as T;
+//   } finally {
+//     clearTimeout(timeout);
+//   }
+// }
 
 function normalizeServices(items: RawService[]): Service[] {
   return items.map((item) => ({
@@ -117,28 +120,64 @@ function normalizeServices(items: RawService[]): Service[] {
   }));
 }
 
+// async function getInitialData(): Promise<Omit<ServicesPageInitialData, "initialPage">> {
+//     const h = await headers();
+//   const forwardedHost = h.get("x-forwarded-host") || h.get("host");
+//   const forwardedProto = h.get("x-forwarded-proto") || "https";
+//   const origin = forwardedHost
+//     ? `${forwardedProto}://${forwardedHost}`
+//     : process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
+//   const cookie = h.get("cookie") || "";
+
+//   const servicesResult = await fetchJson<ApiResponse<RawService[]>>(
+//     `${origin}/api/services`,
+//     cookie
+//   );
+
+//   const rawServices =
+//     servicesResult?.success !== false &&
+//     Array.isArray(servicesResult?.data)
+//       ? servicesResult.data
+//       : [];
+
+//   const seo = await getPageSeo("services");
+
+//   return {
+//     services: normalizeServices(rawServices),
+//     seo: {
+//       h1Title: seo.h1Title || FALLBACK_H1,
+//       title: seo.metaTitle || FALLBACK_H1,
+//       description:
+//         seo.metaDescription ||
+//         "خدمات تخصصی پاراهور در حوزه‌های فارنزیک، تحقیقات، امنیت سایبری و مشاوره فنی.",
+//     },
+//   };
+// }
+
+
+
+
+
+const getRawServices = cache(async (): Promise<RawService[]> => {
+  await connectDB();
+  const docs = await Service.find({ status: "active" })
+    .select(
+      "slug title shortDesc icon tags level categoryLabel status body urgencyTitle urgencyDesc metaTitle metaDescription"
+    )
+    .sort({ createdAt: -1 })
+    .lean();
+  return docs as unknown as RawService[];
+});
+
 async function getInitialData(): Promise<Omit<ServicesPageInitialData, "initialPage">> {
-    const h = await headers();
-  const forwardedHost = h.get("x-forwarded-host") || h.get("host");
-  const forwardedProto = h.get("x-forwarded-proto") || "https";
-  const origin = forwardedHost
-    ? `${forwardedProto}://${forwardedHost}`
-    : process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
-  const cookie = h.get("cookie") || "";
-
-  const servicesResult = await fetchJson<ApiResponse<RawService[]>>(
-    `${origin}/api/services`,
-    cookie
-  );
-
-  const rawServices =
-    servicesResult?.success !== false &&
-    Array.isArray(servicesResult?.data)
-      ? servicesResult.data
-      : [];
-
-  const seo = await getPageSeo("services");
+  const [rawServices, seo] = await Promise.all([
+    getRawServices().catch((e) => {
+      console.error("services error:", e);
+      return [] as RawService[];
+    }),
+    getPageSeo("services"),
+  ]);
 
   return {
     services: normalizeServices(rawServices),
@@ -151,6 +190,11 @@ async function getInitialData(): Promise<Omit<ServicesPageInitialData, "initialP
     },
   };
 }
+
+
+
+
+
 
 export async function generateMetadata({
   searchParams,
