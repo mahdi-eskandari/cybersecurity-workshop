@@ -1004,6 +1004,276 @@ function Spinner({ className = "h-3.5 w-3.5" }: { className?: string }) {
   );
 }
 
+type CategorySeoForm = {
+  metaTitle: string;
+  metaDescription: string;
+  ogImage: string;
+  ogImageAlt: string;
+  index: boolean;
+  follow: boolean;
+};
+
+function CategorySeoModal({
+  category,
+  onClose,
+}: {
+  category: CategoryItem;
+  onClose: () => void;
+}) {
+  const [form, setForm] = useState<CategorySeoForm>({
+    metaTitle: "",
+    metaDescription: "",
+    ogImage: "",
+    ogImageAlt: "",
+    index: true,
+    follow: true,
+  });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const patch = (p: Partial<CategorySeoForm>) => setForm((prev) => ({ ...prev, ...p }));
+  const apiUrl = `/api/admin/categories/${encodeURIComponent(category.id)}/seo`;
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(apiUrl, { cache: "no-store" });
+        const result = await res.json();
+        if (!res.ok || !result.success) throw new Error(result.message || "دریافت اطلاعات انجام نشد.");
+        if (!cancelled) setForm(result.seo);
+      } catch (e) {
+        if (!cancelled) setError(e instanceof Error ? e.message : "خطا در دریافت اطلاعات.");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [apiUrl]);
+
+  const upload = async (file: File) => {
+    setError("");
+    setMessage("");
+    if (!file.type.startsWith("image/")) {
+      setError("فقط فایل تصویری مجاز است.");
+      return;
+    }
+    try {
+      setUploading(true);
+      const fd = new FormData();
+      fd.append("file", file);
+      if (form.ogImageAlt.trim()) fd.append("alt", form.ogImageAlt.trim());
+      const res = await fetch("/api/media", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok || !data.id) throw new Error(data.message || "آپلود تصویر انجام نشد.");
+      patch({
+        ogImage: `/api/media/${data.id}`,
+        ogImageAlt: form.ogImageAlt || data.alt || "",
+      });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "خطا در آپلود تصویر.");
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  };
+
+  const save = async () => {
+    setError("");
+    setMessage("");
+    try {
+      setSaving(true);
+      const res = await fetch(apiUrl, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const result = await res.json();
+      if (!res.ok || !result.success) throw new Error(result.message || "ذخیره انجام نشد.");
+      setForm(result.seo);
+      setMessage("سئوی دسته‌بندی ذخیره شد.");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "خطا در ذخیره.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0F172A]/[0.39] p-5 backdrop-blur-sm"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget && !saving && !uploading) onClose();
+      }}
+    >
+      <div
+        dir="rtl"
+        className="flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-[#1E3A8A]/[0.16] bg-[#F6F9FD] shadow-2xl"
+      >
+        <div className="flex items-center justify-between border-b border-[#1E3A8A]/[0.12] px-5 py-4">
+          <div>
+            <div className="font-mono text-[0.6rem] tracking-[0.18em] text-[#1565C0]/80">CATEGORY SEO</div>
+            <h3 className="mt-1 text-sm font-black text-[#0F172A]">سئوی دسته‌بندی «{category.label}»</h3>
+            <p className="mt-1 font-mono text-[0.62rem] text-slate-500" dir="ltr">
+              /blogs/category/{category.id}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={saving || uploading}
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[#1E3A8A]/[0.14] bg-[#1E3A8A]/[0.054] text-slate-600"
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="flex flex-col gap-4 overflow-y-auto p-5">
+          {loading ? (
+            <div className="py-10 text-center text-xs text-slate-500">در حال دریافت...</div>
+          ) : (
+            <>
+              {error && (
+                <div role="alert" className="rounded-lg border border-red-500/[0.255] bg-red-500/[0.075] px-3 py-2.5 text-[12px] font-bold text-red-700">
+                  {error}
+                </div>
+              )}
+              {message && (
+                <div role="status" className="rounded-lg border border-emerald-500/[0.33] bg-emerald-500/[0.1] px-3 py-2.5 text-[12px] font-bold text-emerald-700">
+                  {message}
+                </div>
+              )}
+
+              <F label="عنوان سئو (Meta Title)" hint={`${form.metaTitle.length}/70 — اگر خالی بماند، عنوان خودکار استفاده می‌شود`}>
+                <input
+                  value={form.metaTitle}
+                  maxLength={70}
+                  onChange={(e) => patch({ metaTitle: e.target.value })}
+                  placeholder={`مثلاً: ${category.label} | پاراهور`}
+                  className={inputClass}
+                />
+              </F>
+
+              <F label="توضیحات متا (Meta Description)" hint={`${form.metaDescription.length}/170 — اگر خالی بماند، توضیح خودکار استفاده می‌شود`}>
+                <textarea
+                  value={form.metaDescription}
+                  maxLength={170}
+                  rows={4}
+                  onChange={(e) => patch({ metaDescription: e.target.value })}
+                  placeholder="توضیح کوتاه و جذاب برای نتایج جستجو..."
+                  className={`${inputClass} resize-none leading-6`}
+                />
+              </F>
+
+              <F label="تصویر شبکه‌های اجتماعی (OG Image)" hint="اندازه مناسب حدود 1200×630 — اگر خالی بماند، عکس پیش‌فرض سایت استفاده می‌شود">
+                <div className="flex gap-2">
+                  <input
+                    dir="ltr"
+                    value={form.ogImage}
+                    onChange={(e) => patch({ ogImage: e.target.value })}
+                    placeholder="/api/media/... یا https://..."
+                    className={`${inputClass} text-left font-mono`}
+                  />
+                  <input
+                    ref={fileRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) void upload(f);
+                    }}
+                  />
+                  <button
+                    type="button"
+                    disabled={uploading}
+                    onClick={() => fileRef.current?.click()}
+                    className="shrink-0 cursor-pointer whitespace-nowrap rounded-lg border border-[#1565C0]/[0.4] bg-[#1565C0]/[0.07] px-3 text-[11px] font-black text-[#1565C0] hover:bg-[#1565C0]/[0.14] disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {uploading ? "در حال آپلود..." : "انتخاب تصویر"}
+                  </button>
+                </div>
+                {form.ogImage && (
+                  <div className="mt-1 flex items-center gap-2">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={form.ogImage}
+                      alt={form.ogImageAlt || "پیش‌نمایش"}
+                      className="h-24 w-auto max-w-full rounded-lg border border-[#1E3A8A]/[0.14] bg-[#F3F7FC]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => patch({ ogImage: "" })}
+                      className="cursor-pointer border-0 bg-transparent text-[0.68rem] font-bold text-red-600"
+                    >
+                      حذف تصویر
+                    </button>
+                  </div>
+                )}
+              </F>
+
+              <F label="متن جایگزین تصویر (Alt)">
+                <input
+                  value={form.ogImageAlt}
+                  maxLength={200}
+                  onChange={(e) => patch({ ogImageAlt: e.target.value })}
+                  placeholder="توضیح کوتاه تصویر"
+                  className={inputClass}
+                />
+              </F>
+
+              <SeoToggle
+                checked={form.index}
+                onChange={(v) => patch({ index: v })}
+                title="Index"
+                description="اجازه نمایش صفحه در نتایج جستجو"
+              />
+              <SeoToggle
+                checked={form.follow}
+                onChange={(v) => patch({ follow: v })}
+                title="Follow"
+                description="اجازه دنبال کردن لینک‌های صفحه"
+              />
+            </>
+          )}
+        </div>
+
+        <div className="flex gap-2 border-t border-[#1E3A8A]/[0.12] bg-[#F1F5FB] p-4">
+          <button
+            type="button"
+            disabled={saving || uploading || loading}
+            onClick={save}
+            className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg border border-[#1565C0]/[0.77] bg-[#1565C0] py-2.5 text-[12px] font-black text-white hover:bg-[#0D47A1] disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {saving ? (
+              <>
+                <Spinner />
+                در حال ذخیره...
+              </>
+            ) : (
+              "ذخیره سئو"
+            )}
+          </button>
+          <button
+            type="button"
+            disabled={saving || uploading}
+            onClick={onClose}
+            className="cursor-pointer rounded-lg border border-[#1E3A8A]/[0.14] bg-[#1E3A8A]/[0.054] px-5 py-2.5 text-[12px] font-bold text-slate-700 disabled:opacity-60"
+          >
+            بستن
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function CategoryManager({
   categories,
   onChanged,
@@ -1021,6 +1291,7 @@ function CategoryManager({
   const [busy, setBusy] = useState(false);
     const [action, setAction] = useState<string | null>(null); // "add" | "edit:<id>" | "delete:<id>"
   const [deleteTarget, setDeleteTarget] = useState<CategoryItem | null>(null);
+  const [seoTarget, setSeoTarget] = useState<CategoryItem | null>(null);
 
    const call = async (url: string, init: RequestInit, act: string) => {
     setBusy(true);
@@ -1138,6 +1409,13 @@ function CategoryManager({
                   </button>
                   <button
                     type="button"
+                    onClick={() => setSeoTarget({ id, label })}
+                    className="shrink-0 cursor-pointer border-0 bg-transparent p-0 text-[0.68rem] font-bold text-emerald-600"
+                  >
+                    سئو
+                  </button>
+                  <button
+                    type="button"
                     disabled={busy}
                     onClick={() => setDeleteTarget({ id, label })}
                     className="shrink-0 cursor-pointer border-0 bg-transparent p-0 text-[0.68rem] font-bold text-red-600 disabled:cursor-not-allowed disabled:opacity-60"
@@ -1243,7 +1521,11 @@ function CategoryManager({
           </div>,
           document.body
         )}
-
+      {seoTarget &&
+        createPortal(
+          <CategorySeoModal category={seoTarget} onClose={() => setSeoTarget(null)} />,
+          document.body
+        )}
 
     </div>
   );

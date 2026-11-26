@@ -4,7 +4,14 @@ import BlogPageClient, { type BlogPageInitialData } from "../../BlogPageClient";
 
 import { buildOrganizationSchema, buildBreadcrumbSchema } from "@/lib/schema";
 import { getPublishedPostsLite, getCategoriesList } from "@/lib/publicPosts";
-import { getPageSeo, SITE_URL, getSocialDefaults } from "@/lib/seo";
+import {
+  getPageSeo,
+  SITE_URL,
+  getSocialDefaults,
+  applyGlobalRobots,
+  brandTitle,
+} from "@/lib/seo";
+import { getCategorySeo } from "@/lib/categorySeo";
 
 export const dynamic = "force-dynamic";
 
@@ -74,31 +81,52 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 
   const currentPage = safePage(page, data.totalPages);
   const label = data.current.label;
-  const title = `${label} | وبلاگ پاراهور`;
-  const description = `مقالات و گزارش‌های دسته «${label}» در وبلاگ پاراهور.`;
   const url = categoryUrl(data.current.id, currentPage);
+
+  // سئوی ذخیره‌شده از پنل ادمین (اگر خالی باشد، متن خودکار قبلی)
+  const seo = await getCategorySeo(data.current.id);
+
+  const title: Metadata["title"] = seo.metaTitle
+    ? brandTitle(seo.metaTitle)
+    : { absolute: `${label} | وبلاگ پاراهور` };
+
+  const ogTitle = seo.metaTitle || `${label} | وبلاگ پاراهور`;
+
+  const description =
+    seo.metaDescription || `مقالات و گزارش‌های دسته «${label}» در وبلاگ پاراهور.`;
+
   const social = await getSocialDefaults();
 
+  const imageUrl = seo.ogImage
+    ? /^https?:\/\//i.test(seo.ogImage)
+      ? seo.ogImage
+      : `${SITE_URL}${seo.ogImage.startsWith("/") ? "" : "/"}${seo.ogImage}`
+    : social.image;
+
+  const imageAlt = seo.ogImageAlt || social.imageAlt || label;
+
+  const robots = await applyGlobalRobots(seo.index, seo.follow);
+
   return {
-    title: { absolute: title },
+    title,
     description,
     alternates: { canonical: url },
-    robots: { index: true, follow: true },
+    robots,
     openGraph: {
       type: "website",
       locale: "fa_IR",
       siteName: social.siteName,
-      title,
+      title: ogTitle,
       description,
       url,
-      images: [{ url: social.image, alt: social.imageAlt || label }],
+      images: [{ url: imageUrl, alt: imageAlt }],
     },
     twitter: {
       card: "summary_large_image",
       site: social.twitterSite,
-      title,
+      title: ogTitle,
       description,
-      images: [social.image],
+      images: [imageUrl],
     },
   };
 }

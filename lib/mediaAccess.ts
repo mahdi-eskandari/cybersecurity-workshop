@@ -1,9 +1,10 @@
 import Post from "../app/model/blog";
 import SiteSeo from "../app/model/SiteSeo";
+import Category from "../app/model/category";
 
 /**
  * رسانه عمومی است اگر در پست published به‌عنوان تصویر شاخص یا داخل محتوا
- * استفاده شده باشد، یا OG پیش‌فرض سایت باشد.
+ * استفاده شده باشد، یا OG پیش‌فرض سایت باشد، یا OG یکی از دسته‌بندی‌ها باشد.
  */
 export async function isMediaPublic(
   id: string,
@@ -19,7 +20,7 @@ export async function isMediaPublic(
   const featuredRegex = new RegExp(id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
 
   try {
-    const [asFeatured, inContent, site] = await Promise.all([
+    const [asFeatured, inContent, asCategoryImage, site] = await Promise.all([
       Post.exists({
         status: "published",
         $or: [
@@ -31,13 +32,14 @@ export async function isMediaPublic(
         status: "published",
         content: { $regex: featuredRegex },
       }),
+      Category.exists({ ogImage: { $regex: featuredRegex } }),
       SiteSeo.findOne({ key: "site" })
         .select("defaultOgImage")
         .lean()
         .catch(() => null),
     ]);
 
-    if (asFeatured || inContent) return true;
+    if (asFeatured || inContent || asCategoryImage) return true;
 
     const og = (site as { defaultOgImage?: string } | null)?.defaultOgImage;
     if (typeof og === "string" && (og.endsWith(id) || og.includes(id))) {

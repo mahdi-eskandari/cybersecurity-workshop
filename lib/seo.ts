@@ -243,7 +243,7 @@ function resolveCanonicalUrl(
 
 // تنظیم سراسری همیشه بر تنظیم هر روت غلبه می‌کند.
 // اگر دیتابیس خطا بدهد، مقدار خود روت دست‌نخورده می‌ماند.
-async function applyGlobalRobots(index: boolean, follow: boolean) {
+export async function applyGlobalRobots(index: boolean, follow: boolean) {
   try {
     const site = await getSiteSeo();
     return {
