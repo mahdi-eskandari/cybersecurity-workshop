@@ -462,7 +462,7 @@ const isDark = darkMode;
   const channels: ContactChannel[] = [
 { icon: <IconPhone color={themeRed} />, iconColor: themeRed, badge: "CRISIS HOTLINE", title: "خط ویژه بحران", desc: "پاسخگویی فوری به بحران های سایبری", value: "09002222319", valueLabel: "شماره تماس", urgent: true, accentColor: themeRed, href: "tel:+982632209950", actionLabel: "تماس اورژانسی" },
 { icon: <TelegramIcon color={themeBlue} />, iconColor: themeBlue, badge: "SECURE CHAT", title: "پشتیبانی امن تلگرام", desc: "ارسال سریع مستندات", value: "Parahoor_Support", valueLabel: "آیدی تلگرام", urgent: false, accentColor: themeBlue, hoverColor: themeBlue, href: "https://t.me/Parahoor_Support", actionLabel: "باز کردن تلگرام" },
-{ icon: <IconLockMail color={themeBlue} />, iconColor: themeBlue, badge: "OFFICIAL EMAIL", title: "ایمیل سازمانی", desc: "برای مکاتبات رسمی و حقوقی", value: "info@parahoor.com", valueLabel: "آدرس ایمیل", urgent: false, accentColor: themeBlue, hoverColor: themeBlue, href: "https://mail.google.com/mail/?view=cm&fs=1&to=info@parahoor.com.com&su=" + encodeURIComponent("تماس از سایت پاراهور"), actionLabel: "ارسال ایمیل" },  ];
+{ icon: <IconLockMail color={themeBlue} />, iconColor: themeBlue, badge: "OFFICIAL EMAIL", title: "ایمیل سازمانی", desc: "برای مکاتبات رسمی و حقوقی", value: "info@parahoor.com", valueLabel: "آدرس ایمیل", urgent: false, accentColor: themeBlue, hoverColor: themeBlue, href: "https://mail.google.com/mail/?view=cm&fs=1&to=info@parahoor.com&su=" + encodeURIComponent("تماس از سایت پاراهور"), actionLabel: "ارسال ایمیل" },  ];
 
   return (
     <>

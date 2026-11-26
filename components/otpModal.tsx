@@ -358,7 +358,7 @@ const fmt = (s: number) =>
                 }}
               >
                 OTP VERIFICATION // SMS
-              </span>y
+              </span>
             </div>
 
             <h2

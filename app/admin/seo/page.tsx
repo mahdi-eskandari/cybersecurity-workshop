@@ -280,9 +280,7 @@ function CustomSelect({
   options: { value: string; label: string }[];
 }) {
   const [open, setOpen] = useState(false);
-    const [ogImage, setOgImage] = useState("");
-  const [ogImageAlt, setOgImageAlt] = useState("");
-  const [uploadingImage, setUploadingImage] = useState(false);
+
 
   const selectedOption =
     options.find(
@@ -535,8 +533,11 @@ export default function SeoAdminPage() {
   const [message, setMessage] =
     useState("");
 
-  const [error, setError] =
-    useState("");
+    const [error, setError] = useState("");
+
+const [ogImage, setOgImage] = useState("");
+const [ogImageAlt, setOgImageAlt] = useState("");
+const [uploadingImage, setUploadingImage] = useState(false);
     
 
   const selectedPage = useMemo(
