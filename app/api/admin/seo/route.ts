@@ -5,6 +5,7 @@ import { parseOgImage, cleanAlt } from "@/lib/seoFields";
 import connectDB from "@/lib/mongodb";
 import PageSeo from "../../../model/PageSeo";
 import SeoRedirect from "../../../model/SeoRedirect";
+import { isAdmin } from "@/lib/adminAuth";
 
 const ALLOWED_PAGES = [
   {
@@ -122,6 +123,10 @@ function normalizeCanonical(
 
 export async function GET() {
   try {
+// اول هر تابع، داخل try:
+if (!(await isAdmin())) {
+  return NextResponse.json({ success: false, message: "دسترسی غیرمجاز" }, { status: 403 });
+}
     await connectDB();
 
     const pages = await PageSeo.find({})
@@ -149,6 +154,11 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+// اول هر تابع، داخل try:
+if (!(await isAdmin())) {
+  return NextResponse.json({ success: false, message: "دسترسی غیرمجاز" }, { status: 403 });
+}
+
     await connectDB();
 
     const body = await request.json();

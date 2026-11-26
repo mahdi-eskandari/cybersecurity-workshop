@@ -19,7 +19,7 @@ async function getAdmin() {
   if (!token) return null;
   if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET is not configured");
 
-  const decoded = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
+  const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ["HS256"] }) as JwtPayload;
 
   if (!decoded.userId || !Types.ObjectId.isValid(decoded.userId)) return null;
 

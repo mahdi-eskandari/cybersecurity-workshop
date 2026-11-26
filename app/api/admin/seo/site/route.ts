@@ -10,6 +10,7 @@ import {
   parseDisallowLines,
   parseBrandFields,
 } from "@/lib/siteSeoShared";
+import { isAdmin } from "@/lib/adminAuth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -19,6 +20,11 @@ const fail = (message: string, status = 400) =>
 
 export async function GET() {
   try {
+// اول هر تابع، داخل try:
+if (!(await isAdmin())) {
+  return NextResponse.json({ success: false, message: "دسترسی غیرمجاز" }, { status: 403 });
+}
+
     await connectDB();
 
     const doc = await SiteSeo.findOne({ key: "site" }).lean().exec();
@@ -35,6 +41,11 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+// اول هر تابع، داخل try:
+if (!(await isAdmin())) {
+  return NextResponse.json({ success: false, message: "دسترسی غیرمجاز" }, { status: 403 });
+}
+
     await connectDB();
 
     const body = await request.json().catch(() => null);

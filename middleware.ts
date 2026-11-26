@@ -21,7 +21,6 @@ interface AuthTokenPayload extends JWTPayload {
 const publicAdminApiRoutes = [
   "/api/admin/login",
   "/api/admin/verify",
-  "/api/admin/resend-code",
 
   // SEO resolver فقط اطلاعات عمومی SEO می‌خواند
   "/api/admin/seo/redirect",
@@ -506,14 +505,11 @@ const isProtectedAPI =
     !isAdminAPI &&
     !isProtectedAPI
   ) {
-    const seoResponse =
-      await handleSeo(request);
-
+        const seoResponse = await handleSeo(request);
     if (seoResponse) {
-      return seoResponse;
+      return addSecurityHeaders(seoResponse);
     }
-
-    return NextResponse.next();
+    return addSecurityHeaders(NextResponse.next());
   }
 
   /*

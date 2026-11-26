@@ -26,7 +26,7 @@ export async function GET() {
       );
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET) as {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ["HS256"] }) as {
       userId: string;
       username?: string;
       email?: string;

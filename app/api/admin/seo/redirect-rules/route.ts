@@ -5,6 +5,7 @@ import { isValidObjectId } from "mongoose";
 import connectDB from "@/lib/mongodb";
 import SeoRedirect from "../../../../model/SeoRedirect";
 import PageSeo from "../../../../model/PageSeo";
+import { isAdmin } from "@/lib/adminAuth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -136,6 +137,11 @@ async function getLivePaths(): Promise<string[]> {
 
 export async function GET() {
   try {
+// اول هر تابع، داخل try:
+if (!(await isAdmin())) {
+  return NextResponse.json({ success: false, message: "دسترسی غیرمجاز" }, { status: 403 });
+}
+
     await connectDB();
     const rules = await SeoRedirect.find({}).sort({ createdAt: -1 }).lean().exec();
     return NextResponse.json({ success: true, rules: rules.map(normalizeRule) });
@@ -149,6 +155,11 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+// اول هر تابع، داخل try:
+if (!(await isAdmin())) {
+  return NextResponse.json({ success: false, message: "دسترسی غیرمجاز" }, { status: 403 });
+}
+
     await connectDB();
 
     const body = await request.json().catch(() => null);
@@ -277,6 +288,11 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
+// اول هر تابع، داخل try:
+if (!(await isAdmin())) {
+  return NextResponse.json({ success: false, message: "دسترسی غیرمجاز" }, { status: 403 });
+}
+
     await connectDB();
 
     const body = await request.json().catch(() => null);

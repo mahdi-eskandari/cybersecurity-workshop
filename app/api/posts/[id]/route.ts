@@ -9,6 +9,7 @@ import SeoRedirect from "../../../model/SeoRedirect";
 import PageSeo from "../../../model/PageSeo";
 import { clearPostsLiteCache } from "@/lib/publicPosts";
 import { parseCanonical, parseOgImage, cleanAlt } from "@/lib/seoFields";
+import { cleanHtml } from "@/lib/sanitize";
 
 export async function PATCH(
   request: Request,
@@ -62,8 +63,8 @@ const safeBody = Object.fromEntries(
       if ("error" in r) return NextResponse.json({ message: r.error }, { status: 400 });
       safeBody.ogImage = r.value;
     }
-    if ("ogImageAlt" in safeBody) {
-      safeBody.ogImageAlt = cleanAlt(safeBody.ogImageAlt);
+if (typeof safeBody.content === "string") {
+      safeBody.content = cleanHtml(safeBody.content);
     }
 
     if (

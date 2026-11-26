@@ -4,7 +4,7 @@ import Service from '../../model/Service';
 import { isAdmin } from "@/lib/adminAuth";
 import { normalizeServiceKey } from "@/lib/serviceKeys";
 import { parseCanonical } from "@/lib/seoFields";
-
+import { cleanSvg } from "@/lib/sanitize";
 
 function normalizeFaqs(faqs: unknown) {
   if (!Array.isArray(faqs)) return [];
@@ -150,10 +150,7 @@ export async function POST(request: NextRequest) {
             ? step.description.trim()
             : "",
 
-        icon:
-          typeof step?.icon === "string"
-            ? step.icon.trim()
-            : "",
+icon: cleanSvg(step?.icon),
       })
     );
 
@@ -204,10 +201,7 @@ export async function POST(request: NextRequest) {
 
       shortDesc: shortDesc.trim(),
 
-      icon:
-        typeof icon === "string"
-          ? icon.trim()
-          : "",
+icon: cleanSvg(icon),
 
       tags:
         Array.isArray(tags)

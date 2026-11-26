@@ -71,7 +71,7 @@ if (!(await isAdmin())) {
     }
 
     if (q?.trim()) {
-      const search = q.trim();
+      const search = q.trim().slice(0, 100).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
       filter.$or = [
         {

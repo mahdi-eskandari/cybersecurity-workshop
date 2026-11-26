@@ -5,62 +5,68 @@ import VerificationCode from "../../../model/VerificationCode";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import { sendVerificationEmail } from "../../../../lib/mail";
+import { getIp } from "@/lib/ip";
+import { retryAfter, record, MIN } from "@/lib/rateLimit";
+
+const FAIL_WINDOW = 15 * MIN;
+const DUMMY_HASH = bcrypt.hashSync("dummy-password", 10);
+
+
 
 export async function POST(req: Request) {
-  console.log("🔥 VERIFY ROUTE HIT");
 
   try {
     await dbConnect();
 
-    const body = await req.json();
-    const { username, email, password } = body;
+    const body = await req.json().catch(() => null);
+    const { username, email, password } = body ?? {};
 
-    if (!username || !email || !password) {
+    if (
+      typeof username !== "string" ||
+      typeof email !== "string" ||
+      typeof password !== "string" ||
+      !username || !email || !password || password.length > 200
+    ) {
       return NextResponse.json(
-        {
-          message:
-            "نام کاربری، ایمیل و رمز عبور الزامی است.",
-        },
+        { message: "نام کاربری، ایمیل و رمز عبور الزامی است." },
         { status: 400 }
       );
     }
 
-    const normalizedUsername = username.trim();
-    const normalizedEmail = email.toLowerCase().trim();
+    const normalizedUsername = username.trim().slice(0, 100);
+    const normalizedEmail = email.toLowerCase().trim().slice(0, 200);
+    const ip = getIp(req);
+
+    if (
+      retryAfter(`adm-verify-ip:${ip}`, 10, FAIL_WINDOW) > 0 ||
+      retryAfter(`adm-verify-mail:${normalizedEmail}`, 5, FAIL_WINDOW) > 0
+    ) {
+      return NextResponse.json(
+        { message: "تعداد تلاش‌ها زیاد است. بعداً دوباره تلاش کنید." },
+        { status: 429 }
+      );
+    }
+
+    // هر تلاش (موفق یا ناموفق) شمرده می‌شود تا ایمیل‌بمب هم ممکن نباشد
+    record(`adm-verify-ip:${ip}`, FAIL_WINDOW);
+    record(`adm-verify-mail:${normalizedEmail}`, FAIL_WINDOW);
+
+    await dbConnect();
 
     const user = await User.findOne({
       username: normalizedUsername,
       email: normalizedEmail,
     });
 
-    if (!user) {
+    // bcrypt همیشه اجرا شود تا با زمان پاسخ نشود کاربر را حدس زد
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      user && user.role === "admin" ? user.password : DUMMY_HASH
+    );
+
+    if (!user || user.role !== "admin" || !isPasswordValid) {
       return NextResponse.json(
         { message: "نام کاربری، ایمیل یا رمز عبور اشتباه است." },
-        { status: 401 }
-      );
-    }
-
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        { message: "دسترسی غیرمجاز است." },
-        { status: 403 }
-      );
-    }
-
-
-
-const isPasswordValid = await bcrypt.compare(
-  password,
-  user.password
-);
-
-
-    if (!isPasswordValid) {
-      return NextResponse.json(
-        {
-          message:
-            "نام کاربری، ایمیل یا رمز عبور اشتباه است.",
-        },
         { status: 401 }
       );
     }

@@ -35,10 +35,7 @@ export function record(key: string, windowMs: number) {
   buckets.set(key, b);
 }
 
-export function getIp(req: Request): string {
-  const xff = req.headers.get("x-forwarded-for");
-  return xff?.split(",")[0].trim() || req.headers.get("x-real-ip") || "unknown";
-}
+export { getIp } from "./ip";
 
 
 /** تعداد رویدادهای ثبت‌شده در پنجره */

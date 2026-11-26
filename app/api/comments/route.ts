@@ -272,8 +272,15 @@ if (!(await isAdmin())) {
 }
 
     await dbConnect();
-    const body = await request.json();
+const body = await request.json();
     const { id, approvalStatus } = body;
+
+    if (!mongoose.Types.ObjectId.isValid(String(id))) {
+      return NextResponse.json(
+        { message: "شناسه نامعتبر است." },
+        { status: 400 }
+      );
+    }
 
     if (!id || !["pending", "approved", "rejected"].includes(approvalStatus)) {
       return NextResponse.json(
@@ -313,12 +320,19 @@ if (!(await isAdmin())) {
 }
 
     await dbConnect();
-    const body = await request.json();
+const body = await request.json();
     const { id } = body;
 
     if (!id) {
       return NextResponse.json(
         { message: "شناسه نظر ارسال نشده است." },
+        { status: 400 }
+      );
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(String(id))) {
+      return NextResponse.json(
+        { message: "شناسه نامعتبر است." },
         { status: 400 }
       );
     }

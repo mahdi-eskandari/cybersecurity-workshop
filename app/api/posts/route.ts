@@ -6,6 +6,7 @@ import Post from "../../model/blog";
 import { isAdmin } from "@/lib/adminAuth";
 import { clearPostsLiteCache } from "@/lib/publicPosts";
 import { parseCanonical, parseOgImage, cleanAlt } from "@/lib/seoFields";
+import { cleanHtml } from "@/lib/sanitize";
 
 export async function GET(request: Request) {
   try {
@@ -96,7 +97,9 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!content?.trim()) {
+const sanitizedContent = cleanHtml(content);
+
+    if (!sanitizedContent.trim()) {
       return NextResponse.json(
         { message: "محتوای پست الزامی است" },
         { status: 400 }
@@ -160,10 +163,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const post = await Post.create({
+const post = await Post.create({
       title: title.trim(),
       slug: normalizedSlug,
-      content,
+      content: sanitizedContent,
       status,
       postType,
       author: finalAuthor.trim(),

@@ -9,6 +9,7 @@ import { isAdmin } from "@/lib/adminAuth";
 import SeoRedirect from "../../../model/SeoRedirect";
 import PageSeo from "../../../model/PageSeo";
 import { parseCanonical } from "@/lib/seoFields";
+import { cleanSvg } from "@/lib/sanitize";
 
 type RouteContext = {
   params: Promise<{
@@ -204,11 +205,7 @@ export async function PATCH(
             ? step.description.trim()
             : "",
 
-        // فقط اضافه شدن ذخیره آیکون مرحله
-        icon:
-          typeof step?.icon === "string"
-            ? step.icon.trim()
-            : "",
+icon: cleanSvg(step?.icon),
       })
     );
 
@@ -287,10 +284,7 @@ const oldService = await Service.findById(id).select("slug").lean();
 
           shortDesc: shortDesc.trim(),
 
-          icon:
-            typeof icon === "string"
-              ? icon
-              : "",
+icon: cleanSvg(icon),
 
           tags:
             Array.isArray(tags)

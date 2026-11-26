@@ -22,7 +22,7 @@ export async function verifyTurnstile(token: unknown, ip?: string | null) {
     errors: data["error-codes"],
     hostname: data.hostname,
     challenge_ts: data.challenge_ts,
-    secretPrefix: secret.slice(0, 3),
+    
   });
 
   if (!data.success) console.warn("Turnstile rejected:", data["error-codes"]);
