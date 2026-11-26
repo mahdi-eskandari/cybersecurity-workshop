@@ -1,4 +1,5 @@
 import { Schema, model, models } from "mongoose";
+import mongoose from "mongoose";
 
 const PageSeoSchema = new Schema(
   {
@@ -87,4 +88,8 @@ const PageSeoSchema = new Schema(
   }
 );
 
-export default models.PageSeo || model("PageSeo", PageSeoSchema);
+if (process.env.NODE_ENV !== "production" && mongoose.models.PageSeo) {
+  mongoose.deleteModel("PageSeo");
+}
+
+export default mongoose.models.PageSeo || mongoose.model("PageSeo", PageSeoSchema);

@@ -107,4 +107,10 @@ follow: {
   { timestamps: true }
 );
 
-export default models.Post || model("Post", PostSchema);
+import mongoose from "mongoose";
+
+if (process.env.NODE_ENV !== "production" && mongoose.models.Post) {
+  mongoose.deleteModel("Post");
+}
+
+export default mongoose.models.Post || mongoose.model("Post", PostSchema);

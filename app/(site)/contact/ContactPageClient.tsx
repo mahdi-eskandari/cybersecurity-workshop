@@ -297,8 +297,8 @@ useEffect(() => {
         </svg>
       </div>
       <h4 className={`text-base font-bold ${isDark ? "text-white" : "text-[#0F172A]"}`}>پیام شما ثبت شد</h4>
-      <p className={`text-sm leading-7 ${isDark ? "text-[#475569]" : "text-slate-500"}`}>از اینکه نظر، پیشنهاد یا درخواست همکاری خود را با پاراهور در میان گذاشتید، سپاسگزاریم.</p>
-      <div className={`rounded-xl border px-4 py-2.5 font-mono text-xs ${isDark ? "border-[#00E5FF]/10 bg-[#00E5FF]/[0.04] text-[#334155]" : "border-[#1E3A8A]/10 bg-[#1565C0]/[0.05] text-[#1565C0]"}`}>FEEDBACK // RECEIVED</div>
+<p className={`text-sm leading-7 ${isDark ? "text-slate-500" : "text-slate-500"}`}>از اینکه نظر، پیشنهاد یا درخواست همکاری خود را با پاراهور در میان گذاشتید، سپاسگزاریم.</p>
+<div className={`rounded-xl border px-4 py-2.5 font-mono text-xs ${isDark ? "border-[#00E5FF]/10 bg-[#00E5FF]/[0.04] text-slate-500" : "border-[#1E3A8A]/10 bg-[#1565C0]/[0.05] text-[#1565C0]"}`}>FEEDBACK // RECEIVED</div>
       <button type="button" onClick={() => { reset(); setSent(false); }} className={`mt-2 text-xs font-semibold transition-opacity hover:opacity-70 ${isDark ? "text-[#00E5FF]" : "text-[#1565C0]"}`}>ثبت پیام جدید</button>
     </div>
   );
@@ -308,19 +308,19 @@ useEffect(() => {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label className={`mb-2 block text-xs font-medium ${isDark ? "text-[#64748B]" : "text-slate-600"}`}>نام و نام خانوادگی <span className="text-[#991B1B]">*</span></label>
-          <input type="text" placeholder="رضا احمدی" autoComplete="name" className={field("name")} {...register("name", { required: "لطفاً نام خود را وارد کنید.", minLength: { value: 2, message: "نام باید حداقل ۲ کاراکتر باشد." } })} onFocus={() => setFocus("name")} onBlur={() => setFocus(null)} />
+          <input type="text" placeholder="رضا احمدی" autoComplete="name" className={`${field("name")} ${isDark ? "placeholder:text-slate-500" : ""}`} {...register("name", { required: "لطفاً نام خود را وارد کنید.", minLength: { value: 2, message: "نام باید حداقل ۲ کاراکتر باشد." } })} onFocus={() => setFocus("name")} onBlur={() => setFocus(null)} />
           {errors.name && <p className="mt-1.5 text-[11px] text-[#991B1B]">{errors.name.message}</p>}
         </div>
         <div>
           <label className={`mb-2 block text-xs font-medium ${isDark ? "text-[#64748B]" : "text-slate-600"}`}>شماره تماس یا ایمیل <span className={isDark ? "text-[#475569]" : "text-slate-400"}>(اختیاری)</span></label>
-          <input type="text" placeholder="09xxxxxxxxx یا email@..." autoComplete="email" className={field("contact")} {...register("contact")} onFocus={() => setFocus("contact")} onBlur={() => setFocus(null)} />
+          <input type="text" placeholder="09xxxxxxxxx یا email@..." autoComplete="email" className={`${field("name")} ${isDark ? "placeholder:text-slate-500" : ""}`} {...register("contact")} onFocus={() => setFocus("contact")} onBlur={() => setFocus(null)} />
         </div>
       </div>
 
       <div>
         <label className={`mb-2 block text-xs font-medium ${isDark ? "text-[#64748B]" : "text-slate-600"}`}>موضوع پیام <span className="text-[#991B1B]">*</span></label>
         <div className="relative">
-          <input type="hidden" {...register("subject", { required: "لطفاً موضوع پیام را انتخاب کنید." })} />
+          <input type="hidden"  {...register("subject", { required: "لطفاً موضوع پیام را انتخاب کنید." })} />
           <button
             type="button"
             onClick={() => { setSubjectOpen((v) => !v); setFocus("subject"); }}
@@ -329,7 +329,7 @@ useEffect(() => {
             aria-haspopup="listbox"
             aria-expanded={subjectOpen}
           >
-            <span className={subject ? (isDark ? "text-[#E2E8F0]" : "text-[#0F172A]") : (isDark ? "text-[#475569]" : "text-[#94A3B8]")}>
+            <span className={subject ? (isDark ? "text-[#E2E8F0]" : "text-[#0F172A]") : (isDark ? "text-slate-500" : "text-[#94A3B8]")}>
   {
     (
       {
@@ -370,7 +370,7 @@ useEffect(() => {
 
       <div>
         <label className={`mb-2 block text-xs font-medium ${isDark ? "text-[#64748B]" : "text-slate-600"}`}>متن پیام <span className="text-[#991B1B]">*</span></label>
-        <textarea rows={4} placeholder="انتقاد، پیشنهاد یا درخواست همکاری خود را بنویسید..." className={`${field("message")} resize-none`} {...register("message", { required: "لطفاً متن پیام را وارد کنید.", minLength: { value: 10, message: "متن پیام باید حداقل ۱۰ کاراکتر باشد." } })} onFocus={() => setFocus("message")} onBlur={() => setFocus(null)} />
+        <textarea rows={4} placeholder="انتقاد، پیشنهاد یا درخواست همکاری خود را بنویسید..." className={`${field("message")} resize-none ${isDark ? "placeholder:text-slate-500" : ""}`} {...register("message", { required: "لطفاً متن پیام را وارد کنید.", minLength: { value: 10, message: "متن پیام باید حداقل ۱۰ کاراکتر باشد." } })} onFocus={() => setFocus("message")} onBlur={() => setFocus(null)} />
         <div className="mt-1.5 flex items-center justify-between">
           {errors.message ? <p className="text-[11px] text-[#991B1B]">{errors.message.message}</p> : <span />}
           <p className={`text-[10px] ${isDark ? "text-[#475569]" : "text-slate-400"}`}>{message.length} کاراکتر</p>

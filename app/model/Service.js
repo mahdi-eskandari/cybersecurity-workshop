@@ -207,8 +207,10 @@ follow: {
   }
 );
 
-// جلوگیری از OverwriteModel در Next.js hot reload
-const Service =
-  models.Service || model("Service", ServiceSchema);
+if (process.env.NODE_ENV !== "production" && mongoose.models.Service) {
+  mongoose.deleteModel("Service");
+}
+
+const Service = mongoose.models.Service || mongoose.model("Service", ServiceSchema);
 
 export default Service;
