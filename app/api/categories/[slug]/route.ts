@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Category from "../../../model/category";
 import Post from "../../../model/blog";
+import SeoRedirect from "../../../model/SeoRedirect";
+import PageSeo from "../../../model/PageSeo";
 import { isAdmin } from "@/lib/adminAuth";
+import { clearPostsLiteCache } from "@/lib/publicPosts";
 
 type Ctx = { params: Promise<{ slug: string }> };
 
@@ -15,8 +18,14 @@ export async function PATCH(request: Request, { params }: Ctx) {
     await connectDB();
 
     const { slug } = await params;
-    const { label } = await request.json();
-    const cleanLabel = String(label ?? "").trim();
+    const body = await request.json();
+    const cleanLabel = String(body?.label ?? "").trim();
+
+    // اگر newSlug نیومده یا با قبلی یکی بود، slug تغییر نمی‌کنه
+    const rawNewSlug =
+      typeof body?.newSlug === "string" ? body.newSlug.trim().toLowerCase() : "";
+    const newSlug = rawNewSlug || slug;
+    const slugChanged = newSlug !== slug;
 
     if (!cleanLabel) {
       return NextResponse.json(
@@ -25,9 +34,26 @@ export async function PATCH(request: Request, { params }: Ctx) {
       );
     }
 
+    if (slugChanged) {
+      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(newSlug)) {
+        return NextResponse.json(
+          { message: "نامک فقط حروف انگلیسی، عدد و خط تیره باشد" },
+          { status: 400 }
+        );
+      }
+
+      const taken = await Category.findOne({ slug: newSlug }).lean();
+      if (taken) {
+        return NextResponse.json(
+          { message: "این نامک قبلاً استفاده شده است" },
+          { status: 409 }
+        );
+      }
+    }
+
     const updated: any = await Category.findOneAndUpdate(
       { slug },
-      { label: cleanLabel },
+      { label: cleanLabel, ...(slugChanged ? { slug: newSlug } : {}) },
       { new: true }
     ).lean();
 
@@ -35,6 +61,36 @@ export async function PATCH(request: Request, { params }: Ctx) {
       return NextResponse.json(
         { message: "دسته‌بندی پیدا نشد" },
         { status: 404 }
+      );
+    }
+
+    if (slugChanged) {
+      // ۱) پست‌ها رو به slug جدید منتقل کن
+      await Post.updateMany({ categoryId: slug }, { $set: { categoryId: newSlug } });
+      clearPostsLiteCache();
+
+      // ۲) ریدایرکت ۳۰۱ از آدرس قدیمی به جدید
+      const base = await PageSeo.findOne({ pageKey: "blogs" })
+        .select("slug")
+        .lean();
+      const baseSlug = (base as any)?.slug || "blogs";
+
+      const oldPath = `/${baseSlug}/category/${slug}`;
+      const newPath = `/${baseSlug}/category/${newSlug}`;
+
+      await SeoRedirect.updateMany({ toPath: oldPath }, { $set: { toPath: newPath } });
+      await SeoRedirect.deleteMany({ fromPath: newPath });
+      await SeoRedirect.findOneAndUpdate(
+        { fromPath: oldPath },
+        {
+          $set: {
+            toPath: newPath,
+            statusCode: 301,
+            matchType: "exact",
+            isActive: true,
+          },
+        },
+        { upsert: true }
       );
     }
 

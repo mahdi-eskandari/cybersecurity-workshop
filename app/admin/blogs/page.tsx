@@ -1292,16 +1292,20 @@ function CategoryManager({
   categories,
   onChanged,
   onDeleted,
+  onSlugChanged,
 }: {
   categories: CategoryItem[];
   onChanged: () => void | Promise<void>;
   onDeleted: (id: string) => void;
+  onSlugChanged: (oldId: string, newId: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   const [newLabel, setNewLabel] = useState("");
   const [newSlug, setNewSlug] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editLabel, setEditLabel] = useState("");
+  const [editSlug, setEditSlug] = useState("");
+  
   const [busy, setBusy] = useState(false);
     const [action, setAction] = useState<string | null>(null); // "add" | "edit:<id>" | "delete:<id>"
   const [deleteTarget, setDeleteTarget] = useState<CategoryItem | null>(null);
@@ -1350,10 +1354,16 @@ function CategoryManager({
   const saveEdit = async (id: string) => {
     const ok = await call(
       `/api/categories/${id}`,
-      { method: "PATCH", body: JSON.stringify({ label: editLabel }) },
+      {
+        method: "PATCH",
+        body: JSON.stringify({ label: editLabel, newSlug: editSlug }),
+      },
       `edit:${id}`
     );
-    if (ok) setEditingId(null);
+    if (ok) {
+      if (editSlug && editSlug !== id) onSlugChanged(id, editSlug);
+      setEditingId(null);
+    }
   };
 
   const confirmRemove = async () => {
@@ -1381,17 +1391,40 @@ function CategoryManager({
             <div key={id} className="flex items-center gap-2">
               {editingId === id ? (
                 <>
-                  <input
-                    value={editLabel}
-                    onChange={(e) => setEditLabel(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        void saveEdit(id);
+                  <div className="flex flex-1 flex-col gap-1.5">
+                    <input
+                      value={editLabel}
+                      onChange={(e) => setEditLabel(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          void saveEdit(id);
+                        }
+                      }}
+                      placeholder="نام دسته‌بندی"
+                      className={inputClass}
+                    />
+                    <input
+                      dir="ltr"
+                      value={editSlug}
+                      onChange={(e) =>
+                        setEditSlug(
+                          e.target.value
+                            .toLowerCase()
+                            .replace(/[^a-z0-9-]/g, "-")
+                            .replace(/-+/g, "-")
+                        )
                       }
-                    }}
-                    className={inputClass}
-                  />
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          void saveEdit(id);
+                        }
+                      }}
+                      placeholder="نامک (URL) مثلاً legal-news"
+                      className={`${inputClass} font-mono text-[0.72rem]`}
+                    />
+                  </div>
 <button
   type="button"
   disabled={busy}
@@ -1416,6 +1449,7 @@ function CategoryManager({
                     onClick={() => {
                       setEditingId(id);
                       setEditLabel(label);
+                      setEditSlug(id);
                     }}
                     className="shrink-0 cursor-pointer border-0 bg-transparent p-0 text-[0.68rem] font-bold text-[#1565C0]"
                   >
@@ -2348,8 +2382,14 @@ if (!response.ok) {
             <div className="flex flex-col gap-3.5"><div><p className="mb-2 font-mono text-[0.65rem] font-semibold tracking-widest text-slate-600">CATEGORIES</p><div className="flex flex-col gap-1.5">{categories.map(({ id, label }) => { const checked = selectedCats.includes(id); return <div key={id} className="flex items-center gap-2.5"><button type="button" onClick={() => toggleCat(id)} className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-[5px] ${checked ? "border-[1.5px] border-[#1565C0] bg-[#1565C0]/[0.166]" : "border-[1.5px] border-[#1E3A8A]/[0.3] bg-transparent"}`}>{checked && <IconCheck />}</button><button type="button" onClick={() => toggleCat(id)} className={`border-0 bg-transparent p-0 text-right text-[0.8rem] ${checked ? "text-slate-800" : "text-slate-500"}`}>{label}</button></div>; })}</div></div>
               <CategoryManager
               categories={categories}
-              onChanged={loadCategories}
+              onChanged={async () => {
+                await loadCategories();
+                await loadPosts();
+              }}
               onDeleted={(id) => setSelectedCats((c) => c.filter((x) => x !== id))}
+              onSlugChanged={(oldId, newId) =>
+                setSelectedCats((c) => c.map((x) => (x === oldId ? newId : x)))
+              }
             />
             <div><p className="mb-2 font-mono text-[0.65rem] font-semibold tracking-widest text-slate-600">TAGS</p><div className="mb-2 flex flex-wrap gap-1.5">{tags.map((t) => <span key={t} className="inline-flex items-center gap-1 rounded-md border border-purple-500/[0.405] bg-purple-500/[0.14] px-2 py-[3px] font-mono text-[0.7rem] text-purple-600">{t}<button type="button" onClick={() => removeTag(t)} className="flex cursor-pointer border-0 bg-transparent p-0 text-purple-600/[0.7] hover:text-red-600"><IconX /></button></span>)}</div><input value={tagInput} onChange={(e) => setTagInput(e.target.value)} onKeyDown={addTag} placeholder="مثلاً #ردیابی_تتر — Enter برای افزودن" className={inputClass} /></div>
             </div>
