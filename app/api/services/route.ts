@@ -3,6 +3,7 @@ import connectDB from '@/lib/mongodb';
 import Service from '../../model/Service';
 import { isAdmin } from "@/lib/adminAuth";
 import { normalizeServiceKey } from "@/lib/serviceKeys";
+import { parseCanonical } from "@/lib/seoFields";
 
 
 function normalizeFaqs(faqs: unknown) {
@@ -80,6 +81,7 @@ export async function POST(request: NextRequest) {
        index,
       follow,
       key,  
+      canonical
     } = body;
 
     if (!slug?.trim()) {
@@ -90,6 +92,12 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 }
       );
+    }
+
+
+        const canonicalResult = parseCanonical(canonical);
+    if ("error" in canonicalResult) {
+      return NextResponse.json({ success: false, message: canonicalResult.error }, { status: 400 });
     }
 
     if (!title?.trim()) {
@@ -258,6 +266,7 @@ export async function POST(request: NextRequest) {
 
             index: typeof index === "boolean" ? index : true,
       follow: typeof follow === "boolean" ? follow : true,
+      canonical: canonicalResult.value,
     });
 
     return NextResponse.json(

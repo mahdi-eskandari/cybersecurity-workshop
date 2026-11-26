@@ -1,5 +1,6 @@
 // app/api/admin/seo/route.ts
 import { NextRequest, NextResponse } from "next/server";
+import { parseOgImage, cleanAlt } from "@/lib/seoFields";
 
 import connectDB from "@/lib/mongodb";
 import PageSeo from "../../../model/PageSeo";
@@ -152,16 +153,7 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
-    const {
-      pageKey,
-      h1Title,
-      slug,
-      metaTitle,
-      metaDescription,
-      index,
-      follow,
-      canonical,
-    } = body;
+    const { pageKey, h1Title, slug, metaTitle, metaDescription, index, follow, canonical, ogImage, ogImageAlt } = body;
 
     // ---------------------------------------------------------
     // PAGE KEY
@@ -333,6 +325,16 @@ export async function POST(request: NextRequest) {
 
     const cleanCanonical = canonicalResult.value;
 
+        const ogImageResult = parseOgImage(ogImage);
+    if ("error" in ogImageResult) {
+      return NextResponse.json(
+        { success: false, message: ogImageResult.error },
+        { status: 400 }
+      );
+    }
+    const cleanOgImage = ogImageResult.value;
+    const cleanOgImageAlt = cleanAlt(ogImageAlt);
+
     // ---------------------------------------------------------
     // CURRENT PAGE
     // ---------------------------------------------------------
@@ -398,6 +400,8 @@ export async function POST(request: NextRequest) {
           index: Boolean(index),
           follow: Boolean(follow),
           canonical: cleanCanonical,
+          ogImage: cleanOgImage,
+          ogImageAlt: cleanOgImageAlt,
         },
       },
       {

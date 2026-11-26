@@ -1011,6 +1011,7 @@ type CategorySeoForm = {
   ogImageAlt: string;
   index: boolean;
   follow: boolean;
+  canonical: string;
 };
 
 function CategorySeoModal({
@@ -1027,6 +1028,7 @@ function CategorySeoModal({
     ogImageAlt: "",
     index: true,
     follow: true,
+    canonical: "",
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -1034,6 +1036,7 @@ function CategorySeoModal({
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
+  
 
   const patch = (p: Partial<CategorySeoForm>) => setForm((prev) => ({ ...prev, ...p }));
   const apiUrl = `/api/admin/categories/${encodeURIComponent(category.id)}/seo`;
@@ -1225,6 +1228,17 @@ function CategorySeoModal({
                   onChange={(e) => patch({ ogImageAlt: e.target.value })}
                   placeholder="توضیح کوتاه تصویر"
                   className={inputClass}
+                />
+              </F>
+
+                            <F label="Canonical" hint="اختیاری — خالی = آدرس خود دسته‌بندی">
+                <input
+                  dir="ltr"
+                  value={form.canonical}
+                  maxLength={500}
+                  onChange={(e) => patch({ canonical: e.target.value })}
+                  placeholder="https://... یا /path (خالی = خودکار)"
+                  className={`${inputClass} text-left font-mono`}
                 />
               </F>
 
@@ -1545,6 +1559,11 @@ export default function PostsAdminPage() {
   const [postType, setPostType] = useState<"normal" | "special">("normal");
     const [indexFlag, setIndexFlag] = useState(true);
   const [followFlag, setFollowFlag] = useState(true);
+    const [ogImage, setOgImage] = useState("");
+  const [ogImageAlt, setOgImageAlt] = useState("");
+  const [canonical, setCanonical] = useState("");
+  const [ogUploading, setOgUploading] = useState(false);
+  const ogFileRef = useRef<HTMLInputElement>(null);
   const [authorId, setAuthorId] = useState<string>("");
   const [createdAt, setCreatedAt] = useState<string>("");
   const [updatedAt, setUpdatedAt] = useState<string>("");
@@ -1581,6 +1600,9 @@ export default function PostsAdminPage() {
     featuredImageAlt: string | null;
         index: boolean;
     follow: boolean;
+        ogImage: string;
+    ogImageAlt: string;
+    canonical: string;
   };
 
   const [view, setView] = useState<"list" | "editor">("list");
@@ -1661,6 +1683,31 @@ const editor = useEditor({
     setTagInput("");
   };
   const removeTag = (tag: string) => setTags((prev) => prev.filter((x) => x !== tag));
+
+    const uploadOgImage = async (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      alert("فقط فایل تصویری مجاز است.");
+      return;
+    }
+    try {
+      setOgUploading(true);
+      const fd = new FormData();
+      fd.append("file", file);
+      if (ogImageAlt.trim()) fd.append("alt", ogImageAlt.trim());
+      const res = await fetch("/api/media", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok || !data.id) throw new Error(data.message || "آپلود تصویر انجام نشد.");
+      setOgImage(`/api/media/${data.id}`);
+      if (!ogImageAlt.trim() && data.alt) setOgImageAlt(data.alt);
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "آپلود تصویر انجام نشد.");
+    } finally {
+      setOgUploading(false);
+      if (ogFileRef.current) ogFileRef.current.value = "";
+    }
+  };
+
+
   const openMediaLibraryForEditor = () => {
     if (editor) mediaSelectionRef.current = { from: editor.state.selection.from, to: editor.state.selection.to };
     setMediaLibraryOpen(true);
@@ -1786,6 +1833,9 @@ const editor = useEditor({
     featuredImageAlt: item?.featuredImageAlt ?? null,
         index: item?.index ?? true,
     follow: item?.follow ?? true,
+        ogImage: item?.ogImage ?? "",
+    ogImageAlt: item?.ogImageAlt ?? "",
+    canonical: item?.canonical ?? "",
   });
 
     const loadCategories = async () => {
@@ -1881,6 +1931,9 @@ if (!response.ok) {
     setPostType("normal");
         setIndexFlag(true);
     setFollowFlag(true);
+        setOgImage("");
+    setOgImageAlt("");
+    setCanonical("");
     setAuthorId("");
     setCreatedAt("");
     setUpdatedAt("");
@@ -1910,6 +1963,9 @@ if (!response.ok) {
     setPostType(post.postType);
         setIndexFlag(post.index);
     setFollowFlag(post.follow);
+        setOgImage(post.ogImage || "");
+    setOgImageAlt(post.ogImageAlt || "");
+    setCanonical(post.canonical || "");
     setSelectedCats(post.categoryId ? [post.categoryId] : []);
     setAuthorId(post.authorId);
     setSelectedCats(post.categoryId ? [post.categoryId] : ["forensic-reports"]);
@@ -1951,6 +2007,9 @@ if (!response.ok) {
       metaDescription: values?.metaDescription?.trim() || metaDesc.trim(),
             index: indexFlag,
       follow: followFlag,
+            ogImage: ogImage.trim(),
+      ogImageAlt: ogImageAlt.trim(),
+      canonical: canonical.trim(),
       featuredImage: featuredMediaId ? `/api/media/${featuredMediaId}` : null,
       featuredImageAlt: featuredAlt.trim() || null,
     };
@@ -2320,7 +2379,79 @@ if (!response.ok) {
               <F label="نامک (URL Slug)" hint="فقط حروف انگلیسی، اعداد و خط تیره"><input {...register("slug", { required: "نامک الزامی است." })} value={slug} maxLength={100} onChange={(e) => { const value = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-"); setSlug(value); setValue("slug", value, { shouldValidate: false }); }} placeholder="post-url-slug" className={`${inputClass} font-mono text-[0.76rem]`} />{errors.slug && <p className="mt-1 text-[0.6rem] font-bold text-red-600">{errors.slug.message}</p>}</F>
               <F label="عنوان سئو (Meta Title)" hint={`${metaTitle.length}/60 — بهتر است زیر 60 کاراکتر باشد`}><input {...register("metaTitle", { required: "عنوان سئو الزامی است." })} value={metaTitle} maxLength={60} onChange={(e) => { setMetaTitle(e.target.value); setValue("metaTitle", e.target.value, { shouldValidate: false }); }} placeholder="عنوان صفحه برای موتورهای جستجو" className={inputClass} /><div className="h-1 w-full overflow-hidden rounded-full bg-[#1E3A8A]/[0.061]"><div className={`h-full transition-all ${metaTitle.length > 55 ? "bg-red-500" : metaTitle.length > 45 ? "bg-amber-400" : "bg-emerald-500"}`} style={{ width: `${Math.min(100, metaTitle.length / 60 * 100)}%` }} /></div>{errors.metaTitle && <p className="mt-1 text-[0.6rem] font-bold text-red-600">{errors.metaTitle.message}</p>}</F>
               <F label="توضیحات متا (Meta Description)" hint={`${metaDesc.length}/160 — حدود 120 تا 160 کاراکتر مناسب است`}><textarea {...register("metaDescription", { required: "توضیحات متا الزامی است." })} value={metaDesc} maxLength={160} onChange={(e) => { setMetaDesc(e.target.value); setValue("metaDescription", e.target.value, { shouldValidate: false }); }} placeholder="توضیح کوتاه و جذاب برای نتایج جستجو..." rows={4} className={`${inputClass} resize-none leading-6`} />{errors.metaDescription && <p className="mt-1 text-[0.6rem] font-bold text-red-600">{errors.metaDescription.message}</p>}<div className="h-1 w-full overflow-hidden rounded-full bg-[#1E3A8A]/[0.061]"><div className={`h-full transition-all ${metaDesc.length > 150 ? "bg-red-500" : metaDesc.length > 110 ? "bg-emerald-500" : "bg-amber-400"}`} style={{ width: `${Math.min(100, metaDesc.length / 160 * 100)}%` }} /></div></F>
-                            <SeoToggle
+
+
+
+              <F label="Canonical" hint="اختیاری — خالی = آدرس خود پست. فقط وقتی پر کن که این پست نسخهٔ تکراری صفحهٔ دیگری است.">
+                <input
+                  dir="ltr"
+                  value={canonical}
+                  maxLength={500}
+                  onChange={(e) => setCanonical(e.target.value)}
+                  placeholder="https://... یا /path (خالی = خودکار)"
+                  className={`${inputClass} text-left font-mono text-[0.76rem]`}
+                />
+              </F>
+
+              <F label="تصویر شبکه‌های اجتماعی (OG Image)" hint="حدود 1200×630 — اگر خالی بماند، تصویر شاخص پست و بعد عکس پیش‌فرض سایت استفاده می‌شود">
+                <div className="flex gap-2">
+                  <input
+                    dir="ltr"
+                    value={ogImage}
+                    maxLength={500}
+                    onChange={(e) => setOgImage(e.target.value)}
+                    placeholder="/api/media/... یا https://..."
+                    className={`${inputClass} text-left font-mono text-[0.72rem]`}
+                  />
+                  <input
+                    ref={ogFileRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) void uploadOgImage(f);
+                    }}
+                  />
+                  <button
+                    type="button"
+                    disabled={ogUploading}
+                    onClick={() => ogFileRef.current?.click()}
+                    className="shrink-0 cursor-pointer whitespace-nowrap rounded-lg border border-[#1565C0]/[0.4] bg-[#1565C0]/[0.07] px-3 text-[11px] font-black text-[#1565C0] hover:bg-[#1565C0]/[0.14] disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {ogUploading ? "در حال آپلود..." : "انتخاب تصویر"}
+                  </button>
+                </div>
+                {ogImage && (
+                  <div className="mt-1 flex items-center gap-2">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={ogImage}
+                      alt={ogImageAlt || "پیش‌نمایش"}
+                      className="h-24 w-auto max-w-full rounded-lg border border-[#1E3A8A]/[0.14] bg-[#F3F7FC]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setOgImage("")}
+                      className="cursor-pointer border-0 bg-transparent text-[0.68rem] font-bold text-red-600"
+                    >
+                      حذف تصویر
+                    </button>
+                  </div>
+                )}
+              </F>
+
+              <F label="متن جایگزین تصویر OG (Alt)">
+                <input
+                  value={ogImageAlt}
+                  maxLength={200}
+                  onChange={(e) => setOgImageAlt(e.target.value)}
+                  placeholder="توضیح کوتاه تصویر"
+                  className={inputClass}
+                />
+              </F>
+
+                  <SeoToggle
                 checked={indexFlag}
                 onChange={setIndexFlag}
                 title="Index"

@@ -26,6 +26,9 @@ export type PlainPost = {
   updatedAt?: string;
   index: boolean;
   follow: boolean;
+    ogImage: string;
+  ogImageAlt: string;
+  canonical: string;
 };
 
 const g = globalThis as unknown as {
@@ -123,6 +126,9 @@ async function toPlain(
     updatedAt: iso(doc.updatedAt),
     index: doc.index !== false,
     follow: doc.follow !== false,
+        ogImage: String(doc.ogImage || ""),
+    ogImageAlt: String(doc.ogImageAlt || ""),
+    canonical: String(doc.canonical || ""),
   };
 }
 

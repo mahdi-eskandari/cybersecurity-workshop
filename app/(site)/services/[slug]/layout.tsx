@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import connectDB from "@/lib/mongodb";
 import Service from "@/app/model/Service";
 import { SITE_URL, getSocialDefaults } from "@/lib/seo";
+import { resolveCanonical } from "@/lib/seoFields";
 
 type Props = {
   children: React.ReactNode;
@@ -25,7 +26,7 @@ export async function generateMetadata({
       slug: decoded.trim().toLowerCase(),
       status: "active",
     })
-      .select("slug title shortDesc metaTitle metaDescription index follow")
+      .select("slug title shortDesc metaTitle metaDescription index follow canonical")
       .lean();
 
     if (!service) {
@@ -50,7 +51,11 @@ export async function generateMetadata({
         service.title || "خدمات تخصصی پاراهور"
       } در حوزه تحقیقات سایبری، فارنزیک دیجیتال و امنیت اطلاعات.`;
 
-    const canonicalUrl = `${SITE_URL}/services/${service.slug || decoded}`;
+        const canonicalUrl = resolveCanonical(
+      service.canonical,
+      `${SITE_URL}/services/${service.slug || decoded}`,
+      SITE_URL
+    );
     const social = await getSocialDefaults();
 
     return {

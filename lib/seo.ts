@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import connectDB from "./mongodb";
 import PageSeo from "../app/model/PageSeo";
 import { getSiteSeo } from "./siteSeo";
+import { resolveOgImage } from "./seoFields";
 
 export const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL ||
@@ -159,6 +160,8 @@ async function getRawPageSeo(pageKey: PageKey) {
       pageKey,
       ...defaultSeo,
       canonical: "",
+      ogImage: "",
+      ogImageAlt: "",
     };
   }
 
@@ -192,6 +195,9 @@ async function getRawPageSeo(pageKey: PageKey) {
       typeof seo.canonical === "string"
         ? seo.canonical.trim()
         : "",
+
+            ogImage: typeof seo.ogImage === "string" ? seo.ogImage.trim() : "",
+    ogImageAlt: typeof seo.ogImageAlt === "string" ? seo.ogImageAlt.trim() : "",
   };
 }
 
@@ -270,6 +276,11 @@ export async function getPageMetadata(
   );
 
   const robots = await applyGlobalRobots(seo.index, seo.follow);
+    const pageImage = resolveOgImage(seo.ogImage, SITE_URL);
+  const imageUrl = pageImage ?? social.image;
+  const imageAlt = pageImage
+    ? seo.ogImageAlt || seo.pageName
+    : social.imageAlt || seo.pageName;
 
   return {
     title: brandTitle(seo.metaTitle),
@@ -284,7 +295,7 @@ export async function getPageMetadata(
       title: seo.metaTitle,
       description: seo.metaDescription,
       url: canonicalUrl,
-      images: [{ url: social.image, alt: social.imageAlt || seo.pageName }],
+      images: [{ url: imageUrl, alt: imageAlt }],
     },
 
     twitter: {
@@ -292,7 +303,7 @@ export async function getPageMetadata(
       site: social.twitterSite,
       title: seo.metaTitle,
       description: seo.metaDescription,
-      images: [social.image],
+      images: [imageUrl],
     },
   };
 }

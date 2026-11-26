@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SITE_URL, getSocialDefaults } from "@/lib/seo";
 import { getPublishedPost, resolveImagePath } from "@/lib/publicPosts";
+import { resolveCanonical, resolveOgImage } from "@/lib/seoFields";
 
 type Props = {
   children: React.ReactNode;
@@ -32,18 +33,27 @@ export async function generateMetadata({
       post.metaDescription.trim() ||
       `مطالعه ${post.title || "این مقاله"} در پایگاه دانش پاراهور؛ مطالب تخصصی درباره تحقیقات سایبری، فارنزیک دیجیتال و امنیت اطلاعات.`;
 
-    const canonicalUrl = `${SITE_URL}/blogs/${post.slug || slug}`;
 
-    // عکس: همیشه آدرس کامل و قابل‌خواندن برای تلگرام
+
+
+        const canonicalUrl = resolveCanonical(
+      post.canonical,
+      `${SITE_URL}/blogs/${post.slug || slug}`,
+      SITE_URL
+    );
+
     const social = await getSocialDefaults();
-    const imgPath = await resolveImagePath(post.featuredImage);
-    const imageUrl = imgPath
-      ? /^https?:\/\//i.test(imgPath)
-        ? imgPath
-        : `${SITE_URL}${imgPath}`
-      : social.image;
+    const customOg = resolveOgImage(post.ogImage, SITE_URL);
 
-    const imageAlt = post.featuredImageAlt || post.title || "پاراهور";
+    const imgPath = await resolveImagePath(post.featuredImage);
+    const featuredUrl = imgPath
+      ? /^https?:\/\//i.test(imgPath) ? imgPath : `${SITE_URL}${imgPath}`
+      : undefined;
+
+    const imageUrl = customOg ?? featuredUrl ?? social.image;
+    const imageAlt = customOg
+      ? post.ogImageAlt || post.title || "پاراهور"
+      : post.featuredImageAlt || post.title || "پاراهور";
 
     return {
       title: { absolute: title },

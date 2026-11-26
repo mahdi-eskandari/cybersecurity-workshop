@@ -3,6 +3,7 @@ import connectDB from "@/lib/mongodb";
 import Category from "@/app/model/category";
 import { isAdmin } from "@/lib/adminAuth";
 import { normalizeCategorySeo } from "@/lib/categorySeo";
+import { parseCanonical } from "@/lib/seoFields";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -23,7 +24,7 @@ export async function GET(_req: NextRequest, { params }: Ctx) {
     await connectDB();
 
     const doc = await Category.findOne({ slug })
-      .select("metaTitle metaDescription ogImage ogImageAlt index follow")
+      .select("metaTitle metaDescription ogImage ogImageAlt index follow canonical")
       .lean()
       .exec();
 
@@ -64,6 +65,9 @@ export async function PUT(request: NextRequest, { params }: Ctx) {
       }
     }
 
+        const canonicalResult = parseCanonical(body.canonical);
+    if ("error" in canonicalResult) return fail(canonicalResult.error);
+
     await connectDB();
 
     const updated = await Category.findOneAndUpdate(
@@ -76,6 +80,7 @@ export async function PUT(request: NextRequest, { params }: Ctx) {
           ogImageAlt,
           index: body.index !== false,
           follow: body.follow !== false,
+          canonical: canonicalResult.value,
         },
       },
       { new: true }

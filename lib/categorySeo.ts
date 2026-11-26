@@ -8,6 +8,7 @@ export type CategorySeo = {
   ogImageAlt: string;
   index: boolean;
   follow: boolean;
+  canonical: string;
 };
 
 export const EMPTY_CATEGORY_SEO: CategorySeo = {
@@ -17,6 +18,7 @@ export const EMPTY_CATEGORY_SEO: CategorySeo = {
   ogImageAlt: "",
   index: true,
   follow: true,
+  canonical: "",
 };
 
 export function normalizeCategorySeo(raw: any): CategorySeo {
@@ -29,6 +31,7 @@ export function normalizeCategorySeo(raw: any): CategorySeo {
     ogImageAlt: typeof r.ogImageAlt === "string" ? r.ogImageAlt.trim() : "",
     index: r.index !== false,
     follow: r.follow !== false,
+        canonical: typeof r.canonical === "string" ? r.canonical.trim() : "",
   };
 }
 
@@ -37,7 +40,7 @@ export async function getCategorySeo(slug: string): Promise<CategorySeo> {
   try {
     await connectDB();
     const doc = await Category.findOne({ slug })
-      .select("metaTitle metaDescription ogImage ogImageAlt index follow")
+      .select("metaTitle metaDescription ogImage ogImageAlt canonical index follow")
       .lean()
       .exec();
     return normalizeCategorySeo(doc);

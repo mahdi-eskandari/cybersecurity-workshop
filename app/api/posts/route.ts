@@ -5,6 +5,7 @@ import connectDB from "@/lib/mongodb";
 import Post from "../../model/blog";
 import { isAdmin } from "@/lib/adminAuth";
 import { clearPostsLiteCache } from "@/lib/publicPosts";
+import { parseCanonical, parseOgImage, cleanAlt } from "@/lib/seoFields";
 
 export async function GET(request: Request) {
   try {
@@ -74,6 +75,9 @@ export async function POST(request: Request) {
       metaDescription,
             index = true,
       follow = true,
+            ogImage = "",
+      ogImageAlt = "",
+      canonical = "",
     } = body;
 
     const finalAuthor = author ?? authorId;
@@ -134,6 +138,15 @@ export async function POST(request: Request) {
       );
     }
 
+        const canonicalResult = parseCanonical(canonical);
+    if ("error" in canonicalResult) {
+      return NextResponse.json({ message: canonicalResult.error }, { status: 400 });
+    }
+    const ogImageResult = parseOgImage(ogImage);
+    if ("error" in ogImageResult) {
+      return NextResponse.json({ message: ogImageResult.error }, { status: 400 });
+    }
+
     const normalizedSlug = slug.trim().toLowerCase();
 
     const existingPost = await Post.findOne({
@@ -164,6 +177,9 @@ export async function POST(request: Request) {
       metaDescription: metaDescription.trim(),
             index: typeof index === "boolean" ? index : true,
       follow: typeof follow === "boolean" ? follow : true,
+            canonical: canonicalResult.value,
+      ogImage: ogImageResult.value,
+      ogImageAlt: cleanAlt(ogImageAlt),
     });
     clearPostsLiteCache();
 

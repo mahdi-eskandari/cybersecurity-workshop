@@ -19,6 +19,7 @@ const CategorySchema = new Schema(
     ogImageAlt: { type: String, default: "", trim: true, maxlength: 200 },
     index: { type: Boolean, default: true },
     follow: { type: Boolean, default: true },
+        canonical: { type: String, default: "", trim: true, maxlength: 500 },
   },
   { timestamps: true }
 );

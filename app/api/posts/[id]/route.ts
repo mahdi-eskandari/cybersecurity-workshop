@@ -8,6 +8,7 @@ import Post from "../../../model/blog";
 import SeoRedirect from "../../../model/SeoRedirect";
 import PageSeo from "../../../model/PageSeo";
 import { clearPostsLiteCache } from "@/lib/publicPosts";
+import { parseCanonical, parseOgImage, cleanAlt } from "@/lib/seoFields";
 
 export async function PATCH(
   request: Request,
@@ -49,6 +50,21 @@ const safeBody = Object.fromEntries(
     ([key]) => !key.startsWith("$") && !key.includes(".") && !BLOCKED.has(key)
   )
 );
+
+
+    if ("canonical" in safeBody) {
+      const r = parseCanonical(safeBody.canonical);
+      if ("error" in r) return NextResponse.json({ message: r.error }, { status: 400 });
+      safeBody.canonical = r.value;
+    }
+    if ("ogImage" in safeBody) {
+      const r = parseOgImage(safeBody.ogImage);
+      if ("error" in r) return NextResponse.json({ message: r.error }, { status: 400 });
+      safeBody.ogImage = r.value;
+    }
+    if ("ogImageAlt" in safeBody) {
+      safeBody.ogImageAlt = cleanAlt(safeBody.ogImageAlt);
+    }
 
     if (
       body.postType !== undefined &&

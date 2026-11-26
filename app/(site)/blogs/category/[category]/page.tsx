@@ -12,6 +12,7 @@ import {
   brandTitle,
 } from "@/lib/seo";
 import { getCategorySeo } from "@/lib/categorySeo";
+import { resolveCanonical } from "@/lib/seoFields";
 
 export const dynamic = "force-dynamic";
 
@@ -82,9 +83,10 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const currentPage = safePage(page, data.totalPages);
   const label = data.current.label;
   const url = categoryUrl(data.current.id, currentPage);
+    const seo = await getCategorySeo(data.current.id);
+  const canonicalUrl = resolveCanonical(seo.canonical, url, SITE_URL);
 
-  // سئوی ذخیره‌شده از پنل ادمین (اگر خالی باشد، متن خودکار قبلی)
-  const seo = await getCategorySeo(data.current.id);
+
 
   const title: Metadata["title"] = seo.metaTitle
     ? brandTitle(seo.metaTitle)
@@ -110,7 +112,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   return {
     title,
     description,
-    alternates: { canonical: url },
+    alternates: { canonical: canonicalUrl },
     robots,
     openGraph: {
       type: "website",
@@ -118,8 +120,8 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       siteName: social.siteName,
       title: ogTitle,
       description,
-      url,
       images: [{ url: imageUrl, alt: imageAlt }],
+      url: canonicalUrl
     },
     twitter: {
       card: "summary_large_image",

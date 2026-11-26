@@ -78,6 +78,9 @@ const PageSeoSchema = new Schema(
       trim: true,
       maxlength: 500,
     },
+
+        ogImage: { type: String, default: "", trim: true, maxlength: 500 },
+    ogImageAlt: { type: String, default: "", trim: true, maxlength: 200 },
   },
   {
     timestamps: true,

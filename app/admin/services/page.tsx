@@ -228,7 +228,7 @@ type TrackingStep = {
 interface Service {
 
   id: string;
-
+canonical: string;
 
   slug: string;
     key: string;
@@ -256,7 +256,7 @@ interface Service {
 }
 
 type ServiceForm = {
-
+canonical: string;
   slug: string;
     key: string;
   title: string;
@@ -1732,6 +1732,8 @@ const normalizeService = (
       index: item?.index ?? true,
   follow: item?.follow ?? true,
       faqs: Array.isArray(item?.faqs) ? item.faqs : [],
+
+  canonical: item?.canonical ?? ""
 });
 
 
@@ -1920,7 +1922,8 @@ export default function ServicesPage() {
   metaDescription: "",
     index: true,
   follow: true,
-      faqs: [],
+   faqs: [],
+   canonical: "",
 },
   });
 
@@ -2088,7 +2091,9 @@ urgencyContent:
 
         index: service.index,
         follow: service.follow,
-                faqs: service.faqs ?? [],
+        faqs: service.faqs ?? [],
+
+        canonical: service.canonical ?? "",
       });
     } else {
       reset({
@@ -2125,7 +2130,8 @@ urgencyContent: {
         metaDescription: "",
         index: true,
         follow: true,
-                faqs: [],
+        faqs: [],
+        canonical: "",
       });
     }
 
@@ -2204,7 +2210,8 @@ const normalizedData = {
 
     index: data.index,
   follow: data.follow,
-        faqs: data.faqs ?? [],
+  faqs: data.faqs ?? [],
+  canonical: (data.canonical ?? "").trim(),
 };
 
     try {
@@ -5249,6 +5256,20 @@ className="mx-auto grid w-full gap-4 px-6 py-6 md:px-7"
                         resize:
                           "none",
                       }}
+                    />
+                  </Field>
+
+                                    <Field
+                    label="Canonical"
+                    hint="اختیاری — خالی = آدرس خود خدمت"
+                    error={errors.canonical?.message}
+                  >
+                    <input
+                      {...register("canonical")}
+                      dir="ltr"
+                      maxLength={500}
+                      placeholder="https://... یا /path (خالی = خودکار)"
+                      style={{ ...inputStyle(!!errors.canonical), fontFamily: "monospace", textAlign: "left" }}
                     />
                   </Field>
 

@@ -14,6 +14,8 @@ type SeoPage = {
   index: boolean;
   follow: boolean;
   canonical?: string;
+    ogImage?: string;
+  ogImageAlt?: string;
 };
 
 const PAGE_OPTIONS = [
@@ -278,6 +280,9 @@ function CustomSelect({
   options: { value: string; label: string }[];
 }) {
   const [open, setOpen] = useState(false);
+    const [ogImage, setOgImage] = useState("");
+  const [ogImageAlt, setOgImageAlt] = useState("");
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const selectedOption =
     options.find(
@@ -633,6 +638,9 @@ export default function SeoAdminPage() {
       page.canonical || ""
     );
 
+        setOgImage(page.ogImage || "");
+    setOgImageAlt(page.ogImageAlt || "");
+
     setMessage("");
     setError("");
   }, [
@@ -663,6 +671,36 @@ export default function SeoAdminPage() {
       .replace(/\/+$/, "")
       .replace(/[^a-z0-9-]/g, "-")
       .replace(/-+/g, "-");
+  };
+
+
+
+    const handleOgUpload = async (file: File) => {
+    setMessage("");
+    setError("");
+
+    if (!file.type.startsWith("image/")) {
+      setError("فقط فایل تصویری مجاز است.");
+      return;
+    }
+
+    try {
+      setUploadingImage(true);
+      const fd = new FormData();
+      fd.append("file", file);
+      if (ogImageAlt.trim()) fd.append("alt", ogImageAlt.trim());
+
+      const res = await fetch("/api/media", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok || !data.id) throw new Error(data.message || "آپلود تصویر انجام نشد.");
+
+      setOgImage(`/api/media/${data.id}`);
+      if (!ogImageAlt.trim() && data.alt) setOgImageAlt(data.alt);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "خطا در آپلود تصویر.");
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   // ---------------------------------------------------------
@@ -778,8 +816,9 @@ export default function SeoAdminPage() {
             index,
             follow,
 
-            canonical:
-              canonical.trim(),
+            canonical: canonical.trim(),
+            ogImage: ogImage.trim(),
+            ogImageAlt: ogImageAlt.trim(),
           }),
         }
       );
@@ -1102,6 +1141,69 @@ return (
                     /170
                   </span>
                 </div>
+              </Field>
+
+
+                            {/* OG IMAGE */}
+              <Field
+                label="OG IMAGE"
+                hint="تصویر پیش‌نمایش در تلگرام، توییتر و ...؛ اندازه مناسب حدود 1200×630. اگر خالی بماند، عکس پیش‌فرض سایت (از «سئو سراسری») استفاده می‌شود."
+              >
+                <div className="flex gap-2">
+                  <input
+                    dir="ltr"
+                    value={ogImage}
+                    maxLength={500}
+                    onChange={(e) => setOgImage(e.target.value)}
+                    className={`${inputClass} text-left font-mono`}
+                    placeholder="/api/media/... یا https://..."
+                  />
+                  <label
+                    className={`flex shrink-0 cursor-pointer items-center rounded-lg border border-[#1565C0]/[0.4] bg-[#1565C0]/[0.07] px-4 text-[12px] font-black text-[#1565C0] hover:bg-[#1565C0]/[0.14] ${
+                      uploadingImage ? "pointer-events-none opacity-60" : ""
+                    }`}
+                  >
+                    {uploadingImage ? "در حال آپلود..." : "انتخاب تصویر"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        if (f) void handleOgUpload(f);
+                        e.target.value = "";
+                      }}
+                    />
+                  </label>
+                </div>
+
+                {ogImage && (
+                  <div className="mt-1 flex items-center gap-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={ogImage}
+                      alt={ogImageAlt || "پیش‌نمایش"}
+                      className="h-24 w-auto max-w-full rounded-lg border border-[#1E3A8A]/[0.14] bg-[#F3F7FC]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setOgImage("")}
+                      className="cursor-pointer border-0 bg-transparent text-[0.68rem] font-bold text-red-600"
+                    >
+                      حذف تصویر
+                    </button>
+                  </div>
+                )}
+              </Field>
+
+              <Field label="OG IMAGE ALT" hint="متن جایگزین تصویر. اگر خالی بماند، نام صفحه استفاده می‌شود.">
+                <input
+                  value={ogImageAlt}
+                  maxLength={200}
+                  onChange={(e) => setOgImageAlt(e.target.value)}
+                  className={inputClass}
+                  placeholder="توضیح کوتاه تصویر"
+                />
               </Field>
             </div>
           </div>

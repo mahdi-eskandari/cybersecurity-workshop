@@ -8,6 +8,7 @@ import { isAdmin } from "@/lib/adminAuth";
 
 import SeoRedirect from "../../../model/SeoRedirect";
 import PageSeo from "../../../model/PageSeo";
+import { parseCanonical } from "@/lib/seoFields";
 
 type RouteContext = {
   params: Promise<{
@@ -149,6 +150,7 @@ export async function PATCH(
       faqs,
       follow,
       index,
+      canonical
 
     } = body;
 
@@ -162,6 +164,12 @@ export async function PATCH(
         },
         { status: 400 }
       );
+    }
+
+
+        const canonicalResult = parseCanonical(canonical);
+    if ("error" in canonicalResult) {
+      return NextResponse.json({ success: false, message: canonicalResult.error }, { status: 400 });
     }
 
     /* ───────── Validate tracking steps ───────── */
@@ -318,6 +326,7 @@ const oldService = await Service.findById(id).select("slug").lean();
 
           metaDescription:
             metaDescription || "",
+         canonical: canonicalResult.value,
 
           ...(Array.isArray(faqs) ? { faqs: normalizeFaqs(faqs) } : {}),
 

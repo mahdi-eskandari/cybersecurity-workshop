@@ -99,6 +99,10 @@ follow: {
   type: Boolean,
   default: true,
 },
+
+    ogImage: { type: String, default: "", trim: true, maxlength: 500 },
+    ogImageAlt: { type: String, default: "", trim: true, maxlength: 200 },
+    canonical: { type: String, default: "", trim: true, maxlength: 500 },
   },
   { timestamps: true }
 );

@@ -1,7 +1,7 @@
 import Post from "../app/model/blog";
 import SiteSeo from "../app/model/SiteSeo";
 import Category from "../app/model/category";
-
+import PageSeo from "../app/model/PageSeo";
 /**
  * رسانه عمومی است اگر در پست published به‌عنوان تصویر شاخص یا داخل محتوا
  * استفاده شده باشد، یا OG پیش‌فرض سایت باشد، یا OG یکی از دسته‌بندی‌ها باشد.
@@ -20,24 +20,19 @@ export async function isMediaPublic(
   const featuredRegex = new RegExp(id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
 
   try {
-    const [asFeatured, inContent, asCategoryImage, site] = await Promise.all([
-      Post.exists({
-        status: "published",
-        $or: [
-          { featuredImage: { $in: candidates } },
-          { featuredImage: featuredRegex },
-        ],
-      }),
-      Post.exists({
-        status: "published",
-        content: { $regex: featuredRegex },
-      }),
+        const [asFeatured, inContent, asCategoryImage, asPostOg, asPageOg, site] = await Promise.all([
+      Post.exists({ status: "published", $or: [
+        { featuredImage: { $in: candidates } },
+        { featuredImage: featuredRegex },
+      ]}),
+      Post.exists({ status: "published", content: { $regex: featuredRegex } }),
       Category.exists({ ogImage: { $regex: featuredRegex } }),
-      SiteSeo.findOne({ key: "site" })
-        .select("defaultOgImage")
-        .lean()
-        .catch(() => null),
+      Post.exists({ status: "published", ogImage: { $regex: featuredRegex } }),
+      PageSeo.exists({ ogImage: { $regex: featuredRegex } }),
+      SiteSeo.findOne({ key: "site" }).select("defaultOgImage").lean().catch(() => null),
     ]);
+
+    if (asFeatured || inContent || asCategoryImage || asPostOg || asPageOg) return true;
 
     if (asFeatured || inContent || asCategoryImage) return true;
 
