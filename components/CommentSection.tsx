@@ -279,7 +279,10 @@ useEffect(() => {
   const el = turnstileBoxRef.current;
   if (!el) return;
 
-  const update = () => setTsScale(Math.min(1, el.clientWidth / 300));
+  const update = () => {
+    const w = Math.floor(el.getBoundingClientRect().width);
+    setTsScale(Math.min(1, w / 300));
+  };
   update();
 
   const ro = new ResizeObserver(update);
@@ -623,14 +626,16 @@ onMouseLeave={(e) => {
 <div
   ref={turnstileBoxRef}
   dir="ltr"
-  className="w-full"
+  className={`w-full overflow-hidden border ${
+    darkMode ? "border-[#fafafa]/80" : "border-[#d0d0d0]"
+  }`}
   style={{ height: 65 * tsScale }}
 >
   <div
-    className="[&>div]:!w-full [&_iframe]:!w-full"
     style={{
-      width: tsScale < 1 ? 300 : "100%",
-      transform: `scale(${tsScale})`,
+      width: tsScale < 1 ? 300 : "calc(100% + 4px)",
+      margin: tsScale < 1 ? 0 : -2,
+      transform: tsScale < 1 ? `scale(${tsScale})` : undefined,
       transformOrigin: "top left",
     }}
   >

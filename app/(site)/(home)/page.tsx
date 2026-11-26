@@ -7,12 +7,13 @@ import {
   SITE_URL,
 } from "@/lib/seo";
 import { buildOrganizationSchema, buildBreadcrumbSchema } from "@/lib/schema";
-import { getPublishedPostsLite } from "@/lib/publicPosts";
+import { getPublishedPostsLite, getCategoriesList } from "@/lib/publicPosts";
 
 async function getInitialData(
   seo: Awaited<ReturnType<typeof getPageSeo>>
 ): Promise<HomePageInitialData> {
   let posts: any[] = [];
+  let categories: { id: string; label: string }[] = [];
 
   try {
     const all = await getPublishedPostsLite();
@@ -27,9 +28,16 @@ async function getInitialData(
     console.error("home posts error:", error);
   }
 
+  try {
+    categories = await getCategoriesList();
+  } catch (error) {
+    console.error("home categories error:", error);
+  }
+
   return {
     posts,
     media: [],
+    categories,
     seo: {
       h1Title:
         seo.h1Title || "هیچ مجرمی در دنیای دیجیتال بی‌ردپا نیست.",

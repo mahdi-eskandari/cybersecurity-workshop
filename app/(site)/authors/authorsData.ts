@@ -36,6 +36,7 @@ export type Author = {
   accentLight: string;
   ctaLabel: string;
   telegram?: string;
+  instagram?: string;
   email?: string;
   bio: string[];
 
@@ -74,6 +75,7 @@ export const authors: Author[] = [
     accentLight: "#0E7490",
     ctaLabel: "ثبت گزارش بحران",
     telegram: "https://t.me/fimbulspring",
+    instagram: "https://instagram.com/YOUR_INSTAGRAM_ID",
 email: "parahoorteam@gmail.com",
     bio: [
       "من یک پژوهشگر در حوزه امنیت اطلاعات و جرم‌شناسی دیجیتال، و مؤسس مجموعه «پاراهور» هستم. ماموریت حرفه‌ای من مدیریت جامع بحران‌ها و تحقیقات سایبری است؛ چرخه‌ای یکپارچه که از پیش‌بینی و رصد تهدیدات، تا رهگیریِ پیچیده‌ترین ردپاهای دیجیتال را پوشش می‌دهد. تمرکز اصلی ما در پاراهور، کالبدشکافیِ عمیقِ حوادث و تبدیلِ داده‌های تاریک به مستنداتِ فنی، جهت پیگیری‌های قانونی است."
@@ -119,6 +121,7 @@ email: "parahoorteam@gmail.com",
     accentLight: "#047857",
     ctaLabel: "ثبت گزارش بحران",
     telegram: "https://t.me/+989120581672",
+    instagram: "https://instagram.com/YOUR_INSTAGRAM_ID",
 email: "mohammadzadehsara57@gmail.com",
     bio: [
       "من وکیل پایه یک دادگستری و کارشناس ارشد حقوق با بیش از چهار سال سابقه وکالت در دعاوی کیفری، حقوقی و به‌ویژه جرایم سایبری و فناوری اطلاعات هستم. رسالت اصلی من در این مجموعه، ایجاد یک پیوند دقیق میان تحقیقات سایبری و الزامات قضایی است؛ تا اطمینان حاصل شود تمامی فرآیندهای کشف جرایم دیجیتال با بالاترین استانداردهای قانونی همسو بوده و نتایج تحقیقات به گزارشی دقیق برای ارائه به محاکم تبدیل میشود"

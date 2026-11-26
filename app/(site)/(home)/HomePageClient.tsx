@@ -13,7 +13,7 @@ import { EmergencyModal } from "../../../components/CrisisReportForm"
 import { createPortal } from "react-dom"
 import { renderHighlightedTitle } from "@/lib/highlightTitle";
 
-
+import { getNewCategoryColors, setCategoryOrder } from "@/lib/categoryColors";
 
 
 
@@ -896,6 +896,20 @@ function getCategoryBadgeClass(category: string, darkMode: boolean): string {
   return badges[category] || (darkMode ? "text-[#54B8FF] bg-[#09263D] ring-[#164B70]" : "text-[#1565C0] bg-[#EBF3FF] ring-blue-100");
 }
 
+function getCategoryBadgeInlineStyle(
+  category: string,
+  darkMode: boolean
+): React.CSSProperties | undefined {
+  const custom = getNewCategoryColors(category, darkMode);
+  if (!custom) return undefined;
+
+  return {
+    color: custom.color,
+    backgroundColor: custom.background,
+    boxShadow: `inset 0 0 0 1px ${custom.border}`,
+  };
+}
+
 function stripHtml(value?: string) {
   if (!value) return "";
 
@@ -960,6 +974,7 @@ const REPORT_CARD_LIGHT =
 export type HomePageInitialData = {
   posts: Post[];
   media: any[];
+  categories?: { id: string; label: string }[];
   seo: {
     h1Title: string;
   };
@@ -1001,6 +1016,11 @@ const closeCrisis = () => {
   const seo = initialData.seo;
   const posts = initialData.posts;
   const media = initialData.media;
+    const categories = initialData.categories?.length
+    ? initialData.categories
+    : BLOG_CATEGORIES;
+
+  setCategoryOrder(categories.map((c) => c.label));
   const loading = false;
 
   const latestBlogPosts = [...posts]
@@ -2005,7 +2025,7 @@ className={`w-12 h-12 flex items-center justify-center rounded-xl ${
                 ))
               : latestBlogPosts.map((post, i) => {
                   const categoryLabel =
-                    BLOG_CATEGORIES.find(
+                    categories.find(
                       (item) => item.id === (post.categoryId || "").trim()
                     )?.label || CATEGORY_FALLBACK
 
@@ -2104,11 +2124,12 @@ className={`w-12 h-12 flex items-center justify-center rounded-xl ${
                         />
 
                         {/* دسته‌بندی روی گوشه‌ی عکس */}
-                        <span
+                                               <span
                           className={`absolute top-3 right-3 z-10 max-w-[calc(100%-1.5rem)] truncate text-[11px] font-bold px-2.5 py-1 rounded-full ring-1 ring-inset shadow-sm backdrop-blur-sm ${getCategoryBadgeClass(
                             categoryLabel,
                             darkMode
                           )}`}
+                          style={getCategoryBadgeInlineStyle(categoryLabel, darkMode)}
                         >
                           {categoryLabel}
                         </span>

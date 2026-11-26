@@ -227,7 +227,7 @@ const footerMenus = [
                   color: darkMode ? "#818fa0" : "#CBD5E1",
                 }}
                   >
-                    026-32209950
+                    09002222319
                   </span>
                 </div>
                 <div className="flex items-center gap-2.5 text-sm text-[#818fa0]"
@@ -239,14 +239,14 @@ const footerMenus = [
                   />
                   <span>info@parahoor.com</span>
                 </div>
-                <div className="flex items-center gap-2.5 text-sm text-[#818fa0]"
+                {/* <div className="flex items-center gap-2.5 text-sm text-[#818fa0]"
                 style={{
                   color: darkMode ? "#818fa0" : "#CBD5E1",
                 }}
                 >
                   <MapPin className="w-4 h-4 flex-shrink-0" />
                   <span>کرج، بلوار بلال، میدان توحید، ساختمان بانک کشاورزی، پلاک چهارم طبقه اول واحد اول</span>
-                </div>
+                </div> */}
                 <div>
 <div className="flex items-center gap-2">
   <SocialBtn
@@ -316,10 +316,11 @@ const footerMenus = [
           اورژانس سایبری
         </p>
         <p className="text-xs text-white/50 mb-3">
-          فقط برای حوادث زنده استفاده کنید
+          {/* فقط برای حوادث زنده استفاده کنید */}  
+        سرویس درحال راه‌ اندازی است.
         </p>
         <a
-          href="tel:+982632209950"
+          href="tel:+989002222319"
           className="flex w-[65%] items-center gap-2 px-3.5 py-2 bg-[#C62828] text-white text-xs font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors"
           style={{
             background: "#EF4444",

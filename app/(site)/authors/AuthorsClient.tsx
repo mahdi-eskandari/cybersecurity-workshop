@@ -16,6 +16,7 @@ import {
 } from "./authorsData";
 import { EmergencyModal } from "../../../components/CrisisReportForm"
 import { renderHighlightedTitle } from "@/lib/highlightTitle";
+import { getNewCategoryColors, setCategoryOrder } from "@/lib/categoryColors";
 
 
 export type { Post };
@@ -79,6 +80,23 @@ const IconMail = () => (
 const IconTelegram = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
     <path d="m21.7 3.4-3.2 16.9c-.24 1.2-.88 1.5-1.78.94l-4.9-3.61-2.36 2.27c-.26.26-.48.48-.98.48l.35-4.99 9.08-8.2c.4-.35-.09-.55-.62-.2L6.06 13.85l-4.82-1.51c-1.05-.33-1.07-1.05.22-1.55L20.3 3.02c.86-.32 1.61.2 1.4.38Z" />
+  </svg>
+);
+
+const IconInstagram = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect x="3" y="3" width="18" height="18" rx="5" />
+    <circle cx="12" cy="12" r="4" />
+    <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
   </svg>
 );
 
@@ -363,6 +381,21 @@ function getCategoryBadgeClass(category: string, darkMode: boolean): string {
   );
 }
 
+function getCategoryBadgeInlineStyle(
+  category: string,
+  darkMode: boolean
+): React.CSSProperties | undefined {
+  const custom = getNewCategoryColors(category, darkMode);
+  if (!custom) return undefined;
+
+  return {
+    color: custom.color,
+    backgroundColor: custom.background,
+    boxShadow: `inset 0 0 0 1px ${custom.border}`,
+  };
+}
+
+
 /* =========================================================
    ARTICLE THUMB
 ========================================================= */
@@ -548,17 +581,18 @@ const ArticleCard = ({
   post,
   accent = "#00E5FF",
   seed = 0,
+   categories = [],
 }: {
   post: Post;
   accent?: string;
   seed?: number;
+  categories?: { id: string; label: string }[];
 }) => {
   const { darkMode } = useTheme();
 
   const categoryLabel =
-    BLOG_CATEGORIES.find(
-      (item) => item.id === (post.categoryId || "").trim()
-    )?.label || CATEGORY_FALLBACK;
+    categories.find((item) => item.id === (post.categoryId || "").trim())
+      ?.label || CATEGORY_FALLBACK;
 
   const summary = post.content
   const dateText = formatDate(post.updatedAt || post.createdAt);
@@ -566,7 +600,6 @@ const ArticleCard = ({
     post.readingTime && post.readingTime > 0
       ? `${post.readingTime} دقیقه`
       : "مطالعه";
-
   return (
     <Link  href={`/blogs/${post.slug}`}>
     
@@ -647,6 +680,7 @@ const ArticleCard = ({
             categoryLabel,
             darkMode
           )}`}
+          style={getCategoryBadgeInlineStyle(categoryLabel, darkMode)}
         >
           {categoryLabel}
         </span>
@@ -798,7 +832,8 @@ export default function AuthorsClient({
   seoH1,
   slugMap,
     basePath: basePathProp,
-  lockCanonical = false,
+    lockCanonical = false,
+  categories = [],
 }: {
   posts: Post[];
   authorSlug: string;
@@ -809,8 +844,10 @@ export default function AuthorsClient({
   slugMap?: Record<string, string>;
    basePath?: string;
   lockCanonical?: boolean;
+  categories?: { id: string; label: string }[];
 }) {
   const { darkMode } = useTheme();
+  setCategoryOrder(categories.map((c) => c.label));
     const blueBright = darkMode ? "#00E5FF" : "#1D4ED8";
 
 
@@ -1224,6 +1261,15 @@ rel={href.startsWith("http") ? "noopener noreferrer nofollow" : undefined}
       href={author.telegram}
     />
   )}
+
+{author.instagram && (
+  <SocialBtn
+    icon={<IconInstagram />}
+    title="Instagram"
+    href={author.instagram}
+  />
+)}
+
 {author.email && (
   <SocialBtn
     icon={<IconMail />}
@@ -1638,6 +1684,7 @@ color: accent
           post={post}
           accent={accent}
           seed={index}
+          categories={categories}
         />
       </motion.div>
     ))}

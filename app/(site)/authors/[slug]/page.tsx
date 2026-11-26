@@ -10,7 +10,7 @@ import {
 } from "@/lib/seo";
 import AuthorsClient from "../AuthorsClient";
 import { type Post, getAuthorPosts, POSTS_PER_PAGE, authors } from "../authorsData";
-import { getPublishedPostsLite } from "@/lib/publicPosts";
+import { getPublishedPostsLite, getCategoriesList } from "@/lib/publicPosts";
 
 
 
@@ -19,6 +19,16 @@ async function getPosts(): Promise<Post[]> {
     return (await getPublishedPostsLite()) as unknown as Post[];
   } catch (error) {
     console.error("authors posts error:", error);
+    return [];
+  }
+}
+
+
+async function getCategories(): Promise<{ id: string; label: string }[]> {
+  try {
+    return await getCategoriesList();
+  } catch (error) {
+    console.error("authors categories error:", error);
     return [];
   }
 }
@@ -118,10 +128,11 @@ export default async function AuthorPage({
   );
   const slugMap = Object.fromEntries(authorSeos.map((x) => [x.id, x.seo.slug]));
 
-  const [posts, adjacent, authorsSeo] = await Promise.all([
+  const [posts, adjacent, authorsSeo, categories] = await Promise.all([
     getPosts(),
     getAdjacentPageLinks(toPageKey(match.identity)),
     getPageSeo("authors"),
+    getCategories(),
   ]);
 
   const showAllPosts = query.view === "all";
@@ -160,7 +171,8 @@ export default async function AuthorPage({
     seoH1={authorsSeo.h1Title}
   slugMap={slugMap}
     basePath={basePath}
-  lockCanonical={Boolean(match.seo.canonical?.trim())}
+        lockCanonical={Boolean(match.seo.canonical?.trim())}
+        categories={categories}
 />
     </>
   );

@@ -15,7 +15,7 @@ import {
 } from "@/lib/schema";
 import AuthorsClient from "./AuthorsClient";
 import { type Post, getAuthorPosts, POSTS_PER_PAGE, authors } from "./authorsData";
-import { getPublishedPostsLite } from "@/lib/publicPosts";
+import { getPublishedPostsLite, getCategoriesList } from "@/lib/publicPosts";
 
 
 
@@ -28,6 +28,15 @@ async function getPosts(): Promise<Post[]> {
     return (await getPublishedPostsLite()) as unknown as Post[];
   } catch (error) {
     console.error("authors posts error:", error);
+    return [];
+  }
+}
+
+async function getCategories(): Promise<{ id: string; label: string }[]> {
+  try {
+    return await getCategoriesList();
+  } catch (error) {
+    console.error("authors categories error:", error);
     return [];
   }
 }
@@ -170,10 +179,11 @@ export default async function AuthorsPage({
   url: `${SITE_URL}${BASE_PATH}/${slugMap[a.id]}`,
 }));
 
-  const [posts, seo, adjacent] = await Promise.all([
+  const [posts, seo, adjacent, categories] = await Promise.all([
     getPosts(),
     getPageSeo("authors"),
     getAdjacentPageLinks("authors"),
+    getCategories(),
   ]);
 
   const showAllPosts = params.view === "all";
@@ -217,6 +227,7 @@ export default async function AuthorsPage({
         slugMap={slugMap}
                 basePath={BASE_PATH}
         lockCanonical={Boolean(seo.canonical?.trim())}
+        categories={categories}
       />
     </>
   );

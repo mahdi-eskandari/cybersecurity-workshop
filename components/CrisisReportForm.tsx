@@ -436,7 +436,10 @@ export const EmergencyModal = ({
     const el = turnstileBoxRef.current;
     if (!el) return;
 
-    const update = () => setTsScale(Math.min(1, el.clientWidth / 300));
+    const update = () => {
+      const w = Math.floor(el.getBoundingClientRect().width);
+      setTsScale(Math.min(1, w / 300));
+    };
     update();
 
     const ro = new ResizeObserver(update);
@@ -649,8 +652,36 @@ const onSubmit = async (data: CrisisReportFormValues) => {
       }
     >
       <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg">
+        <style>{`
+          .crisis-scroll::-webkit-scrollbar { width: 10px; }
+          .crisis-scroll::-webkit-scrollbar-track { background: transparent; margin: 16px 0; }
+          .crisis-scroll::-webkit-scrollbar-thumb {
+            border-radius: 999px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            transition: background 0.2s;
+          }
+          .crisis-scroll-dark::-webkit-scrollbar-thumb {
+            background-image: linear-gradient(180deg, rgba(0,229,255,0.38), rgba(0,229,255,0.14));
+          }
+          .crisis-scroll-dark::-webkit-scrollbar-thumb:hover {
+            background-image: linear-gradient(180deg, rgba(0,229,255,0.6), rgba(0,229,255,0.3));
+          }
+          .crisis-scroll-light::-webkit-scrollbar-thumb {
+            background-image: linear-gradient(180deg, rgba(37,99,235,0.42), rgba(37,99,235,0.18));
+          }
+          .crisis-scroll-light::-webkit-scrollbar-thumb:hover {
+            background-image: linear-gradient(180deg, rgba(37,99,235,0.65), rgba(37,99,235,0.35));
+          }
+          @supports not selector(::-webkit-scrollbar) {
+            .crisis-scroll-dark { scrollbar-width: thin; scrollbar-color: rgba(0,229,255,0.35) transparent; }
+            .crisis-scroll-light { scrollbar-width: thin; scrollbar-color: rgba(37,99,235,0.4) transparent; }
+          }
+        `}</style>
         <div
-          className="relative w-full overflow-hidden"
+          className={`crisis-scroll ${
+            darkMode ? "crisis-scroll-dark" : "crisis-scroll-light"
+          } relative w-full overflow-hidden`}
           style={{
             background: darkMode
               ? "linear-gradient(160deg, rgba(10,17,42,0.99) 0%, rgba(6,11,28,0.99) 100%)"
@@ -1249,14 +1280,16 @@ const onSubmit = async (data: CrisisReportFormValues) => {
             <div
               ref={turnstileBoxRef}
               dir="ltr"
-              className="mb-4 w-full"
+              className={`mb-4 w-full overflow-hidden border ${
+                darkMode ? "border-[#fafafa]/80" : "border-[#d0d0d0]"
+              }`}
               style={{ height: 65 * tsScale }}
             >
               <div
-                className="[&>div]:!w-full [&_iframe]:!w-full"
                 style={{
-                  width: tsScale < 1 ? 300 : "100%",
-                  transform: `scale(${tsScale})`,
+                  width: tsScale < 1 ? 300 : "calc(100% + 4px)",
+                  margin: tsScale < 1 ? 0 : -2,
+                  transform: tsScale < 1 ? `scale(${tsScale})` : undefined,
                   transformOrigin: "top left",
                 }}
               >
