@@ -4,6 +4,9 @@ import { isAdmin } from "@/lib/adminAuth";
 import Media from "../../../model/media";
 import Post from "../../../model/blog";
 import { isMediaPublic } from "@/lib/mediaAccess";
+import { promises as fs } from "fs";
+import path from "path";
+import { UPLOAD_DIR } from "@/lib/uploadDir";
 
 type RouteContext = {
   params: Promise<{ id: string }>;
@@ -53,20 +56,33 @@ export async function GET(_request: Request, context: RouteContext) {
     }
 
     const match = /^data:([^;]+);base64,(.+)$/.exec(media.url);
-    if (!match) {
+
+    let buffer: Buffer;
+    let contentType: string;
+
+    if (match) {
+      // عکس‌های قدیمی که هنوز داخل دیتابیس‌ان
+      if (!match[1].startsWith("image/")) {
+        return new NextResponse("Not found", { status: 404 });
+      }
+      buffer = Buffer.from(match[2], "base64");
+      contentType = match[1];
+    } else if (media.url.startsWith("/api/media/")) {
+      // عکس‌های جدید: فایل روی سرور
+      try {
+        buffer = await fs.readFile(path.join(UPLOAD_DIR, `${id}.webp`));
+        contentType = "image/webp";
+      } catch {
+        return new NextResponse("Not found", { status: 404 });
+      }
+    } else {
       return NextResponse.redirect(media.url);
     }
-
-    if (!match[1].startsWith("image/")) {
-      return new NextResponse("Not found", { status: 404 });
-    }
-
-    const buffer = Buffer.from(match[2], "base64");
 
     return new NextResponse(new Uint8Array(buffer), {
       status: 200,
       headers: {
-        "Content-Type": match[1],
+        "Content-Type": contentType,
         "Content-Length": String(buffer.length),
         "Cache-Control": admin
           ? "private, no-store"
@@ -153,6 +169,8 @@ export async function DELETE(request: Request, context: RouteContext) {
     if (!deletedMedia) {
       return NextResponse.json({ message: "فایل پیدا نشد" }, { status: 404 });
     }
+
+        await fs.unlink(path.join(UPLOAD_DIR, `${id}.webp`)).catch(() => {});
 
     return NextResponse.json({
       success: true,

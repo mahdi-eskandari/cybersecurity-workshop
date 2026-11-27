@@ -4,6 +4,9 @@ import Media from "../../model/media";
 import sharp from "sharp";
 import { isAdmin } from "@/lib/adminAuth";
 import Post from "../../model/blog";
+import { promises as fs } from "fs";
+import path from "path";
+import { UPLOAD_DIR } from "@/lib/uploadDir";
 
 const MAX_UPLOAD = 10 * 1024 * 1024; // ۱۰ مگابایت
 
@@ -96,8 +99,6 @@ export async function POST(request: Request) {
     const metadata = await image.metadata();
     const webpBuffer = await image.webp({ quality: 82 }).toBuffer();
 
-    const dataUrl = `data:image/webp;base64,${webpBuffer.toString("base64")}`;
-
     const originalName = file.name.replace(/\.[^.]+$/, "");
     const webpName = `${originalName}.webp`;
 
@@ -106,15 +107,27 @@ export async function POST(request: Request) {
         ? altValue.trim().slice(0, 200)
         : originalName.replace(/[-_]+/g, " ");
 
-    const media = await Media.create({
+    const media = new Media({
       name: webpName,
-      url: dataUrl,
+      url: "",
       alt,
       mimeType: "image/webp",
       size: webpBuffer.length,
       width: metadata.width ?? null,
       height: metadata.height ?? null,
     });
+    media.url = `/api/media/${media._id}`;
+
+    const filePath = path.join(UPLOAD_DIR, `${media._id}.webp`);
+    await fs.mkdir(UPLOAD_DIR, { recursive: true });
+    await fs.writeFile(filePath, webpBuffer);
+
+    try {
+      await media.save();
+    } catch (err) {
+      await fs.unlink(filePath).catch(() => {});
+      throw err;
+    }
 
     return NextResponse.json(
       {
