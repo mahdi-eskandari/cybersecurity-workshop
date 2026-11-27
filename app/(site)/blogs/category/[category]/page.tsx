@@ -50,11 +50,13 @@ async function loadData(rawCategory: string) {
     const current = categories.find((c) => c.id === id);
     if (!current) return null;
 
-    const categoryPosts = publishedPosts.filter((p) => p.categoryId === id);
-    if (categoryPosts.length === 0) return null;
+    // const categoryPosts = publishedPosts.filter((p) => p.categoryId === id);
+    // if (categoryPosts.length === 0) return null;
 
-    const totalPages = Math.max(1, Math.ceil(categoryPosts.length / PER_PAGE));
+const categoryPosts = publishedPosts.filter((p) => p.categoryId === id);
 
+const totalPages = Math.max(1, Math.ceil(categoryPosts.length / PER_PAGE));
+    
     return { current, categories, publishedPosts, mediaItems: [], totalPages };
   } catch (error) {
     console.error("category page error:", error);

@@ -4722,17 +4722,19 @@ className="mx-auto grid w-full gap-4 px-6 py-6 md:px-7"
                     label="نوع خدمت (انیمیشن و دپارتمان)"
                     hint="با تغییر عنوان تغییر نمی‌کند"
                   >
-                    <select
-                      {...register("key")}
-                      style={inputStyle()}
-                    >
-                      <option value="">— بدون انتخاب (انیمیشن پیش‌فرض) —</option>
-                      {SERVICE_KEYS.map((k) => (
-                        <option key={k} value={k}>
-                          {SERVICE_KEY_LABELS[k]}
-                        </option>
-                      ))}
-                    </select>
+<CustomSelect
+  value={watch("key") ?? ""}
+  onChange={(value) =>
+    setValue("key", value, { shouldDirty: true })
+  }
+  options={[
+    { value: "", label: "— بدون انتخاب (انیمیشن پیش‌فرض) —" },
+    ...SERVICE_KEYS.map((k) => ({
+      value: k,
+      label: SERVICE_KEY_LABELS[k],
+    })),
+  ]}
+/>
                   </Field>
                 </div>
 

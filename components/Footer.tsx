@@ -220,14 +220,19 @@ const footerMenus = [
                 آماده می‌شوند.
               </p>
                             <div className="space-y-3">
-                <div className="flex items-center gap-2.5 text-sm text-[#818fa0]">
-                  <Phone className="w-4 h-4 flex-shrink-0" />
+                <div
+  className="flex items-center gap-2.5 text-sm text-[#818fa0]"
+  style={{
+    color: darkMode ? "#818fa0" : "#CBD5E1",
+  }}
+>
+  <Phone className="w-4 h-4 flex-shrink-0" />
                   <span dir="ltr" 
                     style={{
                   color: darkMode ? "#818fa0" : "#CBD5E1",
                 }}
                   >
-                    09002222319
+                    026-32209950
                   </span>
                 </div>
                 <div className="flex items-center gap-2.5 text-sm text-[#818fa0]"
@@ -239,14 +244,14 @@ const footerMenus = [
                   />
                   <span>info@parahoor.com</span>
                 </div>
-                {/* <div className="flex items-center gap-2.5 text-sm text-[#818fa0]"
+                <div className="flex items-center gap-2.5 text-sm text-[#818fa0]"
                 style={{
                   color: darkMode ? "#818fa0" : "#CBD5E1",
                 }}
                 >
                   <MapPin className="w-4 h-4 flex-shrink-0" />
                   <span>کرج، بلوار بلال، میدان توحید، ساختمان بانک کشاورزی، پلاک چهارم طبقه اول واحد اول</span>
-                </div> */}
+                </div>
                 <div>
 <div className="flex items-center gap-2">
   <SocialBtn
@@ -319,7 +324,7 @@ const footerMenus = [
           فقط برای حوادث زنده استفاده کنید. 
         </p>
         <a
-          href="tel:+989002222319"
+          href="tel:+982632209950"
           className="flex w-[65%] items-center gap-2 px-3.5 py-2 bg-[#C62828] text-white text-xs font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors"
           style={{
             background: "#EF4444",

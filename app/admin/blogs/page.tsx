@@ -1567,12 +1567,12 @@ function CategoryManager({
               </div>
             </div>
           </div>,
-          document.body
+          document.querySelector(".admin-panel") ?? document.body
         )}
       {seoTarget &&
         createPortal(
           <CategorySeoModal category={seoTarget} onClose={() => setSeoTarget(null)} />,
-          document.body
+          document.querySelector(".admin-panel") ?? document.body
         )}
 
     </div>

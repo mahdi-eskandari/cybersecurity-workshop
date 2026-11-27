@@ -387,7 +387,7 @@ const megaCols = STATIC_SERVICES.length > 6 ? 3 : 2;
 {/* SOS + mobile toggle */}
 <div className="flex items-center gap-3 flex-shrink-0 mr-auto min-[840px]:mr-0">
 <a
-href="tel:+989002222319"
+href="tel:+982632209950"
    className="min-[840px]:flex items-center gap-2 px-4 py-2 bg-[#EF4444] text-white text-sm font-semibold rounded-lg hover:bg-[#B71C1C] transition-colors cursor-pointer"
                 style={{
                 background: "#EF4444",
@@ -729,7 +729,7 @@ href="tel:+989002222319"
           <div className="mt-auto pt-6" style={itemAnim(navItems.length + 1)}>
             <a
               
-             href="tel:+989002222319"
+           href="tel:+982632209950"
               onClick={() => setMenuOpen(false)}
               className="flex w-full items-center justify-center rounded-2xl bg-[#C62828] px-5 py-4 text-base font-bold text-white shadow-lg shadow-red-900/20 transition-colors hover:bg-[#B71C1C]"
               style={{

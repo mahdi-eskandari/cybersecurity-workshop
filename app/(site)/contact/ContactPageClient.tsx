@@ -460,7 +460,7 @@ const isDark = darkMode;
   };
 
   const channels: ContactChannel[] = [
-{ icon: <IconPhone color={themeRed} />, iconColor: themeRed, badge: "CRISIS HOTLINE", title: "خط ویژه بحران", desc: "پاسخگویی فوری به بحران های سایبری", value: "09002222319", valueLabel: "شماره تماس", urgent: true, accentColor: themeRed, href: "tel:+982632209950", actionLabel: "تماس اورژانسی" },
+{ icon: <IconPhone color={themeRed} />, iconColor: themeRed, badge: "CRISIS HOTLINE", title: "خط ویژه بحران", desc: "پاسخگویی فوری به بحران های سایبری", value: "026-32209950", valueLabel: "شماره تماس", urgent: true, accentColor: themeRed, href: "tel:+982632209950", actionLabel: "تماس اورژانسی" },
 { icon: <TelegramIcon color={themeBlue} />, iconColor: themeBlue, badge: "SECURE CHAT", title: "پشتیبانی امن تلگرام", desc: "ارسال سریع مستندات", value: "Parahoor_Support", valueLabel: "آیدی تلگرام", urgent: false, accentColor: themeBlue, hoverColor: themeBlue, href: "https://t.me/Parahoor_Support", actionLabel: "باز کردن تلگرام" },
 { icon: <IconLockMail color={themeBlue} />, iconColor: themeBlue, badge: "OFFICIAL EMAIL", title: "ایمیل سازمانی", desc: "برای مکاتبات رسمی و حقوقی", value: "info@parahoor.com", valueLabel: "آدرس ایمیل", urgent: false, accentColor: themeBlue, hoverColor: themeBlue, href: "https://mail.google.com/mail/?view=cm&fs=1&to=info@parahoor.com&su=" + encodeURIComponent("تماس از سایت پاراهور"), actionLabel: "ارسال ایمیل" },  ];
 
@@ -954,7 +954,7 @@ style={{
       }`}
     >
 <a
-  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("کرج")}`}
+  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("کرج، بلوار بلال، میدان توحید، ساختمان بانک کشاورزی")}`}
   target="_blank"
   rel="noopener noreferrer"
   aria-label="باز کردن موقعیت دفتر مرکزی پاراهور در نقشه"
@@ -1012,7 +1012,7 @@ style={{
                آدرس دفتر مرکزی: کرج
               </h4>
 
-              {/* <p
+              <p
                 className={`text-[0.82rem] leading-[1.75] ${
                   isDark ? "text-[#9aa0aa]" : "text-[#64748B]"
                 }`}
@@ -1022,7 +1022,7 @@ style={{
             }}
               >
 بلوار بلال، میدان توحید، ساختمان بانک کشاورزی، پلاک چهارم طبقه اول واحد اول               
-              </p> */}
+              </p>
 
               <div
                 className={`mt-3 flex items-center gap-1.5 text-[0.8rem] ${
@@ -1055,7 +1055,7 @@ style={{
 
       {/* Open in Maps */}
       <a
-  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("کرج")}`}
+  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("کرج، بلوار بلال، میدان توحید، ساختمان بانک کشاورزی")}`}
   target="_blank"
   rel="noopener noreferrer"
         className={`contact-map-open group absolute bottom-4 right-4 z-20 inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-bold transition-all duration-300 ${
